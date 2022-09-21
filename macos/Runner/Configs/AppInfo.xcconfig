@@ -8,7 +8,7 @@
 PRODUCT_NAME = paap
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.paap.paap
+PRODUCT_BUNDLE_IDENTIFIER = com.high.system.training.paap
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2022 com.paap. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 com.high.system.training. All rights reserved.

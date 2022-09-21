@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.paap" "\0"
+            VALUE "CompanyName", "com.high.system.training" "\0"
             VALUE "FileDescription", "paap" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "paap" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 com.paap. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 com.high.system.training. All rights reserved." "\0"
             VALUE "OriginalFilename", "paap.exe" "\0"
             VALUE "ProductName", "paap" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

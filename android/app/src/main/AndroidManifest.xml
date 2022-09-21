@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.paap.paap">
+    package="com.high.system.training.paap">
    <application
         android:label="paap"
         android:name="${applicationName}"

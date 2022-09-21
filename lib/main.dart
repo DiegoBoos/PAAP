@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:paap/modules/auth/services/auth.service.dart';
-import 'package:paap/router/app_routes.dart';
-import 'package:paap/utils/notifications.service.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/domain/blocs/auth/auth_bloc.dart';
 
-void main() => runApp(const AppState());
+import 'package:paap/router.dart';
+import 'package:paap/ui/utils/background_colors.dart';
 
-class AppState extends StatelessWidget {
-  const AppState({Key? key}) : super(key: key);
+import 'data/datasources/local/db_config.dart';
+import 'domain/blocs/perfil/perfil_bloc.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthService()),
-      ],
-      child: const MyApp(),
-    );
-  }
+void main() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -25,18 +17,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Material App',
-        debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.initialRoute,
-        routes: AppRoutes.routes,
-        onGenerateRoute: AppRoutes.onGenerateRoute,
-        navigatorKey: NotificationService.navigatorKey,
-        scaffoldMessengerKey: NotificationService.messengerKey,
-        theme: ThemeData(
-            scaffoldBackgroundColor: Colors.grey[300],
-            colorScheme: ColorScheme.fromSwatch().copyWith(
-                primary: const Color(0xFF50C3F7),
-                secondary: const Color(0xFF2963FF))));
+    DBConfig.database;
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => AuthBloc()),
+          BlocProvider(create: (_) => PerfilBloc()),
+        ],
+        child: MaterialApp(
+            title: 'Flutter Demo',
+            debugShowCheckedModeBanner: false,
+            initialRoute: AppRouter.initialRoute,
+            routes: AppRouter.routes,
+            theme: ThemeData(
+                colorScheme: ColorScheme.fromSwatch().copyWith(
+                    primary: HomeUtils.lightGreen,
+                    secondary: Colors.blue[900]))));
   }
 }
