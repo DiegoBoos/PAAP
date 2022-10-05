@@ -5,19 +5,8 @@ import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../home/pages/home_page.dart';
 import 'sign_in_page.dart';
 
-class CheckAuthPage extends StatefulWidget {
-  const CheckAuthPage({Key? key}) : super(key: key);
-
-  @override
-  State<CheckAuthPage> createState() => _CheckAuthPageState();
-}
-
-class _CheckAuthPageState extends State<CheckAuthPage> {
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<AuthBloc>(context, listen: false).add(VerifyAuth());
-  }
+class CheckAuthPage extends StatelessWidget {
+  const CheckAuthPage({super.key});
 
   @override
   Widget build(BuildContext context) {

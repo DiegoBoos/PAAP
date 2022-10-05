@@ -30,15 +30,16 @@ dependencies:
   animate_do: ^2.1.0
   bloc: ^8.1.0
   bloc_test: ^9.1.0
+  connectivity_plus: ^2.3.7
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
   equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
-  flutter_secure_storage: ^6.0.0
   flutter_svg: ^1.1.4
   font_awesome_flutter: ^10.1.0
+  get_it: ^7.2.0
   http: ^0.13.5
   mockito: ^5.3.0
   path_provider: ^2.0.11
@@ -46,6 +47,7 @@ dependencies:
   rxdart: ^0.27.5
   sqflite: ^2.0.3+1
   xml: ^6.1.0
+  xml2json: ^5.3.5
 
 dev_dependencies:
   flutter_lints: ^2.0.0

@@ -1,50 +1,40 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:paap/data/models/usuario_model.dart';
-import 'package:paap/domain/entities/usuario.dart';
-
-import '../../../data/datasources/local/secure_storage.dart';
-import '../../usecases/get_perfiles.dart';
-import '../../usecases/get_usuario.dart';
+import 'package:paap/domain/blocs/internet/internet_cubit.dart';
+import 'package:paap/domain/usecases/verificar_usuario.dart';
+import '../../entities/usuario.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(const AuthEmpty()) {
-    on<VerifyAuth>((event, emit) async {
-      emit(AuthLoading());
+  final VerificarUsuario verificarUsuario;
 
-      final token = await SecureStorage.readToken();
-      final usuario = await SecureStorage.getUsuario();
-
-      if (token.isEmpty && usuario == null) {
-        const AuthError('No se pudo obtener la información del storage');
-        return;
-      }
-
-      emit(AuthHasData(usuario!, token));
-    });
-
+  AuthBloc({required this.verificarUsuario}) : super(const AuthInitialState()) {
     on<LogIn>((event, emit) async {
-      final usuario = event.usuario;
-      final token = event.token;
+      final usuarioId = event.usuarioId;
+      final contrasena = event.contrasena;
+      final isOffline = event.isOffline;
 
       emit(AuthLoading());
 
-      final result = await GetUsuario.execute();
-
-      result.fold((failure) {
-        emit(AuthError(failure.message));
-      }, (data) async {
-        emit(AuthHasData(data, token));
-      });
+      if (!isOffline) {
+        final result = await verificarUsuario.execute(usuarioId, contrasena);
+        result.fold((failure) {
+          emit(AuthError(failure.properties.first));
+        }, (data) {
+          emit(AuthLoaded(data));
+        });
+      } else {
+        print('Connect to DB');
+      }
     });
 
     on<LogOut>((_, emit) async {
-      await SecureStorage.storage.deleteAll();
-      emit(const AuthEmpty());
+      emit(const AuthInitialState());
     });
   }
 }

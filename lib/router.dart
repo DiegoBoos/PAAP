@@ -6,7 +6,7 @@ import 'ui/home/pages/home_page.dart';
 import 'ui/perfil/pages/new_edit_perfil_page.dart';
 
 class AppRouter {
-  static const initialRoute = 'home';
+  static const initialRoute = 'sign-in';
   static final menuOptions = <MenuOption>[
     MenuOption(
         route: 'sign-in',

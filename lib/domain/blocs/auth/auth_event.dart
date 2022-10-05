@@ -7,15 +7,15 @@ abstract class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class VerifyAuth extends AuthEvent {}
-
 class LogIn extends AuthEvent {
-  final UsuarioEntity usuario;
-  final String token;
-  const LogIn(this.usuario, this.token);
+  final String usuarioId;
+  final String contrasena;
+  final bool isOffline;
 
-  @override
-  List<Object?> get props => [usuario, token];
+  const LogIn(
+      {required this.usuarioId,
+      required this.contrasena,
+      this.isOffline = false});
 }
 
 class LogOut extends AuthEvent {}

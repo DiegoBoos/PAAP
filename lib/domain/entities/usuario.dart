@@ -1,37 +1,37 @@
 import 'dart:convert';
 
-UsuarioEntity usuarioFromJson(String str) =>
+UsuarioEntity usuarioEntityFromJson(String str) =>
     UsuarioEntity.fromJson(json.decode(str));
 
-String usuarioToJson(UsuarioEntity data) => json.encode(data.toJson());
+String usuarioEntityToJson(UsuarioEntity data) => json.encode(data.toJson());
 
 class UsuarioEntity {
   final String usuarioId;
-  final String nombre;
-  final String apellido;
-  final String direccion;
-  final int telefonoFijo;
-  final int telefonoMovil;
-  final String correo;
+  final String? nombre;
+  final String? apellido;
+  final String? direccion;
+  final String? telefonoFijo;
+  final String? telefonoMovil;
+  final String? correo;
   final String contrasena;
-  final DateTime fechaActivacion;
-  final DateTime fechaDesactivacion;
-  final DateTime fechaCambio;
-  final bool activo;
+  final String? fechaActivacion;
+  final String? fechaDesactivacion;
+  final String? fechaCambio;
+  final String? activo;
 
   UsuarioEntity({
     required this.usuarioId,
-    required this.nombre,
-    required this.apellido,
-    required this.direccion,
-    required this.telefonoFijo,
-    required this.telefonoMovil,
-    required this.correo,
+    this.nombre,
+    this.apellido,
+    this.direccion,
+    this.telefonoFijo,
+    this.telefonoMovil,
+    this.correo,
     required this.contrasena,
-    required this.fechaActivacion,
-    required this.fechaDesactivacion,
-    required this.fechaCambio,
-    required this.activo,
+    this.fechaActivacion,
+    this.fechaDesactivacion,
+    this.fechaCambio,
+    this.activo,
   });
 
   factory UsuarioEntity.fromJson(Map<String, dynamic> json) => UsuarioEntity(

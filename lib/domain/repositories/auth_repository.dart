@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
+import 'package:paap/domain/entities/usuario.dart';
 
 import '../core/error/failure.dart';
-import '../entities/usuario.dart';
 
 abstract class AuthRepository {
-  Future<Either<Failure, UsuarioEntity>> getUsuario();
+  Future<Either<Failure, UsuarioEntity>> verificarUsuario(
+      String usuarioId, String contrasena);
 }

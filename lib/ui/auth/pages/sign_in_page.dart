@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:paap/domain/blocs/internet/internet_cubit.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
-import '../../../domain/entities/usuario.dart';
 import '../../utils/validators/form_validators.dart';
 import '../widgets/auth_background.dart';
 import '../widgets/card_container.dart';
@@ -29,6 +29,45 @@ class SignInPage extends StatelessWidget {
                   const SignInForm()
                 ],
               )),
+              const SizedBox(height: 30.0),
+              BlocBuilder<InternetCubit, InternetState>(
+                builder: (context, state) {
+                  if (state is InternetConnected) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Conectado a internet'),
+                          backgroundColor: Colors.green));
+                    });
+                    return const SizedBox();
+                  } else if (state is InternetDisconnected) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('No hay conexión a internet'),
+                          backgroundColor: Colors.red));
+                    });
+                    return const SizedBox();
+                  }
+
+                  return const CircularProgressIndicator();
+                },
+              ),
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  if (state is AuthLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is AuthLoaded) {
+                    return Text(state.usuarioAutenticado?.nombre ?? '');
+                  } else if (state is AuthError) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -45,13 +84,14 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
-  TextEditingController emailCtrl = TextEditingController();
-  TextEditingController passwordCtrl = TextEditingController();
+  TextEditingController usuarioIdCtrl = TextEditingController();
+  TextEditingController contrasenaCtrl = TextEditingController();
   bool eyeToggle = false;
 
   @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context, listen: false);
+    final internetCubit = BlocProvider.of<InternetCubit>(context, listen: true);
     final formKey = GlobalKey<FormState>();
 
     return Form(
@@ -59,7 +99,7 @@ class _SignInFormState extends State<SignInForm> {
       child: Column(
         children: [
           TextFormField(
-            controller: emailCtrl,
+            controller: usuarioIdCtrl,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
@@ -71,7 +111,7 @@ class _SignInFormState extends State<SignInForm> {
           ),
           const SizedBox(height: 30.0),
           TextFormField(
-            controller: passwordCtrl,
+            controller: contrasenaCtrl,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             autocorrect: false,
             obscureText: eyeToggle,
@@ -92,34 +132,26 @@ class _SignInFormState extends State<SignInForm> {
             ),
             validator: (value) => FormValidators.validatePassword(value),
           ),
-          const Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: null,
-              child: Text(
-                '¿Olvidó su contraseña?',
-                style: TextStyle(color: Colors.black),
-              ),
-              /*  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => ChangeNotifierProvider(
-                            create: (_) => ForgotPwdFormProvider(),
-                            child: const ForgotPwdPage()))) */
-            ),
-          ),
+          const SizedBox(height: 30),
           MaterialButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               disabledColor: Colors.grey,
               elevation: 0,
               color: Theme.of(context).colorScheme.secondary,
-              onPressed: () async {
-                FocusScope.of(context).unfocus();
-
+              onPressed: () {
                 if (!formKey.currentState!.validate()) return;
 
-                /* authBloc.add(LogIn(newUser, 'myToken12345')); */
+                if (internetCubit.state is InternetConnected) {
+                  authBloc.add(LogIn(
+                      usuarioId: usuarioIdCtrl.text,
+                      contrasena: contrasenaCtrl.text));
+                } else if (internetCubit.state is InternetDisconnected) {
+                  authBloc.add(LogIn(
+                      usuarioId: usuarioIdCtrl.text,
+                      contrasena: contrasenaCtrl.text,
+                      isOffline: true));
+                }
               },
               child: Container(
                 alignment: Alignment.center,
@@ -129,14 +161,7 @@ class _SignInFormState extends State<SignInForm> {
                   style: TextStyle(color: Colors.white),
                 ),
               )),
-          const SizedBox(height: 20),
-          const Text(
-            'No tienes una cuenta?',
-          ),
-          TextButton(
-            child: const Text('Regístrate'),
-            onPressed: () => Navigator.pushReplacementNamed(context, 'sign-up'),
-          ),
+          const SizedBox(height: 30),
         ],
       ),
     );

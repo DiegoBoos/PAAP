@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:paap/domain/entities/usuario.dart';
 
-UsuarioModel usuarioFromJson(String str) =>
+UsuarioModel usuarioModelFromJson(String str) =>
     UsuarioModel.fromJson(json.decode(str));
 
 String usuarioToJson(UsuarioModel data) => json.encode(data.toJson());
@@ -10,44 +10,44 @@ String usuarioToJson(UsuarioModel data) => json.encode(data.toJson());
 class UsuarioModel extends UsuarioEntity {
   UsuarioModel(
       {required String usuarioId,
-      required String nombre,
-      required String apellido,
-      required String direccion,
-      required int telefonoFijo,
-      required int telefonoMovil,
-      required String correo,
+      String? nombre,
+      String? apellido,
+      String? direccion,
+      String? telefonoFijo,
+      String? telefonoMovil,
+      String? correo,
       required String contrasena,
-      required DateTime fechaActivacion,
-      required DateTime fechaDesactivacion,
-      required DateTime fechaCambio,
-      required bool activo})
+      String? fechaActivacion,
+      String? fechaDesactivacion,
+      String? fechaCambio,
+      String? activo})
       : super(
             usuarioId: usuarioId,
-            nombre: nombre,
-            apellido: apellido,
-            direccion: direccion,
-            telefonoFijo: telefonoFijo,
-            telefonoMovil: telefonoMovil,
-            correo: correo,
+            nombre: nombre ?? '',
+            apellido: apellido ?? '',
+            direccion: direccion ?? '',
+            telefonoFijo: telefonoFijo ?? '',
+            telefonoMovil: telefonoMovil ?? '',
+            correo: correo ?? '',
             contrasena: contrasena,
-            fechaActivacion: fechaActivacion,
-            fechaDesactivacion: fechaDesactivacion,
-            fechaCambio: fechaCambio,
+            fechaActivacion: fechaActivacion ?? '',
+            fechaDesactivacion: fechaDesactivacion ?? '',
+            fechaCambio: fechaCambio ?? '',
             activo: activo);
 
   factory UsuarioModel.fromJson(Map<String, dynamic> json) => UsuarioModel(
-        usuarioId: json["usuarioId"],
-        nombre: json["nombre"],
-        apellido: json["apellido"],
-        direccion: json["direccion"],
-        telefonoFijo: json["telefonoFijo"],
-        telefonoMovil: json["telefonoMovil"],
-        correo: json["correo"],
-        contrasena: json["contrasena"],
-        fechaActivacion: json["fechaActivacion"],
-        fechaDesactivacion: json["fechaDesactivacion"],
-        fechaCambio: json["fechaCambio"],
-        activo: json["activo"],
+        usuarioId: json["UsuarioId"],
+        nombre: json["Nombre"],
+        apellido: json["Apellido"],
+        direccion: json["Direccion"],
+        telefonoFijo: json["TelefonoFijo"],
+        telefonoMovil: json["TelefonoMovil"],
+        correo: json["Correo"],
+        contrasena: json["Contrasena"],
+        fechaActivacion: json["FechaActivacion"],
+        fechaDesactivacion: json["FechaDesactivacion"],
+        fechaCambio: json["FechaCambio"],
+        activo: json["Activo"],
       );
 
   @override

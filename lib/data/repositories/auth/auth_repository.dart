@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:paap/domain/entities/usuario.dart';
 
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/repositories/auth_repository.dart';
-import '../../datasources/local/secure_storage.dart';
-import '../../datasources/remote/auth_remote_data_source.dart';
-import '../../models/usuario_model.dart';
+import '../../datasources/remote/auth/auth_remote_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSource;
@@ -15,16 +14,19 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.authRemoteDataSource});
 
   @override
-  Future<Either<Failure, UsuarioModel>> getUsuario() async {
+  Future<Either<Failure, UsuarioEntity>> verificarUsuario(
+      String usuarioId, String contrasena) async {
     try {
-      final usuario = await authRemoteDataSource.getUsuario();
+      final usuarioModel =
+          await authRemoteDataSource.verificarUsuario(usuarioId, contrasena);
 
-      await SecureStorage.setUsuario(usuario);
-      /* await SecureStorage.storage.write(key: 'token', value: token); */
-
-      return Right(usuario);
+      return Right(usuarioModel);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
     } on ServerException {
-      return Left(ServerFailure());
+      return const Left(ServerFailure(['Excepción no controlada']));
+    } on SocketException {
+      return const Left(ConnectionFailure(['Error de conexión']));
     }
   }
 }
