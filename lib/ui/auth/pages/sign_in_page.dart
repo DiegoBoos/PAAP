@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:paap/domain/blocs/internet/internet_cubit.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
+import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../utils/validators/form_validators.dart';
 import '../widgets/auth_background.dart';
 import '../widgets/card_container.dart';
@@ -57,12 +57,16 @@ class SignInPage extends StatelessWidget {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (state is AuthLoaded) {
-                    return Text(state.usuarioAutenticado?.nombre ?? '');
+                  } else if (state is AuthLoaded && !state.isChecking) {
+                    Navigator.pushReplacementNamed(context, 'home');
+                    return const SizedBox();
                   } else if (state is AuthError) {
-                    return Center(
-                      child: Text(state.message),
-                    );
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: Colors.red));
+                    });
+                    return const SizedBox();
                   } else {
                     return const SizedBox();
                   }

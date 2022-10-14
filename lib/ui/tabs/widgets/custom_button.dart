@@ -19,30 +19,33 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _CustomButtonBackground(icon, primary, secondary),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 100, width: 40),
-            Icon(icon, color: Colors.white, size: 40),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Text(text,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                  )),
-            ),
-            const Icon(
-              Icons.keyboard_arrow_right,
-              color: Colors.white,
-            ),
-            const SizedBox(width: 40),
-          ],
-        )
-      ],
+    return GestureDetector(
+      onTap: onPressed,
+      child: Stack(
+        children: [
+          _CustomButtonBackground(icon, primary, secondary),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 100, width: 40),
+              Icon(icon, color: Colors.white, size: 40),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Text(text,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    )),
+              ),
+              const Icon(
+                Icons.keyboard_arrow_right,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 40),
+            ],
+          )
+        ],
+      ),
     );
   }
 }

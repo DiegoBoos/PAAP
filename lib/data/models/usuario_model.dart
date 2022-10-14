@@ -1,11 +1,4 @@
-import 'dart:convert';
-
-import 'package:paap/domain/entities/usuario.dart';
-
-UsuarioModel usuarioModelFromJson(String str) =>
-    UsuarioModel.fromJson(json.decode(str));
-
-String usuarioToJson(UsuarioModel data) => json.encode(data.toJson());
+import 'package:paap/domain/entities/usuario_entity.dart';
 
 class UsuarioModel extends UsuarioEntity {
   UsuarioModel(
@@ -52,17 +45,17 @@ class UsuarioModel extends UsuarioEntity {
 
   @override
   Map<String, dynamic> toJson() => {
-        "usuarioId": usuarioId,
-        "nombre": nombre,
-        "apellido": apellido,
-        "direccion": direccion,
-        "telefonoFijo": telefonoFijo,
-        "telefonoMovil": telefonoMovil,
-        "correo": correo,
-        "contrasena": contrasena,
-        "fechaActivacion": fechaActivacion,
-        "fechaDesactivacion": fechaDesactivacion,
-        "fechaCambio": fechaCambio,
-        "activo": activo
+        "UsuarioId": usuarioId,
+        "Nombre": nombre,
+        "Apellido": apellido,
+        "Direccion": direccion,
+        "TelefonoFijo": telefonoFijo,
+        "TelefonoMovil": telefonoMovil,
+        "Correo": correo,
+        "Contrasena": contrasena,
+        "FechaActivacion": fechaActivacion,
+        "FechaDesactivacion": fechaDesactivacion,
+        "FechaCambio": fechaCambio,
+        "Activo": activo
       };
 }

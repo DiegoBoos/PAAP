@@ -1,10 +1,9 @@
 import 'dart:io';
 
+import 'package:paap/data/datasources/local/auth/auth_local_data_source.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../../repositories/perfil/db_perfiles.dart';
 
 class DBConfig {
   static Database? _database;
@@ -23,7 +22,7 @@ class DBConfig {
     //Crear base de datos
     _database = await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      DBPerfiles.createTablesPerfilModule(db);
+      AuthLocalDataSourceImpl.createUserTable(db);
     });
 
     return _database!;
