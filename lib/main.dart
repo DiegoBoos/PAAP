@@ -5,7 +5,6 @@ import 'package:paap/domain/blocs/auth/auth_bloc.dart';
 import 'package:paap/router.dart';
 import 'package:paap/ui/utils/background_colors.dart';
 
-import 'data/datasources/local/db_config.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
 import 'domain/cubits/menu/menu_cubit.dart';
 import 'injection.dart' as di;
@@ -20,7 +19,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DBConfig.database;
     return MultiBlocProvider(
         providers: [
           BlocProvider(

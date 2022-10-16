@@ -4,7 +4,9 @@ import 'package:paap/ui/perfiles/pages/perfiles_page.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/entities/menu_entity.dart';
+
+import '../../alianzas/pages/alianzas_page.dart';
+import '../../preinversion/pages/preinversion_page.dart';
 import 'home_page.dart';
 
 class TabsPage extends StatefulWidget {
@@ -20,6 +22,12 @@ class _TabsPageState extends State<TabsPage> {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
     const PerfilesPage(
+      menuHijo: [],
+    ),
+    const PreinversionPage(
+      menuHijo: [],
+    ),
+    const AlianzasPage(
       menuHijo: [],
     ),
     Container(),
@@ -46,21 +54,13 @@ class _TabsPageState extends State<TabsPage> {
         bottomNavigationBar: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
             if (state is MenuLoaded) {
-              final menuPadre = menuCubit.state.menuPadre;
-
-              final filteredMenus = menuPadre!
-                  .where((menu) =>
-                      menu.menuId == '1' ||
-                      menu.menuId == '12' ||
-                      menu.menuId == '36' ||
-                      menu.menuId == '11')
-                  .toList();
+              final menuPadre = menuCubit.state.menuPadre!.toList();
 
               return BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
                   currentIndex: _selectedIndex,
                   onTap: _onItemTapped,
-                  items: filteredMenus
+                  items: menuPadre
                       .map((menuItem) => BottomNavigationBarItem(
                           icon: Icon(setIcon(menuItem.menuId)),
                           label: menuItem.nombre))
@@ -81,30 +81,6 @@ class _TabsPageState extends State<TabsPage> {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-  List<MenuEntity> perfilesMenu(List<MenuEntity> menuHijo) {
-    return menuHijo
-        .where((submenu) => submenu.menuId == '22' || submenu.menuId == '31')
-        .toList();
-  }
-
-  List<MenuEntity> preinversionMenu(List<MenuEntity> menuHijo) {
-    return menuHijo
-        .where((submenu) =>
-            submenu.menuId == '37' ||
-            submenu.menuId == '38' ||
-            submenu.menuId == '39' ||
-            submenu.menuId == '40' ||
-            submenu.menuId == '41' ||
-            submenu.menuId == '2067')
-        .toList();
-  }
-
-  List<MenuEntity> alianzasMenu(List<MenuEntity> menuHijo) {
-    return menuHijo
-        .where((submenu) => submenu.menuId == '43' || submenu.menuId == '44')
-        .toList();
   }
 
   IconData setIcon(String menuId) {
