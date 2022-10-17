@@ -12,4 +12,8 @@ class MenuDB {
   Future<Either<Failure, List<MenuEntity>>> getMenuDB() {
     return repository.getMenuDB();
   }
+
+  Future<Either<Failure, int>> guardarMenuDB(List<MenuEntity> menuEntity) {
+    return repository.guardarMenuDB(menuEntity);
+  }
 }

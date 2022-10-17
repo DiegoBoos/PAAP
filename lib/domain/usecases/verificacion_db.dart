@@ -19,6 +19,6 @@ class VerificacionDB {
 
   Future<Either<Failure, List<Map>>> verificacionDB(
       String usuarioId, String contrasena) {
-    return repository.verificacionDB(usuarioId);
+    return repository.verificacionDB(usuarioId, contrasena);
   }
 }

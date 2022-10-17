@@ -71,9 +71,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, List<Map>>> verificacionDB(String usuarioId) async {
+  Future<Either<Failure, List<Map>>> verificacionDB(
+      String usuarioId, String contrasena) async {
     try {
-      final usuarioDB = await authLocalDataSource.logIn(usuarioId);
+      final usuarioDB = await authLocalDataSource.logIn(usuarioId, contrasena);
       return Right(usuarioDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
@@ -108,6 +109,21 @@ class AuthRepositoryImpl implements AuthRepository {
           List<MenuEntity>.from(menuDB.map((m) => MenuEntity.fromJson(m)));
 
       return Right(menuList);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    } on SocketException {
+      return const Left(ConnectionFailure(['Error de conexión']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> guardarMenuDB(
+      List<MenuEntity> menuEntity) async {
+    try {
+      final menuDB = await authLocalDataSource.guardarMenu(menuEntity);
+      return Right(menuDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

@@ -18,11 +18,11 @@ class DBConfig {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
 
     final path = join(documentDirectory.path, 'paap.db');
-
+    //print(path);
     //Crear base de datos
     _database = await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      AuthLocalDataSourceImpl.createUserTable(db);
+      // AuthLocalDataSourceImpl.createUserTable(db);
     });
 
     return _database!;

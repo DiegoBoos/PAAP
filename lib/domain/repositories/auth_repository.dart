@@ -8,7 +8,8 @@ abstract class AuthRepository {
   Future<Either<Failure, UsuarioEntity>> verificacion(
       String usuarioId, String contrasena);
 
-  Future<Either<Failure, List<Map>>> verificacionDB(String usuarioId);
+  Future<Either<Failure, List<Map>>> verificacionDB(
+      String usuarioId, String contrasena);
 
   Future<Either<Failure, List<Map<String, Object?>>>> existeUsuarioDB();
 
@@ -18,4 +19,6 @@ abstract class AuthRepository {
       String usuarioId, String contrasena);
 
   Future<Either<Failure, List<MenuEntity>>> getMenuDB();
+
+  Future<Either<Failure, int>> guardarMenuDB(List<MenuEntity> menuEntity);
 }

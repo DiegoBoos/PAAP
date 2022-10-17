@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paap/ui/perfiles/pages/perfiles_page.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
+import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
 
 import '../../alianzas/pages/alianzas_page.dart';
@@ -37,17 +38,27 @@ class _TabsPageState extends State<TabsPage> {
   @override
   void initState() {
     super.initState();
-    final authBloc = BlocProvider.of<AuthBloc>(context, listen: false);
-    final menuCubit = BlocProvider.of<MenuCubit>(context, listen: false);
-
-    menuCubit.getMenu(
-        usuarioId: authBloc.state.usuario!.usuarioId,
-        contrasena: authBloc.state.usuario!.contrasena);
   }
 
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context, listen: false);
+
+    final authBloc = BlocProvider.of<AuthBloc>(context, listen: false);
+
+    final internetCubit = BlocProvider.of<InternetCubit>(context, listen: true);
+
+    /* menuCubit.getMenu(
+        usuarioId: authBloc.state.usuario!.usuarioId,
+        contrasena: authBloc.state.usuario!.contrasena); */
+
+    if (internetCubit.state is InternetConnected) {
+      menuCubit.getMenu(
+          usuarioId: authBloc.state.usuario!.usuarioId,
+          contrasena: authBloc.state.usuario!.contrasena);
+    } else {
+      menuCubit.getMenuDB();
+    }
 
     return Scaffold(
         body: _widgetOptions.elementAt(_selectedIndex),
