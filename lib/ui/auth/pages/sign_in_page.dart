@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:paap/ui/utils/input_decoration.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../utils/validators/form_validators.dart';
 import '../widgets/auth_background.dart';
 import '../widgets/card_container.dart';
-import '../widgets/custom_auth_input.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -102,12 +102,13 @@ class _SignInFormState extends State<SignInForm> {
       key: formKey,
       child: Column(
         children: [
+          const SizedBox(height: 20.0),
           TextFormField(
             controller: usuarioIdCtrl,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
-            decoration: CustomAuthInput.inputDecoration(
+            decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'Correo electrónico',
                 labelText: 'Correo electrónico',
                 prefixIcon: Icons.alternate_email_sharp),
@@ -119,7 +120,7 @@ class _SignInFormState extends State<SignInForm> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             autocorrect: false,
             obscureText: eyeToggle,
-            decoration: CustomAuthInput.inputDecoration(
+            decoration: CustomInputDecoration.inputDecoration(
               hintText: '******',
               labelText: 'Contraseña',
               prefixIcon: Icons.lock_outlined,
@@ -136,7 +137,7 @@ class _SignInFormState extends State<SignInForm> {
             ),
             validator: (value) => FormValidators.validatePassword(value),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
           MaterialButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
@@ -165,7 +166,7 @@ class _SignInFormState extends State<SignInForm> {
                   style: TextStyle(color: Colors.white),
                 ),
               )),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
         ],
       ),
     );

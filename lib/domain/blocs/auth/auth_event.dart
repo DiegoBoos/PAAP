@@ -19,5 +19,3 @@ class LogIn extends AuthEvent {
 }
 
 class LogOut extends AuthEvent {}
-
-class ExisteUsuarioDB extends AuthEvent {}

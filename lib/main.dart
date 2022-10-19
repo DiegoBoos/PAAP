@@ -39,6 +39,6 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 colorScheme: ColorScheme.fromSwatch().copyWith(
                     primary: TabsUtils.lightGreen,
-                    secondary: Colors.blue[900]))));
+                    secondary: TabsUtils.obscureGreen))));
   }
 }

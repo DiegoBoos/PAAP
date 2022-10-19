@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:paap/domain/entities/menu_entity.dart';
-
-import '../../blocs/auth/auth_bloc.dart';
 import '../../usecases/menu.dart';
 import '../../usecases/menu_db.dart';
 
@@ -77,11 +75,4 @@ class MenuCubit extends Cubit<MenuState> {
       emit(MenuLoaded(menuPadre, menuHijo));
     });
   }
-
-  /* Future<void> guardarMenu(Emitter<AuthState> emit, MenuEntity data) async {
-    final result = await menuDB.guardarMenuDB(data);
-    result.fold((failure) {
-      emit(AuthError(failure.properties.first));
-    }, (_) {});
-  } */
 }

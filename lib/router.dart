@@ -9,10 +9,5 @@ class AppRouter {
   static Map<String, Widget Function(BuildContext)> routes = {
     'check': (BuildContext context) => const CheckAuthPage(),
     'sign-in': (BuildContext context) => const SignInPage(),
-    //TODO: rutas de las pantallas a desarrollar
-    /* 'VPerfiles': (BuildContext context) => const PerfilesPage(),
-    'VPerfilesPreInversion': (BuildContext context) =>
-        const PerfilesPreinversionPage(),
-    'VAlianzas': (BuildContext context) => const AlianzasPage(), */
   };
 }

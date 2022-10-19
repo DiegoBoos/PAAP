@@ -48,10 +48,6 @@ class _TabsPageState extends State<TabsPage> {
 
     final internetCubit = BlocProvider.of<InternetCubit>(context, listen: true);
 
-    /* menuCubit.getMenu(
-        usuarioId: authBloc.state.usuario!.usuarioId,
-        contrasena: authBloc.state.usuario!.contrasena); */
-
     if (internetCubit.state is InternetConnected) {
       menuCubit.getMenu(
           usuarioId: authBloc.state.usuario!.usuarioId,

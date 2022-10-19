@@ -22,7 +22,8 @@ class DBConfig {
     //Crear base de datos
     _database = await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      // AuthLocalDataSourceImpl.createUserTable(db);
+      AuthLocalDataSourceImpl.createUserTable(db);
+      AuthLocalDataSourceImpl.createMenuTable(db);
     });
 
     return _database!;

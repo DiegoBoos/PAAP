@@ -25,6 +25,7 @@ void init() {
 authBlocInit() {
   // bloc
   locator.registerFactory(() => AuthBloc(
+        internetCubit: locator(),
         verificacion: locator(),
         verificacionDB: locator(),
       ));

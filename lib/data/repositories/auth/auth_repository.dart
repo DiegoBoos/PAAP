@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:paap/domain/entities/menu_entity.dart';
 import 'package:paap/domain/entities/usuario_entity.dart';
@@ -29,29 +27,6 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(e.properties));
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
-    } on SocketException {
-      return const Left(ConnectionFailure(['Error de conexión']));
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<Map<String, Object?>>>> existeUsuarioDB() async {
-    try {
-      final usuarioDB = await authLocalDataSource.existeUsuario();
-
-      if (usuarioDB.isEmpty) {
-        return const Left(ServerFailure([
-          'Usuario no encontrado, por favor inicie sesión con una conexión a internet'
-        ]));
-      }
-
-      return Right(usuarioDB);
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(e.properties));
-    } on ServerException {
-      return const Left(ServerFailure(['Excepción no controlada']));
-    } on SocketException {
-      return const Left(ConnectionFailure(['Error de conexión']));
     }
   }
 
@@ -65,13 +40,11 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(e.properties));
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
-    } on SocketException {
-      return const Left(ConnectionFailure(['Error de conexión']));
     }
   }
 
   @override
-  Future<Either<Failure, List<Map>>> verificacionDB(
+  Future<Either<Failure, List<Map<String, dynamic>>>> verificacionDB(
       String usuarioId, String contrasena) async {
     try {
       final usuarioDB = await authLocalDataSource.logIn(usuarioId, contrasena);
@@ -80,8 +53,6 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(e.properties));
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
-    } on SocketException {
-      return const Left(ConnectionFailure(['Error de conexión']));
     }
   }
 
@@ -96,8 +67,19 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(e.properties));
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
-    } on SocketException {
-      return const Left(ConnectionFailure(['Error de conexión']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> guardarMenuDB(
+      List<MenuEntity> menuEntity) async {
+    try {
+      final menuDB = await authLocalDataSource.guardarMenu(menuEntity);
+      return Right(menuDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
 
@@ -113,23 +95,6 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(e.properties));
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
-    } on SocketException {
-      return const Left(ConnectionFailure(['Error de conexión']));
-    }
-  }
-
-  @override
-  Future<Either<Failure, int>> guardarMenuDB(
-      List<MenuEntity> menuEntity) async {
-    try {
-      final menuDB = await authLocalDataSource.guardarMenu(menuEntity);
-      return Right(menuDB);
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(e.properties));
-    } on ServerException {
-      return const Left(ServerFailure(['Excepción no controlada']));
-    } on SocketException {
-      return const Left(ConnectionFailure(['Error de conexión']));
     }
   }
 }

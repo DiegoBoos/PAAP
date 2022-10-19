@@ -9,15 +9,11 @@ class VerificacionDB {
 
   VerificacionDB(this.repository);
 
-  Future<Either<Failure, List<Map<String, Object?>>>> existeUsuarioDB() {
-    return repository.existeUsuarioDB();
-  }
-
   Future<Either<Failure, int>> guardarUsuarioDB(UsuarioEntity usuarioEntity) {
     return repository.guardarUsuarioDB(usuarioEntity);
   }
 
-  Future<Either<Failure, List<Map>>> verificacionDB(
+  Future<Either<Failure, List<Map<String, dynamic>>>> verificacionDB(
       String usuarioId, String contrasena) {
     return repository.verificacionDB(usuarioId, contrasena);
   }

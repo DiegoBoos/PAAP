@@ -17,7 +17,7 @@ class _CheckAuthPageState extends State<CheckAuthPage> {
   void initState() {
     super.initState();
     final authBloc = BlocProvider.of<AuthBloc>(context, listen: false);
-    authBloc.add(ExisteUsuarioDB());
+    //TODO: Validar usuario autenticado 🤔
   }
 
   @override
