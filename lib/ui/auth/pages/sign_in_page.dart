@@ -30,48 +30,45 @@ class SignInPage extends StatelessWidget {
                 ],
               )),
               const SizedBox(height: 30.0),
-              BlocBuilder<InternetCubit, InternetState>(
-                builder: (context, state) {
+              BlocConsumer<InternetCubit, InternetState>(
+                listener: (context, state) {
                   if (state is InternetConnected) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('Conectado a internet'),
-                          backgroundColor: Colors.green));
-                    });
-                    return const SizedBox();
-                  } else if (state is InternetDisconnected) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('No hay conexión a internet'),
-                          backgroundColor: Colors.red));
-                    });
-                    return const SizedBox();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Conectado a internet'),
+                        backgroundColor: Colors.green));
                   }
-
-                  return const CircularProgressIndicator();
+                  if (state is InternetDisconnected) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('No hay conexión a internet'),
+                        backgroundColor: Colors.red));
+                  }
                 },
-              ),
-              BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, state) {
-                  if (state is AuthLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is AuthLoaded && !state.isChecking) {
-                    Navigator.pushReplacementNamed(context, 'home');
-                    return const SizedBox();
-                  } else if (state is AuthError) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(state.message),
-                          backgroundColor: Colors.red));
-                    });
-                    return const SizedBox();
+                  if (state is InternetLoading) {
+                    return const CircularProgressIndicator();
                   } else {
                     return const SizedBox();
                   }
                 },
               ),
+              BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
+                if (state is AuthLoaded) {
+                  Navigator.of(context).pushReplacementNamed('tabs');
+                }
+                if (state is AuthError) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red));
+                }
+              }, builder: (context, state) {
+                if (state is AuthLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              }),
             ],
           ),
         ),

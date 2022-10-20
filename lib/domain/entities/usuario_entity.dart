@@ -1,17 +1,4 @@
 class UsuarioEntity {
-  final String usuarioId;
-  final String? nombre;
-  final String? apellido;
-  final String? direccion;
-  final String? telefonoFijo;
-  final String? telefonoMovil;
-  final String? correo;
-  final String contrasena;
-  final String? fechaActivacion;
-  final String? fechaDesactivacion;
-  final String? fechaCambio;
-  final String? activo;
-
   UsuarioEntity({
     required this.usuarioId,
     this.nombre,
@@ -26,6 +13,19 @@ class UsuarioEntity {
     this.fechaCambio,
     this.activo,
   });
+
+  final String usuarioId;
+  final String? nombre;
+  final String? apellido;
+  final String? direccion;
+  final String? telefonoFijo;
+  final String? telefonoMovil;
+  final String? correo;
+  final String contrasena;
+  final String? fechaActivacion;
+  final String? fechaDesactivacion;
+  final String? fechaCambio;
+  final String? activo;
 
   factory UsuarioEntity.fromJson(Map<String, dynamic> json) => UsuarioEntity(
         usuarioId: json["UsuarioId"],

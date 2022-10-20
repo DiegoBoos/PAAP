@@ -1,40 +1,28 @@
 part of 'auth_bloc.dart';
 
 abstract class AuthState extends Equatable {
-  final bool isLoggedIn;
-  final bool isChecking;
   final UsuarioEntity? usuario;
-  final List<MenuEntity>? menu;
 
-  const AuthState(
-      {this.isLoggedIn = false,
-      this.isChecking = false,
-      this.usuario,
-      this.menu});
+  const AuthState({this.usuario});
 
   @override
-  List<Object?> get props => [isLoggedIn, usuario];
+  List<Object?> get props => [usuario];
 }
 
-class AuthInitial extends AuthState {
-  const AuthInitial() : super(isLoggedIn: false, usuario: null);
-}
+class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
 class AuthLoaded extends AuthState {
   final UsuarioEntity? usuarioAutenticado;
-  final bool wasChecked;
 
-  const AuthLoaded(this.wasChecked, this.usuarioAutenticado)
+  const AuthLoaded(this.usuarioAutenticado)
       : super(
-          isLoggedIn: true,
-          isChecking: wasChecked,
           usuario: usuarioAutenticado,
         );
 
   @override
-  List<Object?> get props => [usuarioAutenticado, isLoggedIn];
+  List<Object?> get props => [usuarioAutenticado];
 }
 
 class AuthError extends AuthState {

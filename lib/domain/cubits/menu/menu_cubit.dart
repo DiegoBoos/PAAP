@@ -1,24 +1,24 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:paap/domain/entities/menu_entity.dart';
-import '../../usecases/menu.dart';
-import '../../usecases/menu_db.dart';
+import '../../usecases/menu/menu_db_usecase.dart';
+import '../../usecases/menu/menu_usecase.dart';
 
 part 'menu_state.dart';
 
 class MenuCubit extends Cubit<MenuState> {
-  final Menu menu;
-  final MenuDB menuDB;
+  final MenuUsecase menu;
+  final MenuUsecaseDB menuDB;
 
   MenuCubit({required this.menu, required this.menuDB})
       : super(const MenuLoading());
 
-  getMenu({String? usuarioId, String? contrasena}) async {
-    final result = await menu.getMenu(usuarioId!, contrasena!);
+  getMenu(String usuarioId, String contrasena) async {
+    final result = await menu.getMenuUsecase(usuarioId, contrasena);
     result.fold((failure) {
       emit(MenuError(failure.properties.first));
     }, (data) async {
-      await menuDB.guardarMenuDB(data);
+      await menuDB.saveMenuUsecaseDB(data);
       final menuPadre = data
           .where((menu) =>
               menu.tipoMenuId == '1' &&
@@ -46,10 +46,12 @@ class MenuCubit extends Cubit<MenuState> {
   }
 
   getMenuDB() async {
-    final result = await menuDB.getMenuDB();
+    final result = await menuDB.getMenuUsecaseDB();
     result.fold((failure) {
       emit(MenuError(failure.properties.first));
     }, (data) {
+      if (data == null) return emit(const MenuError('No hay datos'));
+
       final menuPadre = data
           .where((menu) =>
               menu.tipoMenuId == '1' &&

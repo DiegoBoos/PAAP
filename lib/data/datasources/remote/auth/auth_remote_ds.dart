@@ -1,17 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:paap/data/models/menu_model.dart';
-import 'package:paap/data/models/usuario_model.dart';
-import 'package:paap/domain/core/error/failure.dart';
 import 'package:xml/xml.dart' as xml;
 
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
+import 'package:paap/domain/core/error/failure.dart';
 import '../../../utils.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<UsuarioModel> verificacion(String usuarioId, String contrasena);
-  Future<List<MenuModel>> getMenu(String usuarioId, String contrasena);
+  Future<Map<String, dynamic>> verificacion(
+      String usuarioId, String contrasena);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -20,7 +18,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<UsuarioModel> verificacion(String usuarioId, String contrasena) async {
+  Future<Map<String, dynamic>> verificacion(
+      String usuarioId, String contrasena) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
@@ -62,7 +61,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  Future<UsuarioModel> consultarUsuario(
+  Future<Map<String, dynamic>> consultarUsuario(
       Uri uri, String usuarioId, String contrasena) async {
     final consultarUsuarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -111,71 +110,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
         final decodedResp = json.decode(res);
 
-        final usuario = UsuarioModel.fromJson(decodedResp['objeto']);
-
-        return usuario;
-      } else {
-        throw ServerFailure([mensaje]);
-      }
-    } else {
-      throw ServerException();
-    }
-  }
-
-  @override
-  Future<List<MenuModel>> getMenu(String usuarioId, String contrasena) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
-
-    final menuSOAP = '''<?xml version="1.0" encoding="utf-8"?>
-    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-      <soap:Body>
-        <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
-          <usuario>
-            <UsuarioId>$usuarioId</UsuarioId>
-            <Contrasena>$contrasena</Contrasena>
-          </usuario>
-          <rol>
-            <RolId>100</RolId>
-            <Nombre>string</Nombre>
-          </rol>
-          <parametros>
-            <string>TablaMenus</string>        
-            <string>1</string>        
-          </parametros>
-        </ObtenerDatos>
-      </soap:Body>
-    </soap:Envelope>''';
-
-    final menuResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: menuSOAP);
-
-    if (menuResp.statusCode == 200) {
-      final menuDoc = xml.XmlDocument.parse(menuResp.body);
-
-      final respuesta =
-          menuDoc.findAllElements('respuesta').map((e) => e.text).first;
-
-      final mensaje =
-          menuDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
-        final xmlString = menuDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
-
-        String res = Utils.convertXmlToJson(xmlString);
-
-        final Map<String, dynamic> decodedResp = json.decode(res);
-
-        final menuList = decodedResp.entries.first.value['Table'];
-
-        return List.from(menuList).map((e) => MenuModel.fromJson(e)).toList();
+        return decodedResp;
       } else {
         throw ServerFailure([mensaje]);
       }

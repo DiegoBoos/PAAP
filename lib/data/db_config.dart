@@ -1,9 +1,11 @@
 import 'dart:io';
 
-import 'package:paap/data/datasources/local/auth/auth_local_data_source.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'datasources/local/auth/auth_local_ds.dart';
+import 'datasources/local/menu/menu_local_ds.dart';
 
 class DBConfig {
   static Database? _database;
@@ -23,7 +25,7 @@ class DBConfig {
     _database = await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
       AuthLocalDataSourceImpl.createUserTable(db);
-      AuthLocalDataSourceImpl.createMenuTable(db);
+      MenuLocalDataSourceImpl.createMenuTable(db);
     });
 
     return _database!;

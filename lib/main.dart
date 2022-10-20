@@ -5,6 +5,7 @@ import 'package:paap/domain/blocs/auth/auth_bloc.dart';
 import 'package:paap/router.dart';
 import 'package:paap/ui/utils/background_colors.dart';
 
+import 'domain/blocs/perfiles/perfiles_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
 import 'domain/cubits/menu/menu_cubit.dart';
 import 'injection.dart' as di;
@@ -22,13 +23,16 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => di.locator<MenuCubit>(),
-          ),
-          BlocProvider(
             create: (_) => di.locator<InternetCubit>(),
           ),
           BlocProvider(
             create: (_) => di.locator<AuthBloc>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<MenuCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<PerfilesBloc>(),
           ),
         ],
         child: MaterialApp(

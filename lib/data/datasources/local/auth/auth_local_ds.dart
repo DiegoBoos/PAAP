@@ -1,4 +1,3 @@
-import 'package:paap/domain/entities/menu_entity.dart';
 import 'package:paap/domain/entities/usuario_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -6,9 +5,7 @@ import '../../../db_config.dart';
 
 abstract class AuthLocalDataSource {
   Future<List<Map<String, dynamic>>> logIn(String usuarioId, String contrasena);
-  Future<int> guardarUsuario(UsuarioEntity usuarioEntity);
-  Future<int> guardarMenu(List<MenuEntity> menuEntity);
-  Future<List<Map<String, dynamic>>> getMenuDB();
+  Future<int> saveUsuario(UsuarioEntity usuarioEntity);
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -32,24 +29,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     ''');
   }
 
-  static createMenuTable(Database db) async {
-    await db.execute('''
-      CREATE TABLE Menu(
-        MenuId TEXT NOT NULL,
-        Nombre TEXT,
-        Ruta TEXT,
-        Icono TEXT,
-        Orden TEXT,
-        MenuPadre	TEXT,
-        TipoMenuId TEXT NOT NULL,
-        FOREIGN KEY(TipoMenuId) REFERENCES TipoMenu(TipoMenuId),
-        PRIMARY KEY(MenuId)
-      )
-    ''');
-  }
-
   @override
-  Future<int> guardarUsuario(UsuarioEntity usuarioEntity) async {
+  Future<int> saveUsuario(UsuarioEntity usuarioEntity) async {
     final db = await DBConfig.database;
 
     await db.delete('Usuario',
@@ -64,8 +45,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       String usuarioId, String contrasena) async {
     final db = await DBConfig.database;
 
-    final res = await db.query(
-        'Usuario WHERE UsuarioId="$usuarioId" and Contrasena="$contrasena"');
+    final res = await db.query('Usuario',
+        where: 'UsuarioId = ? AND Contrasena = ?',
+        whereArgs: [usuarioId, contrasena]);
     return res;
   }
 
@@ -74,30 +56,5 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
     final res = await db.delete('UserAuth', where: 'id = ?', whereArgs: [id]);
     return res;
-  }
-
-  @override
-  Future<List<Map<String, dynamic>>> getMenuDB() async {
-    final db = await DBConfig.database;
-
-    final res = await db.query('Menu');
-
-    return res.toList();
-  }
-
-  @override
-  Future<int> guardarMenu(List<MenuEntity> menuEntity) async {
-    final db = await DBConfig.database;
-
-    var batch = db.batch();
-    batch.delete('Menu');
-
-    for (var menu in menuEntity) {
-      batch.insert('Menu', menu.toJson());
-    }
-
-    final res = await batch.commit();
-
-    return res.length;
   }
 }

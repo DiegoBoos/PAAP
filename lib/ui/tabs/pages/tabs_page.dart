@@ -43,15 +43,12 @@ class _TabsPageState extends State<TabsPage> {
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context, listen: false);
-
     final authBloc = BlocProvider.of<AuthBloc>(context, listen: false);
-
     final internetCubit = BlocProvider.of<InternetCubit>(context, listen: true);
 
     if (internetCubit.state is InternetConnected) {
-      menuCubit.getMenu(
-          usuarioId: authBloc.state.usuario!.usuarioId,
-          contrasena: authBloc.state.usuario!.contrasena);
+      menuCubit.getMenu(authBloc.state.usuario!.usuarioId,
+          authBloc.state.usuario!.contrasena);
     } else {
       menuCubit.getMenuDB();
     }

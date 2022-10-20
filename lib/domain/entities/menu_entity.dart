@@ -1,12 +1,4 @@
 class MenuEntity {
-  final String menuId;
-  final String nombre;
-  final String ruta;
-  final String icono;
-  final String orden;
-  final String menuPadre;
-  final String tipoMenuId;
-
   MenuEntity({
     required this.menuId,
     required this.nombre,
@@ -16,6 +8,14 @@ class MenuEntity {
     required this.menuPadre,
     required this.tipoMenuId,
   });
+
+  final String menuId;
+  final String nombre;
+  final String ruta;
+  final String icono;
+  final String orden;
+  final String menuPadre;
+  final String tipoMenuId;
 
   factory MenuEntity.fromJson(Map<String, dynamic> json) => MenuEntity(
         menuId: json["MenuId"],
