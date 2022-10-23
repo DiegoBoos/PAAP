@@ -7,7 +7,7 @@ import 'package:paap/ui/utils/background_colors.dart';
 
 import 'domain/blocs/perfiles/perfiles_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
-import 'domain/cubits/menu/menu_cubit.dart';
+import 'domain/blocs/menu/menu_bloc.dart';
 import 'injection.dart' as di;
 
 void main() {
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             create: (_) => di.locator<AuthBloc>(),
           ),
           BlocProvider(
-            create: (_) => di.locator<MenuCubit>(),
+            create: (_) => di.locator<MenuBloc>(),
           ),
           BlocProvider(
             create: (_) => di.locator<PerfilesBloc>(),

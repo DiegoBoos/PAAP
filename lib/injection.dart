@@ -6,7 +6,7 @@ import 'package:paap/data/datasources/remote/perfiles/perfiles_remote_ds.dart';
 import 'package:paap/data/repositories/menu/menu_repository.dart';
 import 'package:paap/data/repositories/perfiles/perfiles_repository.dart';
 import 'package:paap/domain/blocs/perfiles/perfiles_bloc.dart';
-import 'package:paap/domain/cubits/menu/menu_cubit.dart';
+import 'package:paap/domain/blocs/menu/menu_bloc.dart';
 import 'package:paap/domain/repositories/auth/auth_repository_db.dart';
 import 'package:paap/domain/repositories/menu/menu_repository.dart';
 import 'package:paap/domain/repositories/perfiles/perfiles_repository.dart';
@@ -37,7 +37,7 @@ final locator = GetIt.instance;
 void init() {
   internetCubitInit();
   authBlocInit();
-  menuCubitInit();
+  menuBlocInit();
   perfilesBlocInit();
   // external
   locator.registerLazySingleton(() => http.Client());
@@ -51,7 +51,6 @@ internetCubitInit() {
 authBlocInit() {
   // bloc
   locator.registerFactory(() => AuthBloc(
-        internetCubit: locator(),
         verificacion: locator(),
         verificacionDB: locator(),
       ));
@@ -89,7 +88,7 @@ authBlocInit() {
   );
 }
 
-menuCubitInit() {
+menuBlocInit() {
   // menu remote usecase
   locator.registerLazySingleton(() => MenuUsecase(locator()));
 
@@ -123,7 +122,7 @@ menuCubitInit() {
   );
 
   // bloc
-  locator.registerFactory(() => MenuCubit(menu: locator(), menuDB: locator()));
+  locator.registerFactory(() => MenuBloc(menu: locator(), menuDB: locator()));
 }
 
 perfilesBlocInit() {

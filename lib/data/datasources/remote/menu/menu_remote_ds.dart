@@ -5,10 +5,11 @@ import 'package:xml/xml.dart' as xml;
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
 import 'package:paap/domain/core/error/failure.dart';
+import '../../../models/menu_model.dart';
 import '../../../utils.dart';
 
 abstract class MenuRemoteDataSource {
-  Future<Map<String, dynamic>> getMenu(String usuarioId, String contrasena);
+  Future<List<MenuModel>> getMenu(String usuarioId, String contrasena);
 }
 
 class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
@@ -17,8 +18,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
   MenuRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<Map<String, dynamic>> getMenu(
-      String usuarioId, String contrasena) async {
+  Future<List<MenuModel>> getMenu(String usuarioId, String contrasena) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
@@ -68,7 +68,11 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        return decodedResp;
+        final menusRaw = decodedResp.entries.first.value['Table'];
+        final menus =
+            List.from(menusRaw).map((e) => MenuModel.fromJson(e)).toList();
+
+        return menus;
       } else {
         throw ServerFailure([mensaje]);
       }

@@ -15,11 +15,9 @@ class MenuRepositoryDBImpl implements MenuRepositoryDB {
   @override
   Future<Either<Failure, List<MenuEntity>>> getMenuRepositoryDB() async {
     try {
-      final menuDB = await menuLocalDataSource.getMenuDB();
-      final menuList =
-          List<MenuEntity>.from(menuDB.map((m) => MenuEntity.fromJson(m)));
+      final menusDB = await menuLocalDataSource.getMenuDB();
 
-      return Right(menuList);
+      return Right(menusDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

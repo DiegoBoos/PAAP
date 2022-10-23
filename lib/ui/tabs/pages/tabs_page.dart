@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/ui/perfiles/pages/perfiles_page.dart';
 
-import '../../../domain/blocs/auth/auth_bloc.dart';
-import '../../../domain/cubits/internet/internet_cubit.dart';
-import '../../../domain/cubits/menu/menu_cubit.dart';
-
+import '../../../domain/blocs/menu/menu_bloc.dart';
 import '../../alianzas/pages/alianzas_page.dart';
+import '../../perfiles/pages/perfiles_page.dart';
 import '../../preinversion/pages/preinversion_page.dart';
 import 'home_page.dart';
 
@@ -36,49 +33,34 @@ class _TabsPageState extends State<TabsPage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final menuCubit = BlocProvider.of<MenuCubit>(context, listen: false);
-    final authBloc = BlocProvider.of<AuthBloc>(context, listen: false);
-    final internetCubit = BlocProvider.of<InternetCubit>(context, listen: true);
-
-    if (internetCubit.state is InternetConnected) {
-      menuCubit.getMenu(authBloc.state.usuario!.usuarioId,
-          authBloc.state.usuario!.contrasena);
-    } else {
-      menuCubit.getMenuDB();
-    }
-
     return Scaffold(
-        body: _widgetOptions.elementAt(_selectedIndex),
-        bottomNavigationBar: BlocBuilder<MenuCubit, MenuState>(
-          builder: (context, state) {
-            if (state is MenuLoaded) {
-              final menuPadre = menuCubit.state.menuPadre!.toList();
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BlocBuilder<MenuBloc, MenuState>(
+        builder: (context, state) {
+          if (state is MenuLoaded) {
+            final menuPadre = state.menuPadre!.toList();
 
-              return BottomNavigationBar(
-                  type: BottomNavigationBarType.fixed,
-                  currentIndex: _selectedIndex,
-                  onTap: _onItemTapped,
-                  items: menuPadre
-                      .map((menuItem) => BottomNavigationBarItem(
-                          icon: Icon(setIcon(menuItem.menuId)),
-                          label: menuItem.nombre))
-                      .toList());
-            } else if (state is MenuError) {
-              return Text(state.message);
-            }
-            return Container(
-              alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.only(bottom: 10),
-              child: const CircularProgressIndicator(),
-            );
-          },
-        ));
+            return BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                currentIndex: _selectedIndex,
+                onTap: _onItemTapped,
+                items: menuPadre
+                    .map((menuItem) => BottomNavigationBarItem(
+                        icon: Icon(setIcon(menuItem.menuId)),
+                        label: menuItem.nombre))
+                    .toList());
+          } else if (state is MenuError) {
+            return Text(state.message);
+          }
+          return Container(
+            alignment: Alignment.bottomCenter,
+            padding: const EdgeInsets.only(bottom: 30),
+            child: const CircularProgressIndicator(),
+          );
+        },
+      ),
+    );
   }
 
   void _onItemTapped(int index) {

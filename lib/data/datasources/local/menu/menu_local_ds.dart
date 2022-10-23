@@ -1,10 +1,11 @@
+import 'package:paap/data/models/menu_model.dart';
 import 'package:paap/domain/entities/menu_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../db_config.dart';
 
 abstract class MenuLocalDataSource {
-  Future<List<Map<String, dynamic>>> getMenuDB();
+  Future<List<MenuModel>> getMenuDB();
   Future<int> saveMenu(List<MenuEntity> menuEntity);
 }
 
@@ -26,12 +27,15 @@ class MenuLocalDataSourceImpl implements MenuLocalDataSource {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getMenuDB() async {
+  Future<List<MenuModel>> getMenuDB() async {
     final db = await DBConfig.database;
 
     final res = await db.query('Menu');
 
-    return res.toList();
+    final menusDB =
+        List<MenuModel>.from(res.map((m) => MenuModel.fromJson(m))).toList();
+
+    return menusDB;
   }
 
   @override

@@ -5,7 +5,6 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/repositories/auth/auth_repository.dart';
 import '../../datasources/remote/auth/auth_remote_ds.dart';
-import '../../models/usuario_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSource;
@@ -16,10 +15,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, UsuarioEntity>> verificacionRepository(
       String usuarioId, String contrasena) async {
     try {
-      final result =
+      final usuario =
           await authRemoteDataSource.verificacion(usuarioId, contrasena);
-
-      final usuario = UsuarioModel.fromJson(result['objeto']);
 
       return Right(usuario);
     } on ServerFailure catch (e) {

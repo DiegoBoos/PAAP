@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:paap/data/models/usuario_model.dart';
 import 'package:xml/xml.dart' as xml;
 
 import '../../../constants.dart';
@@ -8,8 +9,7 @@ import 'package:paap/domain/core/error/failure.dart';
 import '../../../utils.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<Map<String, dynamic>> verificacion(
-      String usuarioId, String contrasena);
+  Future<UsuarioModel> verificacion(String usuarioId, String contrasena);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -18,8 +18,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<Map<String, dynamic>> verificacion(
-      String usuarioId, String contrasena) async {
+  Future<UsuarioModel> verificacion(String usuarioId, String contrasena) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
@@ -61,7 +60,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  Future<Map<String, dynamic>> consultarUsuario(
+  Future<UsuarioModel> consultarUsuario(
       Uri uri, String usuarioId, String contrasena) async {
     final consultarUsuarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -110,7 +109,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
         final decodedResp = json.decode(res);
 
-        return decodedResp;
+        final usuario = UsuarioModel.fromJson(decodedResp['objeto']);
+
+        return usuario;
       } else {
         throw ServerFailure([mensaje]);
       }

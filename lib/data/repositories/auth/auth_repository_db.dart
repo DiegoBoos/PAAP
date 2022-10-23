@@ -28,11 +28,8 @@ class AuthRepositoryDBImpl implements AuthRepositoryDB {
   Future<Either<Failure, UsuarioEntity?>> verificacionRepositoryDB(
       String usuarioId, String contrasena) async {
     try {
-      final result = await authLocalDataSource.logIn(usuarioId, contrasena);
-      if (result.isEmpty) return const Right(null);
+      final usuario = await authLocalDataSource.logIn(usuarioId, contrasena);
 
-      final usuarioMap = {for (var e in result[0].entries) e.key: e.value};
-      final usuario = UsuarioEntity.fromJson(usuarioMap);
       return Right(usuario);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));

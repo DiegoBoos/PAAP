@@ -3,7 +3,7 @@ class MenuEntity {
     required this.menuId,
     required this.nombre,
     required this.ruta,
-    required this.icono,
+    this.icono,
     required this.orden,
     required this.menuPadre,
     required this.tipoMenuId,
@@ -12,7 +12,7 @@ class MenuEntity {
   final String menuId;
   final String nombre;
   final String ruta;
-  final String icono;
+  final String? icono;
   final String orden;
   final String menuPadre;
   final String tipoMenuId;

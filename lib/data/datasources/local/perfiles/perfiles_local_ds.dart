@@ -1,13 +1,13 @@
-import 'package:paap/domain/entities/perfil_entity.dart';
+import 'package:paap/data/models/perfiles_model.dart';
+import 'package:paap/domain/entities/perfiles_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../db_config.dart';
 
 abstract class PerfilesLocalDataSource {
-  Future<List<Map<String, dynamic>>> getPerfilesDB();
-  Future<List<Map<String, dynamic>>> getPerfilesFiltrosDB(
-      String id, String nombre);
-  Future<int> savePerfiles(List<PerfilEntity> perfiles);
+  Future<List<PerfilesModel>> getPerfilesDB();
+  Future<List<PerfilesModel>> getPerfilesFiltrosDB(String id, String nombre);
+  Future<int> savePerfilesDB(List<PerfilesEntity> perfilesEntity);
 }
 
 class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
@@ -111,32 +111,40 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getPerfilesDB() async {
+  Future<List<PerfilesModel>> getPerfilesDB() async {
     final db = await DBConfig.database;
 
     final res = await db.query('Perfil');
 
-    return res.toList();
+    final perfilesDB =
+        List<PerfilesModel>.from(res.map((m) => PerfilesModel.fromJson(m)))
+            .toList();
+
+    return perfilesDB;
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getPerfilesFiltrosDB(
+  Future<List<PerfilesModel>> getPerfilesFiltrosDB(
       String id, String nombre) async {
     final db = await DBConfig.database;
 
     final res = await db.query('Perfil');
 
-    return res.toList();
+    final perfilesDB =
+        List<PerfilesModel>.from(res.map((m) => PerfilesModel.fromJson(m)))
+            .toList();
+
+    return perfilesDB;
   }
 
   @override
-  Future<int> savePerfiles(List<PerfilEntity> perfilEntity) async {
+  Future<int> savePerfilesDB(List<PerfilesEntity> perfilesEntity) async {
     final db = await DBConfig.database;
 
     var batch = db.batch();
     batch.delete('Perfil');
 
-    for (var perfil in perfilEntity) {
+    for (var perfil in perfilesEntity) {
       batch.insert('Perfil', perfil.toJson());
     }
 

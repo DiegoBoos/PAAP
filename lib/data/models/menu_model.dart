@@ -5,7 +5,7 @@ class MenuModel extends MenuEntity {
       {required String menuId,
       required String nombre,
       required String ruta,
-      required String icono,
+      String? icono,
       required String orden,
       required String menuPadre,
       required String tipoMenuId})

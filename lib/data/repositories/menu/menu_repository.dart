@@ -6,7 +6,6 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/repositories/menu/menu_repository.dart';
 import '../../datasources/remote/menu/menu_remote_ds.dart';
-import '../../models/menu_model.dart';
 
 class MenuRepositoryImpl implements MenuRepository {
   final MenuRemoteDataSource menuRemoteDataSource;
@@ -17,13 +16,9 @@ class MenuRepositoryImpl implements MenuRepository {
   Future<Either<Failure, List<MenuEntity>>> getMenuRepository(
       String usuarioId, String contrasena) async {
     try {
-      final result = await menuRemoteDataSource.getMenu(usuarioId, contrasena);
+      final menus = await menuRemoteDataSource.getMenu(usuarioId, contrasena);
 
-      final menuRawList = result.entries.first.value['Table'];
-      final menuList =
-          List.from(menuRawList).map((e) => MenuModel.fromJson(e)).toList();
-
-      return Right(menuList);
+      return Right(menus);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

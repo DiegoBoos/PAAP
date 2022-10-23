@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:paap/domain/cubits/internet/internet_cubit.dart';
+
 import 'package:paap/domain/usecases/auth/verificacion_usecase.dart';
 import 'package:paap/domain/usecases/auth/verificacion_db_usecase.dart';
 import '../../entities/usuario_entity.dart';
@@ -9,23 +9,20 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final InternetCubit internetCubit;
-
   final VerificacionUsecase verificacion;
   final VerificacionUsecaseDB verificacionDB;
 
   AuthBloc({
-    required this.internetCubit,
     required this.verificacion,
     required this.verificacionDB,
   }) : super(AuthInitial()) {
     on<LogIn>((event, emit) async {
       if (event.isOffline) {
         emit(AuthLoading());
-        await _logInOffline(event, emit);
+        await _logInDB(event, emit);
       } else {
         emit(AuthLoading());
-        await _logInOnline(event, emit);
+        await _logIn(event, emit);
       }
     });
 
@@ -34,7 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
-  _logInOnline(event, emit) async {
+  _logIn(event, emit) async {
     final usuarioId = event.usuarioId;
     final contrasena = event.contrasena;
 
@@ -42,13 +39,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await verificacion.verificacionUsecase(usuarioId!, contrasena!);
     result.fold((failure) {
       emit(AuthError(failure.properties.first));
-    }, (data) {
+    }, (data) async {
       emit(AuthLoaded(data));
-      saveUsuario(data, emit);
+      await _saveUsuario(data, emit);
     });
   }
 
-  _logInOffline(event, emit) async {
+  _logInDB(event, emit) async {
     final usuarioId = event.usuarioId;
     final contrasena = event.contrasena;
 
@@ -63,7 +60,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
-  saveUsuario(UsuarioEntity data, emit) async {
+  _saveUsuario(UsuarioEntity data, emit) async {
     final result = await verificacionDB.saveUsuarioUsecaseDB(data);
     result.fold((failure) {
       emit(AuthError(failure.properties.first));

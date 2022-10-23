@@ -1,10 +1,11 @@
+import 'package:paap/data/models/usuario_model.dart';
 import 'package:paap/domain/entities/usuario_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../db_config.dart';
 
 abstract class AuthLocalDataSource {
-  Future<List<Map<String, dynamic>>> logIn(String usuarioId, String contrasena);
+  Future<UsuarioModel?> logIn(String usuarioId, String contrasena);
   Future<int> saveUsuario(UsuarioEntity usuarioEntity);
 }
 
@@ -41,14 +42,18 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> logIn(
-      String usuarioId, String contrasena) async {
+  Future<UsuarioModel?> logIn(String usuarioId, String contrasena) async {
     final db = await DBConfig.database;
 
     final res = await db.query('Usuario',
         where: 'UsuarioId = ? AND Contrasena = ?',
         whereArgs: [usuarioId, contrasena]);
-    return res;
+
+    if (res.isEmpty) return null;
+
+    final usuarioMap = {for (var e in res[0].entries) e.key: e.value};
+    final usuario = UsuarioModel.fromJson(usuarioMap);
+    return usuario;
   }
 
   Future<int> logOut(int id) async {

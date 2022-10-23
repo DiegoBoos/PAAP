@@ -1,24 +1,36 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:paap/domain/entities/menu_entity.dart';
+
+import '../../entities/menu_entity.dart';
 import '../../usecases/menu/menu_db_usecase.dart';
 import '../../usecases/menu/menu_usecase.dart';
 
+part 'menu_event.dart';
 part 'menu_state.dart';
 
-class MenuCubit extends Cubit<MenuState> {
+class MenuBloc extends Bloc<MenuEvent, MenuState> {
   final MenuUsecase menu;
   final MenuUsecaseDB menuDB;
 
-  MenuCubit({required this.menu, required this.menuDB})
-      : super(const MenuLoading());
+  MenuBloc({required this.menu, required this.menuDB}) : super(MenuInitial()) {
+    on<GetMenus>((event, emit) async {
+      if (event.isOffline) {
+        emit(MenuLoading());
+        await _getMenuDB(event, emit);
+      } else {
+        emit(MenuLoading());
+        await _getMenu(event, emit);
+      }
+    });
+  }
+  _getMenu(event, emit) async {
+    final usuarioId = event.usuarioId;
+    final contrasena = event.contrasena;
 
-  getMenu(String usuarioId, String contrasena) async {
     final result = await menu.getMenuUsecase(usuarioId, contrasena);
     result.fold((failure) {
       emit(MenuError(failure.properties.first));
     }, (data) async {
-      await menuDB.saveMenuUsecaseDB(data);
       final menuPadre = data
           .where((menu) =>
               menu.tipoMenuId == '1' &&
@@ -42,10 +54,11 @@ class MenuCubit extends Cubit<MenuState> {
       });
 
       emit(MenuLoaded(menuPadre, menuHijo));
+      await menuDB.saveMenuUsecaseDB(data);
     });
   }
 
-  getMenuDB() async {
+  _getMenuDB(event, emit) async {
     final result = await menuDB.getMenuUsecaseDB();
     result.fold((failure) {
       emit(MenuError(failure.properties.first));
