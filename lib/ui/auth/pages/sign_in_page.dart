@@ -6,6 +6,7 @@ import 'package:paap/ui/utils/input_decoration.dart';
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/menu/menu_bloc.dart';
 import '../../../domain/cubits/internet/internet_cubit.dart';
+import '../../utils/all_platform.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/validators/form_validators.dart';
 import '../widgets/auth_background.dart';
@@ -16,6 +17,10 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localCaptchaController = LocalCaptchaController();
+    var inputCode = '';
+    final configFormData = ConfigFormData();
+
     return Scaffold(
       body: AuthBackground(
         child: SingleChildScrollView(
@@ -28,6 +33,64 @@ class SignInPage extends StatelessWidget {
                   const SizedBox(height: 10.0),
                   Text('Iniciar sesión',
                       style: Theme.of(context).textTheme.headline4),
+                  LocalCaptcha(
+                    key: ValueKey(configFormData.toString()),
+                    controller: localCaptchaController,
+                    height: 150,
+                    width: 300,
+                    backgroundColor: Colors.grey[100]!,
+                    chars: configFormData.chars,
+                    length: configFormData.length,
+                    fontSize: configFormData.fontSize > 0
+                        ? configFormData.fontSize
+                        : null,
+                    caseSensitive: configFormData.caseSensitive,
+                    codeExpireAfter: configFormData.codeExpireAfter,
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Escriba el texto',
+                      hintText: 'Escriba el texto',
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value != null && value.isNotEmpty) {
+                        if (value.length != configFormData.length) {
+                          return '* Code must be length of ${configFormData.length}.';
+                        }
+
+                        final validation =
+                            localCaptchaController.validate(value);
+
+                        switch (validation) {
+                          case LocalCaptchaValidation.invalidCode:
+                            return '* Código incorrecto.';
+                          case LocalCaptchaValidation.codeExpired:
+                            return '* Código expirado.';
+                          case LocalCaptchaValidation.valid:
+                          default:
+                            return null;
+                        }
+                      }
+
+                      return '* Requerido.';
+                    },
+                    onSaved: (value) => inputCode = value ?? '',
+                  ),
+                  const SizedBox(height: 16.0),
+                  SizedBox(
+                    height: 40.0,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => localCaptchaController.refresh(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueGrey,
+                      ),
+                      child: const Text('RECAPTCHA'),
+                    ),
+                  ),
                   const SignInForm(),
                   const NetworkIcon(),
                 ],
@@ -79,6 +142,7 @@ class _SignInFormState extends State<SignInForm> {
     final internetCubit = BlocProvider.of<InternetCubit>(context);
     final menuBloc = BlocProvider.of<MenuBloc>(context);
     final formKey = GlobalKey<FormState>();
+    final captchaFormKey = GlobalKey<FormState>();
 
     return Form(
       key: formKey,
@@ -144,6 +208,9 @@ class _SignInFormState extends State<SignInForm> {
                 onPressed: authBloc.state is AuthLoading
                     ? null
                     : () {
+                        if (captchaFormKey.currentState?.validate() ?? false) {
+                          captchaFormKey.currentState!.save();
+                        }
                         if (!formKey.currentState!.validate()) return;
 
                         if (internetCubit.state is InternetConnected) {
@@ -171,5 +238,18 @@ class _SignInFormState extends State<SignInForm> {
         ],
       ),
     );
+  }
+}
+
+class ConfigFormData {
+  String chars = 'abdefghnryABDEFGHNQRY3468';
+  int length = 5;
+  double fontSize = 0;
+  bool caseSensitive = false;
+  Duration codeExpireAfter = const Duration(minutes: 10);
+
+  @override
+  String toString() {
+    return '$chars$length$caseSensitive${codeExpireAfter.inMinutes}';
   }
 }
