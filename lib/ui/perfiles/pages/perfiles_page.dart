@@ -6,6 +6,7 @@ import 'package:paap/ui/utils/no_data_svg.dart';
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
 import '../../../domain/blocs/menu/menu_bloc.dart';
+import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/entities/menu_entity.dart';
 import '../../../domain/entities/perfiles_entity.dart';
 import '../../utils/custom_drawer.dart';
@@ -46,8 +47,17 @@ class _PerfilesPageState extends State<PerfilesPage> {
     final usuarioId = authBloc.state.usuario!.usuarioId;
     final contrasena = authBloc.state.usuario!.contrasena;
 
+    final internetCubit = BlocProvider.of<InternetCubit>(context);
+
     final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
-    perfilesBloc.add(GetPerfiles(usuarioId: usuarioId, contrasena: contrasena));
+
+    if (internetCubit.state is InternetConnected) {
+      perfilesBloc
+          .add(GetPerfiles(usuarioId: usuarioId, contrasena: contrasena));
+    } else if (internetCubit.state is InternetDisconnected) {
+      perfilesBloc.add(GetPerfiles(
+          usuarioId: usuarioId, contrasena: contrasena, isOffline: true));
+    }
   }
 
   List<MenuEntity> menuPerfiles = [];

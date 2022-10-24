@@ -7,6 +7,6 @@ abstract class PerfilesRepositoryDB {
   Future<Either<Failure, List<PerfilesEntity>>> getPerfilesRepositoryDB();
   Future<Either<Failure, List<PerfilesEntity>>> getPerfilesFiltrosRepositoryDB(
       String? id, String? nombre);
-  /*  Future<Either<Failure, int>> savePerfilesRepositoryDB(
-      List<PerfilesEntity> perfiles); */
+  Future<Either<Failure, int>> savePerfilesRepositoryDB(
+      List<PerfilesEntity> perfiles);
 }

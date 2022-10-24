@@ -18,7 +18,7 @@ class PerfilesUsecaseDB {
     return repositoryDB.getPerfilesFiltrosRepositoryDB(id ?? '', nombre ?? '');
   }
 
-  /*  Future<Either<Failure, int>> savePerfilesDB(List<PerfilesEntity> perfiles) {
+  Future<Either<Failure, int>> savePerfilesDB(List<PerfilesEntity> perfiles) {
     return repositoryDB.savePerfilesRepositoryDB(perfiles);
-  } */
+  }
 }

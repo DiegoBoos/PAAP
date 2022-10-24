@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:paap/data/datasources/local/perfiles/perfiles_local_ds.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -20,12 +21,13 @@ class DBConfig {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
 
     final path = join(documentDirectory.path, 'paap.db');
-    //print(path);
+    print(path);
     //Crear base de datos
     _database = await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
       AuthLocalDataSourceImpl.createUserTable(db);
       MenuLocalDataSourceImpl.createMenuTable(db);
+      PerfilesLocalDataSourceImpl.createSchemaPerfil(db);
     });
 
     return _database!;

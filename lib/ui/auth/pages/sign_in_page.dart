@@ -67,8 +67,10 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
-  TextEditingController usuarioIdCtrl = TextEditingController();
-  TextEditingController contrasenaCtrl = TextEditingController();
+  TextEditingController usuarioIdCtrl =
+      TextEditingController(text: 'adamariatorrenegra@hotmail.com');
+  TextEditingController contrasenaCtrl =
+      TextEditingController(text: 'UHJvZGVzYXJyb2xsbzIxKg==');
   bool eyeToggle = false;
 
   @override
@@ -121,9 +123,16 @@ class _SignInFormState extends State<SignInForm> {
           BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthLoaded) {
-                menuBloc.add(GetMenus(
-                    usuarioId: state.usuarioAutenticado!.usuarioId,
-                    contrasena: state.usuarioAutenticado!.contrasena));
+                if (internetCubit.state is InternetConnected) {
+                  menuBloc.add(GetMenus(
+                      usuarioId: state.usuarioAutenticado!.usuarioId,
+                      contrasena: state.usuarioAutenticado!.contrasena));
+                } else if (internetCubit.state is InternetDisconnected) {
+                  menuBloc.add(GetMenus(
+                      usuarioId: state.usuarioAutenticado!.usuarioId,
+                      contrasena: state.usuarioAutenticado!.contrasena,
+                      isOffline: true));
+                }
               }
             },
             child: MaterialButton(

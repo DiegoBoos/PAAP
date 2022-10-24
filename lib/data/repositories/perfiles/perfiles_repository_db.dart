@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:paap/data/models/perfiles_model.dart';
 
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
@@ -13,8 +14,7 @@ class PerfilesRepositoryDBImpl implements PerfilesRepositoryDB {
   PerfilesRepositoryDBImpl({required this.perfilesLocalDataSource});
 
   @override
-  Future<Either<Failure, List<PerfilesEntity>>>
-      getPerfilesRepositoryDB() async {
+  Future<Either<Failure, List<PerfilesModel>>> getPerfilesRepositoryDB() async {
     try {
       final perfilesDB = await perfilesLocalDataSource.getPerfilesDB();
 
@@ -27,7 +27,7 @@ class PerfilesRepositoryDBImpl implements PerfilesRepositoryDB {
   }
 
   @override
-  Future<Either<Failure, List<PerfilesEntity>>> getPerfilesFiltrosRepositoryDB(
+  Future<Either<Failure, List<PerfilesModel>>> getPerfilesFiltrosRepositoryDB(
       String? id, String? nombre) async {
     try {
       final perfilesDB = await perfilesLocalDataSource.getPerfilesDB();
@@ -40,10 +40,16 @@ class PerfilesRepositoryDBImpl implements PerfilesRepositoryDB {
     }
   }
 
-  /* @override
+  @override
   Future<Either<Failure, int>> savePerfilesRepositoryDB(
-      List<PerfilesEntity> perfiles) {
-    // TODO: implement savePerfilesRepositoryDB
-    throw UnimplementedError();
-  } */
+      List<PerfilesEntity> perfiles) async {
+    try {
+      final perfilesDB = await perfilesLocalDataSource.savePerfilesDB(perfiles);
+      return Right(perfilesDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }
