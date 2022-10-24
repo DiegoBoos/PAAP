@@ -105,8 +105,8 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
       </rol>
       <parametros>
         <string>TablaPerfilFiltros</string>        
-        <string>$id</string>        
         <string>$nombre</string>        
+        <string>$id</string>        
       </parametros>
     </ObtenerDatos>
   </soap:Body>
@@ -141,7 +141,9 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final perfilesRaw = decodedResp.entries.first.value['Table'];
+        final perfilesRaw = decodedResp.entries.length > 1
+            ? decodedResp.entries.first.value['Table']
+            : decodedResp.entries.last.value['Table'];
 
         final perfiles = List.from(perfilesRaw)
             .map((e) => PerfilesModel.fromJson(e))

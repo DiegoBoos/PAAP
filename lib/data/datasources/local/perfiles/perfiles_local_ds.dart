@@ -1,5 +1,3 @@
-import 'package:paap/data/models/perfil_model.dart';
-import 'package:paap/domain/entities/perfil_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../../domain/entities/perfiles_entity.dart';
@@ -8,8 +6,7 @@ import '../../../models/perfiles_model.dart';
 
 abstract class PerfilesLocalDataSource {
   Future<List<PerfilesModel>> getPerfilesDB();
-  Future<List<Map<String, dynamic>>> getPerfilesFiltrosDB(
-      String id, String nombre);
+  Future<List<PerfilesModel>> getPerfilesFiltrosDB(String id, String nombre);
   Future<int> savePerfilesDB(List<PerfilesEntity> perfiles);
 }
 
@@ -132,13 +129,19 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getPerfilesFiltrosDB(
+  Future<List<PerfilesModel>> getPerfilesFiltrosDB(
       String id, String nombre) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('Perfiles');
+    final res = await db.query('Perfiles',
+        where: 'ID LIKE ? AND Nombre LIKE ?',
+        whereArgs: ['%$id%', '%$nombre%']);
 
-    return res.toList();
+    final perfilesDB =
+        List<PerfilesModel>.from(res.map((m) => PerfilesModel.fromJson(m)))
+            .toList();
+
+    return perfilesDB;
   }
 
   @override

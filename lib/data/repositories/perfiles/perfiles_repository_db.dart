@@ -30,7 +30,8 @@ class PerfilesRepositoryDBImpl implements PerfilesRepositoryDB {
   Future<Either<Failure, List<PerfilesModel>>> getPerfilesFiltrosRepositoryDB(
       String? id, String? nombre) async {
     try {
-      final perfilesDB = await perfilesLocalDataSource.getPerfilesDB();
+      final perfilesDB =
+          await perfilesLocalDataSource.getPerfilesFiltrosDB(id!, nombre!);
 
       return Right(perfilesDB);
     } on ServerFailure catch (e) {

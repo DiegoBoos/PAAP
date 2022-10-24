@@ -79,13 +79,10 @@ class PerfilesBloc extends Bloc<PerfilesEvent, PerfilesState> {
   }
 
   _getPerfilesFiltrosOffline(event, emit) async {
-    final usuarioId = event.usuarioId;
-    final contrasena = event.contrasena;
     final id = event.id;
-    final nombre = event.contrasena;
+    final nombre = event.nombre;
 
-    final result = await perfiles.getPerfilesFiltrosUsecase(
-        usuarioId, contrasena, id, nombre);
+    final result = await perfilesDB.getPerfilesFiltrosUsecaseDB(id, nombre);
     result.fold((failure) {
       emit(PerfilesError(failure.properties.first));
     }, (data) {
