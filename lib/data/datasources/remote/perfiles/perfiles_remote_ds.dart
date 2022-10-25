@@ -141,15 +141,17 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final perfilesRaw = decodedResp.entries.length > 1
-            ? decodedResp.entries.first.value['Table']
-            : decodedResp.entries.last.value['Table'];
+        final perfilesRaw = decodedResp.entries.first.value['Table'];
 
-        final perfiles = List.from(perfilesRaw)
-            .map((e) => PerfilesModel.fromJson(e))
-            .toList();
+        if (perfilesRaw is List) {
+          final perfiles = List.from(perfilesRaw)
+              .map((e) => PerfilesModel.fromJson(e))
+              .toList();
 
-        return perfiles;
+          return perfiles;
+        } else {
+          return [PerfilesModel.fromJson(perfilesRaw)];
+        }
       } else {
         throw ServerFailure([mensaje]);
       }
