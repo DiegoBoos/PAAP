@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paap/domain/blocs/auth/auth_bloc.dart';
 
 import 'package:paap/router.dart';
-import 'package:paap/ui/utils/background_colors.dart';
+import 'package:paap/ui/utils/styles.dart';
 
 import 'domain/blocs/perfiles/perfiles_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
             routes: AppRouter.routes,
             theme: ThemeData(
                 colorScheme: ColorScheme.fromSwatch().copyWith(
-                    primary: TabsUtils.lightGreen,
-                    secondary: TabsUtils.obscureGreen))));
+                    primary: Styles.lightGreen,
+                    secondary: Styles.obscureGreen))));
   }
 }

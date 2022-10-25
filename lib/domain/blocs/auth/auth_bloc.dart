@@ -32,11 +32,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   _logIn(event, emit) async {
-    final usuarioId = event.usuarioId;
-    final contrasena = event.contrasena;
+    final usuario = event.usuario;
 
-    final result =
-        await verificacion.verificacionUsecase(usuarioId!, contrasena!);
+    final result = await verificacion.verificacionUsecase(usuario);
     result.fold((failure) {
       emit(AuthError(failure.properties.first));
     }, (data) async {
@@ -46,11 +44,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   _logInDB(event, emit) async {
-    final usuarioId = event.usuarioId;
-    final contrasena = event.contrasena;
+    final usuario = event.usuario;
 
-    final result =
-        await verificacionDB.verificacionUsecaseDB(usuarioId, contrasena);
+    final result = await verificacionDB.verificacionUsecaseDB(usuario);
     result.fold((failure) {
       emit(AuthError(failure.properties.first));
     }, (data) {

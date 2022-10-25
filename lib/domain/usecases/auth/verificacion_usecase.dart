@@ -10,7 +10,7 @@ class VerificacionUsecase {
   VerificacionUsecase(this.repository);
 
   Future<Either<Failure, UsuarioEntity>> verificacionUsecase(
-      String usuarioId, String contrasena) {
-    return repository.verificacionRepository(usuarioId, contrasena);
+      UsuarioEntity usuario) {
+    return repository.verificacionRepository(usuario);
   }
 }

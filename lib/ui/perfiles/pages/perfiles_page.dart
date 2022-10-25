@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paap/ui/utils/network_icon.dart';
 import 'package:paap/ui/utils/no_data_svg.dart';
+import 'package:paap/ui/utils/styles.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
@@ -44,19 +45,14 @@ class _PerfilesPageState extends State<PerfilesPage> {
 
   void getPerfiles() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    final usuarioId = authBloc.state.usuario!.usuarioId;
-    final contrasena = authBloc.state.usuario!.contrasena;
-
     final internetCubit = BlocProvider.of<InternetCubit>(context);
-
     final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
 
     if (internetCubit.state is InternetConnected) {
-      perfilesBloc
-          .add(GetPerfiles(usuarioId: usuarioId, contrasena: contrasena));
+      perfilesBloc.add(GetPerfiles(usuario: authBloc.state.usuario!));
     } else if (internetCubit.state is InternetDisconnected) {
-      perfilesBloc.add(GetPerfiles(
-          usuarioId: usuarioId, contrasena: contrasena, isOffline: true));
+      perfilesBloc
+          .add(GetPerfiles(usuario: authBloc.state.usuario!, isOffline: true));
     }
   }
 
@@ -75,8 +71,6 @@ class _PerfilesPageState extends State<PerfilesPage> {
 
   @override
   Widget build(BuildContext context) {
-    const titleStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.w500);
-    const subtitleStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w400);
     return Scaffold(
         appBar: AppBar(title: const Text('Perfiles'), actions: const [
           Padding(
@@ -94,7 +88,7 @@ class _PerfilesPageState extends State<PerfilesPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('PERFILES', style: titleStyle),
+                const Text('PERFILES', style: Styles.titleStyle),
                 filtersDropdown(context),
               ],
             ),
@@ -102,7 +96,7 @@ class _PerfilesPageState extends State<PerfilesPage> {
           const SizedBox(height: 20),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text('Consulta', style: subtitleStyle),
+            child: Text('Consulta', style: Styles.subtitleStyle),
           ),
           const SizedBox(height: 20),
           if (showCard) SearchCard(enableId: enableId, enableName: enableName),
@@ -120,7 +114,7 @@ class _PerfilesPageState extends State<PerfilesPage> {
                           Center(child: NoDataSvg(title: 'No hay resultados')));
                 }
                 return PerfilesRows(
-                    perfiles: perfiles, subtitleStyle: subtitleStyle);
+                    perfiles: perfiles, subtitleStyle: Styles.subtitleStyle);
               }
               return const SizedBox();
             },

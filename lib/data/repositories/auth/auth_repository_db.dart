@@ -26,11 +26,11 @@ class AuthRepositoryDBImpl implements AuthRepositoryDB {
 
   @override
   Future<Either<Failure, UsuarioEntity?>> verificacionRepositoryDB(
-      String usuarioId, String contrasena) async {
+      UsuarioEntity usuario) async {
     try {
-      final usuario = await authLocalDataSource.logIn(usuarioId, contrasena);
+      final usuarioEntity = await authLocalDataSource.logIn(usuario);
 
-      return Right(usuario);
+      return Right(usuarioEntity);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

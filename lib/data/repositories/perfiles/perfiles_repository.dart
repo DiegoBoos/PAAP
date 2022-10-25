@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:paap/domain/entities/perfil_entity.dart';
 import 'package:paap/domain/entities/perfiles_entity.dart';
+import 'package:paap/domain/entities/usuario_entity.dart';
 
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
@@ -14,10 +16,9 @@ class PerfilesRepositoryImpl implements PerfilesRepository {
 
   @override
   Future<Either<Failure, List<PerfilesEntity>>> getPerfilesRepository(
-      String usuarioId, String contrasena) async {
+      UsuarioEntity usuario) async {
     try {
-      final perfiles =
-          await perfilRemoteDataSource.getPerfiles(usuarioId, contrasena);
+      final perfiles = await perfilRemoteDataSource.getPerfiles(usuario);
 
       return Right(perfiles);
     } on ServerFailure catch (e) {
@@ -29,12 +30,26 @@ class PerfilesRepositoryImpl implements PerfilesRepository {
 
   @override
   Future<Either<Failure, List<PerfilesEntity>>> getPerfilesFiltrosRepository(
-      String usuarioId, String contrasena, String? id, String? nombre) async {
+      UsuarioEntity usuario, String? id, String? nombre) async {
     try {
       final perfiles = await perfilRemoteDataSource.getPerfilesFiltros(
-          usuarioId, contrasena, id ?? '', nombre ?? '');
+          usuario, id ?? '', nombre ?? '');
 
       return Right(perfiles);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PerfilEntity>> getPerfilRepository(
+      UsuarioEntity usuario, String perfilId) async {
+    try {
+      final perfil = await perfilRemoteDataSource.getPerfil(usuario, perfilId);
+
+      return Right(perfil);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

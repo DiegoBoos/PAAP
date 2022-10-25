@@ -85,9 +85,6 @@ class SearchCard extends StatelessWidget {
                           if (_formKey.currentState!.validate()) {
                             final authBloc = BlocProvider.of<AuthBloc>(context,
                                 listen: false);
-                            final usuarioId = authBloc.state.usuario!.usuarioId;
-                            final contrasena =
-                                authBloc.state.usuario!.contrasena;
 
                             final perfilesBloc = BlocProvider.of<PerfilesBloc>(
                                 context,
@@ -95,15 +92,13 @@ class SearchCard extends StatelessWidget {
 
                             if (internetCubit.state is InternetConnected) {
                               perfilesBloc.add(GetPerfilesFiltros(
-                                  usuarioId: usuarioId,
-                                  contrasena: contrasena,
+                                  usuario: authBloc.state.usuario!,
                                   id: idCtrl.text,
                                   nombre: nameCtrl.text));
                             } else if (internetCubit.state
                                 is InternetDisconnected) {
                               perfilesBloc.add(GetPerfilesFiltros(
-                                  usuarioId: usuarioId,
-                                  contrasena: contrasena,
+                                  usuario: authBloc.state.usuario!,
                                   id: idCtrl.text,
                                   nombre: nameCtrl.text,
                                   isOffline: true));

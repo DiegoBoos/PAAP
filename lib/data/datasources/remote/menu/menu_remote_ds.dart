@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
 import 'package:paap/domain/core/error/failure.dart';
@@ -9,7 +10,7 @@ import '../../../models/menu_model.dart';
 import '../../../utils.dart';
 
 abstract class MenuRemoteDataSource {
-  Future<List<MenuModel>> getMenu(String usuarioId, String contrasena);
+  Future<List<MenuModel>> getMenu(UsuarioEntity usuario);
 }
 
 class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
@@ -18,7 +19,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
   MenuRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<List<MenuModel>> getMenu(String usuarioId, String contrasena) async {
+  Future<List<MenuModel>> getMenu(UsuarioEntity usuario) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
@@ -27,8 +28,8 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
           <usuario>
-            <UsuarioId>$usuarioId</UsuarioId>
-            <Contrasena>$contrasena</Contrasena>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
           </usuario>
           <rol>
             <RolId>100</RolId>

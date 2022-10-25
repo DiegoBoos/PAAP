@@ -3,13 +3,14 @@ import 'package:http/http.dart' as http;
 import 'package:paap/data/models/usuario_model.dart';
 import 'package:xml/xml.dart' as xml;
 
+import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
 import 'package:paap/domain/core/error/failure.dart';
 import '../../../utils.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<UsuarioModel> verificacion(String usuarioId, String contrasena);
+  Future<UsuarioModel> verificacion(UsuarioEntity usuario);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -18,7 +19,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<UsuarioModel> verificacion(String usuarioId, String contrasena) async {
+  Future<UsuarioModel> verificacion(UsuarioEntity usuario) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
@@ -27,8 +28,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       <soap:Body>
         <Verificacion xmlns="${Constants.urlSOAP}/">
           <objeto>
-            <UsuarioId>$usuarioId</UsuarioId>
-            <Contrasena>$contrasena</Contrasena>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
           </objeto>
         </Verificacion>
       </soap:Body>
@@ -51,7 +52,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           verificacionDoc.findAllElements('mensaje').map((e) => e.text).first;
 
       if (respuesta == 'true') {
-        return await consultarUsuario(uri, usuarioId, contrasena);
+        return await consultarUsuario(uri, usuario);
       } else {
         throw ServerFailure([mensaje]);
       }
@@ -60,19 +61,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  Future<UsuarioModel> consultarUsuario(
-      Uri uri, String usuarioId, String contrasena) async {
+  Future<UsuarioModel> consultarUsuario(Uri uri, UsuarioEntity usuario) async {
     final consultarUsuarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ConsultarUsuario xmlns="${Constants.urlSOAP}/">
         <usuario>
-            <UsuarioId>$usuarioId</UsuarioId>
-            <Contrasena>$contrasena</Contrasena>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
         </usuario>
           <objeto>
-            <UsuarioId>$usuarioId</UsuarioId>
-            <Contrasena>$contrasena</Contrasena>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
           </objeto>
         </ConsultarUsuario>
       </soap:Body>

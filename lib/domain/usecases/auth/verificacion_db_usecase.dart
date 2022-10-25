@@ -15,7 +15,7 @@ class VerificacionUsecaseDB {
   }
 
   Future<Either<Failure, UsuarioEntity?>> verificacionUsecaseDB(
-      String usuarioId, String contrasena) {
-    return repositoryDB.verificacionRepositoryDB(usuarioId, contrasena);
+      UsuarioEntity usuario) {
+    return repositoryDB.verificacionRepositoryDB(usuario);
   }
 }

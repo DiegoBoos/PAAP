@@ -8,14 +8,10 @@ abstract class AuthEvent extends Equatable {
 }
 
 class LogIn extends AuthEvent {
-  final String usuarioId;
-  final String contrasena;
+  final UsuarioEntity usuario;
   final bool isOffline;
 
-  const LogIn(
-      {required this.usuarioId,
-      required this.contrasena,
-      this.isOffline = false});
+  const LogIn({required this.usuario, this.isOffline = false});
 }
 
 class LogOut extends AuthEvent {}

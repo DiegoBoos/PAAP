@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../../db_config.dart';
 
 abstract class AuthLocalDataSource {
-  Future<UsuarioModel?> logIn(String usuarioId, String contrasena);
+  Future<UsuarioModel?> logIn(UsuarioEntity usuario);
   Future<int> saveUsuario(UsuarioEntity usuarioEntity);
 }
 
@@ -42,18 +42,18 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<UsuarioModel?> logIn(String usuarioId, String contrasena) async {
+  Future<UsuarioModel?> logIn(UsuarioEntity usuario) async {
     final db = await DBConfig.database;
 
     final res = await db.query('Usuario',
         where: 'UsuarioId = ? AND Contrasena = ?',
-        whereArgs: [usuarioId, contrasena]);
+        whereArgs: [usuario.usuarioId, usuario.contrasena]);
 
     if (res.isEmpty) return null;
 
     final usuarioMap = {for (var e in res[0].entries) e.key: e.value};
-    final usuario = UsuarioModel.fromJson(usuarioMap);
-    return usuario;
+    final usuarioModel = UsuarioModel.fromJson(usuarioMap);
+    return usuarioModel;
   }
 
   Future<int> logOut(int id) async {

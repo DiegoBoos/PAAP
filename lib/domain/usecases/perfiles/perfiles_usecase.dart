@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failure.dart';
+import '../../entities/perfil_entity.dart';
 import '../../entities/perfiles_entity.dart';
+import '../../entities/usuario_entity.dart';
 import '../../repositories/perfiles/perfiles_repository.dart';
 
 class PerfilesUsecase {
@@ -10,13 +12,18 @@ class PerfilesUsecase {
   PerfilesUsecase(this.repository);
 
   Future<Either<Failure, List<PerfilesEntity>>> getPerfilesUsecase(
-      String usuarioId, String contrasena) {
-    return repository.getPerfilesRepository(usuarioId, contrasena);
+      UsuarioEntity usuario) {
+    return repository.getPerfilesRepository(usuario);
   }
 
   Future<Either<Failure, List<PerfilesEntity>>> getPerfilesFiltrosUsecase(
-      String usuarioId, String contrasena, String? id, String? nombre) {
+      UsuarioEntity usuario, String? id, String? nombre) {
     return repository.getPerfilesFiltrosRepository(
-        usuarioId, contrasena, id ?? '', nombre ?? '');
+        usuario, id ?? '', nombre ?? '');
+  }
+
+  Future<Either<Failure, PerfilEntity>> getPerfilUsecase(
+      UsuarioEntity usuario, String perfilId) {
+    return repository.getPerfilRepository(usuario, perfilId);
   }
 }

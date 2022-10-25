@@ -26,7 +26,7 @@ class UsuarioModel extends UsuarioEntity {
             fechaActivacion: fechaActivacion ?? '',
             fechaDesactivacion: fechaDesactivacion ?? '',
             fechaCambio: fechaCambio ?? '',
-            activo: activo);
+            activo: activo ?? '');
 
   factory UsuarioModel.fromJson(Map<String, dynamic> json) => UsuarioModel(
         usuarioId: json["UsuarioId"],

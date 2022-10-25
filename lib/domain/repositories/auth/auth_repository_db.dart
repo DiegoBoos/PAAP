@@ -5,7 +5,7 @@ import '../../core/error/failure.dart';
 
 abstract class AuthRepositoryDB {
   Future<Either<Failure, UsuarioEntity?>> verificacionRepositoryDB(
-      String usuarioId, String contrasena);
+      UsuarioEntity usuario);
 
   Future<Either<Failure, int>> saveUsuarioRepositoryDB(
       UsuarioEntity usuarioEntity);

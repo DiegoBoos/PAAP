@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:paap/domain/entities/usuario_entity.dart';
 import 'package:paap/ui/utils/input_decoration.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
@@ -56,6 +57,8 @@ class _SignInPageState extends State<SignInPage> {
                         const NetworkIcon(),
                       ],
                     ),
+                    const SizedBox(height: 10.0),
+                    SignInForm(formKey),
                     const SizedBox(height: 10.0),
                     LocalCaptcha(
                       key: ValueKey(configFormData.toString()),
@@ -113,8 +116,6 @@ class _SignInPageState extends State<SignInPage> {
                         label: const Text('RECAPTCHA'),
                       ),
                     ),
-                    const SizedBox(height: 16.0),
-                    SignInForm(formKey),
                   ],
                 )),
                 const SizedBox(height: 20.0),
@@ -207,14 +208,10 @@ class _SignInFormState extends State<SignInForm> {
           listener: (context, state) {
             if (state is AuthLoaded) {
               if (internetCubit.state is InternetConnected) {
-                menuBloc.add(GetMenus(
-                    usuarioId: state.usuarioAutenticado!.usuarioId,
-                    contrasena: state.usuarioAutenticado!.contrasena));
+                menuBloc.add(GetMenus(usuario: state.usuarioAutenticado!));
               } else if (internetCubit.state is InternetDisconnected) {
                 menuBloc.add(GetMenus(
-                    usuarioId: state.usuarioAutenticado!.usuarioId,
-                    contrasena: state.usuarioAutenticado!.contrasena,
-                    isOffline: true));
+                    usuario: state.usuarioAutenticado!, isOffline: true));
               }
             }
           },
@@ -229,15 +226,15 @@ class _SignInFormState extends State<SignInForm> {
                   : () {
                       if (!widget.formKey.currentState!.validate()) return;
 
+                      final usuario = UsuarioEntity(
+                        usuarioId: usuarioIdCtrl.text,
+                        contrasena: contrasenaCtrl.text,
+                      );
+
                       if (internetCubit.state is InternetConnected) {
-                        authBloc.add(LogIn(
-                            usuarioId: usuarioIdCtrl.text,
-                            contrasena: contrasenaCtrl.text));
+                        authBloc.add(LogIn(usuario: usuario));
                       } else if (internetCubit.state is InternetDisconnected) {
-                        authBloc.add(LogIn(
-                            usuarioId: usuarioIdCtrl.text,
-                            contrasena: contrasenaCtrl.text,
-                            isOffline: true));
+                        authBloc.add(LogIn(usuario: usuario, isOffline: true));
                       }
                     },
               child: Container(

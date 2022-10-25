@@ -8,12 +8,8 @@ abstract class MenuEvent extends Equatable {
 }
 
 class GetMenus extends MenuEvent {
-  final String usuarioId;
-  final String contrasena;
+  final UsuarioEntity usuario;
   final bool isOffline;
 
-  const GetMenus(
-      {required this.usuarioId,
-      required this.contrasena,
-      this.isOffline = false});
+  const GetMenus({required this.usuario, this.isOffline = false});
 }

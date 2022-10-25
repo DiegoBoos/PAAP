@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:paap/domain/entities/menu_entity.dart';
 
 import '../../core/error/failure.dart';
+import '../../entities/usuario_entity.dart';
 import '../../repositories/menu/menu_repository.dart';
 
 class MenuUsecase {
@@ -10,7 +11,7 @@ class MenuUsecase {
   MenuUsecase(this.repository);
 
   Future<Either<Failure, List<MenuEntity>>> getMenuUsecase(
-      String usuarioId, String contrasena) {
-    return repository.getMenuRepository(usuarioId, contrasena);
+      UsuarioEntity usuario) {
+    return repository.getMenuRepository(usuario);
   }
 }

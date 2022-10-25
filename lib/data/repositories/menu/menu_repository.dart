@@ -4,6 +4,7 @@ import 'package:paap/domain/entities/menu_entity.dart';
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 
+import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/menu/menu_repository.dart';
 import '../../datasources/remote/menu/menu_remote_ds.dart';
 
@@ -14,9 +15,9 @@ class MenuRepositoryImpl implements MenuRepository {
 
   @override
   Future<Either<Failure, List<MenuEntity>>> getMenuRepository(
-      String usuarioId, String contrasena) async {
+      UsuarioEntity usuario) async {
     try {
-      final menus = await menuRemoteDataSource.getMenu(usuarioId, contrasena);
+      final menus = await menuRemoteDataSource.getMenu(usuario);
 
       return Right(menus);
     } on ServerFailure catch (e) {

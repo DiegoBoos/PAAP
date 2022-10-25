@@ -1,8 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:paap/domain/entities/perfil_entity.dart';
 import 'package:paap/domain/entities/perfiles_entity.dart';
+import 'package:paap/domain/entities/usuario_entity.dart';
 
 import '../../cubits/internet/internet_cubit.dart';
+
 import '../../usecases/perfiles/perfiles_db_usecase.dart';
 import '../../usecases/perfiles/perfiles_usecase.dart';
 
@@ -14,11 +17,12 @@ class PerfilesBloc extends Bloc<PerfilesEvent, PerfilesState> {
 
   final PerfilesUsecase perfiles;
   final PerfilesUsecaseDB perfilesDB;
-  PerfilesBloc(
-      {required this.internetCubit,
-      required this.perfiles,
-      required this.perfilesDB})
-      : super(PerfilesInitial()) {
+
+  PerfilesBloc({
+    required this.internetCubit,
+    required this.perfiles,
+    required this.perfilesDB,
+  }) : super(PerfilesInitial()) {
     on<GetPerfiles>((event, emit) async {
       if (event.isOffline) {
         emit(PerfilesLoading());
@@ -38,17 +42,26 @@ class PerfilesBloc extends Bloc<PerfilesEvent, PerfilesState> {
         await _getPerfilesFiltrosOnline(event, emit);
       }
     });
+
+    on<GetPerfil>((event, emit) async {
+      if (event.isOffline) {
+        emit(PerfilLoading());
+        //await _getPerfilOffline(event, emit);
+      } else {
+        emit(PerfilLoading());
+        await _getPerfilOnline(event, emit);
+      }
+    });
   }
 
   _getPerfilesOnline(event, emit) async {
-    final usuarioId = event.usuarioId;
-    final contrasena = event.contrasena;
+    final usuario = event.usuario;
 
-    final result = await perfiles.getPerfilesUsecase(usuarioId, contrasena);
+    final result = await perfiles.getPerfilesUsecase(usuario);
     result.fold((failure) {
       emit(PerfilesError(failure.properties.first));
     }, (data) async {
-      emit(PerfilesLoaded(data));
+      emit(PerfilesLoaded(perfilesLoaded: data));
       await perfilesDB.savePerfilesDB(data);
     });
   }
@@ -58,22 +71,21 @@ class PerfilesBloc extends Bloc<PerfilesEvent, PerfilesState> {
     result.fold((failure) {
       emit(PerfilesError(failure.properties.first));
     }, (data) {
-      emit(PerfilesLoaded(data));
+      emit(PerfilesLoaded(perfilesLoaded: data));
     });
   }
 
   _getPerfilesFiltrosOnline(event, emit) async {
-    final usuarioId = event.usuarioId;
-    final contrasena = event.contrasena;
+    final usuario = event.usuario;
     final id = event.id;
     final nombre = event.nombre;
 
-    final result = await perfiles.getPerfilesFiltrosUsecase(
-        usuarioId, contrasena, id, nombre);
+    final result =
+        await perfiles.getPerfilesFiltrosUsecase(usuario, id, nombre);
     result.fold((failure) {
       emit(PerfilesError(failure.properties.first));
     }, (data) async {
-      emit(PerfilesLoaded(data));
+      emit(PerfilesLoaded(perfilesLoaded: data));
       /* await perfilesDB.savePerfilesDB(data); */
     });
   }
@@ -86,7 +98,19 @@ class PerfilesBloc extends Bloc<PerfilesEvent, PerfilesState> {
     result.fold((failure) {
       emit(PerfilesError(failure.properties.first));
     }, (data) {
-      emit(PerfilesLoaded(data));
+      emit(PerfilesLoaded(perfilesLoaded: data));
+    });
+  }
+
+  _getPerfilOnline(event, emit) async {
+    final usuario = event.usuario;
+    final perfilId = event.perfilId;
+
+    final result = await perfiles.getPerfilUsecase(usuario, perfilId);
+    result.fold((failure) {
+      emit(PerfilError(failure.properties.first));
+    }, (data) {
+      emit(PerfilLoaded(perfilLoaded: data));
     });
   }
 }

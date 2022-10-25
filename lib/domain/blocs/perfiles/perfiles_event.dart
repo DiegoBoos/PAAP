@@ -8,27 +8,27 @@ abstract class PerfilesEvent extends Equatable {
 }
 
 class GetPerfiles extends PerfilesEvent {
-  final String usuarioId;
-  final String contrasena;
+  final UsuarioEntity usuario;
   final bool isOffline;
 
-  const GetPerfiles(
-      {required this.usuarioId,
-      required this.contrasena,
-      this.isOffline = false});
+  const GetPerfiles({required this.usuario, this.isOffline = false});
 }
 
 class GetPerfilesFiltros extends PerfilesEvent {
-  final String usuarioId;
-  final String contrasena;
+  final UsuarioEntity usuario;
   final String? id;
   final String? nombre;
   final bool isOffline;
 
   const GetPerfilesFiltros(
-      {required this.usuarioId,
-      required this.contrasena,
-      this.id,
-      this.nombre,
-      this.isOffline = false});
+      {required this.usuario, this.id, this.nombre, this.isOffline = false});
+}
+
+class GetPerfil extends PerfilesEvent {
+  final UsuarioEntity usuario;
+  final String perfilId;
+  final bool isOffline;
+
+  const GetPerfil(
+      {required this.usuario, required this.perfilId, this.isOffline = false});
 }

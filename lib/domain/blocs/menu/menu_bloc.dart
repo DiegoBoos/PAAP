@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../entities/menu_entity.dart';
+import '../../entities/usuario_entity.dart';
 import '../../usecases/menu/menu_db_usecase.dart';
 import '../../usecases/menu/menu_usecase.dart';
 
@@ -24,10 +25,9 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     });
   }
   _getMenu(event, emit) async {
-    final usuarioId = event.usuarioId;
-    final contrasena = event.contrasena;
+    final usuario = event.usuario;
 
-    final result = await menu.getMenuUsecase(usuarioId, contrasena);
+    final result = await menu.getMenuUsecase(usuario);
     result.fold((failure) {
       emit(MenuError(failure.properties.first));
     }, (data) async {
