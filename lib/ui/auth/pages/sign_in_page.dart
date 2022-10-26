@@ -58,8 +58,6 @@ class _SignInPageState extends State<SignInPage> {
                       ],
                     ),
                     const SizedBox(height: 10.0),
-                    SignInForm(formKey),
-                    const SizedBox(height: 10.0),
                     LocalCaptcha(
                       key: ValueKey(configFormData.toString()),
                       controller: localCaptchaController,
@@ -116,6 +114,8 @@ class _SignInPageState extends State<SignInPage> {
                         label: const Text('RECAPTCHA'),
                       ),
                     ),
+                    SignInForm(formKey),
+                    const SizedBox(height: 10.0),
                   ],
                 )),
                 const SizedBox(height: 20.0),

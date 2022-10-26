@@ -6,6 +6,7 @@ import 'package:paap/domain/entities/usuario_entity.dart';
 
 import '../../cubits/internet/internet_cubit.dart';
 
+import '../../entities/vperfil_entity.dart';
 import '../../usecases/perfiles/perfiles_db_usecase.dart';
 import '../../usecases/perfiles/perfiles_usecase.dart';
 

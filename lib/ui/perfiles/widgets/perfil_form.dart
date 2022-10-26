@@ -42,8 +42,9 @@ class _PerfilFormState extends State<PerfilForm> {
             child: Column(children: [
               TextFormField(
                   enabled: false,
+                  initialValue: perfil.perfilId,
                   decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'ID Alianza', labelText: 'ID Alianza')),
+                      hintText: 'Id. Perfil', labelText: 'Id. Perfil')),
               const SizedBox(height: 20),
               TextFormField(
                   initialValue: perfil.nombre,
@@ -53,20 +54,20 @@ class _PerfilFormState extends State<PerfilForm> {
                       labelText: 'Nombre del Proyecto')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.tipoProyectoId,
+                  initialValue: perfil.tipoProyecto,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Tipo Proyecto', labelText: 'Tipo Proyecto')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.productoId,
+                  initialValue: perfil.productoPrincipal,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Producto Principal',
                       labelText: 'Producto Principal')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.productoAsociadoId,
+                  initialValue: perfil.productoAsociado,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Producto Asociado',
@@ -78,7 +79,7 @@ class _PerfilFormState extends State<PerfilForm> {
                       hintText: 'Departamento', labelText: 'Departamento')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.municipioId,
+                  initialValue: perfil.municipio,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Municipio', labelText: 'Municipio')),

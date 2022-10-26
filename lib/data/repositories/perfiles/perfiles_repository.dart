@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:paap/domain/entities/perfil_entity.dart';
 import 'package:paap/domain/entities/perfiles_entity.dart';
 import 'package:paap/domain/entities/usuario_entity.dart';
 
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 
+import '../../../domain/entities/vperfil_entity.dart';
 import '../../../domain/repositories/perfiles/perfiles_repository.dart';
 import '../../datasources/remote/perfiles/perfiles_remote_ds.dart';
 
@@ -44,7 +44,7 @@ class PerfilesRepositoryImpl implements PerfilesRepository {
   }
 
   @override
-  Future<Either<Failure, PerfilEntity>> getPerfilRepository(
+  Future<Either<Failure, VPerfilEntity>> getPerfilRepository(
       UsuarioEntity usuario, String perfilId) async {
     try {
       final perfil = await perfilRemoteDataSource.getPerfil(usuario, perfilId);

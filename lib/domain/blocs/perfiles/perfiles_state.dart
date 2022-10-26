@@ -2,7 +2,7 @@ part of 'perfiles_bloc.dart';
 
 abstract class PerfilesState extends Equatable {
   final List<PerfilesEntity>? perfiles;
-  final PerfilEntity? perfil;
+  final VPerfilEntity? perfil;
 
   const PerfilesState({this.perfiles, this.perfil});
 
@@ -28,7 +28,7 @@ class PerfilesLoaded extends PerfilesState {
 }
 
 class PerfilLoaded extends PerfilesState {
-  final PerfilEntity? perfilLoaded;
+  final VPerfilEntity? perfilLoaded;
 
   const PerfilLoaded({this.perfilLoaded}) : super(perfil: perfilLoaded);
 
