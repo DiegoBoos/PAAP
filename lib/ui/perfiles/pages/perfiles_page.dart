@@ -9,6 +9,7 @@ import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
 import '../../../domain/blocs/menu/menu_bloc.dart';
 import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/entities/menu_entity.dart';
+import '../../../domain/entities/perfil_entity.dart';
 import '../../../domain/entities/perfiles_entity.dart';
 import '../../utils/custom_drawer.dart';
 import '../widgets/perfiles_rows.dart';
@@ -107,7 +108,7 @@ class _PerfilesPageState extends State<PerfilesPage> {
               } else if (state is PerfilesError) {
                 return const SizedBox();
               } else if (state is PerfilesLoaded) {
-                List<PerfilesEntity> perfiles = state.perfiles!;
+                List<PerfilEntity> perfiles = state.perfiles!;
                 if (perfiles.isEmpty) {
                   return const SizedBox(
                       child:

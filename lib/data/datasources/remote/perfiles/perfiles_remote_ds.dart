@@ -4,7 +4,6 @@ import 'package:paap/data/models/v_perfil_model.dart';
 import 'package:paap/domain/entities/usuario_entity.dart';
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/entities/vperfil_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
 import 'package:paap/domain/core/error/failure.dart';
@@ -16,8 +15,8 @@ import '../../../models/tipo_proyecto_model.dart';
 import '../../../utils.dart';
 
 abstract class PerfilesRemoteDataSource {
-  Future<List<PerfilesModel>> getPerfiles(UsuarioEntity usuario);
-  Future<List<PerfilesModel>> getPerfilesFiltros(
+  Future<List<PerfilModel>> getPerfiles(UsuarioEntity usuario);
+  Future<List<PerfilModel>> getPerfilesFiltros(
       UsuarioEntity usuario, String id, String nombre);
 
   Future<VPerfilModel> getPerfil(UsuarioEntity usuario, String perfilId);
@@ -29,7 +28,7 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
   PerfilesRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<List<PerfilesModel>> getPerfiles(UsuarioEntity usuario) async {
+  Future<List<PerfilModel>> getPerfiles(UsuarioEntity usuario) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
@@ -84,7 +83,12 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
             .map((e) => PerfilesModel.fromJson(e))
             .toList();
 
-        return perfiles;
+        List<PerfilModel> listPerfil = [];
+        for (var perfil in perfiles) {
+          final dsPerfil = await getPerfilTable(usuario, perfil.id);
+          listPerfil.add(dsPerfil);
+        }
+        return listPerfil;
       } else {
         throw ServerFailure([mensaje]);
       }
@@ -94,7 +98,7 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
   }
 
   @override
-  Future<List<PerfilesModel>> getPerfilesFiltros(
+  Future<List<PerfilModel>> getPerfilesFiltros(
       UsuarioEntity usuario, String? id, String? nombre) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
@@ -156,9 +160,14 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
               .map((e) => PerfilesModel.fromJson(e))
               .toList();
 
-          return perfiles;
+          List<PerfilModel> listPerfil = [];
+          for (var perfil in perfiles) {
+            final dsPerfil = await getPerfilTable(usuario, perfil.id);
+            listPerfil.add(dsPerfil);
+          }
+          return listPerfil;
         } else {
-          return [PerfilesModel.fromJson(perfilesRaw)];
+          return [PerfilModel.fromJson(perfilesRaw)];
         }
       } else {
         throw ServerFailure([mensaje]);
@@ -230,23 +239,6 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
 
         final municipio = await getMunicipio(usuario, perfil.municipioId);
 
-        /* final VPerfilModel vPerfil = VPerfilModel(
-            perfilId: perfil.perfilId,
-            convocatoriaId: perfil.convocatoriaId,
-            nombre: perfil.nombre,
-            abreviatura: perfil.abreviatura,
-            municipio: municipio.nombre,
-            direccion: perfil.direccion,
-            contacto: perfil.contacto,
-            telefonoFijo: perfil.telefonoFijo,
-            telefonoMovil: perfil.telefonoMovil,
-            correo: perfil.correo,
-            tipoProyecto: tipoProyecto.nombre,
-            productoPrincipal: productoPrincipal.nombre,
-            productoAsociado: productoAsociado.nombre,
-            valorTotalProyecto: perfil.valorTotalProyecto,
-            incentivoModular: perfil.incentivoModular);
- */
         final vPerfil = VPerfilModel.fromJson({
           "perfilId": perfil.perfilId,
           "convocatoriaId": perfil.convocatoriaId,
@@ -328,6 +320,71 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
         final tipoProyecto = TipoProyectoModel.fromJson(decodedResp['objeto']);
 
         return tipoProyecto;
+      } else {
+        throw ServerFailure([mensaje]);
+      }
+    } else {
+      throw ServerException();
+    }
+  }
+
+  Future<List<ProductoModel>> getProductos(
+      UsuarioEntity usuario, String productoId) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final productosSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+          </usuario>
+          <rol>
+            <RolId>400</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <parametros>
+            <string>TablaProductos</string> 
+          </parametros>
+        </ObtenerDatos>
+      </soap:Body>
+    </soap:Envelope>''';
+
+    final productosResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+        },
+        body: productosSOAP);
+
+    if (productosResp.statusCode == 200) {
+      final productosDoc = xml.XmlDocument.parse(productosResp.body);
+
+      final respuesta =
+          productosDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      final mensaje =
+          productosDoc.findAllElements('mensaje').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        final xmlString = productosDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final productosRaw = decodedResp.entries.first.value['Table'];
+
+        final productos = List.from(productosRaw)
+            .map((e) => ProductoModel.fromJson(e))
+            .toList();
+
+        return productos;
       } else {
         throw ServerFailure([mensaje]);
       }
@@ -450,6 +507,67 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
         final municipio = MunicipioModel.fromJson(decodedResp['objeto']);
 
         return municipio;
+      } else {
+        throw ServerFailure([mensaje]);
+      }
+    } else {
+      throw ServerException();
+    }
+  }
+
+  Future<PerfilModel> getPerfilTable(
+      UsuarioEntity usuario, String perfilId) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final perfilesSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <ConsultarPerfil xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+            </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <PerfilId>$perfilId</PerfilId>
+          </objeto>
+        </ConsultarPerfil>
+      </soap:Body>
+    </soap:Envelope>''';
+
+    final perfilResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "${Constants.urlSOAP}/ConsultarPerfil"
+        },
+        body: perfilesSOAP);
+
+    if (perfilResp.statusCode == 200) {
+      final municipioDoc = xml.XmlDocument.parse(perfilResp.body);
+
+      final respuesta =
+          municipioDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      final mensaje =
+          municipioDoc.findAllElements('mensaje').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        final xmlString = municipioDoc
+            .findAllElements('objeto')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final decodedResp = json.decode(res);
+
+        final perfil = PerfilModel.fromJson(decodedResp['objeto']);
+
+        return perfil;
       } else {
         throw ServerFailure([mensaje]);
       }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
+import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../utils/input_decoration.dart';
 
 class PerfilForm extends StatefulWidget {
@@ -21,10 +22,23 @@ class _PerfilFormState extends State<PerfilForm> {
   @override
   void initState() {
     super.initState();
+    getPerfil();
+  }
+
+  void getPerfil() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
+    final internetCubit = BlocProvider.of<InternetCubit>(context);
     final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
-    perfilesBloc.add(
-        GetPerfil(usuario: authBloc.state.usuario!, perfilId: widget.perfilId));
+
+    if (internetCubit.state is InternetConnected) {
+      perfilesBloc.add(GetPerfil(
+          usuario: authBloc.state.usuario!, perfilId: widget.perfilId));
+    } else if (internetCubit.state is InternetDisconnected) {
+      perfilesBloc.add(GetPerfil(
+          usuario: authBloc.state.usuario!,
+          perfilId: widget.perfilId,
+          isOffline: true));
+    }
   }
 
   @override

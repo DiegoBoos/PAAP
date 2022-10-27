@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failure.dart';
-import '../../entities/perfiles_entity.dart';
+import '../../entities/perfil_entity.dart';
+
 import '../../repositories/perfiles/perfiles_repository_db.dart';
 
 class PerfilesUsecaseDB {
@@ -9,16 +10,20 @@ class PerfilesUsecaseDB {
 
   PerfilesUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<PerfilesEntity>>> getPerfilesUsecaseDB() {
+  Future<Either<Failure, List<PerfilEntity>>> getPerfilesUsecaseDB() {
     return repositoryDB.getPerfilesRepositoryDB();
   }
 
-  Future<Either<Failure, List<PerfilesEntity>>> getPerfilesFiltrosUsecaseDB(
+  Future<Either<Failure, List<PerfilEntity>>> getPerfilesFiltrosUsecaseDB(
       String? id, String? nombre) {
     return repositoryDB.getPerfilesFiltrosRepositoryDB(id ?? '', nombre ?? '');
   }
 
-  Future<Either<Failure, int>> savePerfilesDB(List<PerfilesEntity> perfiles) {
+  Future<Either<Failure, int>> savePerfilesDB(List<PerfilEntity> perfiles) {
     return repositoryDB.savePerfilesRepositoryDB(perfiles);
+  }
+
+  Future<Either<Failure, PerfilEntity?>> getPerfilUsecaseDB(String id) {
+    return repositoryDB.getPerfilRepositoryDB(id);
   }
 }

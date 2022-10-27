@@ -1,13 +1,15 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../../../domain/entities/perfiles_entity.dart';
+import '../../../../domain/entities/perfil_entity.dart';
+
 import '../../../db_config.dart';
-import '../../../models/perfiles_model.dart';
+import '../../../models/perfil_model.dart';
 
 abstract class PerfilesLocalDataSource {
-  Future<List<PerfilesModel>> getPerfilesDB();
-  Future<List<PerfilesModel>> getPerfilesFiltrosDB(String id, String nombre);
-  Future<int> savePerfilesDB(List<PerfilesEntity> perfiles);
+  Future<List<PerfilModel>> getPerfilesDB();
+  Future<List<PerfilModel>> getPerfilesFiltrosDB(String id, String nombre);
+  Future<int> savePerfilesDB(List<PerfilEntity> perfiles);
+  Future<PerfilModel?> getPerfilDB(String id);
 }
 
 class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
@@ -78,21 +80,21 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
     ''');
     await db.execute('''
       CREATE TABLE IF NOT EXISTS Perfil (
-	      PerfilId	INTEGER NOT NULL,
-	      ConvocatoriaId	INTEGER NOT NULL,
+	      PerfilId	TEXT NOT NULL,
+	      ConvocatoriaId	TEXT NOT NULL,
 	      Nombre	TEXT,
 	      Abreviatura	TEXT,
-	      MunicipioId	INTEGER NOT NULL,
+	      MunicipioId	TEXT NOT NULL,
 	      Direccion	TEXT,
 	      Contacto	TEXT,
 	      TelefonoFijo	TEXT,
 	      TelefonoMovil	TEXT,
 	      Correo	TEXT,
-	      TipoProyectoId	INTEGER NOT NULL,
-	      ProductoId	INTEGER NOT NULL,
-	      ProductoAsociadoId	INTEGER NOT NULL,
-	      ValorTotalProyecto	INTEGER,
-	      IncentivoModular	INTEGER,
+	      TipoProyectoId	TEXT NOT NULL,
+	      ProductoId	TEXT NOT NULL,
+	      ProductoAsociadoId	TEXT NOT NULL,
+	      ValorTotalProyecto	TEXT,
+	      IncentivoModular	TEXT,
 	      PRIMARY KEY(PerfilId),
 	      FOREIGN KEY(ConvocatoriaId) REFERENCES Convocatoria(ConvocatoriaId),
 	      FOREIGN KEY(TipoProyectoId) REFERENCES TipoProyecto(TipoProyectoId),
@@ -102,7 +104,7 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
       )
     ''');
 
-    await db.execute('''
+    /*  await db.execute('''
       CREATE TABLE IF NOT EXISTS Perfiles (
         ID	TEXT NOT NULL,
         Nombre	TEXT,
@@ -112,51 +114,65 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
         Ubicación	TEXT,
         Categorización	TEXT
       )
-    ''');
+    '''); */
   }
 
   @override
-  Future<List<PerfilesModel>> getPerfilesDB() async {
+  Future<List<PerfilModel>> getPerfilesDB() async {
     final db = await DBConfig.database;
 
-    final res = await db.query('Perfiles');
+    final res = await db.query('Perfil');
 
     final perfilesDB =
-        List<PerfilesModel>.from(res.map((m) => PerfilesModel.fromJson(m)))
+        List<PerfilModel>.from(res.map((m) => PerfilModel.fromJson(m)))
             .toList();
 
     return perfilesDB;
   }
 
   @override
-  Future<List<PerfilesModel>> getPerfilesFiltrosDB(
+  Future<List<PerfilModel>> getPerfilesFiltrosDB(
       String id, String nombre) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('Perfiles',
-        where: 'ID LIKE ? AND Nombre LIKE ?',
+    final res = await db.query('Perfil',
+        where: 'PerfilId LIKE ? AND Nombre LIKE ?',
         whereArgs: ['%$id%', '%$nombre%']);
 
     final perfilesDB =
-        List<PerfilesModel>.from(res.map((m) => PerfilesModel.fromJson(m)))
+        List<PerfilModel>.from(res.map((m) => PerfilModel.fromJson(m)))
             .toList();
 
     return perfilesDB;
   }
 
   @override
-  Future<int> savePerfilesDB(List<PerfilesEntity> perfilesEntity) async {
+  Future<int> savePerfilesDB(List<PerfilEntity> perfilEntity) async {
     final db = await DBConfig.database;
 
     var batch = db.batch();
-    batch.delete('Perfiles');
+    batch.delete('Perfil');
 
-    for (var perfil in perfilesEntity) {
-      batch.insert('Perfiles', perfil.toJson());
+    for (var perfil in perfilEntity) {
+      batch.insert('Perfil', perfil.toJson());
     }
 
     final res = await batch.commit();
 
     return res.length;
+  }
+
+  @override
+  Future<PerfilModel?> getPerfilDB(String id) async {
+    final db = await DBConfig.database;
+
+    final res =
+        await db.query('Perfil', where: 'PerfilId = ?', whereArgs: [id]);
+
+    if (res.isEmpty) return null;
+    final perfilMap = {for (var e in res[0].entries) e.key: e.value};
+    final perfilModel = PerfilModel.fromJson(perfilMap);
+
+    return perfilModel;
   }
 }

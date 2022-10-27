@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../domain/entities/perfiles_entity.dart';
+import '../../../domain/entities/perfil_entity.dart';
 
 class PerfilesRows extends StatelessWidget {
   const PerfilesRows({
@@ -9,7 +9,7 @@ class PerfilesRows extends StatelessWidget {
     required this.subtitleStyle,
   }) : super(key: key);
 
-  final List<PerfilesEntity> perfiles;
+  final List<PerfilEntity> perfiles;
   final TextStyle subtitleStyle;
 
   @override
@@ -42,14 +42,14 @@ class PerfilesRows extends StatelessWidget {
           ),
         ],
         rows: List.generate(perfiles.length, (index) {
-          PerfilesEntity perfil = perfiles[index];
+          PerfilEntity perfil = perfiles[index];
 
           return DataRow(cells: <DataCell>[
-            DataCell(Text(perfil.id)),
+            DataCell(Text(perfil.perfilId.toString())),
             DataCell(Text(perfil.nombre)),
             DataCell(IconButton(
                 onPressed: () => Navigator.pushNamed(context, 'perfil-detail',
-                    arguments: perfil.id),
+                    arguments: perfil.perfilId),
                 icon: const Icon(
                   Icons.keyboard_arrow_right,
                 ))),

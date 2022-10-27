@@ -21,7 +21,7 @@ class DBConfig {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
 
     final path = join(documentDirectory.path, 'paap.db');
-    print(path);
+    print('Ruta base: $path');
     //Crear base de datos
     _database = await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {

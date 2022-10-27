@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:paap/domain/entities/perfil_entity.dart';
-import 'package:paap/domain/entities/perfiles_entity.dart';
 import 'package:paap/domain/entities/usuario_entity.dart';
 
 import '../../cubits/internet/internet_cubit.dart';
@@ -47,7 +46,7 @@ class PerfilesBloc extends Bloc<PerfilesEvent, PerfilesState> {
     on<GetPerfil>((event, emit) async {
       if (event.isOffline) {
         emit(PerfilLoading());
-        //await _getPerfilOffline(event, emit);
+        await _getPerfilOffline(event, emit);
       } else {
         emit(PerfilLoading());
         await _getPerfilOnline(event, emit);
@@ -112,6 +111,17 @@ class PerfilesBloc extends Bloc<PerfilesEvent, PerfilesState> {
       emit(PerfilError(failure.properties.first));
     }, (data) {
       emit(PerfilLoaded(perfilLoaded: data));
+    });
+  }
+
+  _getPerfilOffline(event, emit) async {
+    final perfilId = event.perfilId;
+
+    final result = await perfilesDB.getPerfilUsecaseDB(perfilId);
+    result.fold((failure) {
+      emit(PerfilError(failure.properties.first));
+    }, (data) {
+      //emit(PerfilLoaded(perfilLoaded: data));
     });
   }
 }
