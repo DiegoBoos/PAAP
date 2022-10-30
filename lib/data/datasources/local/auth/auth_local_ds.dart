@@ -1,8 +1,8 @@
-import 'package:paap/data/models/usuario_model.dart';
-import 'package:paap/domain/entities/usuario_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../../db_config.dart';
+import '../../../../domain/entities/usuario_entity.dart';
+import '../../../../domain/db/db_config.dart';
+import '../../../models/usuario_model.dart';
 
 abstract class AuthLocalDataSource {
   Future<UsuarioModel?> logIn(UsuarioEntity usuario);
@@ -24,7 +24,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
         FechaActivacion	TEXT,
         FechaDesactivacion TEXT,
         FechaCambio	TEXT,
-        Activo INTEGER,
+        Activo TEXT,
         PRIMARY KEY(UsuarioId)
       )
     ''');

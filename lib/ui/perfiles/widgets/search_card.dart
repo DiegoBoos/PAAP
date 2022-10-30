@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
-import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../utils/input_decoration.dart';
 
 class SearchCard extends StatelessWidget {
@@ -23,7 +22,6 @@ class SearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final internetCubit = BlocProvider.of<InternetCubit>(context);
     return Card(
       elevation: 5,
       margin: const EdgeInsets.all(20),
@@ -90,19 +88,10 @@ class SearchCard extends StatelessWidget {
                                 context,
                                 listen: false);
 
-                            if (internetCubit.state is InternetConnected) {
-                              perfilesBloc.add(GetPerfilesFiltros(
-                                  usuario: authBloc.state.usuario!,
-                                  id: idCtrl.text,
-                                  nombre: nameCtrl.text));
-                            } else if (internetCubit.state
-                                is InternetDisconnected) {
-                              perfilesBloc.add(GetPerfilesFiltros(
-                                  usuario: authBloc.state.usuario!,
-                                  id: idCtrl.text,
-                                  nombre: nameCtrl.text,
-                                  isOffline: true));
-                            }
+                            perfilesBloc.add(GetPerfilesFiltros(
+                                usuario: authBloc.state.usuario!,
+                                id: idCtrl.text,
+                                nombre: nameCtrl.text));
                           }
                         },
                         icon: const Icon(Icons.search)),

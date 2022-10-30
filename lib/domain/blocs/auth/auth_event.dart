@@ -7,6 +7,12 @@ abstract class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class SaveUsuario extends AuthEvent {
+  final UsuarioEntity usuario;
+
+  const SaveUsuario({required this.usuario});
+}
+
 class LogIn extends AuthEvent {
   final UsuarioEntity usuario;
   final bool isOffline;

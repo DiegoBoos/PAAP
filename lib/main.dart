@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/blocs/auth/auth_bloc.dart';
 
-import 'package:paap/router.dart';
-import 'package:paap/ui/utils/styles.dart';
-
+import 'domain/blocs/auth/auth_bloc.dart';
+import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/blocs/perfiles/perfiles_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
-import 'domain/blocs/menu/menu_bloc.dart';
+
+import 'domain/cubits/menu/menu_cubit.dart';
 import 'injection.dart' as di;
+import 'router.dart';
+import 'ui/utils/styles.dart';
 
 void main() {
   di.init();
@@ -29,7 +30,10 @@ class MyApp extends StatelessWidget {
             create: (_) => di.locator<AuthBloc>(),
           ),
           BlocProvider(
-            create: (_) => di.locator<MenuBloc>(),
+            create: (_) => di.locator<DownloadSyncBloc>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<MenuCubit>(),
           ),
           BlocProvider(
             create: (_) => di.locator<PerfilesBloc>(),

@@ -45,10 +45,10 @@ class PerfilesRows extends StatelessWidget {
           PerfilEntity perfil = perfiles[index];
 
           return DataRow(cells: <DataCell>[
-            DataCell(Text(perfil.perfilId.toString())),
+            DataCell(Text(perfil.perfilId)),
             DataCell(Text(perfil.nombre)),
             DataCell(IconButton(
-                onPressed: () => Navigator.pushNamed(context, 'perfil-detail',
+                onPressed: () => Navigator.pushNamed(context, 'VPerfil',
                     arguments: perfil.perfilId),
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

@@ -1,4 +1,4 @@
-import '../../domain/entities/municipio_entity.dart';
+import 'package:paap/domain/entities/municipio_entity.dart';
 
 class MunicipioModel extends MunicipioEntity {
   MunicipioModel(

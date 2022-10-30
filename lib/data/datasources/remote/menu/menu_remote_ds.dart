@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
-import 'package:paap/domain/core/error/failure.dart';
 import '../../../models/menu_model.dart';
 import '../../../utils.dart';
 

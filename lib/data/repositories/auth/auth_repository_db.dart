@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:paap/domain/entities/usuario_entity.dart';
 
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
+import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/auth/auth_repository_db.dart';
 import '../../datasources/local/auth/auth_local_ds.dart';
 

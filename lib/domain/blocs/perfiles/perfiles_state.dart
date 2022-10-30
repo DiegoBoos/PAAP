@@ -33,7 +33,7 @@ class PerfilLoaded extends PerfilesState {
   const PerfilLoaded({this.perfilLoaded}) : super(perfil: perfilLoaded);
 
   @override
-  List<Object?> get props => [perfiles];
+  List<Object?> get props => [perfil];
 }
 
 class PerfilesError extends PerfilesState {

@@ -1,17 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:paap/data/models/v_perfil_model.dart';
-import 'package:paap/domain/entities/usuario_entity.dart';
+
 import 'package:xml/xml.dart' as xml;
 
+import '../../../../domain/core/error/failure.dart';
+import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
-import 'package:paap/domain/core/error/failure.dart';
+
 import '../../../models/municipio_model.dart';
 import '../../../models/perfil_model.dart';
 import '../../../models/perfiles_model.dart';
 import '../../../models/producto_model.dart';
 import '../../../models/tipo_proyecto_model.dart';
+import '../../../models/v_perfil_model.dart';
 import '../../../utils.dart';
 
 abstract class PerfilesRemoteDataSource {

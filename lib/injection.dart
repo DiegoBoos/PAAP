@@ -1,65 +1,65 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
-import 'package:paap/data/datasources/local/perfiles/perfiles_local_ds.dart';
-import 'package:paap/data/datasources/remote/perfiles/perfiles_remote_ds.dart';
-import 'package:paap/data/repositories/menu/menu_repository.dart';
-import 'package:paap/data/repositories/perfiles/perfiles_repository.dart';
-import 'package:paap/domain/blocs/perfiles/perfiles_bloc.dart';
-import 'package:paap/domain/blocs/menu/menu_bloc.dart';
-import 'package:paap/domain/repositories/auth/auth_repository_db.dart';
-import 'package:paap/domain/repositories/menu/menu_repository.dart';
-import 'package:paap/domain/repositories/perfiles/perfiles_repository.dart';
+import 'package:paap/domain/cubits/menu/menu_cubit.dart';
 
-import 'package:paap/domain/usecases/auth/verificacion_db_usecase.dart';
-import 'package:paap/domain/usecases/perfiles/perfiles_db_usecase.dart';
-import 'package:paap/domain/usecases/perfiles/perfiles_usecase.dart';
-
-import 'data/datasources/local/auth/auth_local_ds.dart';
-import 'data/datasources/local/menu/menu_local_ds.dart';
-import 'data/datasources/remote/auth/auth_remote_ds.dart';
-import 'data/datasources/remote/menu/menu_remote_ds.dart';
-import 'data/repositories/auth/auth_repository.dart';
-import 'data/repositories/auth/auth_repository_db.dart';
-import 'data/repositories/menu/menu_repository_db.dart';
-import 'data/repositories/perfiles/perfiles_repository_db.dart';
-import 'domain/blocs/auth/auth_bloc.dart';
+import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
-import 'domain/repositories/auth/auth_repository.dart';
-import 'domain/repositories/menu/menu_repository_db.dart';
-import 'domain/repositories/perfiles/perfiles_repository_db.dart';
-import 'domain/usecases/auth/verificacion_usecase.dart';
-import 'domain/usecases/menu/menu_db_usecase.dart';
-import 'domain/usecases/menu/menu_usecase.dart';
+import 'domain/usecases/auth/auth_exports.dart';
+import 'domain/usecases/menu/menu_exports.dart';
+import 'domain/usecases/convocatoria/convocatoria_exports.dart';
+import 'domain/usecases/perfiles/perfiles_exports.dart';
+import 'domain/usecases/tipo_proyecto/tipo_proyecto_exports.dart';
+import 'domain/usecases/unidad/unidad_exports.dart';
 
 final locator = GetIt.instance;
 
 void init() {
   internetCubitInit();
+  downloadSyncInit();
   authBlocInit();
-  menuBlocInit();
+  menuCubitInit();
+  convocatoriaInit();
+  tipoProyectoInit();
+  unidadInit();
   perfilesBlocInit();
+
   // external
   locator.registerLazySingleton(() => http.Client());
 }
 
-internetCubitInit() {
+downloadSyncInit() {
   // bloc
+  locator.registerFactory(() => DownloadSyncBloc(
+      menu: locator(),
+      menuDB: locator(),
+      convocatoria: locator(),
+      convocatoriaDB: locator(),
+      perfiles: locator(),
+      perfilesDB: locator(),
+      tipoProyecto: locator(),
+      tipoProyectoDB: locator(),
+      unidad: locator(),
+      unidadDB: locator()));
+}
+
+internetCubitInit() {
+  // cubit
   locator.registerFactory(() => InternetCubit(connectivity: Connectivity()));
 }
 
 authBlocInit() {
   // bloc
   locator.registerFactory(() => AuthBloc(
-        verificacion: locator(),
-        verificacionDB: locator(),
+        auth: locator(),
+        authDB: locator(),
       ));
 
   // remote usecase
-  locator.registerLazySingleton(() => VerificacionUsecase(locator()));
+  locator.registerLazySingleton(() => AuthUsecase(locator()));
 
   // local usecase
-  locator.registerLazySingleton(() => VerificacionUsecaseDB(locator()));
+  locator.registerLazySingleton(() => AuthUsecaseDB(locator()));
 
   // repository
   locator.registerLazySingleton<AuthRepository>(
@@ -88,11 +88,14 @@ authBlocInit() {
   );
 }
 
-menuBlocInit() {
-  // menu remote usecase
+menuCubitInit() {
+  //cubit
+  locator.registerFactory(() => MenuCubit(menu: locator(), menuDB: locator()));
+
+  // remote usecase
   locator.registerLazySingleton(() => MenuUsecase(locator()));
 
-  // menu local usecase
+  // local usecase
   locator.registerLazySingleton(() => MenuUsecaseDB(locator()));
 
   // repository
@@ -120,9 +123,108 @@ menuBlocInit() {
   locator.registerLazySingleton<MenuLocalDataSource>(
     () => MenuLocalDataSourceImpl(),
   );
+}
 
-  // bloc
-  locator.registerFactory(() => MenuBloc(menu: locator(), menuDB: locator()));
+convocatoriaInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => ConvocatoriaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => ConvocatoriaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<ConvocatoriaRepository>(
+    () => ConvocatoriaRepositoryImpl(
+      convocatoriaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<ConvocatoriaRepositoryDB>(
+    () => ConvocatoriaRepositoryDBImpl(
+      convocatoriaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<ConvocatoriaRemoteDataSource>(
+    () => ConvocatoriaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<ConvocatoriaLocalDataSource>(
+    () => ConvocatoriaLocalDataSourceImpl(),
+  );
+}
+
+tipoProyectoInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => TipoProyectoUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => TipoProyectoUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<TipoProyectoRepository>(
+    () => TipoProyectoRepositoryImpl(
+      tipoProyectoRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<TipoProyectoRepositoryDB>(
+    () => TipoProyectoRepositoryDBImpl(
+      tipoProyectoLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<TipoProyectoRemoteDataSource>(
+    () => TipoProyectoRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<TipoProyectoLocalDataSource>(
+    () => TipoProyectoLocalDataSourceImpl(),
+  );
+}
+
+unidadInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => UnidadUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => UnidadUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<UnidadRepository>(
+    () => UnidadRepositoryImpl(
+      unidadRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<UnidadRepositoryDB>(
+    () => UnidadRepositoryDBImpl(
+      unidadLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<UnidadRemoteDataSource>(
+    () => UnidadRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<UnidadLocalDataSource>(
+    () => UnidadLocalDataSourceImpl(),
+  );
 }
 
 perfilesBlocInit() {

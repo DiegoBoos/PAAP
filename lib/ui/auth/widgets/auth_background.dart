@@ -7,12 +7,8 @@ class AuthBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Stack(
-        children: [_PurpleBox(), _HeaderIcon(), child],
-      ),
+    return Column(
+      children: [_PurpleBox(), child],
     );
   }
 }
@@ -20,11 +16,8 @@ class AuthBackground extends StatelessWidget {
 class _PurpleBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Container(
       width: double.infinity,
-      height: size.height * 0.4,
       decoration: _purpleBackground(context),
       child: Stack(children: [
         Positioned(
@@ -51,30 +44,30 @@ class _PurpleBox extends StatelessWidget {
           bottom: 120,
           right: 20,
           child: _Bubble(),
-        )
+        ),
+        _BackgroundImage()
       ]),
     );
   }
 
   BoxDecoration _purpleBackground(BuildContext context) {
     return BoxDecoration(
+        borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(40), bottomRight: Radius.circular(40)),
         gradient: LinearGradient(colors: [
-      Theme.of(context).colorScheme.secondary,
-      Theme.of(context).colorScheme.primary
-    ]));
+          Theme.of(context).colorScheme.secondary,
+          Theme.of(context).colorScheme.primary
+        ]));
   }
 }
 
-class _HeaderIcon extends StatelessWidget {
+class _BackgroundImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(top: 30),
-        child: const Icon(Icons.person_pin, color: Colors.white, size: 100),
-      ),
-    );
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+            child: Image.asset('assets/images/logo.png')));
   }
 }
 

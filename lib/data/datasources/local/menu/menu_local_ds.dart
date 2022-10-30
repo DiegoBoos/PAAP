@@ -1,12 +1,12 @@
-import 'package:paap/data/models/menu_model.dart';
-import 'package:paap/domain/entities/menu_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../../db_config.dart';
+import '../../../../domain/entities/menu_entity.dart';
+import '../../../../domain/db/db_config.dart';
+import '../../../models/menu_model.dart';
 
 abstract class MenuLocalDataSource {
   Future<List<MenuModel>> getMenuDB();
-  Future<int> saveMenu(List<MenuEntity> menuEntity);
+  Future<MenuModel> saveMenu(MenuEntity menuEntity);
 }
 
 class MenuLocalDataSourceImpl implements MenuLocalDataSource {
@@ -20,8 +20,8 @@ class MenuLocalDataSourceImpl implements MenuLocalDataSource {
         Orden TEXT,
         MenuPadre	TEXT,
         TipoMenuId TEXT NOT NULL,
-        FOREIGN KEY(TipoMenuId) REFERENCES TipoMenu(TipoMenuId),
-        PRIMARY KEY(MenuId)
+        PRIMARY KEY(MenuId),
+        FOREIGN KEY(TipoMenuId) REFERENCES TipoMenu(TipoMenuId)
       )
     ''');
   }
@@ -39,18 +39,11 @@ class MenuLocalDataSourceImpl implements MenuLocalDataSource {
   }
 
   @override
-  Future<int> saveMenu(List<MenuEntity> menuEntity) async {
+  Future<MenuModel> saveMenu(MenuEntity menuEntity) async {
     final db = await DBConfig.database;
 
-    var batch = db.batch();
-    batch.delete('Menu');
-
-    for (var menu in menuEntity) {
-      batch.insert('Menu', menu.toJson());
-    }
-
-    final res = await batch.commit();
-
-    return res.length;
+    final menuJson = menuEntity.toJson();
+    await db.insert('Menu', menuJson);
+    return MenuModel.fromJson(menuJson);
   }
 }

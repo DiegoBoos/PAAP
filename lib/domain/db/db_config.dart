@@ -1,12 +1,16 @@
 import 'dart:io';
 
-import 'package:paap/data/datasources/local/perfiles/perfiles_local_ds.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+
 import 'package:sqflite/sqflite.dart';
 
-import 'datasources/local/auth/auth_local_ds.dart';
-import 'datasources/local/menu/menu_local_ds.dart';
+import '../../data/datasources/local/auth/auth_local_ds.dart';
+import '../../data/datasources/local/convocatoria/convocatoria_local_ds.dart';
+import '../../data/datasources/local/menu/menu_local_ds.dart';
+import '../../data/datasources/local/perfiles/perfiles_local_ds.dart';
+import '../../data/datasources/local/tipo_proyecto/tipo_proyecto_local_ds.dart';
+import '../../data/datasources/local/unidad/unidad_local_ds.dart';
 
 class DBConfig {
   static Database? _database;
@@ -27,10 +31,18 @@ class DBConfig {
         onCreate: (Database db, int version) async {
       AuthLocalDataSourceImpl.createUserTable(db);
       MenuLocalDataSourceImpl.createMenuTable(db);
-      PerfilesLocalDataSourceImpl.createSchemaPerfil(db);
+      ConvocatoriaLocalDataSourceImpl.createConvocatoriaTable(db);
+      TipoProyectoLocalDataSourceImpl.createTipoProyectoTable(db);
+      UnidadLocalDataSourceImpl.createUnidadTable(db);
+      PerfilesLocalDataSourceImpl.createPerfilTable(db);
     });
 
     return _database!;
+  }
+
+  Future<int> truncateTable(String name) async {
+    final db = await database;
+    return await db.delete(name);
   }
 
   void deleteDB() async {

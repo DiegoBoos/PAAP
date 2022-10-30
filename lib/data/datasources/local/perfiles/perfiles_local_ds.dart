@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../../domain/entities/perfil_entity.dart';
 
-import '../../../db_config.dart';
+import '../../../../domain/db/db_config.dart';
 import '../../../models/perfil_model.dart';
 
 abstract class PerfilesLocalDataSource {
@@ -13,58 +13,10 @@ abstract class PerfilesLocalDataSource {
 }
 
 class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
-  static createSchemaPerfil(Database db) async {
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS Convocatoria (
-        ConvocatoriaId	INTEGER NOT NULL,
-        Nombre	TEXT,
-        Descripcion	TEXT,
-        FechaInicial	TEXT,
-        FechaFinal	TEXT,
-        Recursos	INTEGER,
-        PRIMARY KEY(ConvocatoriaId)
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS Convocatoria (
-        ConvocatoriaId	INTEGER NOT NULL,
-        Nombre	TEXT,
-        Descripcion	TEXT,
-        FechaInicial	TEXT,
-        FechaFinal	TEXT,
-        Recursos	INTEGER,
-        PRIMARY KEY(ConvocatoriaId)
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS TipoProyecto (
-        TipoProyectoId	INTEGER NOT NULL,
-        Name	TEXT,
-        PRIMARY KEY(TipoProyectoId)
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS Unidad (
-        UnidadId	INTEGER NOT NULL,
-        Nombre	TEXT,
-        Simbolo	TEXT,
-        PRIMARY KEY(UnidadId)
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS Producto (
-        ProductoId	INTEGER NOT NULL,
-        Nombre	TEXT,
-        UnidadId	INTEGER NOT NULL,
-        EsProducto	INTEGER,
-        EsAsociado	INTEGER,
-        PRIMARY KEY(ProductoId),
-        FOREIGN KEY(UnidadId) REFERENCES Unidad(UnidadId)
-      )
-    ''');
+  static createPerfilTable(Database db) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS Departamento (
-        DepartamentoId	INTEGER NOT NULL,
+        DepartamentoId	TEXT NOT NULL,
         Nombre	TEXT,
         PRIMARY KEY(DepartamentoId)
       )
@@ -103,18 +55,6 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
 	      FOREIGN KEY(ProductoAsociadoId) REFERENCES Producto(ProductoId)
       )
     ''');
-
-    /*  await db.execute('''
-      CREATE TABLE IF NOT EXISTS Perfiles (
-        ID	TEXT NOT NULL,
-        Nombre	TEXT,
-        Abreviatura	TEXT,
-        Valor_x0020_Proyécto	TEXT,
-        Incentivo_x0020_Módular	TEXT,
-        Ubicación	TEXT,
-        Categorización	TEXT
-      )
-    '''); */
   }
 
   @override

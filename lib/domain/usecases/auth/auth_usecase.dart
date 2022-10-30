@@ -4,12 +4,12 @@ import '../../core/error/failure.dart';
 import '../../entities/usuario_entity.dart';
 import '../../repositories/auth/auth_repository.dart';
 
-class VerificacionUsecase {
+class AuthUsecase {
   final AuthRepository repository;
 
-  VerificacionUsecase(this.repository);
+  AuthUsecase(this.repository);
 
-  Future<Either<Failure, UsuarioEntity>> verificacionUsecase(
+  Future<Either<Failure, UsuarioEntity?>> verificacionUsecase(
       UsuarioEntity usuario) {
     return repository.verificacionRepository(usuario);
   }

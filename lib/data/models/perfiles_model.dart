@@ -1,4 +1,4 @@
-import '../../domain/entities/perfiles_entity.dart';
+import 'package:paap/domain/entities/perfiles_entity.dart';
 
 class PerfilesModel extends PerfilesEntity {
   PerfilesModel({

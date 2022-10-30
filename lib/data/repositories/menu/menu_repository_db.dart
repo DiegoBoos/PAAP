@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:paap/domain/entities/menu_entity.dart';
 
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 
+import '../../../domain/entities/menu_entity.dart';
 import '../../../domain/repositories/menu/menu_repository_db.dart';
 import '../../datasources/local/menu/menu_local_ds.dart';
 
@@ -26,8 +26,8 @@ class MenuRepositoryDBImpl implements MenuRepositoryDB {
   }
 
   @override
-  Future<Either<Failure, int>> saveMenuRepositoryDB(
-      List<MenuEntity> menuEntity) async {
+  Future<Either<Failure, MenuEntity>> saveMenuRepositoryDB(
+      MenuEntity menuEntity) async {
     try {
       final menuDB = await menuLocalDataSource.saveMenu(menuEntity);
       return Right(menuDB);

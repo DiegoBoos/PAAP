@@ -4,14 +4,13 @@ import '../../core/error/failure.dart';
 import '../../entities/usuario_entity.dart';
 import '../../repositories/auth/auth_repository_db.dart';
 
-class VerificacionUsecaseDB {
+class AuthUsecaseDB {
   final AuthRepositoryDB repositoryDB;
 
-  VerificacionUsecaseDB(this.repositoryDB);
+  AuthUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, int>> saveUsuarioUsecaseDB(
-      UsuarioEntity usuarioEntity) {
-    return repositoryDB.saveUsuarioRepositoryDB(usuarioEntity);
+  Future<Either<Failure, int>> saveUsuarioUsecase(UsuarioEntity usuario) {
+    return repositoryDB.saveUsuarioRepositoryDB(usuario);
   }
 
   Future<Either<Failure, UsuarioEntity?>> verificacionUsecaseDB(

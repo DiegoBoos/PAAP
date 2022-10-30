@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:paap/domain/entities/menu_entity.dart';
 
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 
+import '../../../domain/entities/menu_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/menu/menu_repository.dart';
 import '../../datasources/remote/menu/menu_remote_ds.dart';

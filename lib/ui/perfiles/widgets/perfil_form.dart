@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
-import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../utils/input_decoration.dart';
 
 class PerfilForm extends StatefulWidget {
@@ -22,23 +21,10 @@ class _PerfilFormState extends State<PerfilForm> {
   @override
   void initState() {
     super.initState();
-    getPerfil();
-  }
-
-  void getPerfil() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    final internetCubit = BlocProvider.of<InternetCubit>(context);
     final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
-
-    if (internetCubit.state is InternetConnected) {
-      perfilesBloc.add(GetPerfil(
-          usuario: authBloc.state.usuario!, perfilId: widget.perfilId));
-    } else if (internetCubit.state is InternetDisconnected) {
-      perfilesBloc.add(GetPerfil(
-          usuario: authBloc.state.usuario!,
-          perfilId: widget.perfilId,
-          isOffline: true));
-    }
+    perfilesBloc.add(
+        GetPerfil(usuario: authBloc.state.usuario!, perfilId: widget.perfilId));
   }
 
   @override
@@ -49,16 +35,14 @@ class _PerfilFormState extends State<PerfilForm> {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is PerfilLoaded) {
-          //TODO: crear blocs accesorias para los dropdowns
           final perfil = state.perfilLoaded!;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
             child: Column(children: [
               TextFormField(
                   enabled: false,
-                  initialValue: perfil.perfilId,
                   decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Id. Perfil', labelText: 'Id. Perfil')),
+                      hintText: 'ID Alianza', labelText: 'ID Alianza')),
               const SizedBox(height: 20),
               TextFormField(
                   initialValue: perfil.nombre,

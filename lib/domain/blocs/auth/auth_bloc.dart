@@ -1,20 +1,20 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:paap/domain/usecases/auth/verificacion_usecase.dart';
-import 'package:paap/domain/usecases/auth/verificacion_db_usecase.dart';
 import '../../entities/usuario_entity.dart';
+import '../../usecases/auth/auth_db_usecase.dart';
+import '../../usecases/auth/auth_usecase.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final VerificacionUsecase verificacion;
-  final VerificacionUsecaseDB verificacionDB;
+  final AuthUsecase auth;
+  final AuthUsecaseDB authDB;
 
   AuthBloc({
-    required this.verificacion,
-    required this.verificacionDB,
+    required this.auth,
+    required this.authDB,
   }) : super(AuthInitial()) {
     on<LogIn>((event, emit) async {
       if (event.isOffline) {
@@ -29,24 +29,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogOut>((_, emit) async {
       emit(AuthInitial());
     });
+
+    on<SaveUsuario>((event, emit) async {
+      await _saveUsuario(event.usuario, emit);
+    });
   }
 
   _logIn(event, emit) async {
     final usuario = event.usuario;
 
-    final result = await verificacion.verificacionUsecase(usuario);
+    final result = await auth.verificacionUsecase(usuario);
     result.fold((failure) {
       emit(AuthError(failure.properties.first));
     }, (data) async {
       emit(AuthLoaded(data));
-      await _saveUsuario(data, emit);
     });
   }
 
   _logInDB(event, emit) async {
     final usuario = event.usuario;
 
-    final result = await verificacionDB.verificacionUsecaseDB(usuario);
+    final result = await authDB.verificacionUsecaseDB(usuario);
     result.fold((failure) {
       emit(AuthError(failure.properties.first));
     }, (data) {
@@ -56,8 +59,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
-  _saveUsuario(UsuarioEntity data, emit) async {
-    final result = await verificacionDB.saveUsuarioUsecaseDB(data);
+  _saveUsuario(UsuarioEntity usuario, emit) async {
+    final result = await authDB.saveUsuarioUsecase(usuario);
     result.fold((failure) {
       emit(AuthError(failure.properties.first));
     }, (_) {});

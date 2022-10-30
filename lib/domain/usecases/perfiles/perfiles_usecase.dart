@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../core/error/failure.dart';
 import '../../entities/perfil_entity.dart';
-import '../../entities/perfiles_entity.dart';
 import '../../entities/usuario_entity.dart';
 import '../../entities/vperfil_entity.dart';
 import '../../repositories/perfiles/perfiles_repository.dart';

@@ -1,4 +1,4 @@
-import '../../domain/entities/producto_entity.dart';
+import 'package:paap/domain/entities/producto_entity.dart';
 
 class ProductoModel extends ProductoEntity {
   ProductoModel(
