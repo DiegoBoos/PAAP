@@ -4,13 +4,13 @@ class ProductoModel extends ProductoEntity {
   ProductoModel(
       {required String id,
       required String nombre,
-      required String unidadid,
+      String? unidadid,
       required String esproducto,
       required String esasociado})
       : super(
             id: id,
             nombre: nombre,
-            unidadid: unidadid,
+            unidadid: unidadid ?? '',
             esproducto: esproducto,
             esasociado: esasociado);
 

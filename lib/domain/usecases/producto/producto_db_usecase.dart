@@ -1,18 +1,19 @@
 import 'package:dartz/dartz.dart';
 import '../../core/error/failure.dart';
-import '../../entities/menu_entity.dart';
-import '../../repositories/menu/menu_repository_db.dart';
+import '../../entities/producto_entity.dart';
+import '../../repositories/producto/producto_repository_db.dart';
 
-class MenuUsecaseDB {
-  final MenuRepositoryDB repositoryDB;
+class ProductoUsecaseDB {
+  final ProductoRepositoryDB repositoryDB;
 
-  MenuUsecaseDB(this.repositoryDB);
+  ProductoUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<MenuEntity>?>> getMenuUsecaseDB() {
-    return repositoryDB.getMenuRepositoryDB();
+  Future<Either<Failure, List<ProductoEntity>?>> getProductoUsecaseDB() {
+    return repositoryDB.getProductosRepositoryDB();
   }
 
-  Future<Either<Failure, MenuEntity>> saveMenuUsecaseDB(MenuEntity menuEntity) {
-    return repositoryDB.saveMenuRepositoryDB(menuEntity);
+  Future<Either<Failure, int>> saveProductoUsecaseDB(
+      List<ProductoEntity> productos) {
+    return repositoryDB.saveProductosRepositoryDB(productos);
   }
 }

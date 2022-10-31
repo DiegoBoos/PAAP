@@ -42,6 +42,8 @@ class MenuLocalDataSourceImpl implements MenuLocalDataSource {
   Future<MenuModel> saveMenu(MenuEntity menuEntity) async {
     final db = await DBConfig.database;
 
+    await db.delete('Menu');
+
     final menuJson = menuEntity.toJson();
     await db.insert('Menu', menuJson);
     return MenuModel.fromJson(menuJson);

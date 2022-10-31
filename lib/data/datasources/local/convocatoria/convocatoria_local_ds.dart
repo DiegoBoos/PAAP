@@ -42,6 +42,8 @@ class ConvocatoriaLocalDataSourceImpl implements ConvocatoriaLocalDataSource {
       ConvocatoriaEntity convocatoriaEntity) async {
     final db = await DBConfig.database;
 
+    await db.delete('Convocatoria');
+
     final menuJson = convocatoriaEntity.toJson();
     await db.insert('Convocatoria', menuJson);
 

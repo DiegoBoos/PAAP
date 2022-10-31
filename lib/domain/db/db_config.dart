@@ -9,6 +9,7 @@ import '../../data/datasources/local/auth/auth_local_ds.dart';
 import '../../data/datasources/local/convocatoria/convocatoria_local_ds.dart';
 import '../../data/datasources/local/menu/menu_local_ds.dart';
 import '../../data/datasources/local/perfiles/perfiles_local_ds.dart';
+import '../../data/datasources/local/producto/producto_local_ds.dart';
 import '../../data/datasources/local/tipo_proyecto/tipo_proyecto_local_ds.dart';
 import '../../data/datasources/local/unidad/unidad_local_ds.dart';
 
@@ -35,6 +36,7 @@ class DBConfig {
       TipoProyectoLocalDataSourceImpl.createTipoProyectoTable(db);
       UnidadLocalDataSourceImpl.createUnidadTable(db);
       PerfilesLocalDataSourceImpl.createPerfilTable(db);
+      ProductoLocalDataSourceImpl.createProductoTable(db);
     });
 
     return _database!;

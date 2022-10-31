@@ -3,12 +3,20 @@ import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 import 'package:paap/domain/cubits/menu/menu_cubit.dart';
 
+import 'data/datasources/local/producto/producto_local_ds.dart';
+import 'data/datasources/remote/producto/producto_remote_ds.dart';
+import 'data/repositories/producto/producto_repository.dart';
+import 'data/repositories/producto/producto_repository_db.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
+import 'domain/repositories/producto/producto_repository.dart';
+import 'domain/repositories/producto/producto_repository_db.dart';
 import 'domain/usecases/auth/auth_exports.dart';
 import 'domain/usecases/menu/menu_exports.dart';
 import 'domain/usecases/convocatoria/convocatoria_exports.dart';
 import 'domain/usecases/perfiles/perfiles_exports.dart';
+import 'domain/usecases/producto/producto_db_usecase.dart';
+import 'domain/usecases/producto/producto_usecase.dart';
 import 'domain/usecases/tipo_proyecto/tipo_proyecto_exports.dart';
 import 'domain/usecases/unidad/unidad_exports.dart';
 
@@ -22,6 +30,7 @@ void init() {
   convocatoriaInit();
   tipoProyectoInit();
   unidadInit();
+  productosInit();
   perfilesBlocInit();
 
   // external
@@ -40,7 +49,9 @@ downloadSyncInit() {
       tipoProyecto: locator(),
       tipoProyectoDB: locator(),
       unidad: locator(),
-      unidadDB: locator()));
+      unidadDB: locator(),
+      productos: locator(),
+      productosDB: locator()));
 }
 
 internetCubitInit() {
@@ -265,5 +276,39 @@ perfilesBlocInit() {
   // local data source
   locator.registerLazySingleton<PerfilesLocalDataSource>(
     () => PerfilesLocalDataSourceImpl(),
+  );
+}
+
+productosInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => ProductoUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => ProductoUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<ProductoRepository>(
+    () => ProductoRepositoryImpl(
+      productoRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<ProductoRepositoryDB>(
+    () => ProductoRepositoryDBImpl(
+      productoLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<ProductoRemoteDataSource>(
+    () => ProductoRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<ProductoLocalDataSource>(
+    () => ProductoLocalDataSourceImpl(),
   );
 }

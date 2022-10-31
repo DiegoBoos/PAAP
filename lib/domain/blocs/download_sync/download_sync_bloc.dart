@@ -1,22 +1,21 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:paap/domain/db/db_config.dart';
 
-import '../../core/error/failure.dart';
 import '../../entities/convocatoria_entity.dart';
 import '../../entities/menu_entity.dart';
 import '../../entities/perfil_entity.dart';
 import '../../entities/tipo_proyecto_entity.dart';
 import '../../entities/unidad_entity.dart';
 import '../../entities/usuario_entity.dart';
+import '../../entities/producto_entity.dart';
 import '../../usecases/convocatoria/convocatoria_exports.dart';
 import '../../usecases/menu/menu_exports.dart';
 import '../../usecases/perfiles/perfiles_exports.dart';
 import '../../usecases/tipo_proyecto/tipo_proyecto_exports.dart';
 import '../../usecases/unidad/unidad_exports.dart';
+import '../../usecases/producto/producto_exports.dart';
 
 part 'download_sync_event.dart';
 part 'download_sync_state.dart';
@@ -45,6 +44,9 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final PerfilesUsecase perfiles;
   final PerfilesUsecaseDB perfilesDB;
 
+  final ProductoUsecase productos;
+  final ProductoUsecaseDB productosDB;
+
   DownloadSyncBloc({
     required this.menu,
     required this.menuDB,
@@ -56,16 +58,19 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.unidadDB,
     required this.perfiles,
     required this.perfilesDB,
+    required this.productos,
+    required this.productosDB,
   }) : super(DownloadSyncInitial()) {
     listenDownloadStates();
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
       emit(DownloadSyncInProgress());
       downloadMenu(usuario, emit);
-      //downloadConvocatorias(usuario, emit);
-      //downloadTiposProyectos(usuario, emit);
-      //downloadUnidades(usuario, emit);
-      //downloadPerfiles(usuario, emit);
+      downloadConvocatorias(usuario, emit);
+      downloadTiposProyectos(usuario, emit);
+      downloadUnidades(usuario, emit);
+      downloadPerfiles(usuario, emit);
+      downloadProductos(usuario, emit);
     });
 
     on<DownloadStatusChanged>((event, emit) {
@@ -102,7 +107,6 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
         .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
             (data) {
       menus = data;
-      DBConfig.db.truncateTable('Menu').then((_) => insertMenu(menus[0], emit));
     });
   }
 
@@ -138,9 +142,6 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
         .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
             (data) {
       convocatorias = data;
-      DBConfig.db
-          .truncateTable('Convocatoria')
-          .then((_) => insertConvocatoria(convocatorias[0], emit));
     });
   }
 
@@ -186,7 +187,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     final result = await tipoProyectoDB.saveTiposProyectosUsecaseDB(data);
     return result.fold(
         (failure) => emit(DownloadSyncFailure(failure.properties.first)), (_) {
-      getTiposProyectosDB();
+      //getTiposProyectosDB();
     });
   }
 
@@ -205,7 +206,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     final result = await unidadDB.saveUnidadesUsecaseDB(data);
     return result.fold(
         (failure) => emit(DownloadSyncFailure(failure.properties.first)), (_) {
-      getUnidadesDB();
+      //getUnidadesDB();
     });
   }
 
@@ -224,7 +225,26 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     final result = await perfilesDB.savePerfilesUsecaseDB(data);
     return result.fold(
         (failure) => emit(DownloadSyncFailure(failure.properties.first)), (_) {
-      getPerfilesDB();
+      //getPerfilesDB();
+    });
+  }
+
+  void downloadProductos(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await productos.getProductosUsecase(usuario);
+    return result
+        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
+            (data) {
+      saveProductos(data, emit);
+    });
+  }
+
+  void saveProductos(
+      List<ProductoEntity> data, Emitter<DownloadSyncState> emit) async {
+    final result = await productosDB.saveProductoUsecaseDB(data);
+    return result.fold(
+        (failure) => emit(DownloadSyncFailure(failure.properties.first)), (_) {
+      //getPerfilesDB();
     });
   }
 
@@ -256,7 +276,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     return alianzasMenu;
   }
 
-  Future<Either<Failure, List<ConvocatoriaEntity>?>>
+  /*Future<Either<Failure, List<ConvocatoriaEntity>?>>
       getConvocatoriasDB() async {
     final result = await convocatoriaDB.getConvocatoriasUsecaseDB();
     return result.fold(
@@ -280,5 +300,5 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     final result = await perfilesDB.getPerfilesUsecaseDB();
     return result.fold(
         (failure) => Left(failure.properties.first), (data) => Right(data));
-  }
+  }*/
 }
