@@ -3,15 +3,23 @@ import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 import 'package:paap/domain/cubits/menu/menu_cubit.dart';
 
+import 'data/datasources/local/genero/genero_local_ds.dart';
 import 'data/datasources/local/producto/producto_local_ds.dart';
+import 'data/datasources/remote/genero/genero_remote_ds.dart';
 import 'data/datasources/remote/producto/producto_remote_ds.dart';
+import 'data/repositories/genero/genero_repository.dart';
+import 'data/repositories/genero/genero_repository_db.dart';
 import 'data/repositories/producto/producto_repository.dart';
 import 'data/repositories/producto/producto_repository_db.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
+import 'domain/repositories/genero/genero_repository.dart';
+import 'domain/repositories/genero/genero_repository_db.dart';
 import 'domain/repositories/producto/producto_repository.dart';
 import 'domain/repositories/producto/producto_repository_db.dart';
 import 'domain/usecases/auth/auth_exports.dart';
+import 'domain/usecases/genero/genero_db_usecase.dart';
+import 'domain/usecases/genero/genero_usecase.dart';
 import 'domain/usecases/menu/menu_exports.dart';
 import 'domain/usecases/convocatoria/convocatoria_exports.dart';
 import 'domain/usecases/perfiles/perfiles_exports.dart';
@@ -31,6 +39,7 @@ void init() {
   tipoProyectoInit();
   unidadInit();
   productosInit();
+  generosInit();
   perfilesBlocInit();
 
   // external
@@ -51,7 +60,9 @@ downloadSyncInit() {
       unidad: locator(),
       unidadDB: locator(),
       productos: locator(),
-      productosDB: locator()));
+      productosDB: locator(),
+      generos: locator(),
+      generosDB: locator()));
 }
 
 internetCubitInit() {
@@ -310,5 +321,39 @@ productosInit() {
   // local data source
   locator.registerLazySingleton<ProductoLocalDataSource>(
     () => ProductoLocalDataSourceImpl(),
+  );
+}
+
+generosInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => GeneroUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => GeneroUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<GeneroRepository>(
+    () => GeneroRepositoryImpl(
+      generoRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<GeneroRepositoryDB>(
+    () => GeneroRepositoryDBImpl(
+      generoLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<GeneroRemoteDataSource>(
+    () => GeneroRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<GeneroLocalDataSource>(
+    () => GeneroLocalDataSourceImpl(),
   );
 }

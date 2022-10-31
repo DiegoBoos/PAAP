@@ -12,7 +12,7 @@ class MenuUsecaseDB {
     return repositoryDB.getMenuRepositoryDB();
   }
 
-  Future<Either<Failure, MenuEntity>> saveMenuUsecaseDB(MenuEntity menuEntity) {
-    return repositoryDB.saveMenuRepositoryDB(menuEntity);
+  Future<Either<Failure, int>> saveMenuUsecaseDB(List<MenuEntity> menu) {
+    return repositoryDB.saveMenuRepositoryDB(menu);
   }
 }

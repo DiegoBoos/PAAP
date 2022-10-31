@@ -26,8 +26,8 @@ class MenuRepositoryDBImpl implements MenuRepositoryDB {
   }
 
   @override
-  Future<Either<Failure, MenuEntity>> saveMenuRepositoryDB(
-      MenuEntity menuEntity) async {
+  Future<Either<Failure, int>> saveMenuRepositoryDB(
+      List<MenuEntity> menuEntity) async {
     try {
       final menuDB = await menuLocalDataSource.saveMenu(menuEntity);
       return Right(menuDB);

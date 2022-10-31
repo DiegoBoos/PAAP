@@ -7,6 +7,6 @@ abstract class ConvocatoriaRepositoryDB {
   Future<Either<Failure, List<ConvocatoriaEntity>>>
       getConvocatoriasRepositoryDB();
 
-  Future<Either<Failure, ConvocatoriaEntity>> saveConvocatoriaRepositoryDB(
-      ConvocatoriaEntity convocatoriaEntity);
+  Future<Either<Failure, int>> saveConvocatoriaRepositoryDB(
+      List<ConvocatoriaEntity> convocatoriaEntity);
 }

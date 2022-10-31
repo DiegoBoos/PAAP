@@ -64,8 +64,28 @@ class _SignInPageState extends State<SignInPage> {
       },
       builder: (context, state) {
         if (state is AuthLoading) {
-          return const LoadingPage(
-            title: 'Progress...',
+          return BlocConsumer<DownloadSyncBloc, DownloadSyncState>(
+            listener: (context, state) {
+              if (state is DownloadSyncSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Descarga finalizada con éxito'),
+                    backgroundColor: Colors.green));
+
+                Navigator.of(context).pushReplacementNamed('tabs');
+              } else if (state is DownloadSyncFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(state.message), backgroundColor: Colors.red));
+              }
+            },
+            builder: (context, state) {
+              if (state is DownloadSyncInProgress) {
+                final msg = state.title;
+                return const LoadingPage(
+                  title: 'Progress...',
+                );
+              }
+              return const SizedBox();
+            },
           );
         }
 
@@ -190,7 +210,7 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                         ],
                       ),
-                      BlocConsumer<DownloadSyncBloc, DownloadSyncState>(
+                      /* BlocConsumer<DownloadSyncBloc, DownloadSyncState>(
                           listener: (context, state) {
                         if (state is DownloadSyncSuccess) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -212,7 +232,7 @@ class _SignInPageState extends State<SignInPage> {
                         }
 
                         return const SizedBox();
-                      }),
+                      }), */
                     ],
                   ),
                 ),

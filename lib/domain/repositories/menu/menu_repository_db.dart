@@ -6,6 +6,6 @@ import '../../entities/menu_entity.dart';
 abstract class MenuRepositoryDB {
   Future<Either<Failure, List<MenuEntity>>> getMenuRepositoryDB();
 
-  Future<Either<Failure, MenuEntity>> saveMenuRepositoryDB(
-      MenuEntity menuEntity);
+  Future<Either<Failure, int>> saveMenuRepositoryDB(
+      List<MenuEntity> menuEntity);
 }

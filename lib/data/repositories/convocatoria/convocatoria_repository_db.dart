@@ -28,8 +28,8 @@ class ConvocatoriaRepositoryDBImpl implements ConvocatoriaRepositoryDB {
   }
 
   @override
-  Future<Either<Failure, ConvocatoriaEntity>> saveConvocatoriaRepositoryDB(
-      ConvocatoriaEntity convocatoriaEntity) async {
+  Future<Either<Failure, int>> saveConvocatoriaRepositoryDB(
+      List<ConvocatoriaEntity> convocatoriaEntity) async {
     try {
       final convocatoriaDB = await convocatoriaLocalDataSource
           .saveConvocatoria(convocatoriaEntity);

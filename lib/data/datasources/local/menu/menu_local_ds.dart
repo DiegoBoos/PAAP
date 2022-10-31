@@ -6,7 +6,7 @@ import '../../../models/menu_model.dart';
 
 abstract class MenuLocalDataSource {
   Future<List<MenuModel>> getMenuDB();
-  Future<MenuModel> saveMenu(MenuEntity menuEntity);
+  Future<int> saveMenu(List<MenuEntity> menuEntity);
 }
 
 class MenuLocalDataSourceImpl implements MenuLocalDataSource {
@@ -39,13 +39,18 @@ class MenuLocalDataSourceImpl implements MenuLocalDataSource {
   }
 
   @override
-  Future<MenuModel> saveMenu(MenuEntity menuEntity) async {
+  Future<int> saveMenu(List<MenuEntity> menuEntity) async {
     final db = await DBConfig.database;
 
-    await db.delete('Menu');
+    var batch = db.batch();
+    batch.delete('Menu');
 
-    final menuJson = menuEntity.toJson();
-    await db.insert('Menu', menuJson);
-    return MenuModel.fromJson(menuJson);
+    for (var menu in menuEntity) {
+      batch.insert('Menu', menu.toJson());
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
   }
 }

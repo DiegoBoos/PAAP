@@ -13,8 +13,8 @@ class ConvocatoriaUsecaseDB {
     return repositoryDB.getConvocatoriasRepositoryDB();
   }
 
-  Future<Either<Failure, ConvocatoriaEntity>> saveConvocatoriaUsecaseDB(
-      ConvocatoriaEntity convocatoriaEntity) {
-    return repositoryDB.saveConvocatoriaRepositoryDB(convocatoriaEntity);
+  Future<Either<Failure, int>> saveConvocatoriaUsecaseDB(
+      List<ConvocatoriaEntity> menu) {
+    return repositoryDB.saveConvocatoriaRepositoryDB(menu);
   }
 }

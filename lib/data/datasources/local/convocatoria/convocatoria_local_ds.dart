@@ -6,8 +6,7 @@ import '../../../models/convocatoria.dart';
 
 abstract class ConvocatoriaLocalDataSource {
   Future<List<ConvocatoriaModel>> getConvocatoriasDB();
-  Future<ConvocatoriaModel> saveConvocatoria(
-      ConvocatoriaEntity convocatoriaEntity);
+  Future<int> saveConvocatoria(List<ConvocatoriaEntity> convocatoriaEntity);
 }
 
 class ConvocatoriaLocalDataSourceImpl implements ConvocatoriaLocalDataSource {
@@ -38,15 +37,19 @@ class ConvocatoriaLocalDataSourceImpl implements ConvocatoriaLocalDataSource {
   }
 
   @override
-  Future<ConvocatoriaModel> saveConvocatoria(
-      ConvocatoriaEntity convocatoriaEntity) async {
+  Future<int> saveConvocatoria(
+      List<ConvocatoriaEntity> convocatoriaEntity) async {
     final db = await DBConfig.database;
 
-    await db.delete('Convocatoria');
+    var batch = db.batch();
+    batch.delete('Convocatoria');
 
-    final menuJson = convocatoriaEntity.toJson();
-    await db.insert('Convocatoria', menuJson);
+    for (var convocatoria in convocatoriaEntity) {
+      batch.insert('Convocatoria', convocatoria.toJson());
+    }
 
-    return ConvocatoriaModel.fromJson(menuJson);
+    final res = await batch.commit();
+
+    return res.length;
   }
 }

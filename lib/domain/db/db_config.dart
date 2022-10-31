@@ -7,6 +7,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../data/datasources/local/auth/auth_local_ds.dart';
 import '../../data/datasources/local/convocatoria/convocatoria_local_ds.dart';
+import '../../data/datasources/local/genero/genero_local_ds.dart';
 import '../../data/datasources/local/menu/menu_local_ds.dart';
 import '../../data/datasources/local/perfiles/perfiles_local_ds.dart';
 import '../../data/datasources/local/producto/producto_local_ds.dart';
@@ -37,6 +38,7 @@ class DBConfig {
       UnidadLocalDataSourceImpl.createUnidadTable(db);
       PerfilesLocalDataSourceImpl.createPerfilTable(db);
       ProductoLocalDataSourceImpl.createProductoTable(db);
+      GeneroLocalDataSourceImpl.createGeneroTable(db);
     });
 
     return _database!;
