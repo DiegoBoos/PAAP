@@ -66,11 +66,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       final usuario = event.usuario;
       emit(DownloadSyncInProgress());
       downloadMenu(usuario, emit);
-      downloadConvocatorias(usuario, emit);
-      downloadTiposProyectos(usuario, emit);
-      downloadUnidades(usuario, emit);
-      downloadPerfiles(usuario, emit);
-      downloadProductos(usuario, emit);
+      //downloadConvocatorias(usuario, emit);
+      //downloadTiposProyectos(usuario, emit);
+      //downloadUnidades(usuario, emit);
+      //downloadPerfiles(usuario, emit);
+      //downloadProductos(usuario, emit);
     });
 
     on<DownloadStatusChanged>((event, emit) {
