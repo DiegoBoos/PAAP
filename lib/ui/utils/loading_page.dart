@@ -20,7 +20,7 @@ class LoadingPage extends StatelessWidget {
             size: 100.0,
           ),
           const SizedBox(height: 10),
-          const Text('Progress...')
+          Text(title)
         ],
       ),
     );

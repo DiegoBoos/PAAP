@@ -31,22 +31,17 @@ class DBConfig {
     //Crear base de datos
     _database = await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      AuthLocalDataSourceImpl.createUserTable(db);
-      MenuLocalDataSourceImpl.createMenuTable(db);
-      ConvocatoriaLocalDataSourceImpl.createConvocatoriaTable(db);
-      TipoProyectoLocalDataSourceImpl.createTipoProyectoTable(db);
-      UnidadLocalDataSourceImpl.createUnidadTable(db);
-      PerfilesLocalDataSourceImpl.createPerfilTable(db);
-      ProductoLocalDataSourceImpl.createProductoTable(db);
-      GeneroLocalDataSourceImpl.createGeneroTable(db);
+      await AuthLocalDataSourceImpl.createUserTable(db);
+      await MenuLocalDataSourceImpl.createMenuTable(db);
+      await ConvocatoriaLocalDataSourceImpl.createConvocatoriaTable(db);
+      await TipoProyectoLocalDataSourceImpl.createTipoProyectoTable(db);
+      await UnidadLocalDataSourceImpl.createUnidadTable(db);
+      await PerfilesLocalDataSourceImpl.createPerfilTable(db);
+      await ProductoLocalDataSourceImpl.createProductoTable(db);
+      await GeneroLocalDataSourceImpl.createGeneroTable(db);
     });
 
     return _database!;
-  }
-
-  Future<int> truncateTable(String name) async {
-    final db = await database;
-    return await db.delete(name);
   }
 
   void deleteDB() async {

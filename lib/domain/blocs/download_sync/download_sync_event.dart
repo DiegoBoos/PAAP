@@ -13,22 +13,8 @@ class DownloadStarted extends DownloadSyncEvent {
   const DownloadStarted(this.usuario);
 }
 
-class DownloadStatusChanged extends DownloadSyncEvent {
-  final String title;
-  final int counter;
-  final double progress;
+class DownloadSyncError extends DownloadSyncEvent {
+  final String message;
 
-  const DownloadStatusChanged(
-      {required this.title, required this.counter, required this.progress});
-
-  @override
-  List<Object> get props => [title, counter, progress];
+  const DownloadSyncError(this.message);
 }
-
-class DownloadSyncCompleted extends DownloadSyncEvent {}
-
-class DownloadSyncError extends DownloadSyncEvent {}
-
-class MenuDownloaded extends DownloadSyncEvent {}
-
-class ConvocatoriasDownloaded extends DownloadSyncEvent {}

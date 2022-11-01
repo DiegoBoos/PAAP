@@ -24,19 +24,11 @@ part 'download_sync_event.dart';
 part 'download_sync_state.dart';
 
 class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
-  String title = '';
-  int counter = 0;
-  double progress = 0;
-
   final MenuUsecase menu;
   final MenuUsecaseDB menuDB;
-  List<MenuEntity> menus = [];
-  bool menuDownloaded = false;
 
   final ConvocatoriaUsecase convocatoria;
   final ConvocatoriaUsecaseDB convocatoriaDB;
-  List<ConvocatoriaEntity> convocatorias = [];
-  bool convocatoriasDownloaded = false;
 
   final TipoProyectoUsecase tipoProyecto;
   final TipoProyectoUsecaseDB tipoProyectoDB;
@@ -69,232 +61,156 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       required this.generos,
       required this.generosDB})
       : super(DownloadSyncInitial()) {
-    listenDownloadStates();
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
-      emit(DownloadSyncInProgress());
-      downloadMenu(usuario, emit);
-      downloadConvocatorias(usuario, emit);
-      downloadTiposProyectos(usuario, emit);
-      downloadUnidades(usuario, emit);
-      //downloadPerfiles(usuario, emit);
-      downloadProductos(usuario, emit);
-      downloadGeneros(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Descargando Menús',
+          counter: state.progressModel!.counter + 1)));
+      await downloadMenu(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Descargando Convocatorias',
+          counter: state.progressModel!.counter + 1)));
+      await downloadConvocatorias(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Descargando Tipos Proyectos',
+          counter: state.progressModel!.counter + 1)));
+      await downloadTiposProyectos(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Descargando Unidades',
+          counter: state.progressModel!.counter + 1)));
+      await downloadUnidades(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Descargando Perfiles',
+          counter: state.progressModel!.counter + 1)));
+      await downloadPerfiles(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Descargando Productos',
+          counter: state.progressModel!.counter + 1)));
+      await downloadProductos(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Descargando Géneros',
+          counter: state.progressModel!.counter + 1)));
+      await downloadGeneros(usuario, emit);
 
       emit(DownloadSyncSuccess());
     });
 
-    on<DownloadStatusChanged>((event, emit) {
-      emit(DownloadSyncInProgress(
-          title: event.title,
-          counter: event.counter,
-          progress: event.progress));
-    });
-
-    on<DownloadSyncCompleted>((_, emit) => emit(DownloadSyncSuccess()));
-
-    on<MenuDownloaded>((_, emit) => emit(MenuDownloadSyncSuccess()));
-
-    on<ConvocatoriasDownloaded>(
-        (_, emit) => emit(ConvocatoriasDownloadSyncSuccess()));
+    on<DownloadSyncError>(
+        (event, emit) => emit(DownloadSyncFailure(event.message)));
   }
 
-  StreamSubscription<DownloadSyncState> listenDownloadStates() {
-    return stream.listen((state) {
-      if (state is MenuDownloadSyncSuccess) menuDownloaded = true;
-      if (state is ConvocatoriasDownloadSyncSuccess) {
-        convocatoriasDownloaded = true;
-      }
-      if (menuDownloaded && convocatoriasDownloaded) {
-        add(DownloadSyncCompleted());
-      }
-    });
-  }
-
-  void downloadMenu(
+  Future<void> downloadMenu(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result = await menu.getMenuUsecase(usuario);
-    result
-        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
-            (data) {
-      menus = data;
-      saveMenu(menus, emit);
-    });
+    result.fold((failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveMenu(data, emit));
   }
 
-  void saveMenu(List<MenuEntity> data, Emitter<DownloadSyncState> emit) async {
+  Future<void> saveMenu(
+      List<MenuEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await menuDB.saveMenuUsecaseDB(data);
     return result.fold(
-        (failure) => emit(DownloadSyncFailure(failure.properties.first)),
-        (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
 
-  /* insertMenu(MenuEntity menuEntity, Emitter<DownloadSyncState> emit) async {
-    final result = await menuDB.saveMenuUsecaseDB(menuEntity);
-    result
-        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
-            (data) {
-      title = 'Descargando menus... $counter';
-      counter += 1;
-      progress = ((counter / menus.length) * 100) / 100;
-
-      if (counter >= menus.length) {
-        title = '';
-        counter = 0;
-        progress = 0.0;
-        add(MenuDownloaded());
-        return;
-      }
-
-      add(DownloadStatusChanged(
-          title: title, counter: counter, progress: progress));
-
-      MenuEntity menu = menus[counter];
-      insertMenu(menu, emit);
-    });
-  } */
-
-  void downloadConvocatorias(
+  Future<void> downloadConvocatorias(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result = await convocatoria.getConvocatoriasUsecase(usuario);
-    return result
-        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
-            (data) {
-      convocatorias = data;
-      saveConvocatorias(convocatorias, emit);
-    });
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveConvocatorias(data, emit));
   }
 
-  void saveConvocatorias(
+  Future<void> saveConvocatorias(
       List<ConvocatoriaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await convocatoriaDB.saveConvocatoriaUsecaseDB(data);
     return result.fold(
-        (failure) => emit(DownloadSyncFailure(failure.properties.first)),
-        (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
-  /* insertConvocatoria(ConvocatoriaEntity convocatoriaEntity,
-      Emitter<DownloadSyncState> emit) async {
-    final result =
-        await convocatoriaDB.saveConvocatoriaUsecaseDB(convocatoriaEntity);
-    result
-        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
-            (data) {
-      title = 'Descargando convocatorias... $counter';
-      counter += 1;
-      progress = ((counter / convocatorias.length) * 100) / 100;
 
-      if (counter >= convocatorias.length) {
-        title = '';
-        counter = 0;
-        progress = 0.0;
-        add(ConvocatoriasDownloaded());
-        return;
-      }
-
-      add(DownloadStatusChanged(
-          title: title, counter: counter, progress: progress));
-
-      ConvocatoriaEntity convocatoria = convocatorias[counter];
-      insertConvocatoria(convocatoria, emit);
-    });
-  } */
-
-  void downloadTiposProyectos(
+  Future<void> downloadTiposProyectos(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result = await tipoProyecto.getTiposProyectosUsecase(usuario);
-    return result
-        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
-            (data) {
-      saveTiposProyectos(data, emit);
-    });
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveTiposProyectos(data, emit));
   }
 
-  void saveTiposProyectos(
+  Future<void> saveTiposProyectos(
       List<TipoProyectoEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await tipoProyectoDB.saveTiposProyectosUsecaseDB(data);
     return result.fold(
-        (failure) => emit(DownloadSyncFailure(failure.properties.first)), (_) {
-      //getTiposProyectosDB();
-    });
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
 
-  void downloadUnidades(
+  Future<void> downloadUnidades(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result = await unidad.getUnidadesUsecase(usuario);
-    return result
-        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
-            (data) {
-      saveUnidades(data, emit);
-    });
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveUnidades(data, emit));
   }
 
-  void saveUnidades(
+  Future<void> saveUnidades(
       List<UnidadEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await unidadDB.saveUnidadesUsecaseDB(data);
     return result.fold(
-        (failure) => emit(DownloadSyncFailure(failure.properties.first)), (_) {
-      //getUnidadesDB();
-    });
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
 
-  void downloadPerfiles(
+  Future<void> downloadPerfiles(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result = await perfiles.getPerfilesUsecase(usuario);
-    return result
-        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
-            (data) {
-      savePerfiles(data, emit);
-    });
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await savePerfiles(data, emit));
   }
 
-  void savePerfiles(
+  Future<void> savePerfiles(
       List<PerfilEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await perfilesDB.savePerfilesUsecaseDB(data);
     return result.fold(
-        (failure) => emit(DownloadSyncFailure(failure.properties.first)), (_) {
-      //getPerfilesDB();
-    });
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
 
-  void downloadProductos(
+  Future<void> downloadProductos(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result = await productos.getProductosUsecase(usuario);
-    return result
-        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
-            (data) {
-      saveProductos(data, emit);
-    });
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveProductos(data, emit));
   }
 
-  void saveProductos(
+  Future<void> saveProductos(
       List<ProductoEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await productosDB.saveProductoUsecaseDB(data);
     return result.fold(
-        (failure) => emit(DownloadSyncFailure(failure.properties.first)), (_) {
-      //getPerfilesDB();
-    });
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
 
-  void downloadGeneros(
+  Future<void> downloadGeneros(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result = await generos.getGenerosUsecase(usuario);
-    return result
-        .fold((failure) => emit(DownloadSyncFailure(failure.properties.first)),
-            (data) {
-      saveGeneros(data, emit);
-    });
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveGeneros(data, emit));
   }
 
-  void saveGeneros(
+  Future<void> saveGeneros(
       List<GeneroEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await generosDB.saveGenerosUsecaseDB(data);
     return result.fold(
-        (failure) => emit(DownloadSyncFailure(failure.properties.first)), (_) {
-      //getPerfilesDB();
-    });
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
 
-  List<MenuEntity> preinversionMenuSorted(List<MenuEntity> menu) {
+  /* List<MenuEntity> preinversionMenuSorted(List<MenuEntity> menu) {
     final preinversionMenu = menu
         .where((menu) =>
             menu.menuId == '36' ||
@@ -320,31 +236,5 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       return a.orden.toLowerCase().compareTo(b.orden.toLowerCase());
     });
     return alianzasMenu;
-  }
-
-  /*Future<Either<Failure, List<ConvocatoriaEntity>?>>
-      getConvocatoriasDB() async {
-    final result = await convocatoriaDB.getConvocatoriasUsecaseDB();
-    return result.fold(
-        (failure) => Left(failure.properties.first), (data) => Right(data));
-  }
-
-  Future<Either<Failure, List<TipoProyectoEntity>?>>
-      getTiposProyectosDB() async {
-    final result = await tipoProyectoDB.getTiposProyectosUsecaseDB();
-    return result.fold(
-        (failure) => Left(failure.properties.first), (data) => Right(data));
-  }
-
-  Future<Either<Failure, List<UnidadEntity>?>> getUnidadesDB() async {
-    final result = await unidadDB.getUnidadesUsecaseDB();
-    return result.fold(
-        (failure) => Left(failure.properties.first), (data) => Right(data));
-  }
-
-  Future<Either<Failure, List<PerfilEntity>?>> getPerfilesDB() async {
-    final result = await perfilesDB.getPerfilesUsecaseDB();
-    return result.fold(
-        (failure) => Left(failure.properties.first), (data) => Right(data));
-  }*/
+  } */
 }

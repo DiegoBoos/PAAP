@@ -1,19 +1,33 @@
 part of 'download_sync_bloc.dart';
 
-abstract class DownloadSyncState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class DownloadSyncInitial extends DownloadSyncState {}
-
-class DownloadSyncInProgress extends DownloadSyncState {
+class ProgressModel {
   final String title;
   final int counter;
-  final double progress;
+  final int total;
 
-  DownloadSyncInProgress(
-      {this.title = '', this.counter = 0, this.progress = 0});
+  ProgressModel({required this.title, required this.counter, this.total = 7});
+
+  ProgressModel copyWith({String? title, int? counter}) => ProgressModel(
+      title: title ?? this.title, counter: counter ?? this.counter);
+}
+
+abstract class DownloadSyncState extends Equatable {
+  final ProgressModel? progressModel;
+  const DownloadSyncState({this.progressModel});
+
+  @override
+  List<Object?> get props => [progressModel];
+}
+
+class DownloadSyncInitial extends DownloadSyncState {
+  DownloadSyncInitial()
+      : super(progressModel: ProgressModel(title: '', counter: 0));
+}
+
+class DownloadSyncInProgress extends DownloadSyncState {
+  final ProgressModel progress;
+
+  const DownloadSyncInProgress(this.progress) : super(progressModel: progress);
 
   @override
   List<Object> get props => [progress];
@@ -24,12 +38,8 @@ class DownloadSyncSuccess extends DownloadSyncState {}
 class DownloadSyncFailure extends DownloadSyncState {
   final String message;
 
-  DownloadSyncFailure(this.message);
+  const DownloadSyncFailure(this.message);
 
   @override
   List<Object?> get props => [message];
 }
-
-class MenuDownloadSyncSuccess extends DownloadSyncState {}
-
-class ConvocatoriasDownloadSyncSuccess extends DownloadSyncState {}

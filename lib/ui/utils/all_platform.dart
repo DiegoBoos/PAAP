@@ -161,9 +161,11 @@ class _LocalCaptchaState extends State<LocalCaptcha> {
     // Hacky way to deal with CustomPaint keep repainting due to affect by mouse region activity.
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Future.delayed(const Duration(milliseconds: 600), () {
-        setState(() {
-          _isCaptchaReady = true;
-        });
+        if (mounted) {
+          setState(() {
+            _isCaptchaReady = true;
+          });
+        }
       });
     });
   }

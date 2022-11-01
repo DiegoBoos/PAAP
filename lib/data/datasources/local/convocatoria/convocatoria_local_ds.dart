@@ -42,6 +42,7 @@ class ConvocatoriaLocalDataSourceImpl implements ConvocatoriaLocalDataSource {
     final db = await DBConfig.database;
 
     var batch = db.batch();
+
     batch.delete('Convocatoria');
 
     for (var convocatoria in convocatoriaEntity) {
