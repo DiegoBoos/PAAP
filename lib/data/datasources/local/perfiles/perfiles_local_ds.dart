@@ -4,12 +4,13 @@ import '../../../../domain/entities/perfil_entity.dart';
 
 import '../../../../domain/db/db_config.dart';
 import '../../../models/perfil_model.dart';
+import '../../../models/v_perfil_model.dart';
 
 abstract class PerfilesLocalDataSource {
   Future<List<PerfilModel>> getPerfilesDB();
   Future<List<PerfilModel>> getPerfilesFiltrosDB(String id, String nombre);
   Future<int> savePerfilesDB(List<PerfilEntity> perfiles);
-  Future<PerfilModel?> getPerfilDB(String id);
+  Future<VPerfilModel?> getPerfilDB(String id);
 }
 
 class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
@@ -87,15 +88,42 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
   }
 
   @override
-  Future<PerfilModel?> getPerfilDB(String id) async {
+  Future<VPerfilModel?> getPerfilDB(String id) async {
     final db = await DBConfig.database;
 
-    final res =
-        await db.query('Perfil', where: 'PerfilId = ?', whereArgs: [id]);
+    //final res = await db.query('Perfil', where: 'PerfilId = ?', whereArgs: [id]);
+
+    const String sql = '''
+    select
+    PerfilId as perfilId,
+    ConvocatoriaId as convocatoriaId,
+    Perfil.Nombre as nombre, 
+    Abreviatura as abreviatura, 
+    Municipio.Nombre  as municipio, 
+    Departamento.Nombre as departamento, 
+    Direccion as direccion,
+    Contacto as contacto,
+    TelefonoFijo as telefonoFijo, 
+    TelefonoMovil as telefonoMovil,
+    Correo as correo,
+    TipoProyecto.Nombre as tipoProyecto,
+    ProductoPrincipal.Nombre as productoPrincipal,
+    ProductoAsociado.Nombre as productoAsociado,
+    ValorTotalProyecto as valorTotalProyecto,
+    IncentivoModular as incentivoModular
+    from Perfil
+    left join Municipio on (Municipio.MunicipioId=Perfil.MunicipioId)
+    left join Departamento on (Departamento.DepartamentoId=Municipio.DepartamentoId)
+    left join TipoProyecto on (TipoProyecto.TipoProyectoId=Perfil.TipoProyectoId)
+    left join Producto as ProductoPrincipal on (ProductoPrincipal.ProductoId =Perfil.ProductoId)
+    left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =Perfil.ProductoAsociadoId)
+    ''';
+
+    final res = await db.rawQuery(sql);
 
     if (res.isEmpty) return null;
     final perfilMap = {for (var e in res[0].entries) e.key: e.value};
-    final perfilModel = PerfilModel.fromJson(perfilMap);
+    final perfilModel = VPerfilModel.fromJson(perfilMap);
 
     return perfilModel;
   }

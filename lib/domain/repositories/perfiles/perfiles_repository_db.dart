@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../core/error/failure.dart';
 import '../../entities/perfil_entity.dart';
+import '../../entities/vperfil_entity.dart';
 
 abstract class PerfilesRepositoryDB {
   Future<Either<Failure, List<PerfilEntity>>> getPerfilesRepositoryDB();
@@ -9,5 +10,5 @@ abstract class PerfilesRepositoryDB {
       String? id, String? nombre);
   Future<Either<Failure, int>> savePerfilesRepositoryDB(
       List<PerfilEntity> perfiles);
-  Future<Either<Failure, PerfilEntity?>> getPerfilRepositoryDB(String id);
+  Future<Either<Failure, VPerfilEntity?>> getPerfilRepositoryDB(String id);
 }

@@ -38,9 +38,10 @@ class _PerfilFormState extends State<PerfilForm> {
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
             child: Column(children: [
               TextFormField(
+                  initialValue: perfil.perfilId,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'ID Alianza', labelText: 'ID Alianza')),
+                      hintText: 'ID Perfil', labelText: 'ID Perfil')),
               const SizedBox(height: 20),
               TextFormField(
                   initialValue: perfil.nombre,
@@ -50,32 +51,33 @@ class _PerfilFormState extends State<PerfilForm> {
                       labelText: 'Nombre del Proyecto')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.tipoProyectoId,
+                  initialValue: perfil.tipoProyecto,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Tipo Proyecto', labelText: 'Tipo Proyecto')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.productoId,
+                  initialValue: perfil.productoPrincipal,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Producto Principal',
                       labelText: 'Producto Principal')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.productoAsociadoId,
+                  initialValue: perfil.productoAsociado,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Producto Asociado',
                       labelText: 'Producto Asociado')),
               const SizedBox(height: 20),
               TextFormField(
+                  initialValue: perfil.departamento,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Departamento', labelText: 'Departamento')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.municipioId,
+                  initialValue: perfil.municipio,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Municipio', labelText: 'Municipio')),

@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../core/error/failure.dart';
 import '../../entities/perfil_entity.dart';
 
+import '../../entities/vperfil_entity.dart';
 import '../../repositories/perfiles/perfiles_repository_db.dart';
 
 class PerfilesUsecaseDB {
@@ -24,7 +25,7 @@ class PerfilesUsecaseDB {
     return repositoryDB.savePerfilesRepositoryDB(perfiles);
   }
 
-  Future<Either<Failure, PerfilEntity?>> getPerfilUsecaseDB(String id) {
+  Future<Either<Failure, VPerfilEntity?>> getPerfilUsecaseDB(String id) {
     return repositoryDB.getPerfilRepositoryDB(id);
   }
 }
