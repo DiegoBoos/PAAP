@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../entities/agrupacion_entity.dart';
 import '../../entities/convocatoria_entity.dart';
 import '../../entities/departamento_entity.dart';
 import '../../entities/estado_visita_entity.dart';
@@ -15,6 +16,8 @@ import '../../entities/tipo_visita_entity.dart';
 import '../../entities/unidad_entity.dart';
 import '../../entities/usuario_entity.dart';
 import '../../entities/producto_entity.dart';
+import '../../usecases/agrupacion/agrupacion_db_usecase.dart';
+import '../../usecases/agrupacion/agrupacion_usecase.dart';
 import '../../usecases/convocatoria/convocatoria_exports.dart';
 import '../../usecases/departamento/departamento_db_usecase.dart';
 import '../../usecases/departamento/departamento_usecase.dart';
@@ -69,6 +72,9 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final EstadoVisitaUsecase estadoVisita;
   final EstadoVisitaUsecaseDB estadoVisitaDB;
 
+  final AgrupacionUsecase agrupacion;
+  final AgrupacionUsecaseDB agrupacionDB;
+
   DownloadSyncBloc({
     required this.menu,
     required this.menuDB,
@@ -92,6 +98,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.tipoVisitaDB,
     required this.estadoVisita,
     required this.estadoVisitaDB,
+    required this.agrupacion,
+    required this.agrupacionDB,
   }) : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -150,6 +158,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Estados Visita',
           counter: state.progressModel!.counter + 1)));
       await downloadEstadosVisitas(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Agrupaciones',
+          counter: state.progressModel!.counter + 1)));
+      await downloadAgrupaciones(usuario, emit);
 
       emit(DownloadSyncSuccess());
     });
@@ -318,6 +331,21 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   Future<void> saveEstadosVisitas(
       List<EstadoVisitaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await estadoVisitaDB.saveEstadosVisitasUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadAgrupaciones(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await agrupacion.getAgrupacionesUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveAgrupaciones(data, emit));
+  }
+
+  Future<void> saveAgrupaciones(
+      List<AgrupacionEntity> data, Emitter<DownloadSyncState> emit) async {
+    final result = await agrupacionDB.saveAgrupacionesUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

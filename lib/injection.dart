@@ -3,18 +3,22 @@ import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 import 'package:paap/domain/cubits/menu/menu_cubit.dart';
 
+import 'data/datasources/local/agrupacion/agrupacion_local_ds.dart';
 import 'data/datasources/local/departamento/departamento_local_ds.dart';
 import 'data/datasources/local/estado_visita/estado_visita_local_ds.dart';
 import 'data/datasources/local/genero/genero_local_ds.dart';
 import 'data/datasources/local/municipio/municipio_local_ds.dart';
 import 'data/datasources/local/producto/producto_local_ds.dart';
 import 'data/datasources/local/tipo_visita/tipo_visita_local_ds.dart';
+import 'data/datasources/remote/agrupacion/agrupacion_remote_ds.dart';
 import 'data/datasources/remote/departamento/departamento_remote_ds.dart';
 import 'data/datasources/remote/estado_visita/estado_visita_remote_ds.dart';
 import 'data/datasources/remote/genero/genero_remote_ds.dart';
 import 'data/datasources/remote/municipio/municipio_remote_ds.dart';
 import 'data/datasources/remote/producto/producto_remote_ds.dart';
 import 'data/datasources/remote/tipo_visita/tipo_visita_remote_ds.dart';
+import 'data/repositories/agrupacion/agrupacion_repository.dart';
+import 'data/repositories/agrupacion/agrupacion_repository_db.dart';
 import 'data/repositories/departamento/departamento_repository.dart';
 import 'data/repositories/departamento/departamento_repository_db.dart';
 import 'data/repositories/estado_visita/estado_visita_repository.dart';
@@ -29,6 +33,8 @@ import 'data/repositories/tipo_visita/tipo_visita_repository.dart';
 import 'data/repositories/tipo_visita/tipo_visita_repository_db.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
+import 'domain/repositories/agrupacion/agrupacion_repository.dart';
+import 'domain/repositories/agrupacion/agrupacion_repository_db.dart';
 import 'domain/repositories/departamento/departamento_repository.dart';
 import 'domain/repositories/departamento/departamento_repository_db.dart';
 import 'domain/repositories/estado_visita/estado_visita_repository.dart';
@@ -41,6 +47,8 @@ import 'domain/repositories/producto/producto_repository.dart';
 import 'domain/repositories/producto/producto_repository_db.dart';
 import 'domain/repositories/tipo_visita/tipo_visita_repository.dart';
 import 'domain/repositories/tipo_visita/tipo_visita_repository_db.dart';
+import 'domain/usecases/agrupacion/agrupacion_db_usecase.dart';
+import 'domain/usecases/agrupacion/agrupacion_usecase.dart';
 import 'domain/usecases/auth/auth_exports.dart';
 import 'domain/usecases/departamento/departamento_db_usecase.dart';
 import 'domain/usecases/departamento/departamento_usecase.dart';
@@ -76,6 +84,7 @@ void init() {
   municipiosInit();
   tipoVisitaInit();
   estadoVisitaInit();
+  agrupacionInit();
 
   perfilesBlocInit();
 
@@ -108,6 +117,8 @@ downloadSyncInit() {
         tipoVisitaDB: locator(),
         estadoVisita: locator(),
         estadoVisitaDB: locator(),
+        agrupacion: locator(),
+        agrupacionDB: locator(),
       ));
 }
 
@@ -535,5 +546,39 @@ estadoVisitaInit() {
   // local data source
   locator.registerLazySingleton<EstadoVisitaLocalDataSource>(
     () => EstadoVisitaLocalDataSourceImpl(),
+  );
+}
+
+agrupacionInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => AgrupacionUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => AgrupacionUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<AgrupacionRepository>(
+    () => AgrupacionRepositoryImpl(
+      agrupacionRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<AgrupacionRepositoryDB>(
+    () => AgrupacionRepositoryDBImpl(
+      agrupacionLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<AgrupacionRemoteDataSource>(
+    () => AgrupacionRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<AgrupacionLocalDataSource>(
+    () => AgrupacionLocalDataSourceImpl(),
   );
 }

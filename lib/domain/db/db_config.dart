@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:sqflite/sqflite.dart';
 
+import '../../data/datasources/local/agrupacion/agrupacion_local_ds.dart';
 import '../../data/datasources/local/auth/auth_local_ds.dart';
 import '../../data/datasources/local/convocatoria/convocatoria_local_ds.dart';
 import '../../data/datasources/local/departamento/departamento_local_ds.dart';
@@ -47,6 +48,7 @@ class DBConfig {
       await PerfilesLocalDataSourceImpl.createPerfilTable(db);
       await TipoVisitaLocalDataSourceImpl.createTipoVisitaTable(db);
       await EstadoVisitaLocalDataSourceImpl.createEstadoVisitaTable(db);
+      await AgrupacionLocalDataSourceImpl.createAgrupacionTable(db);
     });
 
     return _database!;
