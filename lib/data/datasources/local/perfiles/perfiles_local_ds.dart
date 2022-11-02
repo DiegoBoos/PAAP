@@ -91,9 +91,7 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
   Future<VPerfilModel?> getPerfilDB(String id) async {
     final db = await DBConfig.database;
 
-    //final res = await db.query('Perfil', where: 'PerfilId = ?', whereArgs: [id]);
-
-    const String sql = '''
+    String sql = '''
     select
     PerfilId as perfilId,
     ConvocatoriaId as convocatoriaId,
@@ -117,6 +115,7 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
     left join TipoProyecto on (TipoProyecto.TipoProyectoId=Perfil.TipoProyectoId)
     left join Producto as ProductoPrincipal on (ProductoPrincipal.ProductoId =Perfil.ProductoId)
     left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =Perfil.ProductoAsociadoId)
+    where perfilId = $id
     ''';
 
     final res = await db.rawQuery(sql);
