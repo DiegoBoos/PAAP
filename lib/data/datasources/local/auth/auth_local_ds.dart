@@ -12,7 +12,7 @@ abstract class AuthLocalDataSource {
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   static createUserTable(Database db) async {
     await db.execute('''
-      CREATE TABLE Usuario(
+      CREATE TABLE IF NOT EXISTS Usuario(
         UsuarioId	TEXT NOT NULL,
         Nombre TEXT,
         Apellido TEXT,

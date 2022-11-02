@@ -7,11 +7,15 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../data/datasources/local/auth/auth_local_ds.dart';
 import '../../data/datasources/local/convocatoria/convocatoria_local_ds.dart';
+import '../../data/datasources/local/departamento/departamento_local_ds.dart';
+import '../../data/datasources/local/estado_visita/estado_visita_local_ds.dart';
 import '../../data/datasources/local/genero/genero_local_ds.dart';
 import '../../data/datasources/local/menu/menu_local_ds.dart';
+import '../../data/datasources/local/municipio/municipio_local_ds.dart';
 import '../../data/datasources/local/perfiles/perfiles_local_ds.dart';
 import '../../data/datasources/local/producto/producto_local_ds.dart';
 import '../../data/datasources/local/tipo_proyecto/tipo_proyecto_local_ds.dart';
+import '../../data/datasources/local/tipo_visita/tipo_visita_local_ds.dart';
 import '../../data/datasources/local/unidad/unidad_local_ds.dart';
 
 class DBConfig {
@@ -36,9 +40,13 @@ class DBConfig {
       await ConvocatoriaLocalDataSourceImpl.createConvocatoriaTable(db);
       await TipoProyectoLocalDataSourceImpl.createTipoProyectoTable(db);
       await UnidadLocalDataSourceImpl.createUnidadTable(db);
-      await PerfilesLocalDataSourceImpl.createPerfilTable(db);
       await ProductoLocalDataSourceImpl.createProductoTable(db);
       await GeneroLocalDataSourceImpl.createGeneroTable(db);
+      await DepartamentoLocalDataSourceImpl.createDepartamentoTable(db);
+      await MunicipioLocalDataSourceImpl.createMunicipioTable(db);
+      await PerfilesLocalDataSourceImpl.createPerfilTable(db);
+      await TipoVisitaLocalDataSourceImpl.createTipoVisitaTable(db);
+      await EstadoVisitaLocalDataSourceImpl.createEstadoVisitaTable(db);
     });
 
     return _database!;

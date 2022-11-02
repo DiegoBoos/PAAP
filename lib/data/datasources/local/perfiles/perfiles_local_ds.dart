@@ -15,22 +15,6 @@ abstract class PerfilesLocalDataSource {
 class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
   static createPerfilTable(Database db) async {
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS Departamento (
-        DepartamentoId	TEXT NOT NULL,
-        Nombre	TEXT,
-        PRIMARY KEY(DepartamentoId)
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS Municipio (
-        MunicipioId	INTEGER NOT NULL,
-        Nombre	TEXT,
-        DepartamentoId	TEXT NOT NULL,
-        PRIMARY KEY(MunicipioId),
-        FOREIGN KEY(DepartamentoId) REFERENCES Departamento(DepartamentoId)
-      )
-    ''');
-    await db.execute('''
       CREATE TABLE IF NOT EXISTS Perfil (
 	      PerfilId	TEXT NOT NULL,
 	      ConvocatoriaId	TEXT NOT NULL,

@@ -3,29 +3,61 @@ import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 import 'package:paap/domain/cubits/menu/menu_cubit.dart';
 
+import 'data/datasources/local/departamento/departamento_local_ds.dart';
+import 'data/datasources/local/estado_visita/estado_visita_local_ds.dart';
 import 'data/datasources/local/genero/genero_local_ds.dart';
+import 'data/datasources/local/municipio/municipio_local_ds.dart';
 import 'data/datasources/local/producto/producto_local_ds.dart';
+import 'data/datasources/local/tipo_visita/tipo_visita_local_ds.dart';
+import 'data/datasources/remote/departamento/departamento_remote_ds.dart';
+import 'data/datasources/remote/estado_visita/estado_visita_remote_ds.dart';
 import 'data/datasources/remote/genero/genero_remote_ds.dart';
+import 'data/datasources/remote/municipio/municipio_remote_ds.dart';
 import 'data/datasources/remote/producto/producto_remote_ds.dart';
+import 'data/datasources/remote/tipo_visita/tipo_visita_remote_ds.dart';
+import 'data/repositories/departamento/departamento_repository.dart';
+import 'data/repositories/departamento/departamento_repository_db.dart';
+import 'data/repositories/estado_visita/estado_visita_repository.dart';
+import 'data/repositories/estado_visita/estado_visita_repository_db.dart';
 import 'data/repositories/genero/genero_repository.dart';
 import 'data/repositories/genero/genero_repository_db.dart';
+import 'data/repositories/municipio/municipio_repository.dart';
+import 'data/repositories/municipio/municipio_repository_db.dart';
 import 'data/repositories/producto/producto_repository.dart';
 import 'data/repositories/producto/producto_repository_db.dart';
+import 'data/repositories/tipo_visita/tipo_visita_repository.dart';
+import 'data/repositories/tipo_visita/tipo_visita_repository_db.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
+import 'domain/repositories/departamento/departamento_repository.dart';
+import 'domain/repositories/departamento/departamento_repository_db.dart';
+import 'domain/repositories/estado_visita/estado_visita_repository.dart';
+import 'domain/repositories/estado_visita/estado_visita_repository_db.dart';
 import 'domain/repositories/genero/genero_repository.dart';
 import 'domain/repositories/genero/genero_repository_db.dart';
+import 'domain/repositories/municipio/municipio_repository.dart';
+import 'domain/repositories/municipio/municipio_repository_db.dart';
 import 'domain/repositories/producto/producto_repository.dart';
 import 'domain/repositories/producto/producto_repository_db.dart';
+import 'domain/repositories/tipo_visita/tipo_visita_repository.dart';
+import 'domain/repositories/tipo_visita/tipo_visita_repository_db.dart';
 import 'domain/usecases/auth/auth_exports.dart';
+import 'domain/usecases/departamento/departamento_db_usecase.dart';
+import 'domain/usecases/departamento/departamento_usecase.dart';
+import 'domain/usecases/estado_visita/estado_visita_db_usecase.dart';
+import 'domain/usecases/estado_visita/estado_visita_usecase.dart';
 import 'domain/usecases/genero/genero_db_usecase.dart';
 import 'domain/usecases/genero/genero_usecase.dart';
 import 'domain/usecases/menu/menu_exports.dart';
 import 'domain/usecases/convocatoria/convocatoria_exports.dart';
+import 'domain/usecases/municipio/municipio_db_usecase.dart';
+import 'domain/usecases/municipio/municipio_usecase.dart';
 import 'domain/usecases/perfiles/perfiles_exports.dart';
 import 'domain/usecases/producto/producto_db_usecase.dart';
 import 'domain/usecases/producto/producto_usecase.dart';
 import 'domain/usecases/tipo_proyecto/tipo_proyecto_exports.dart';
+import 'domain/usecases/tipo_visita/tipo_visita_db_usecase.dart';
+import 'domain/usecases/tipo_visita/tipo_visita_usecase.dart';
 import 'domain/usecases/unidad/unidad_exports.dart';
 
 final locator = GetIt.instance;
@@ -40,6 +72,11 @@ void init() {
   unidadInit();
   productosInit();
   generosInit();
+  departamentosInit();
+  municipiosInit();
+  tipoVisitaInit();
+  estadoVisitaInit();
+
   perfilesBlocInit();
 
   // external
@@ -49,20 +86,29 @@ void init() {
 downloadSyncInit() {
   // bloc
   locator.registerFactory(() => DownloadSyncBloc(
-      menu: locator(),
-      menuDB: locator(),
-      convocatoria: locator(),
-      convocatoriaDB: locator(),
-      perfiles: locator(),
-      perfilesDB: locator(),
-      tipoProyecto: locator(),
-      tipoProyectoDB: locator(),
-      unidad: locator(),
-      unidadDB: locator(),
-      productos: locator(),
-      productosDB: locator(),
-      generos: locator(),
-      generosDB: locator()));
+        menu: locator(),
+        menuDB: locator(),
+        convocatoria: locator(),
+        convocatoriaDB: locator(),
+        perfiles: locator(),
+        perfilesDB: locator(),
+        tipoProyecto: locator(),
+        tipoProyectoDB: locator(),
+        unidad: locator(),
+        unidadDB: locator(),
+        productos: locator(),
+        productosDB: locator(),
+        generos: locator(),
+        generosDB: locator(),
+        departamentos: locator(),
+        departamentosDB: locator(),
+        municipios: locator(),
+        municipiosDB: locator(),
+        tipoVisita: locator(),
+        tipoVisitaDB: locator(),
+        estadoVisita: locator(),
+        estadoVisitaDB: locator(),
+      ));
 }
 
 internetCubitInit() {
@@ -355,5 +401,141 @@ generosInit() {
   // local data source
   locator.registerLazySingleton<GeneroLocalDataSource>(
     () => GeneroLocalDataSourceImpl(),
+  );
+}
+
+departamentosInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => DepartamentoUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => DepartamentoUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<DepartamentoRepository>(
+    () => DepartamentoRepositoryImpl(
+      departamentoRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<DepartamentoRepositoryDB>(
+    () => DepartamentoRepositoryDBImpl(
+      departamentoLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<DepartamentoRemoteDataSource>(
+    () => DepartamentoRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<DepartamentoLocalDataSource>(
+    () => DepartamentoLocalDataSourceImpl(),
+  );
+}
+
+municipiosInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => MunicipioUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => MunicipioUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<MunicipioRepository>(
+    () => MunicipioRepositoryImpl(
+      municipioRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<MunicipioRepositoryDB>(
+    () => MunicipioRepositoryDBImpl(
+      municipioLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<MunicipioRemoteDataSource>(
+    () => MunicipioRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<MunicipioLocalDataSource>(
+    () => MunicipioLocalDataSourceImpl(),
+  );
+}
+
+tipoVisitaInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => TipoVisitaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => TipoVisitaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<TipoVisitaRepository>(
+    () => TipoVisitaRepositoryImpl(
+      tipoVisitaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<TipoVisitaRepositoryDB>(
+    () => TipoVisitaRepositoryDBImpl(
+      tipoVisitaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<TipoVisitaRemoteDataSource>(
+    () => TipoVisitaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<TipoVisitaLocalDataSource>(
+    () => TipoVisitaLocalDataSourceImpl(),
+  );
+}
+
+estadoVisitaInit() {
+  // remote usecase
+  locator.registerLazySingleton(() => EstadoVisitaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => EstadoVisitaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<EstadoVisitaRepository>(
+    () => EstadoVisitaRepositoryImpl(
+      estadoVisitaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<EstadoVisitaRepositoryDB>(
+    () => EstadoVisitaRepositoryDBImpl(
+      estadoVisitaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<EstadoVisitaRemoteDataSource>(
+    () => EstadoVisitaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<EstadoVisitaLocalDataSource>(
+    () => EstadoVisitaLocalDataSourceImpl(),
   );
 }
