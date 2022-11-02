@@ -298,8 +298,6 @@ unidadInit() {
 perfilesBlocInit() {
   // bloc
   locator.registerFactory(() => PerfilesBloc(
-        internetCubit: locator(),
-        perfiles: locator(),
         perfilesDB: locator(),
       ));
 

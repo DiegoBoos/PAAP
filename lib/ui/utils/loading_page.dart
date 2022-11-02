@@ -26,3 +26,13 @@ class LoadingPage extends StatelessWidget {
     );
   }
 }
+
+class CustomCircularProgress extends StatelessWidget {
+  const CustomCircularProgress({super.key, required this.alignment});
+  final Alignment alignment;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(alignment: alignment, child: CircularProgressIndicator());
+  }
+}

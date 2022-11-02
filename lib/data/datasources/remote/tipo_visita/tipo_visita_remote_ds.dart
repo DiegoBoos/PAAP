@@ -71,11 +71,13 @@ class TipoVisitaRemoteDataSourceImpl implements TipoVisitaRemoteDataSource {
 
         final tipovisitasRaw = decodedResp.entries.first.value['Table'];
 
-        final tipovisitas = List.from(tipovisitasRaw)
-            .map((e) => TipoVisitaModel.fromJson(e))
-            .toList();
-
-        return tipovisitas;
+        if (tipovisitasRaw is List) {
+          return List.from(tipovisitasRaw)
+              .map((e) => TipoVisitaModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoVisitaModel.fromJson(tipovisitasRaw)];
+        }
       } else {
         throw ServerFailure([mensaje]);
       }

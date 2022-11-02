@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
 import '../../utils/input_decoration.dart';
 
@@ -81,17 +80,11 @@ class SearchCard extends StatelessWidget {
                         color: Colors.white,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            final authBloc = BlocProvider.of<AuthBloc>(context,
-                                listen: false);
-
-                            final perfilesBloc = BlocProvider.of<PerfilesBloc>(
-                                context,
-                                listen: false);
+                            final perfilesBloc =
+                                BlocProvider.of<PerfilesBloc>(context);
 
                             perfilesBloc.add(GetPerfilesFiltros(
-                                usuario: authBloc.state.usuario!,
-                                id: idCtrl.text,
-                                nombre: nameCtrl.text));
+                                id: idCtrl.text, nombre: nameCtrl.text));
                           }
                         },
                         icon: const Icon(Icons.search)),

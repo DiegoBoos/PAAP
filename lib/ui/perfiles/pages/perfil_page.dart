@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:paap/ui/utils/styles.dart';
+import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/entities/menu_entity.dart';
 import '../../utils/custom_drawer.dart';
 import '../../utils/network_icon.dart';
+import '../../utils/styles.dart';
 import '../widgets/perfil_form.dart';
 
-class PerfilPage extends StatefulWidget {
+class PerfilPage extends StatelessWidget {
   const PerfilPage({super.key});
 
-  @override
-  State<PerfilPage> createState() => _PerfilPageState();
-}
-
-class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     final perfilId = ModalRoute.of(context)?.settings.arguments as String;
 
     return Scaffold(
-        /*  drawer: CustomDrawer(
-          menuHijo: perfilesMenu,
-          id: perfilId,
-        ), */
+        drawer: BlocBuilder<MenuCubit, MenuState>(
+          builder: (context, state) {
+            final perfilesMenu = perfilesMenuSorted(state.menu!);
+            return CustomDrawer(
+              menuHijo: perfilesMenu,
+              id: perfilId,
+            );
+          },
+        ),
         appBar: AppBar(title: const Text('Detalle Perfil'), actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),

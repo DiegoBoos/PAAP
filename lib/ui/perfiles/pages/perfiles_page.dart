@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
 import '../../../domain/entities/perfil_entity.dart';
+import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
@@ -17,12 +18,18 @@ class PerfilesPage extends StatefulWidget {
 }
 
 class _PerfilesPageState extends State<PerfilesPage> {
+  @override
+  void initState() {
+    super.initState();
+    final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
+    perfilesBloc.add(GetPerfiles());
+  }
+
   String? selectedValue;
   List<Map<String, dynamic>> options = [
     {'id': 'id', 'description': 'Filtrar por ID'},
     {'id': 'name', 'description': 'Filtrar por Nombre'},
     {'id': 'allFilters', 'description': 'Filtrar por ID y Nombre'},
-    {'id': 'listAll', 'description': 'Listar todo'},
   ];
 
   bool showCard = false;
@@ -64,9 +71,8 @@ class _PerfilesPageState extends State<PerfilesPage> {
           BlocBuilder<PerfilesBloc, PerfilesState>(
             builder: (context, state) {
               if (state is PerfilesLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is PerfilesError) {
-                return const SizedBox();
+                return const CustomCircularProgress(
+                    alignment: Alignment.center);
               } else if (state is PerfilesLoaded) {
                 List<PerfilEntity> perfiles = state.perfiles!;
                 if (perfiles.isEmpty) {
@@ -114,10 +120,6 @@ class _PerfilesPageState extends State<PerfilesPage> {
             showCard = true;
             enableName = true;
             enableId = true;
-          }
-          if (selectedValue == 'listAll') {
-            showCard = false;
-            //TODO: Get Perfiles
           }
         });
       },

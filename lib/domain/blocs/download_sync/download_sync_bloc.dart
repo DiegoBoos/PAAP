@@ -116,11 +116,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           counter: state.progressModel!.counter + 1)));
       await downloadUnidades(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+      /*   emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Perfiles',
           counter: state.progressModel!.counter + 1)));
       await downloadPerfiles(usuario, emit);
-
+ */
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Productos',
           counter: state.progressModel!.counter + 1)));
@@ -136,10 +136,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           counter: state.progressModel!.counter + 1)));
       await downloadDepartamentos(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+      /*  emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Municipios',
           counter: state.progressModel!.counter + 1)));
-      await downloadMunicipios(usuario, emit);
+      await downloadMunicipios(usuario, emit); */
 
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Tipos Visita',

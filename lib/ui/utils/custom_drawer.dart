@@ -20,6 +20,18 @@ class CustomDrawer extends StatelessWidget {
                 leading: Icon(setIcon(submenu)),
                 title: Text(submenu.nombre),
                 onTap: () {
+                  if (submenu.menuId == '12') {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                    return;
+                  }
+                  if (submenu.menuId == '37') {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                    return;
+                  }
+                  if (submenu.menuId == '11') {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                    return;
+                  }
                   Navigator.pushNamed(context, submenu.ruta, arguments: id);
                 });
           },

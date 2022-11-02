@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
 import '../../utils/input_decoration.dart';
 
@@ -21,10 +20,8 @@ class _PerfilFormState extends State<PerfilForm> {
   @override
   void initState() {
     super.initState();
-    final authBloc = BlocProvider.of<AuthBloc>(context);
     final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
-    perfilesBloc.add(
-        GetPerfil(usuario: authBloc.state.usuario!, perfilId: widget.perfilId));
+    perfilesBloc.add(GetPerfil(perfilId: widget.perfilId));
   }
 
   @override
@@ -32,7 +29,8 @@ class _PerfilFormState extends State<PerfilForm> {
     return BlocBuilder<PerfilesBloc, PerfilesState>(
       builder: (context, state) {
         if (state is PerfilLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              heightFactor: 2, child: CircularProgressIndicator());
         }
         if (state is PerfilLoaded) {
           final perfil = state.perfilLoaded!;
@@ -52,20 +50,20 @@ class _PerfilFormState extends State<PerfilForm> {
                       labelText: 'Nombre del Proyecto')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.tipoProyecto,
+                  initialValue: perfil.tipoProyectoId,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Tipo Proyecto', labelText: 'Tipo Proyecto')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.productoPrincipal,
+                  initialValue: perfil.productoId,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Producto Principal',
                       labelText: 'Producto Principal')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.productoAsociado,
+                  initialValue: perfil.productoAsociadoId,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Producto Asociado',
@@ -77,7 +75,7 @@ class _PerfilFormState extends State<PerfilForm> {
                       hintText: 'Departamento', labelText: 'Departamento')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfil.municipio,
+                  initialValue: perfil.municipioId,
                   enabled: false,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Municipio', labelText: 'Municipio')),

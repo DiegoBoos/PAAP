@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/ui/utils/custom_snack_bar.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/download_sync/download_sync_bloc.dart';
@@ -37,7 +38,7 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = BlocProvider.of<AuthBloc>(context);
+    final authBloc = BlocProvider.of<AuthBloc>(context, listen: true);
     final internetCubit = BlocProvider.of<InternetCubit>(context);
     final downloadSyncBloc = BlocProvider.of<DownloadSyncBloc>(context);
 
@@ -66,15 +67,14 @@ class _SignInPageState extends State<SignInPage> {
         BlocListener<DownloadSyncBloc, DownloadSyncState>(
             listener: (context, state) {
           if (state is DownloadSyncSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Descarga exitosa'),
-                backgroundColor: Colors.green));
+            CustomSnackBar.showSnackBar(
+                context, 'Descarga exitosa', Colors.green);
+
             Navigator.pushReplacementNamed(context, 'tabs');
           }
           if (state is DownloadSyncFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Error al sincronizar datos'),
-                backgroundColor: Colors.red));
+            CustomSnackBar.showSnackBar(
+                context, 'Error en la sincronización', Colors.red);
           }
         }),
       ],
@@ -167,25 +167,30 @@ class _SignInPageState extends State<SignInPage> {
                                   disabledColor: Colors.grey,
                                   elevation: 0,
                                   color: Theme.of(context).colorScheme.primary,
-                                  onPressed: () {
-                                    if (!formKey.currentState!.validate()) {
-                                      return;
-                                    }
+                                  onPressed: authBloc.state is AuthLoading
+                                      ? null
+                                      : () {
+                                          if (!formKey.currentState!
+                                              .validate()) {
+                                            return;
+                                          }
 
-                                    final usuario = UsuarioEntity(
-                                      usuarioId: usuarioIdCtrl.text,
-                                      contrasena: contrasenaCtrl.text,
-                                    );
+                                          final usuario = UsuarioEntity(
+                                            usuarioId: usuarioIdCtrl.text,
+                                            contrasena: contrasenaCtrl.text,
+                                          );
 
-                                    if (internetCubit.state
-                                        is InternetConnected) {
-                                      authBloc.add(LogIn(usuario: usuario));
-                                    } else if (internetCubit.state
-                                        is InternetDisconnected) {
-                                      authBloc.add(LogIn(
-                                          usuario: usuario, isOffline: true));
-                                    }
-                                  },
+                                          if (internetCubit.state
+                                              is InternetConnected) {
+                                            authBloc
+                                                .add(LogIn(usuario: usuario));
+                                          } else if (internetCubit.state
+                                              is InternetDisconnected) {
+                                            authBloc.add(LogIn(
+                                                usuario: usuario,
+                                                isOffline: true));
+                                          }
+                                        },
                                   child: Container(
                                     alignment: Alignment.center,
                                     width: double.infinity,
