@@ -4,9 +4,9 @@ class BeneficiarioModel extends BeneficiarioEntity {
   BeneficiarioModel({
     required String beneficiarioId,
     required String nombre1,
-    required String nombre2,
+    String? nombre2,
     required String apellido1,
-    required String apellido2,
+    String? apellido2,
     required String generoId,
     required String fechaNacimiento,
     required String fechaExpedicionDocumento,
@@ -17,9 +17,9 @@ class BeneficiarioModel extends BeneficiarioEntity {
   }) : super(
             beneficiarioId: beneficiarioId,
             nombre1: nombre1,
-            nombre2: nombre2,
+            nombre2: nombre2 ?? '',
             apellido1: apellido1,
-            apellido2: apellido2,
+            apellido2: apellido2 ?? '',
             generoId: generoId,
             fechaNacimiento: fechaNacimiento,
             fechaExpedicionDocumento: fechaExpedicionDocumento,

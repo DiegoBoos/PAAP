@@ -8,7 +8,7 @@ class AlianzaModel extends AlianzaEntity {
     required String valorProyecto,
     required String incentivoModular,
     required String ubicacion,
-    required String categorizacion,
+    String? categorizacion,
   }) : super(
             id: id,
             nombre: nombre,

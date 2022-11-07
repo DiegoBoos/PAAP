@@ -5,8 +5,8 @@ import '../../../../domain/db/db_config.dart';
 import '../../../models/tipo_identificacion_model.dart';
 
 abstract class TipoIdentificacionLocalDataSource {
-  Future<List<TipoIdentificacionModel>> getTipoIdentificacionsDB();
-  Future<int> saveTipoIdentificacions(
+  Future<List<TipoIdentificacionModel>> getTipoIdentificacionesDB();
+  Future<int> saveTipoIdentificaciones(
       List<TipoIdentificacionEntity> tipoIdentificacionEntity);
 }
 
@@ -23,19 +23,19 @@ class TipoIdentificacionLocalDataSourceImpl
   }
 
   @override
-  Future<List<TipoIdentificacionModel>> getTipoIdentificacionsDB() async {
+  Future<List<TipoIdentificacionModel>> getTipoIdentificacionesDB() async {
     final db = await DBConfig.database;
 
     final res = await db.query('TipoIdentificacion');
 
-    final tipoIdentificacionsDB = List<TipoIdentificacionModel>.from(
+    final tipoIdentificacionesDB = List<TipoIdentificacionModel>.from(
         res.map((m) => TipoIdentificacionModel.fromJson(m))).toList();
 
-    return tipoIdentificacionsDB;
+    return tipoIdentificacionesDB;
   }
 
   @override
-  Future<int> saveTipoIdentificacions(
+  Future<int> saveTipoIdentificaciones(
       List<TipoIdentificacionEntity> tipoIdentificacionEntity) async {
     final db = await DBConfig.database;
 

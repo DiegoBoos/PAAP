@@ -21,8 +21,7 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
 	      Incentivo_x0020_Módular	TEXT,
 	      Ubicación	TEXT,
 	      Categorización	TEXT,
-	      PRIMARY KEY(AlianzaId),
-
+	      PRIMARY KEY(ID)
       )
     ''');
   }

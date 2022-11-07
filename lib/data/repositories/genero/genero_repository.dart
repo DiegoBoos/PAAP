@@ -17,9 +17,9 @@ class GeneroRepositoryImpl implements GeneroRepository {
   Future<Either<Failure, List<GeneroEntity>>> getGenerosRepository(
       UsuarioEntity usuario) async {
     try {
-      final tipoproyectos = await generoRemoteDataSource.getGeneros(usuario);
+      final generos = await generoRemoteDataSource.getGeneros(usuario);
 
-      return Right(tipoproyectos);
+      return Right(generos);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

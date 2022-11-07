@@ -17,7 +17,7 @@ class ActividadFinancieraLocalDataSourceImpl
       CREATE TABLE IF NOT EXISTS ActividadFinanciera (
         ActividadFinancieraId	TEXT NOT NULL,
         Nombre	TEXT,
-        Descripción	TEXT,
+        Descripcion	TEXT,
         Activo	TEXT,
         TipoMovimientoId	TEXT,
         PRIMARY KEY(ActividadFinancieraId)

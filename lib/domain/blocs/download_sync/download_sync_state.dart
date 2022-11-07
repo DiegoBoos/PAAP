@@ -5,7 +5,7 @@ class ProgressModel {
   final int counter;
   final int total;
 
-  ProgressModel({required this.title, required this.counter, this.total = 12});
+  ProgressModel({required this.title, required this.counter, this.total = 32});
 
   ProgressModel copyWith({String? title, int? counter}) => ProgressModel(
       title: title ?? this.title, counter: counter ?? this.counter);

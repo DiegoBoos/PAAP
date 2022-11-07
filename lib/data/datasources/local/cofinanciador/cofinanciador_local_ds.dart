@@ -23,7 +23,7 @@ class CofinanciadorLocalDataSourceImpl implements CofinanciadorLocalDataSource {
         Tipo_x0020_Entidad	TEXT,
         Departamento	TEXT,
         Municipio	TEXT,
-        PRIMARY KEY(CofinanciadorId)
+        PRIMARY KEY(ID)
       )
     ''');
   }

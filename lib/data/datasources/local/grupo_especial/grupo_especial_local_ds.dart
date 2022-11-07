@@ -5,8 +5,8 @@ import '../../../../domain/db/db_config.dart';
 import '../../../models/grupo_especial_model.dart';
 
 abstract class GrupoEspecialLocalDataSource {
-  Future<List<GrupoEspecialModel>> getTiposProyectosDB();
-  Future<int> saveTiposProyectos(
+  Future<List<GrupoEspecialModel>> getGruposEspecialesDB();
+  Future<int> saveGruposEspeciales(
       List<GrupoEspecialEntity> gruposespecialesEntity);
 }
 
@@ -23,7 +23,7 @@ class GrupoEspecialLocalDataSourceImpl implements GrupoEspecialLocalDataSource {
   }
 
   @override
-  Future<List<GrupoEspecialModel>> getTiposProyectosDB() async {
+  Future<List<GrupoEspecialModel>> getGruposEspecialesDB() async {
     final db = await DBConfig.database;
 
     final res = await db.query('GrupoEspecial');
@@ -35,7 +35,7 @@ class GrupoEspecialLocalDataSourceImpl implements GrupoEspecialLocalDataSource {
   }
 
   @override
-  Future<int> saveTiposProyectos(
+  Future<int> saveGruposEspeciales(
       List<GrupoEspecialEntity> gruposespecialesEntity) async {
     final db = await DBConfig.database;
 

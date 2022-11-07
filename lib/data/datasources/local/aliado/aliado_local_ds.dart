@@ -22,8 +22,7 @@ class AliadosLocalDataSourceImpl implements AliadosLocalDataSource {
 	      Ciudad	TEXT,
 	      Años_x0020_Experiencia	TEXT,
 	      Estado	TEXT,
-	      PRIMARY KEY(AliadoId),
-
+	      PRIMARY KEY(AliadoId)
       )
     ''');
   }
