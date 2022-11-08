@@ -1,28 +1,28 @@
 part of 'residencia_cubit.dart';
 
 abstract class ResidenciaState extends Equatable {
-  final List<ResidenciaEntity>? residencia;
-  const ResidenciaState({this.residencia});
+  final List<ResidenciaEntity>? residencias;
+  const ResidenciaState({this.residencias});
 
   @override
-  List<Object?> get props => [residencia];
+  List<Object?> get props => [residencias];
 }
 
-class ResidenciaInitial extends ResidenciaState {}
+class ResidenciasInitial extends ResidenciaState {}
 
-class ResidenciaLoading extends ResidenciaState {}
+class ResidenciasLoading extends ResidenciaState {}
 
-class ResidenciaLoaded extends ResidenciaState {
-  final List<ResidenciaEntity>? residenciaLoaded;
+class ResidenciasLoaded extends ResidenciaState {
+  final List<ResidenciaEntity>? residenciasLoaded;
 
-  const ResidenciaLoaded(this.residenciaLoaded)
-      : super(residencia: residenciaLoaded);
+  const ResidenciasLoaded(this.residenciasLoaded)
+      : super(residencias: residenciasLoaded);
 }
 
-class ResidenciaError extends ResidenciaState {
+class ResidenciasError extends ResidenciaState {
   final String message;
 
-  const ResidenciaError(this.message);
+  const ResidenciasError(this.message);
 
   @override
   List<Object?> get props => [message];

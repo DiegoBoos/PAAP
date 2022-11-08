@@ -1,27 +1,27 @@
 part of 'genero_cubit.dart';
 
 abstract class GeneroState extends Equatable {
-  final List<GeneroEntity>? genero;
-  const GeneroState({this.genero});
+  final List<GeneroEntity>? generos;
+  const GeneroState({this.generos});
 
   @override
-  List<Object?> get props => [genero];
+  List<Object?> get props => [generos];
 }
 
-class GeneroInitial extends GeneroState {}
+class GenerosInitial extends GeneroState {}
 
-class GeneroLoading extends GeneroState {}
+class GenerosLoading extends GeneroState {}
 
-class GeneroLoaded extends GeneroState {
-  final List<GeneroEntity>? generoLoaded;
+class GenerosLoaded extends GeneroState {
+  final List<GeneroEntity>? generosLoaded;
 
-  const GeneroLoaded(this.generoLoaded) : super(genero: generoLoaded);
+  const GenerosLoaded(this.generosLoaded) : super(generos: generosLoaded);
 }
 
-class GeneroError extends GeneroState {
+class GenerosError extends GeneroState {
   final String message;
 
-  const GeneroError(this.message);
+  const GenerosError(this.message);
 
   @override
   List<Object?> get props => [message];

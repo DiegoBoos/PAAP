@@ -1,232 +1,43 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
-import 'package:paap/domain/cubits/menu/menu_cubit.dart';
 
-import 'data/datasources/local/actividad_financiera/actividad_financiera_local_ds.dart';
-import 'data/datasources/local/agrupacion/agrupacion_local_ds.dart';
-import 'data/datasources/local/aliado/aliado_local_ds.dart';
-import 'data/datasources/local/alianzas/alianzas_local_ds.dart';
-import 'data/datasources/local/beneficiario/beneficiario_local_ds.dart';
-import 'data/datasources/local/cofinanciador/cofinanciador_local_ds.dart';
-import 'data/datasources/local/consultor/consultor_local_ds.dart';
-import 'data/datasources/local/departamento/departamento_local_ds.dart';
-import 'data/datasources/local/desembolso/desembolso_local_ds.dart';
-import 'data/datasources/local/estado_civil/estado_civil_local_ds.dart';
-import 'data/datasources/local/estado_visita/estado_visita_local_ds.dart';
-import 'data/datasources/local/frecuencia/frecuencia_local_ds.dart';
-import 'data/datasources/local/genero/genero_local_ds.dart';
-import 'data/datasources/local/grupo_especial/grupo_especial_local_ds.dart';
-import 'data/datasources/local/municipio/municipio_local_ds.dart';
-import 'data/datasources/local/nivel_escolar/nivel_escolar_local_ds.dart';
-import 'data/datasources/local/producto/producto_local_ds.dart';
-import 'data/datasources/local/residencia/residencia_local_ds.dart';
-import 'data/datasources/local/revision/revision_local_ds.dart';
-import 'data/datasources/local/rubro/rubro_local_ds.dart';
-import 'data/datasources/local/tipo_calidad/tipo_calidad_local_ds.dart';
-import 'data/datasources/local/tipo_entidad/tipo_entidad_local_ds.dart';
-import 'data/datasources/local/tipo_identificacion/tipo_identificacion_local_ds.dart';
-import 'data/datasources/local/tipo_movimiento/tipo_movimiento_local_ds.dart';
-import 'data/datasources/local/tipo_tenencia/tipo_tenencia_local_ds.dart';
-import 'data/datasources/local/tipo_visita/tipo_visita_local_ds.dart';
-import 'data/datasources/local/vereda/vereda_local_ds.dart';
-import 'data/datasources/remote/actividad_financiera/actividad_financiera_remote_ds.dart';
-import 'data/datasources/remote/agrupacion/agrupacion_remote_ds.dart';
-import 'data/datasources/remote/aliado/aliado_remote_ds.dart';
-import 'data/datasources/remote/alianza/alianza_remote_ds.dart';
-import 'data/datasources/remote/beneficiario/beneficiario_remote_ds.dart';
-import 'data/datasources/remote/cofinanciador/cofinanciador_remote_ds.dart';
-import 'data/datasources/remote/consultor/consultor_remote_ds.dart';
-import 'data/datasources/remote/departamento/departamento_remote_ds.dart';
-import 'data/datasources/remote/desembolso/desembolso_remote_ds.dart';
-import 'data/datasources/remote/estado_civil/estado_civil_remote_ds.dart';
-import 'data/datasources/remote/estado_visita/estado_visita_remote_ds.dart';
-import 'data/datasources/remote/frecuencia/frecuencia_remote_ds.dart';
-import 'data/datasources/remote/genero/genero_remote_ds.dart';
-import 'data/datasources/remote/grupo_especial/grupo_especial_remote_ds.dart';
-import 'data/datasources/remote/municipio/municipio_remote_ds.dart';
-import 'data/datasources/remote/nivel_escolar/nivel_escolar_remote_ds.dart';
-import 'data/datasources/remote/producto/producto_remote_ds.dart';
-import 'data/datasources/remote/residencia/residencia_remote_ds.dart';
-import 'data/datasources/remote/revision/revision_remote_ds.dart';
-import 'data/datasources/remote/rubro/rubro_remote_ds.dart';
-import 'data/datasources/remote/tipo_calidad/tipo_calidad_remote_ds.dart';
-import 'data/datasources/remote/tipo_entidad/tipo_entidad_remote_ds.dart';
-import 'data/datasources/remote/tipo_identificacion/tipo_identificacion_remote_ds.dart';
-import 'data/datasources/remote/tipo_movimiento/tipo_movimiento_remote_ds.dart';
-import 'data/datasources/remote/tipo_tenencia/tipo_tenencia_remote_ds.dart';
-import 'data/datasources/remote/tipo_visita/tipo_visita_remote_ds.dart';
-import 'data/datasources/remote/vereda/vereda_remote_ds.dart';
-import 'data/repositories/actividad_financiera/actividad_financiera_repository.dart';
-import 'data/repositories/actividad_financiera/actividad_financiera_repository_db.dart';
-import 'data/repositories/agrupacion/agrupacion_repository.dart';
-import 'data/repositories/agrupacion/agrupacion_repository_db.dart';
-import 'data/repositories/aliado/aliado_repository.dart';
-import 'data/repositories/aliado/aliado_repository_db.dart';
-import 'data/repositories/alianza/alianza_repository.dart';
-import 'data/repositories/alianza/alianza_repository_db.dart';
-import 'data/repositories/beneficiario/beneficiario_repository.dart';
-import 'data/repositories/beneficiario/beneficiario_repository_db.dart';
-import 'data/repositories/cofinanciador/cofinanciador_repository.dart';
-import 'data/repositories/cofinanciador/cofinanciador_repository_db.dart';
-import 'data/repositories/consultor/consultor_repository.dart';
-import 'data/repositories/consultor/consultor_repository_db.dart';
-import 'data/repositories/departamento/departamento_repository.dart';
-import 'data/repositories/departamento/departamento_repository_db.dart';
-import 'data/repositories/desembolso/desembolso_repository.dart';
-import 'data/repositories/desembolso/desembolso_repository_db.dart';
-import 'data/repositories/estado_civil/estado_civil_repository.dart';
-import 'data/repositories/estado_civil/estado_civil_repository_db.dart';
-import 'data/repositories/estado_visita/estado_visita_repository.dart';
-import 'data/repositories/estado_visita/estado_visita_repository_db.dart';
-import 'data/repositories/frecuencia/frecuencia_repository.dart';
-import 'data/repositories/frecuencia/frecuencia_repository_db.dart';
-import 'data/repositories/genero/genero_repository.dart';
-import 'data/repositories/genero/genero_repository_db.dart';
-import 'data/repositories/grupo_especial/grupo_especial_repository.dart';
-import 'data/repositories/grupo_especial/grupo_especial_repository_db.dart';
-import 'data/repositories/municipio/municipio_repository.dart';
-import 'data/repositories/municipio/municipio_repository_db.dart';
-import 'data/repositories/nivel_escolar/nivel_escolar_repository.dart';
-import 'data/repositories/nivel_escolar/nivel_escolar_repository_db.dart';
-import 'data/repositories/producto/producto_repository.dart';
-import 'data/repositories/producto/producto_repository_db.dart';
-import 'data/repositories/residencia/residencia_repository.dart';
-import 'data/repositories/residencia/residencia_repository_db.dart';
-import 'data/repositories/revision/revision_repository.dart';
-import 'data/repositories/revision/revision_repository_db.dart';
-import 'data/repositories/rubro/rubro_repository.dart';
-import 'data/repositories/rubro/rubro_repository_db.dart';
-import 'data/repositories/tipo_calidad/tipo_calidad_repository.dart';
-import 'data/repositories/tipo_calidad/tipo_calidad_repository_db.dart';
-import 'data/repositories/tipo_entidad/tipo_entidad_repository.dart';
-import 'data/repositories/tipo_entidad/tipo_entidad_repository_db.dart';
-import 'data/repositories/tipo_identificacion/tipo_identificacion_repository.dart';
-import 'data/repositories/tipo_identificacion/tipo_identificacion_repository_db.dart';
-import 'data/repositories/tipo_movimiento/tipo_movimiento_repository.dart';
-import 'data/repositories/tipo_movimiento/tipo_movimiento_repository_db.dart';
-import 'data/repositories/tipo_tenencia/tipo_tenencia_repository.dart';
-import 'data/repositories/tipo_tenencia/tipo_tenencia_repository_db.dart';
-import 'data/repositories/tipo_visita/tipo_visita_repository.dart';
-import 'data/repositories/tipo_visita/tipo_visita_repository_db.dart';
-import 'data/repositories/vereda/vereda_repository.dart';
-import 'data/repositories/vereda/vereda_repository_db.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
-import 'domain/repositories/actividad_financiera/actividad_financiera_repository.dart';
-import 'domain/repositories/actividad_financiera/actividad_financiera_repository_db.dart';
-import 'domain/repositories/agrupacion/agrupacion_repository.dart';
-import 'domain/repositories/agrupacion/agrupacion_repository_db.dart';
-import 'domain/repositories/aliado/aliado_repository.dart';
-import 'domain/repositories/aliado/aliado_repository_db.dart';
-import 'domain/repositories/alianza/alianza_repository.dart';
-import 'domain/repositories/alianza/alianza_repository_db.dart';
-import 'domain/repositories/beneficiario/beneficiario_repository.dart';
-import 'domain/repositories/beneficiario/beneficiario_repository_db.dart';
-import 'domain/repositories/cofinanciador/cofinanciador_repository.dart';
-import 'domain/repositories/cofinanciador/cofinanciador_repository_db.dart';
-import 'domain/repositories/consultor/consultor_repository.dart';
-import 'domain/repositories/consultor/consultor_repository_db.dart';
-import 'domain/repositories/departamento/departamento_repository.dart';
-import 'domain/repositories/departamento/departamento_repository_db.dart';
-import 'domain/repositories/desembolso/desembolso_repository.dart';
-import 'domain/repositories/desembolso/desembolso_repository_db.dart';
-import 'domain/repositories/estado_civil/estado_civil_repository.dart';
-import 'domain/repositories/estado_civil/estado_civil_repository_db.dart';
-import 'domain/repositories/estado_visita/estado_visita_repository.dart';
-import 'domain/repositories/estado_visita/estado_visita_repository_db.dart';
-import 'domain/repositories/frecuencia/frecuencia_repository.dart';
-import 'domain/repositories/frecuencia/frecuencia_repository_db.dart';
-import 'domain/repositories/genero/genero_repository.dart';
-import 'domain/repositories/genero/genero_repository_db.dart';
-import 'domain/repositories/grupo_especial/grupo_especial_repository.dart';
-import 'domain/repositories/grupo_especial/grupo_especial_repository_db.dart';
-import 'domain/repositories/municipio/municipio_repository.dart';
-import 'domain/repositories/municipio/municipio_repository_db.dart';
-import 'domain/repositories/nivel_escolar/nivel_escolar_repository.dart';
-import 'domain/repositories/nivel_escolar/nivel_escolar_repository_db.dart';
-import 'domain/repositories/producto/producto_repository.dart';
-import 'domain/repositories/producto/producto_repository_db.dart';
-import 'domain/repositories/residencia/residencia_repository.dart';
-import 'domain/repositories/residencia/residencia_repository_db.dart';
-import 'domain/repositories/revision/revision_repository.dart';
-import 'domain/repositories/revision/revision_repository_db.dart';
-import 'domain/repositories/rubro/rubro_repository.dart';
-import 'domain/repositories/rubro/rubro_repository_db.dart';
-import 'domain/repositories/tipo_calidad/tipo_calidad_repository.dart';
-import 'domain/repositories/tipo_calidad/tipo_calidad_repository_db.dart';
-import 'domain/repositories/tipo_entidad/tipo_entidad_repository.dart';
-import 'domain/repositories/tipo_entidad/tipo_entidad_repository_db.dart';
-import 'domain/repositories/tipo_identificacion/tipo_identificacion_repository.dart';
-import 'domain/repositories/tipo_identificacion/tipo_identificacion_repository_db.dart';
-import 'domain/repositories/tipo_movimiento/tipo_movimiento_repository.dart';
-import 'domain/repositories/tipo_movimiento/tipo_movimiento_repository_db.dart';
-import 'domain/repositories/tipo_tenencia/tipo_tenencia_repository.dart';
-import 'domain/repositories/tipo_tenencia/tipo_tenencia_repository_db.dart';
-import 'domain/repositories/tipo_visita/tipo_visita_repository.dart';
-import 'domain/repositories/tipo_visita/tipo_visita_repository_db.dart';
-import 'domain/repositories/vereda/vereda_repository.dart';
-import 'domain/repositories/vereda/vereda_repository_db.dart';
-import 'domain/usecases/actividad_financiera/actividad_financiera_db_usecase.dart';
-import 'domain/usecases/actividad_financiera/actividad_financiera_usecase.dart';
-import 'domain/usecases/agrupacion/agrupacion_db_usecase.dart';
-import 'domain/usecases/agrupacion/agrupacion_usecase.dart';
-import 'domain/usecases/aliado/aliado_db_usecase.dart';
-import 'domain/usecases/aliado/aliado_usecase.dart';
-import 'domain/usecases/alianza/alianza_db_usecase.dart';
-import 'domain/usecases/alianza/alianza_usecase.dart';
+import 'domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
+import 'domain/usecases/agrupacion/agrupacion_exports.dart';
+import 'domain/usecases/aliado/aliado_exports.dart';
+import 'domain/usecases/alianza/alianza_exports.dart';
 import 'domain/usecases/auth/auth_exports.dart';
-import 'domain/usecases/beneficiario/beneficiario_db_usecase.dart';
-import 'domain/usecases/beneficiario/beneficiario_usecase.dart';
-import 'domain/usecases/cofinanciador/cofinanciador_db_usecase.dart';
-import 'domain/usecases/cofinanciador/cofinanciador_usecase.dart';
-import 'domain/usecases/consultor/consultor_db_usecase.dart';
-import 'domain/usecases/consultor/consultor_usecase.dart';
-import 'domain/usecases/departamento/departamento_db_usecase.dart';
-import 'domain/usecases/departamento/departamento_usecase.dart';
-import 'domain/usecases/desembolso/desembolso_db_usecase.dart';
-import 'domain/usecases/desembolso/desembolso_usecase.dart';
-import 'domain/usecases/estado_civil/estado_civil_db_usecase.dart';
-import 'domain/usecases/estado_civil/estado_civil_usecase.dart';
-import 'domain/usecases/estado_visita/estado_visita_db_usecase.dart';
-import 'domain/usecases/estado_visita/estado_visita_usecase.dart';
-import 'domain/usecases/frecuencia/frecuencia_db_usecase.dart';
-import 'domain/usecases/frecuencia/frecuencia_usecase.dart';
-import 'domain/usecases/genero/genero_db_usecase.dart';
-import 'domain/usecases/genero/genero_usecase.dart';
-import 'domain/usecases/grupo_especial/grupo_especial_db_usecase.dart';
-import 'domain/usecases/grupo_especial/grupo_especial_usecase.dart';
-import 'domain/usecases/menu/menu_exports.dart';
+import 'domain/usecases/beneficiario/beneficiario_exports.dart';
+import 'domain/usecases/cofinanciador/cofinanciador_exports.dart';
+import 'domain/usecases/consultor/consultor_exports.dart';
 import 'domain/usecases/convocatoria/convocatoria_exports.dart';
-import 'domain/usecases/municipio/municipio_db_usecase.dart';
-import 'domain/usecases/municipio/municipio_usecase.dart';
-import 'domain/usecases/nivel_escolar/nivel_escolar_db_usecase.dart';
-import 'domain/usecases/nivel_escolar/nivel_escolar_usecase.dart';
+import 'domain/usecases/departamento/departamento_exports.dart';
+import 'domain/usecases/desembolso/desembolso_exports.dart';
+import 'domain/usecases/estado_civil/estado_civil_exports.dart';
+import 'domain/usecases/estado_visita/estado_visita_exports.dart';
+import 'domain/usecases/frecuencia/frecuencia_exports.dart';
+import 'domain/usecases/genero/genero_exports.dart';
+import 'domain/usecases/grupo_especial/grupo_especial_exports.dart';
+import 'domain/usecases/menu/menu_exports.dart';
+import 'domain/usecases/municipio/municipio_exports.dart';
+import 'domain/usecases/nivel_escolar/nivel_escolar_exports.dart';
 import 'domain/usecases/perfiles/perfiles_exports.dart';
-import 'domain/usecases/producto/producto_db_usecase.dart';
-import 'domain/usecases/producto/producto_usecase.dart';
-import 'domain/usecases/residencia/residencia_db_usecase.dart';
-import 'domain/usecases/residencia/residencia_usecase.dart';
-import 'domain/usecases/revision/revision_db_usecase.dart';
-import 'domain/usecases/revision/revision_usecase.dart';
-import 'domain/usecases/rubro/rubro_db_usecase.dart';
-import 'domain/usecases/rubro/rubro_usecase.dart';
-import 'domain/usecases/tipo_calidad/tipo_calidad_db_usecase.dart';
-import 'domain/usecases/tipo_calidad/tipo_calidad_usecase.dart';
-import 'domain/usecases/tipo_entidad/tipo_entidad_db_usecase.dart';
-import 'domain/usecases/tipo_entidad/tipo_entidad_usecase.dart';
-import 'domain/usecases/tipo_identificacion/tipo_identificacion_db_usecase.dart';
-import 'domain/usecases/tipo_identificacion/tipo_identificacion_usecase.dart';
-import 'domain/usecases/tipo_movimiento/tipo_movimiento_db_usecase.dart';
-import 'domain/usecases/tipo_movimiento/tipo_movimiento_usecase.dart';
+import 'domain/usecases/producto/producto_exports.dart';
+import 'domain/usecases/residencia/residencia_exports.dart';
+import 'domain/usecases/revision/revision_exports.dart';
+import 'domain/usecases/rubro/rubro_exports.dart';
+import 'domain/usecases/tipo_actividad_productiva/tipo_actividad_productiva_exports.dart';
+import 'domain/usecases/tipo_calidad/tipo_calidad_exports.dart';
+import 'domain/usecases/tipo_entidad/tipo_entidad_exports.dart';
+import 'domain/usecases/tipo_identificacion/tipo_identificacion_exports.dart';
+import 'domain/usecases/tipo_movimiento/tipo_movimiento_exports.dart';
 import 'domain/usecases/tipo_proyecto/tipo_proyecto_exports.dart';
-import 'domain/usecases/tipo_tenencia/tipo_tenencia_db_usecase.dart';
-import 'domain/usecases/tipo_tenencia/tipo_tenencia_usecase.dart';
-import 'domain/usecases/tipo_visita/tipo_visita_db_usecase.dart';
-import 'domain/usecases/tipo_visita/tipo_visita_usecase.dart';
+import 'domain/usecases/tipo_tenencia/tipo_tenencia_exports.dart';
+import 'domain/usecases/tipo_visita/tipo_visita_exports.dart';
 import 'domain/usecases/unidad/unidad_exports.dart';
-import 'domain/usecases/vereda/vereda_db_usecase.dart';
-import 'domain/usecases/vereda/vereda_usecase.dart';
+import 'domain/usecases/vereda/vereda_exports.dart';
 
 final locator = GetIt.instance;
 
@@ -265,6 +76,7 @@ void init() {
   actividadFinancieraInit();
   tipoMovimientoInit();
   tipoCalidadInit();
+  tipoActividadProductivaInit();
 
   perfilesBlocInit();
 
@@ -339,6 +151,8 @@ downloadSyncInit() {
         tipoMovimientoDB: locator(),
         tipoCalidad: locator(),
         tipoCalidadDB: locator(),
+        tipoActividadProductiva: locator(),
+        tipoActividadProductivaDB: locator(),
       ));
 }
 
@@ -425,6 +239,8 @@ menuCubitInit() {
 }
 
 convocatoriaInit() {
+  // cubit
+  locator.registerFactory(() => ConvocatoriaCubit(convocatoriaDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => ConvocatoriaUsecase(locator()));
 
@@ -459,6 +275,8 @@ convocatoriaInit() {
 }
 
 tipoProyectoInit() {
+  // cubit
+  locator.registerFactory(() => TipoProyectoCubit(tipoProyectoDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => TipoProyectoUsecase(locator()));
 
@@ -493,6 +311,8 @@ tipoProyectoInit() {
 }
 
 unidadInit() {
+  // cubit
+  locator.registerFactory(() => UnidadCubit(unidadDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => UnidadUsecase(locator()));
 
@@ -566,6 +386,8 @@ perfilesBlocInit() {
 }
 
 productosInit() {
+  // cubit
+  locator.registerFactory(() => ProductoCubit(productoDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => ProductoUsecase(locator()));
 
@@ -600,6 +422,8 @@ productosInit() {
 }
 
 generosInit() {
+  // cubit
+  locator.registerFactory(() => GeneroCubit(generoDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => GeneroUsecase(locator()));
 
@@ -634,6 +458,8 @@ generosInit() {
 }
 
 departamentosInit() {
+  // cubit
+  locator.registerFactory(() => DepartamentoCubit(departamentoDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => DepartamentoUsecase(locator()));
 
@@ -668,6 +494,8 @@ departamentosInit() {
 }
 
 municipiosInit() {
+  // cubit
+  locator.registerFactory(() => MunicipioCubit(municipioDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => MunicipioUsecase(locator()));
 
@@ -702,6 +530,8 @@ municipiosInit() {
 }
 
 tipoVisitaInit() {
+  // cubit
+  locator.registerFactory(() => TipoVisitaCubit(tipoVisitaDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => TipoVisitaUsecase(locator()));
 
@@ -736,6 +566,8 @@ tipoVisitaInit() {
 }
 
 estadoVisitaInit() {
+  // cubit
+  locator.registerFactory(() => EstadoVisitaCubit(estadovisitaDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => EstadoVisitaUsecase(locator()));
 
@@ -770,6 +602,8 @@ estadoVisitaInit() {
 }
 
 agrupacionInit() {
+  // cubit
+  locator.registerFactory(() => AgrupacionCubit(agrupacionDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => AgrupacionUsecase(locator()));
 
@@ -804,6 +638,8 @@ agrupacionInit() {
 }
 
 estadoCivilInit() {
+  // cubit
+  locator.registerFactory(() => EstadoCivilCubit(estadoCivilDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => EstadoCivilUsecase(locator()));
 
@@ -838,6 +674,8 @@ estadoCivilInit() {
 }
 
 residenciaInit() {
+  // cubit
+  locator.registerFactory(() => ResidenciaCubit(residenciaDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => ResidenciaUsecase(locator()));
 
@@ -872,6 +710,8 @@ residenciaInit() {
 }
 
 tipoTenenciaInit() {
+  // cubit
+  locator.registerFactory(() => TipoTenenciaCubit(tipoTenenciaDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => TipoTenenciaUsecase(locator()));
 
@@ -906,6 +746,8 @@ tipoTenenciaInit() {
 }
 
 nivelEscolarInit() {
+  // cubit
+  locator.registerFactory(() => NivelEscolarCubit(nivelEscolarDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => NivelEscolarUsecase(locator()));
 
@@ -940,6 +782,8 @@ nivelEscolarInit() {
 }
 
 veredaInit() {
+  // cubit
+  locator.registerFactory(() => VeredaCubit(veredaDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => VeredaUsecase(locator()));
 
@@ -974,6 +818,8 @@ veredaInit() {
 }
 
 alianzaInit() {
+  // cubit
+  locator.registerFactory(() => AlianzaCubit(alianzaDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => AlianzaUsecase(locator()));
 
@@ -1008,6 +854,8 @@ alianzaInit() {
 }
 
 aliadoInit() {
+  // cubit
+  locator.registerFactory(() => AliadoCubit(aliadoDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => AliadoUsecase(locator()));
 
@@ -1042,6 +890,9 @@ aliadoInit() {
 }
 
 frecuenciaInit() {
+  // cubit
+  locator.registerFactory(() => FrecuenciaCubit(frecuenciaDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => FrecuenciaUsecase(locator()));
 
@@ -1076,6 +927,9 @@ frecuenciaInit() {
 }
 
 beneficiarioInit() {
+  // cubit
+  locator.registerFactory(() => BeneficiarioCubit(beneficiarioDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => BeneficiarioUsecase(locator()));
 
@@ -1110,6 +964,9 @@ beneficiarioInit() {
 }
 
 grupoEspecialInit() {
+  // cubit
+  locator.registerFactory(() => GrupoEspecialCubit(grupoEspecialDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => GrupoEspecialUsecase(locator()));
 
@@ -1144,6 +1001,10 @@ grupoEspecialInit() {
 }
 
 tipoIdentificacionInit() {
+  // cubit
+  locator.registerFactory(
+      () => TipoIdentificacionCubit(tipoIdentificacionDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => TipoIdentificacionUsecase(locator()));
 
@@ -1178,6 +1039,9 @@ tipoIdentificacionInit() {
 }
 
 revisionInit() {
+  // cubit
+  locator.registerFactory(() => RevisionCubit(revisionDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => RevisionUsecase(locator()));
 
@@ -1212,6 +1076,9 @@ revisionInit() {
 }
 
 consultorInit() {
+  // cubit
+  locator.registerFactory(() => ConsultorCubit(consultorDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => ConsultorUsecase(locator()));
 
@@ -1246,6 +1113,9 @@ consultorInit() {
 }
 
 tipoEntidadInit() {
+  // cubit
+  locator.registerFactory(() => TipoEntidadCubit(tipoEntidadDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => TipoEntidadUsecase(locator()));
 
@@ -1280,6 +1150,8 @@ tipoEntidadInit() {
 }
 
 cofinanciadorInit() {
+  // cubit
+  locator.registerFactory(() => CofinanciadorCubit(cofinanciadorDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => CofinanciadorUsecase(locator()));
 
@@ -1314,6 +1186,9 @@ cofinanciadorInit() {
 }
 
 desembolsoInit() {
+  // cubit
+  locator.registerFactory(() => DesembolsoCubit(desembolsoDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => DesembolsoUsecase(locator()));
 
@@ -1348,6 +1223,9 @@ desembolsoInit() {
 }
 
 rubroInit() {
+  // cubit
+  locator.registerFactory(() => RubroCubit(rubroDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => RubroUsecase(locator()));
 
@@ -1382,6 +1260,10 @@ rubroInit() {
 }
 
 actividadFinancieraInit() {
+  // cubit
+  locator.registerFactory(
+      () => ActividadFinancieraCubit(actividadFinancieraDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => ActividadFinancieraUsecase(locator()));
 
@@ -1416,6 +1298,10 @@ actividadFinancieraInit() {
 }
 
 tipoMovimientoInit() {
+  // cubit
+  locator
+      .registerFactory(() => TipoMovimientoCubit(tipoMovimientoDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => TipoMovimientoUsecase(locator()));
 
@@ -1450,6 +1336,9 @@ tipoMovimientoInit() {
 }
 
 tipoCalidadInit() {
+  // cubit
+  locator.registerFactory(() => TipoCalidadCubit(tipoCalidadDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => TipoCalidadUsecase(locator()));
 
@@ -1473,6 +1362,46 @@ tipoCalidadInit() {
   // remote data source
   locator.registerLazySingleton<TipoCalidadRemoteDataSource>(
     () => TipoCalidadRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<TipoCalidadLocalDataSource>(
+    () => TipoCalidadLocalDataSourceImpl(),
+  );
+}
+
+tipoActividadProductivaInit() {
+  // cubit
+  locator.registerFactory(
+      () => TipoActividadProductivaCubit(tipoActividadProductivaDB: locator()));
+
+  // remote usecase
+  locator
+      .registerLazySingleton(() => TipoActividadProductivaUsecase(locator()));
+
+  // local usecase
+  locator
+      .registerLazySingleton(() => TipoActividadProductivaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<TipoActividadProductivaRepository>(
+    () => TipoActividadProductivaRepositoryImpl(
+      tipoActividadProductivaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<TipoActividadProductivaRepositoryDB>(
+    () => TipoActividadProductivaRepositoryDBImpl(
+      tipoActividadProductivaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<TipoActividadProductivaRemoteDataSource>(
+    () => TipoActividadProductivaRemoteDataSourceImpl(
       client: locator(),
     ),
   );

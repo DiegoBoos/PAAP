@@ -3,24 +3,20 @@ import 'package:equatable/equatable.dart';
 
 import '../../entities/tipo_movimiento_entity.dart';
 import '../../usecases/tipo_movimiento/tipo_movimiento_db_usecase.dart';
-import '../../usecases/tipo_movimiento/tipo_movimiento_usecase.dart';
-
 part '../tipo_movimiento/tipo_movimiento_state.dart';
 
 class TipoMovimientoCubit extends Cubit<TipoMovimientoState> {
-  final TipoMovimientoUsecase tipoMovimiento;
   final TipoMovimientoUsecaseDB tipoMovimientoDB;
 
-  TipoMovimientoCubit(
-      {required this.tipoMovimiento, required this.tipoMovimientoDB})
-      : super(TipoMovimientoInitial()) {
-    getTipoMovimientoDB();
+  TipoMovimientoCubit({required this.tipoMovimientoDB})
+      : super(TiposMovimientosInitial()) {
+    getTiposMovimientosDB();
   }
 
-  void getTipoMovimientoDB() async {
+  void getTiposMovimientosDB() async {
     final result = await tipoMovimientoDB.getTiposMovimientosUsecaseDB();
     result.fold(
-        (failure) => emit(TipoMovimientoError(failure.properties.first)),
-        (data) => emit(TipoMovimientoLoaded(data)));
+        (failure) => emit(TiposMovimientosError(failure.properties.first)),
+        (data) => emit(TiposMovimientosLoaded(data)));
   }
 }

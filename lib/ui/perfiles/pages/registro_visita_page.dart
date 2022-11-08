@@ -4,7 +4,7 @@ import '../../utils/input_decoration.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/conceptos.dart';
-import '../widgets/floating_buttons.dart';
+import '../../utils/floating_buttons.dart';
 import '../widgets/matriz_evaluacion.dart';
 import '../widgets/perfil_card.dart';
 
@@ -23,7 +23,6 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final perfilId = ModalRoute.of(context)?.settings.arguments as String;
     DateTime date = DateTime.now();
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +38,7 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
         child: SingleChildScrollView(
           child: Column(children: [
             const SizedBox(height: 30),
-            PerfilCard(perfilId),
+            const PerfilCard(),
             const SizedBox(height: 30),
             const Text('Evaluación del Perfil', style: Styles.titleStyle),
             const SizedBox(height: 10),
@@ -121,7 +120,8 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                   ),
                   if (toggleEvaluacion) const MatrizEvaluacion(),
                   if (toggleConceptos) const Conceptos(),
-                  const FloatingButtons()
+                  const SaveFinishCancelButtons(
+                      onCanceled: null, onFinished: null, onSaved: null)
                 ],
               ),
           ]),

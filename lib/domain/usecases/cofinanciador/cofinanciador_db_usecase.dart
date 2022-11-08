@@ -13,6 +13,11 @@ class CofinanciadorUsecaseDB {
     return repositoryDB.getCofinanciadoresRepositoryDB();
   }
 
+  Future<Either<Failure, CofinanciadorEntity?>> getCofinanciadorUsecaseDB(
+      String id) {
+    return repositoryDB.getCofinanciadorRepositoryDB(id);
+  }
+
   Future<Either<Failure, int>> saveCofinanciadoresUsecaseDB(
       List<CofinanciadorEntity> cofinanciadorEntity) {
     return repositoryDB.saveCofinanciadoresRepositoryDB(cofinanciadorEntity);

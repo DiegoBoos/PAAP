@@ -1,7 +1,7 @@
 part of 'cofinanciador_cubit.dart';
 
 abstract class CofinanciadorState extends Equatable {
-  final List<CofinanciadorEntity>? cofinanciador;
+  final CofinanciadorEntity? cofinanciador;
   const CofinanciadorState({this.cofinanciador});
 
   @override
@@ -13,7 +13,7 @@ class CofinanciadorInitial extends CofinanciadorState {}
 class CofinanciadorLoading extends CofinanciadorState {}
 
 class CofinanciadorLoaded extends CofinanciadorState {
-  final List<CofinanciadorEntity>? cofinanciadorLoaded;
+  final CofinanciadorEntity? cofinanciadorLoaded;
 
   const CofinanciadorLoaded(this.cofinanciadorLoaded)
       : super(cofinanciador: cofinanciadorLoaded);

@@ -25,6 +25,20 @@ class AliadoRepositoryDBImpl implements AliadoRepositoryDB {
   }
 
   @override
+  Future<Either<Failure, AliadoEntity?>> getAliadoRepositoryDB(
+      String id) async {
+    try {
+      final aliadoDB = await aliadoLocalDataSource.getAliadoDB(id);
+
+      return Right(aliadoDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, int>> saveAliadosRepositoryDB(
       List<AliadoEntity> aliadoEntity) async {
     try {

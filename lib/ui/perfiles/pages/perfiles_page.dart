@@ -18,13 +18,6 @@ class PerfilesPage extends StatefulWidget {
 }
 
 class _PerfilesPageState extends State<PerfilesPage> {
-  @override
-  void initState() {
-    super.initState();
-    final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
-    perfilesBloc.add(GetPerfiles());
-  }
-
   String? selectedValue;
   List<Map<String, dynamic>> options = [
     {'id': 'id', 'description': 'Filtrar por ID'},
@@ -74,7 +67,7 @@ class _PerfilesPageState extends State<PerfilesPage> {
                 return const CustomCircularProgress(
                     alignment: Alignment.center);
               } else if (state is PerfilesLoaded) {
-                List<PerfilEntity> perfiles = state.perfiles!;
+                List<PerfilEntity> perfiles = state.perfilesLoaded!;
                 if (perfiles.isEmpty) {
                   return const SizedBox(
                       child:

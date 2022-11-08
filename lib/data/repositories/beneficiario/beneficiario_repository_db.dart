@@ -27,6 +27,21 @@ class BeneficiarioRepositoryDBImpl implements BeneficiarioRepositoryDB {
   }
 
   @override
+  Future<Either<Failure, BeneficiarioEntity?>> getBeneficiarioRepositoryDB(
+      String id) async {
+    try {
+      final beneficiarioDB =
+          await beneficiarioLocalDataSource.getBeneficiarioDB(id);
+
+      return Right(beneficiarioDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, int>> saveBeneficiariosRepositoryDB(
       List<BeneficiarioEntity> beneficiarioEntity) async {
     try {

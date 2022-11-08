@@ -7,6 +7,7 @@ import '../../../models/aliado_model.dart';
 
 abstract class AliadosLocalDataSource {
   Future<List<AliadoModel>> getAliadosDB();
+  Future<AliadoModel?> getAliadoDB(String id);
   Future<int> saveAliadosDB(List<AliadoEntity> aliados);
 }
 
@@ -38,6 +39,19 @@ class AliadosLocalDataSourceImpl implements AliadosLocalDataSource {
             .toList();
 
     return aliadosDB;
+  }
+
+  @override
+  Future<AliadoModel?> getAliadoDB(String id) async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('Aliado', where: 'aliadoId', whereArgs: [id]);
+
+    if (res.isEmpty) return null;
+    final aliadoMap = {for (var e in res[0].entries) e.key: e.value};
+    final aliadoModel = AliadoModel.fromJson(aliadoMap);
+
+    return aliadoModel;
   }
 
   @override

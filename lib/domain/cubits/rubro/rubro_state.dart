@@ -1,27 +1,27 @@
 part of 'rubro_cubit.dart';
 
 abstract class RubroState extends Equatable {
-  final List<RubroEntity>? rubro;
-  const RubroState({this.rubro});
+  final List<RubroEntity>? rubros;
+  const RubroState({this.rubros});
 
   @override
-  List<Object?> get props => [rubro];
+  List<Object?> get props => [rubros];
 }
 
-class RubroInitial extends RubroState {}
+class RubrosInitial extends RubroState {}
 
-class RubroLoading extends RubroState {}
+class RubrosLoading extends RubroState {}
 
-class RubroLoaded extends RubroState {
-  final List<RubroEntity>? rubroLoaded;
+class RubrosLoaded extends RubroState {
+  final List<RubroEntity>? rubrosLoaded;
 
-  const RubroLoaded(this.rubroLoaded) : super(rubro: rubroLoaded);
+  const RubrosLoaded(this.rubrosLoaded) : super(rubros: rubrosLoaded);
 }
 
-class RubroError extends RubroState {
+class RubrosError extends RubroState {
   final String message;
 
-  const RubroError(this.message);
+  const RubrosError(this.message);
 
   @override
   List<Object?> get props => [message];

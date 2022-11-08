@@ -1,7 +1,7 @@
 part of 'beneficiario_cubit.dart';
 
 abstract class BeneficiarioState extends Equatable {
-  final List<BeneficiarioEntity>? beneficiario;
+  final BeneficiarioEntity? beneficiario;
   const BeneficiarioState({this.beneficiario});
 
   @override
@@ -13,7 +13,7 @@ class BeneficiarioInitial extends BeneficiarioState {}
 class BeneficiarioLoading extends BeneficiarioState {}
 
 class BeneficiarioLoaded extends BeneficiarioState {
-  final List<BeneficiarioEntity>? beneficiarioLoaded;
+  final BeneficiarioEntity? beneficiarioLoaded;
 
   const BeneficiarioLoaded(this.beneficiarioLoaded)
       : super(beneficiario: beneficiarioLoaded);

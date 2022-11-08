@@ -24,7 +24,7 @@ class CustomDrawer extends StatelessWidget {
                     Navigator.popUntil(context, (route) => route.isFirst);
                     return;
                   }
-                  if (submenu.menuId == '37') {
+                  if (submenu.menuId == '36') {
                     Navigator.popUntil(context, (route) => route.isFirst);
                     return;
                   }
@@ -43,7 +43,7 @@ class CustomDrawer extends StatelessWidget {
     if (submenu.menuId == '22') return Icons.home;
     if (submenu.menuId == '31') return Icons.assignment_turned_in;
 
-    if (submenu.menuId == '37') return Icons.filter_center_focus;
+    if (submenu.menuId == '36') return Icons.filter_center_focus;
     if (submenu.menuId == '37') return Icons.home;
     if (submenu.menuId == '38') return Icons.sentiment_very_satisfied;
     if (submenu.menuId == '39') return Icons.accessibility;

@@ -1,7 +1,7 @@
 part of 'perfil_cubit.dart';
 
 abstract class PerfilState extends Equatable {
-  final List<PerfilEntity>? perfil;
+  final VPerfilEntity? perfil;
   const PerfilState({this.perfil});
 
   @override
@@ -13,7 +13,7 @@ class PerfilInitial extends PerfilState {}
 class PerfilLoading extends PerfilState {}
 
 class PerfilLoaded extends PerfilState {
-  final List<PerfilEntity>? perfilLoaded;
+  final VPerfilEntity? perfilLoaded;
 
   const PerfilLoaded(this.perfilLoaded) : super(perfil: perfilLoaded);
 }

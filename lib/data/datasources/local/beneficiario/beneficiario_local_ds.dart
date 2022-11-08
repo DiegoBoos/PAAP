@@ -6,6 +6,7 @@ import '../../../models/beneficiario_model.dart';
 
 abstract class BeneficiarioLocalDataSource {
   Future<List<BeneficiarioModel>> getBeneficiariosDB();
+  Future<BeneficiarioModel?> getBeneficiarioDB(String id);
   Future<int> saveBeneficiarios(List<BeneficiarioEntity> beneficiarioEntity);
 }
 
@@ -40,6 +41,20 @@ class BeneficiarioLocalDataSourceImpl implements BeneficiarioLocalDataSource {
         res.map((m) => BeneficiarioModel.fromJson(m))).toList();
 
     return beneficiariosDB;
+  }
+
+  @override
+  Future<BeneficiarioModel?> getBeneficiarioDB(String id) async {
+    final db = await DBConfig.database;
+
+    final res = await db
+        .query('Beneficiario', where: 'BeneficiarioId = ?', whereArgs: [id]);
+
+    if (res.isEmpty) return null;
+    final beneficiarioMap = {for (var e in res[0].entries) e.key: e.value};
+    final beneficiarioModel = BeneficiarioModel.fromJson(beneficiarioMap);
+
+    return beneficiarioModel;
   }
 
   @override

@@ -1,28 +1,28 @@
 part of 'tipo_tenencia_cubit.dart';
 
 abstract class TipoTenenciaState extends Equatable {
-  final List<TipoTenenciaEntity>? tipoTenencia;
-  const TipoTenenciaState({this.tipoTenencia});
+  final List<TipoTenenciaEntity>? tiposTenencias;
+  const TipoTenenciaState({this.tiposTenencias});
 
   @override
-  List<Object?> get props => [tipoTenencia];
+  List<Object?> get props => [tiposTenencias];
 }
 
-class TipoTenenciaInitial extends TipoTenenciaState {}
+class TiposTenenciasInitial extends TipoTenenciaState {}
 
-class TipoTenenciaLoading extends TipoTenenciaState {}
+class TiposTenenciasLoading extends TipoTenenciaState {}
 
-class TipoTenenciaLoaded extends TipoTenenciaState {
-  final List<TipoTenenciaEntity>? tipoTenenciaLoaded;
+class TiposTenenciasLoaded extends TipoTenenciaState {
+  final List<TipoTenenciaEntity>? tiposTenenciasLoaded;
 
-  const TipoTenenciaLoaded(this.tipoTenenciaLoaded)
-      : super(tipoTenencia: tipoTenenciaLoaded);
+  const TiposTenenciasLoaded(this.tiposTenenciasLoaded)
+      : super(tiposTenencias: tiposTenenciasLoaded);
 }
 
-class TipoTenenciaError extends TipoTenenciaState {
+class TiposTenenciasError extends TipoTenenciaState {
   final String message;
 
-  const TipoTenenciaError(this.message);
+  const TiposTenenciasError(this.message);
 
   @override
   List<Object?> get props => [message];

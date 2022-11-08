@@ -1,28 +1,28 @@
 part of 'convocatoria_cubit.dart';
 
 abstract class ConvocatoriaState extends Equatable {
-  final List<ConvocatoriaEntity>? convocatoria;
-  const ConvocatoriaState({this.convocatoria});
+  final List<ConvocatoriaEntity>? convocatorias;
+  const ConvocatoriaState({this.convocatorias});
 
   @override
-  List<Object?> get props => [convocatoria];
+  List<Object?> get props => [convocatorias];
 }
 
-class ConvocatoriaInitial extends ConvocatoriaState {}
+class ConvocatoriasInitial extends ConvocatoriaState {}
 
-class ConvocatoriaLoading extends ConvocatoriaState {}
+class ConvocatoriasLoading extends ConvocatoriaState {}
 
-class ConvocatoriaLoaded extends ConvocatoriaState {
-  final List<ConvocatoriaEntity>? convocatoriaLoaded;
+class ConvocatoriasLoaded extends ConvocatoriaState {
+  final List<ConvocatoriaEntity>? convocatoriasLoaded;
 
-  const ConvocatoriaLoaded(this.convocatoriaLoaded)
-      : super(convocatoria: convocatoriaLoaded);
+  const ConvocatoriasLoaded(this.convocatoriasLoaded)
+      : super(convocatorias: convocatoriasLoaded);
 }
 
-class ConvocatoriaError extends ConvocatoriaState {
+class ConvocatoriasError extends ConvocatoriaState {
   final String message;
 
-  const ConvocatoriaError(this.message);
+  const ConvocatoriasError(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -3,22 +3,19 @@ import 'package:equatable/equatable.dart';
 
 import '../../entities/vereda_entity.dart';
 import '../../usecases/vereda/vereda_db_usecase.dart';
-import '../../usecases/vereda/vereda_usecase.dart';
 
 part '../vereda/vereda_state.dart';
 
 class VeredaCubit extends Cubit<VeredaState> {
-  final VeredaUsecase vereda;
   final VeredaUsecaseDB veredaDB;
 
-  VeredaCubit({required this.vereda, required this.veredaDB})
-      : super(VeredaInitial()) {
-    getVeredaDB();
+  VeredaCubit({required this.veredaDB}) : super(VeredasInitial()) {
+    getVeredasDB();
   }
 
-  void getVeredaDB() async {
+  void getVeredasDB() async {
     final result = await veredaDB.getVeredasUsecaseDB();
-    result.fold((failure) => emit(VeredaError(failure.properties.first)),
-        (data) => emit(VeredaLoaded(data)));
+    result.fold((failure) => emit(VeredasError(failure.properties.first)),
+        (data) => emit(VeredasLoaded(data)));
   }
 }

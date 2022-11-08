@@ -3,22 +3,17 @@ import 'package:equatable/equatable.dart';
 
 import '../../entities/cofinanciador_entity.dart';
 import '../../usecases/cofinanciador/cofinanciador_db_usecase.dart';
-import '../../usecases/cofinanciador/cofinanciador_usecase.dart';
 
 part 'cofinanciador_state.dart';
 
 class CofinanciadorCubit extends Cubit<CofinanciadorState> {
-  final CofinanciadorUsecase cofinanciador;
   final CofinanciadorUsecaseDB cofinanciadorDB;
 
-  CofinanciadorCubit(
-      {required this.cofinanciador, required this.cofinanciadorDB})
-      : super(CofinanciadorInitial()) {
-    getCofinanciadorDB();
-  }
+  CofinanciadorCubit({required this.cofinanciadorDB})
+      : super(CofinanciadorInitial());
 
-  void getCofinanciadorDB() async {
-    final result = await cofinanciadorDB.getCofinanciadoresUsecaseDB();
+  void getCofinanciadorDB(String id) async {
+    final result = await cofinanciadorDB.getCofinanciadorUsecaseDB(id);
     result.fold((failure) => emit(CofinanciadorError(failure.properties.first)),
         (data) => emit(CofinanciadorLoaded(data)));
   }

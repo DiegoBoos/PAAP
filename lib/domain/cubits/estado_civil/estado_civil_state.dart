@@ -1,28 +1,28 @@
 part of 'estado_civil_cubit.dart';
 
 abstract class EstadoCivilState extends Equatable {
-  final List<EstadoCivilEntity>? estadoCivil;
-  const EstadoCivilState({this.estadoCivil});
+  final List<EstadoCivilEntity>? estadosCiviles;
+  const EstadoCivilState({this.estadosCiviles});
 
   @override
-  List<Object?> get props => [estadoCivil];
+  List<Object?> get props => [estadosCiviles];
 }
 
-class EstadoCivilInitial extends EstadoCivilState {}
+class EstadosCivilesInitial extends EstadoCivilState {}
 
-class EstadoCivilLoading extends EstadoCivilState {}
+class EstadosCivilesLoading extends EstadoCivilState {}
 
-class EstadoCivilLoaded extends EstadoCivilState {
-  final List<EstadoCivilEntity>? estadoCivilLoaded;
+class EstadosCivilesLoaded extends EstadoCivilState {
+  final List<EstadoCivilEntity>? estadosCivilesLoaded;
 
-  const EstadoCivilLoaded(this.estadoCivilLoaded)
-      : super(estadoCivil: estadoCivilLoaded);
+  const EstadosCivilesLoaded(this.estadosCivilesLoaded)
+      : super(estadosCiviles: estadosCivilesLoaded);
 }
 
-class EstadoCivilError extends EstadoCivilState {
+class EstadosCivilesError extends EstadoCivilState {
   final String message;
 
-  const EstadoCivilError(this.message);
+  const EstadosCivilesError(this.message);
 
   @override
   List<Object?> get props => [message];

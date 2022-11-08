@@ -1,7 +1,7 @@
 part of 'consultor_cubit.dart';
 
 abstract class ConsultorState extends Equatable {
-  final List<ConsultorEntity>? consultor;
+  final ConsultorEntity? consultor;
   const ConsultorState({this.consultor});
 
   @override
@@ -13,7 +13,7 @@ class ConsultorInitial extends ConsultorState {}
 class ConsultorLoading extends ConsultorState {}
 
 class ConsultorLoaded extends ConsultorState {
-  final List<ConsultorEntity>? consultorLoaded;
+  final ConsultorEntity? consultorLoaded;
 
   const ConsultorLoaded(this.consultorLoaded)
       : super(consultor: consultorLoaded);

@@ -3,97 +3,40 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../entities/actividad_financiera_entity.dart';
-import '../../entities/agrupacion_entity.dart';
-import '../../entities/aliado_entity.dart';
-import '../../entities/alianza_entity.dart';
-import '../../entities/beneficiario_entity.dart';
-import '../../entities/cofinanciador_entity.dart';
-import '../../entities/consultor_entity.dart';
-import '../../entities/convocatoria_entity.dart';
-import '../../entities/departamento_entity.dart';
-import '../../entities/desembolso_entity.dart';
-import '../../entities/estado_civil_entity.dart';
-import '../../entities/estado_visita_entity.dart';
-import '../../entities/frecuencia_entity.dart';
-import '../../entities/genero_entity.dart';
-import '../../entities/grupo_especial_entity.dart';
-import '../../entities/menu_entity.dart';
-import '../../entities/municipio_entity.dart';
-import '../../entities/nivel_escolar_entity.dart';
-import '../../entities/perfil_entity.dart';
-import '../../entities/residencia_entity.dart';
-import '../../entities/revision_entity.dart';
-import '../../entities/rubro_entity.dart';
-import '../../entities/tipo_calidad_entity.dart';
-import '../../entities/tipo_entidad_entity.dart';
-import '../../entities/tipo_identificacion_entity.dart';
-import '../../entities/tipo_movimiento_entity.dart';
-import '../../entities/tipo_proyecto_entity.dart';
-import '../../entities/tipo_tenencia_entity.dart';
-import '../../entities/tipo_visita_entity.dart';
-import '../../entities/unidad_entity.dart';
 import '../../entities/usuario_entity.dart';
-import '../../entities/producto_entity.dart';
-import '../../entities/vereda_entity.dart';
-import '../../usecases/actividad_financiera/actividad_financiera_db_usecase.dart';
-import '../../usecases/actividad_financiera/actividad_financiera_usecase.dart';
-import '../../usecases/agrupacion/agrupacion_db_usecase.dart';
-import '../../usecases/agrupacion/agrupacion_usecase.dart';
-import '../../usecases/aliado/aliado_db_usecase.dart';
-import '../../usecases/aliado/aliado_usecase.dart';
-import '../../usecases/alianza/alianza_db_usecase.dart';
-import '../../usecases/alianza/alianza_usecase.dart';
-import '../../usecases/beneficiario/beneficiario_db_usecase.dart';
-import '../../usecases/beneficiario/beneficiario_usecase.dart';
-import '../../usecases/cofinanciador/cofinanciador_db_usecase.dart';
-import '../../usecases/cofinanciador/cofinanciador_usecase.dart';
-import '../../usecases/consultor/consultor_db_usecase.dart';
-import '../../usecases/consultor/consultor_usecase.dart';
+import '../../usecases/actividad_financiera/actividad_financiera_exports.dart';
+import '../../usecases/agrupacion/agrupacion_exports.dart';
+import '../../usecases/aliado/aliado_exports.dart';
+import '../../usecases/alianza/alianza_exports.dart';
+import '../../usecases/beneficiario/beneficiario_exports.dart';
+import '../../usecases/cofinanciador/cofinanciador_exports.dart';
+import '../../usecases/consultor/consultor_exports.dart';
 import '../../usecases/convocatoria/convocatoria_exports.dart';
-import '../../usecases/departamento/departamento_db_usecase.dart';
-import '../../usecases/departamento/departamento_usecase.dart';
-import '../../usecases/desembolso/desembolso_db_usecase.dart';
-import '../../usecases/desembolso/desembolso_usecase.dart';
-import '../../usecases/estado_civil/estado_civil_db_usecase.dart';
-import '../../usecases/estado_civil/estado_civil_usecase.dart';
-import '../../usecases/estado_visita/estado_visita_db_usecase.dart';
-import '../../usecases/estado_visita/estado_visita_usecase.dart';
-import '../../usecases/frecuencia/frecuencia_db_usecase.dart';
-import '../../usecases/frecuencia/frecuencia_usecase.dart';
-import '../../usecases/genero/genero_db_usecase.dart';
-import '../../usecases/genero/genero_usecase.dart';
-import '../../usecases/grupo_especial/grupo_especial_db_usecase.dart';
-import '../../usecases/grupo_especial/grupo_especial_usecase.dart';
+import '../../usecases/departamento/departamento_exports.dart';
+import '../../usecases/desembolso/desembolso_exports.dart';
+import '../../usecases/estado_civil/estado_civil_exports.dart';
+import '../../usecases/estado_visita/estado_visita_exports.dart';
+import '../../usecases/frecuencia/frecuencia_exports.dart';
+import '../../usecases/genero/genero_exports.dart';
+import '../../usecases/grupo_especial/grupo_especial_exports.dart';
 import '../../usecases/menu/menu_exports.dart';
-import '../../usecases/municipio/municipio_db_usecase.dart';
-import '../../usecases/municipio/municipio_usecase.dart';
-import '../../usecases/nivel_escolar/nivel_escolar_db_usecase.dart';
-import '../../usecases/nivel_escolar/nivel_escolar_usecase.dart';
+import '../../usecases/municipio/municipio_exports.dart';
+import '../../usecases/nivel_escolar/nivel_escolar_exports.dart';
 import '../../usecases/perfiles/perfiles_exports.dart';
-import '../../usecases/residencia/residencia_db_usecase.dart';
-import '../../usecases/residencia/residencia_usecase.dart';
-import '../../usecases/revision/revision_db_usecase.dart';
-import '../../usecases/revision/revision_usecase.dart';
-import '../../usecases/rubro/rubro_db_usecase.dart';
-import '../../usecases/rubro/rubro_usecase.dart';
-import '../../usecases/tipo_calidad/tipo_calidad_db_usecase.dart';
-import '../../usecases/tipo_calidad/tipo_calidad_usecase.dart';
-import '../../usecases/tipo_entidad/tipo_entidad_db_usecase.dart';
-import '../../usecases/tipo_entidad/tipo_entidad_usecase.dart';
-import '../../usecases/tipo_identificacion/tipo_identificacion_db_usecase.dart';
-import '../../usecases/tipo_identificacion/tipo_identificacion_usecase.dart';
-import '../../usecases/tipo_movimiento/tipo_movimiento_db_usecase.dart';
-import '../../usecases/tipo_movimiento/tipo_movimiento_usecase.dart';
-import '../../usecases/tipo_proyecto/tipo_proyecto_exports.dart';
-import '../../usecases/tipo_tenencia/tipo_tenencia_db_usecase.dart';
-import '../../usecases/tipo_tenencia/tipo_tenencia_usecase.dart';
-import '../../usecases/tipo_visita/tipo_visita_db_usecase.dart';
-import '../../usecases/tipo_visita/tipo_visita_usecase.dart';
-import '../../usecases/unidad/unidad_exports.dart';
 import '../../usecases/producto/producto_exports.dart';
-import '../../usecases/vereda/vereda_db_usecase.dart';
-import '../../usecases/vereda/vereda_usecase.dart';
+import '../../usecases/residencia/residencia_exports.dart';
+import '../../usecases/revision/revision_exports.dart';
+import '../../usecases/rubro/rubro_exports.dart';
+import '../../usecases/tipo_actividad_productiva/tipo_actividad_productiva_exports.dart';
+import '../../usecases/tipo_calidad/tipo_calidad_exports.dart';
+import '../../usecases/tipo_entidad/tipo_entidad_exports.dart';
+import '../../usecases/tipo_identificacion/tipo_identificacion_exports.dart';
+import '../../usecases/tipo_movimiento/tipo_movimiento_exports.dart';
+import '../../usecases/tipo_proyecto/tipo_proyecto_exports.dart';
+import '../../usecases/tipo_tenencia/tipo_tenencia_exports.dart';
+import '../../usecases/tipo_visita/tipo_visita_exports.dart';
+import '../../usecases/unidad/unidad_exports.dart';
+import '../../usecases/vereda/vereda_exports.dart';
 
 part 'download_sync_event.dart';
 part 'download_sync_state.dart';
@@ -195,6 +138,9 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final TipoCalidadUsecase tipoCalidad;
   final TipoCalidadUsecaseDB tipoCalidadDB;
 
+  final TipoActividadProductivaUsecase tipoActividadProductiva;
+  final TipoActividadProductivaUsecaseDB tipoActividadProductivaDB;
+
   DownloadSyncBloc({
     required this.menu,
     required this.menuDB,
@@ -260,6 +206,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.tipoMovimientoDB,
     required this.tipoCalidad,
     required this.tipoCalidadDB,
+    required this.tipoActividadProductiva,
+    required this.tipoActividadProductivaDB,
   }) : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -423,6 +371,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Tipos Calidades',
           counter: state.progressModel!.counter + 1)));
       await downloadTiposCalidades(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Tipos Actividades Productivas',
+          counter: state.progressModel!.counter + 1)));
+      await downloadTiposActividadesProductivas(usuario, emit);
 
       emit(DownloadSyncSuccess());
     });
@@ -910,6 +863,24 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   Future<void> saveTiposCalidades(
       List<TipoCalidadEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await tipoCalidadDB.saveTiposCalidadesUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadTiposActividadesProductivas(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await tipoActividadProductiva
+        .getTiposActividadesProductivasUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveTiposActividadesProductivas(data, emit));
+  }
+
+  Future<void> saveTiposActividadesProductivas(
+      List<TipoActividadProductivaEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await tipoActividadProductivaDB
+        .saveTiposActividadesProductivasUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

@@ -1,28 +1,28 @@
 part of 'nivel_escolar_cubit.dart';
 
 abstract class NivelEscolarState extends Equatable {
-  final List<NivelEscolarEntity>? nivelEscolar;
-  const NivelEscolarState({this.nivelEscolar});
+  final List<NivelEscolarEntity>? nivelesEscolares;
+  const NivelEscolarState({this.nivelesEscolares});
 
   @override
-  List<Object?> get props => [nivelEscolar];
+  List<Object?> get props => [nivelesEscolares];
 }
 
-class NivelEscolarInitial extends NivelEscolarState {}
+class NivelesEscolaresInitial extends NivelEscolarState {}
 
-class NivelEscolarLoading extends NivelEscolarState {}
+class NivelesEscolaresLoading extends NivelEscolarState {}
 
-class NivelEscolarLoaded extends NivelEscolarState {
-  final List<NivelEscolarEntity>? nivelEscolarLoaded;
+class NivelesEscolaresLoaded extends NivelEscolarState {
+  final List<NivelEscolarEntity>? nivelesEscolaresLoaded;
 
-  const NivelEscolarLoaded(this.nivelEscolarLoaded)
-      : super(nivelEscolar: nivelEscolarLoaded);
+  const NivelesEscolaresLoaded(this.nivelesEscolaresLoaded)
+      : super(nivelesEscolares: nivelesEscolaresLoaded);
 }
 
-class NivelEscolarError extends NivelEscolarState {
+class NivelesEscolaresError extends NivelEscolarState {
   final String message;
 
-  const NivelEscolarError(this.message);
+  const NivelesEscolaresError(this.message);
 
   @override
   List<Object?> get props => [message];

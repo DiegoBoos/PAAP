@@ -9,7 +9,7 @@ class ActividadFinancieraUsecaseDB {
   ActividadFinancieraUsecaseDB(this.repositoryDB);
 
   Future<Either<Failure, List<ActividadFinancieraEntity>?>>
-      getActividadFinancierasUsecaseDB() {
+      getActividadesFinancierasUsecaseDB() {
     return repositoryDB.getActividadesFinancierasRepositoryDB();
   }
 

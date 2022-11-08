@@ -1,28 +1,28 @@
 part of 'desembolso_cubit.dart';
 
 abstract class DesembolsoState extends Equatable {
-  final List<DesembolsoEntity>? desembolso;
-  const DesembolsoState({this.desembolso});
+  final List<DesembolsoEntity>? desembolsos;
+  const DesembolsoState({this.desembolsos});
 
   @override
-  List<Object?> get props => [desembolso];
+  List<Object?> get props => [desembolsos];
 }
 
-class DesembolsoInitial extends DesembolsoState {}
+class DesembolsosInitial extends DesembolsoState {}
 
-class DesembolsoLoading extends DesembolsoState {}
+class DesembolsosLoading extends DesembolsoState {}
 
-class DesembolsoLoaded extends DesembolsoState {
-  final List<DesembolsoEntity>? desembolsoLoaded;
+class DesembolsosLoaded extends DesembolsoState {
+  final List<DesembolsoEntity>? desembolsosLoaded;
 
-  const DesembolsoLoaded(this.desembolsoLoaded)
-      : super(desembolso: desembolsoLoaded);
+  const DesembolsosLoaded(this.desembolsosLoaded)
+      : super(desembolsos: desembolsosLoaded);
 }
 
-class DesembolsoError extends DesembolsoState {
+class DesembolsosError extends DesembolsoState {
   final String message;
 
-  const DesembolsoError(this.message);
+  const DesembolsosError(this.message);
 
   @override
   List<Object?> get props => [message];

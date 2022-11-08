@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/cubits/menu/menu_cubit.dart';
-import 'package:paap/ui/utils/custom_snack_bar.dart';
-import 'package:paap/ui/utils/loading_page.dart';
+
+import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
+import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/entities/menu_entity.dart';
 import '../../alianzas/pages/alianzas_page.dart';
 import '../../perfiles/pages/perfiles_page.dart';
-import '../../preinversion/pages/preinversion_page.dart';
+import '../../utils/custom_snack_bar.dart';
+import '../../utils/loading_page.dart';
 import 'home_page.dart';
 
 class TabsPage extends StatefulWidget {
@@ -17,15 +18,21 @@ class TabsPage extends StatefulWidget {
 }
 
 class _TabsPageState extends State<TabsPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
+    perfilesBloc.add(GetPerfiles());
+  }
+
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
     const PerfilesPage(),
-    const PreinversionPage(),
+    const PerfilesPage(),
     const AlianzasPage(),
-    Container(),
-    Container(),
   ];
 
   @override
@@ -34,18 +41,18 @@ class _TabsPageState extends State<TabsPage> {
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BlocConsumer<MenuCubit, MenuState>(
         listener: (context, state) {
-          if (state is MenuError) {
+          if (state is MenusError) {
             CustomSnackBar.showSnackBar(context, state.message, Colors.red);
           }
         },
         builder: (context, state) {
-          if (state is MenuLoading) {
+          if (state is MenusLoading) {
             return const Padding(
               padding: EdgeInsets.only(bottom: 20.0),
               child: CustomCircularProgress(alignment: Alignment.bottomCenter),
             );
-          } else if (state is MenuLoaded) {
-            final menu = state.menu!;
+          } else if (state is MenusLoaded) {
+            final menu = state.menus!;
 
             final tabsMenu = tabsMenuSorted(menu);
 

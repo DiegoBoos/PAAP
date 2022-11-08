@@ -12,6 +12,10 @@ class AliadoUsecaseDB {
     return repositoryDB.getAliadosRepositoryDB();
   }
 
+  Future<Either<Failure, AliadoEntity?>> getAliadoUsecaseDB(String id) {
+    return repositoryDB.getAliadoRepositoryDB(id);
+  }
+
   Future<Either<Failure, int>> saveAliadosUsecaseDB(
       List<AliadoEntity> aliadoEntity) {
     return repositoryDB.saveAliadosRepositoryDB(aliadoEntity);

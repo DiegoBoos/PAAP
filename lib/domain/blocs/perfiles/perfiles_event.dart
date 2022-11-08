@@ -15,9 +15,3 @@ class GetPerfilesFiltros extends PerfilesEvent {
 
   const GetPerfilesFiltros({this.id, this.nombre});
 }
-
-class GetPerfil extends PerfilesEvent {
-  final String perfilId;
-
-  const GetPerfil({required this.perfilId});
-}

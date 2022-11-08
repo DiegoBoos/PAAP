@@ -3,23 +3,20 @@ import 'package:equatable/equatable.dart';
 
 import '../../entities/actividad_financiera_entity.dart';
 import '../../usecases/actividad_financiera/actividad_financiera_db_usecase.dart';
-import '../../usecases/actividad_financiera/actividad_financiera_usecase.dart';
 
 part '../actividad_financiera/actividad_financiera_state.dart';
 
 class ActividadFinancieraCubit extends Cubit<ActividadFinancieraState> {
-  final ActividadFinancieraUsecase actividadFinanciera;
   final ActividadFinancieraUsecaseDB actividadFinancieraDB;
 
-  ActividadFinancieraCubit(
-      {required this.actividadFinanciera, required this.actividadFinancieraDB})
+  ActividadFinancieraCubit({required this.actividadFinancieraDB})
       : super(ActividadFinancieraInitial()) {
-    getActividadFinancieraDB();
+    getActividadesFinancierasDB();
   }
 
-  void getActividadFinancieraDB() async {
+  void getActividadesFinancierasDB() async {
     final result =
-        await actividadFinancieraDB.getActividadFinancierasUsecaseDB();
+        await actividadFinancieraDB.getActividadesFinancierasUsecaseDB();
     result.fold(
         (failure) => emit(ActividadFinancieraError(failure.properties.first)),
         (data) => emit(ActividadFinancieraLoaded(data)));

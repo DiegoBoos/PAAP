@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
+import '../../../domain/cubits/perfil/perfil_cubit.dart';
 import '../../utils/loading_page.dart';
 
 class PerfilCard extends StatefulWidget {
-  const PerfilCard(
-    this.perfilId, {
-    Key? key,
-  }) : super(key: key);
-  final String perfilId;
+  const PerfilCard({super.key});
 
   @override
   State<PerfilCard> createState() => _PerfilCardState();
@@ -17,15 +13,8 @@ class PerfilCard extends StatefulWidget {
 
 class _PerfilCardState extends State<PerfilCard> {
   @override
-  void initState() {
-    super.initState();
-    final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
-    perfilesBloc.add(GetPerfil(perfilId: widget.perfilId));
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PerfilesBloc, PerfilesState>(
+    return BlocBuilder<PerfilCubit, PerfilState>(
       builder: (context, state) {
         if (state is PerfilLoading) {
           return const CustomCircularProgress(alignment: Alignment.center);

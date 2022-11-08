@@ -12,6 +12,10 @@ class ConsultorUsecaseDB {
     return repositoryDB.getConsultoresRepositoryDB();
   }
 
+  Future<Either<Failure, ConsultorEntity?>> getConsultorUsecaseDB(String id) {
+    return repositoryDB.getConsultorRepositoryDB(id);
+  }
+
   Future<Either<Failure, int>> saveConsultoresUsecaseDB(
       List<ConsultorEntity> consultorEntity) {
     return repositoryDB.saveConsultoresRepositoryDB(consultorEntity);

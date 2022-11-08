@@ -8,7 +8,7 @@ class ProductoUsecaseDB {
 
   ProductoUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<ProductoEntity>?>> getProductoUsecaseDB() {
+  Future<Either<Failure, List<ProductoEntity>?>> getProductosUsecaseDB() {
     return repositoryDB.getProductosRepositoryDB();
   }
 

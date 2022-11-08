@@ -1,28 +1,28 @@
 part of 'frecuencia_cubit.dart';
 
 abstract class FrecuenciaState extends Equatable {
-  final List<FrecuenciaEntity>? frecuencia;
-  const FrecuenciaState({this.frecuencia});
+  final List<FrecuenciaEntity>? frecuencias;
+  const FrecuenciaState({this.frecuencias});
 
   @override
-  List<Object?> get props => [frecuencia];
+  List<Object?> get props => [frecuencias];
 }
 
-class FrecuenciaInitial extends FrecuenciaState {}
+class FrecuenciasInitial extends FrecuenciaState {}
 
-class FrecuenciaLoading extends FrecuenciaState {}
+class FrecuenciasLoading extends FrecuenciaState {}
 
-class FrecuenciaLoaded extends FrecuenciaState {
-  final List<FrecuenciaEntity>? frecuenciaLoaded;
+class FrecuenciasLoaded extends FrecuenciaState {
+  final List<FrecuenciaEntity>? frecuenciasLoaded;
 
-  const FrecuenciaLoaded(this.frecuenciaLoaded)
-      : super(frecuencia: frecuenciaLoaded);
+  const FrecuenciasLoaded(this.frecuenciasLoaded)
+      : super(frecuencias: frecuenciasLoaded);
 }
 
-class FrecuenciaError extends FrecuenciaState {
+class FrecuenciasError extends FrecuenciaState {
   final String message;
 
-  const FrecuenciaError(this.message);
+  const FrecuenciasError(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -3,22 +3,19 @@ import 'package:equatable/equatable.dart';
 
 import '../../entities/agrupacion_entity.dart';
 import '../../usecases/agrupacion/agrupacion_db_usecase.dart';
-import '../../usecases/agrupacion/agrupacion_usecase.dart';
 
 part 'agrupacion_state.dart';
 
 class AgrupacionCubit extends Cubit<AgrupacionState> {
-  final AgrupacionUsecase agrupacion;
   final AgrupacionUsecaseDB agrupacionDB;
 
-  AgrupacionCubit({required this.agrupacion, required this.agrupacionDB})
-      : super(AgrupacionInitial()) {
-    getAgrupacionDB();
+  AgrupacionCubit({required this.agrupacionDB}) : super(AgrupacionesInitial()) {
+    getAgrupacionesDB();
   }
 
-  void getAgrupacionDB() async {
+  void getAgrupacionesDB() async {
     final result = await agrupacionDB.getAgrupacionesUsecaseDB();
-    result.fold((failure) => emit(AgrupacionError(failure.properties.first)),
-        (data) => emit(AgrupacionLoaded(data)));
+    result.fold((failure) => emit(AgrupacionesError(failure.properties.first)),
+        (data) => emit(AgrupacionesLoaded(data)));
   }
 }

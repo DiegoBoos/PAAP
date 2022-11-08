@@ -33,6 +33,11 @@ class CustomCircularProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(alignment: alignment, child: CircularProgressIndicator());
+    return Container(
+        alignment: alignment,
+        child: SpinKitCircle(
+          color: Colors.blue[900],
+          size: 100.0,
+        ));
   }
 }

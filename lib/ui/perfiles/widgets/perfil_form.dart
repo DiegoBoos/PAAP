@@ -1,32 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
+import '../../../domain/cubits/perfil/perfil_cubit.dart';
 import '../../utils/input_decoration.dart';
 
-class PerfilForm extends StatefulWidget {
-  const PerfilForm(
-    this.perfilId, {
-    Key? key,
-  }) : super(key: key);
-
-  final String perfilId;
-
-  @override
-  State<PerfilForm> createState() => _PerfilFormState();
-}
-
-class _PerfilFormState extends State<PerfilForm> {
-  @override
-  void initState() {
-    super.initState();
-    final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
-    perfilesBloc.add(GetPerfil(perfilId: widget.perfilId));
-  }
+class PerfilForm extends StatelessWidget {
+  const PerfilForm({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PerfilesBloc, PerfilesState>(
+    return BlocBuilder<PerfilCubit, PerfilState>(
       builder: (context, state) {
         if (state is PerfilLoading) {
           return const Center(

@@ -1,28 +1,28 @@
 part of 'tipo_calidad_cubit.dart';
 
 abstract class TipoCalidadState extends Equatable {
-  final List<TipoCalidadEntity>? tipoCalidad;
-  const TipoCalidadState({this.tipoCalidad});
+  final List<TipoCalidadEntity>? tiposCalidades;
+  const TipoCalidadState({this.tiposCalidades});
 
   @override
-  List<Object?> get props => [tipoCalidad];
+  List<Object?> get props => [tiposCalidades];
 }
 
-class TipoCalidadInitial extends TipoCalidadState {}
+class TiposCalidadesInitial extends TipoCalidadState {}
 
-class TipoCalidadLoading extends TipoCalidadState {}
+class TiposCalidadesLoading extends TipoCalidadState {}
 
-class TipoCalidadLoaded extends TipoCalidadState {
-  final List<TipoCalidadEntity>? tipoCalidadLoaded;
+class TiposCalidadesLoaded extends TipoCalidadState {
+  final List<TipoCalidadEntity>? tiposCalidadesLoaded;
 
-  const TipoCalidadLoaded(this.tipoCalidadLoaded)
-      : super(tipoCalidad: tipoCalidadLoaded);
+  const TiposCalidadesLoaded(this.tiposCalidadesLoaded)
+      : super(tiposCalidades: tiposCalidadesLoaded);
 }
 
-class TipoCalidadError extends TipoCalidadState {
+class TiposCalidadesError extends TipoCalidadState {
   final String message;
 
-  const TipoCalidadError(this.message);
+  const TiposCalidadesError(this.message);
 
   @override
   List<Object?> get props => [message];

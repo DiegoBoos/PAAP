@@ -95,7 +95,7 @@ class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
     select
     PerfilId as perfilId,
     ConvocatoriaId as convocatoriaId,
-    Perfil.Nombre as nombre, 
+    nombre as nombre, 
     Abreviatura as abreviatura, 
     Municipio.Nombre  as municipio, 
     Departamento.Nombre as departamento, 

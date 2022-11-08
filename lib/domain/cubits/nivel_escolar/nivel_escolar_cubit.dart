@@ -3,22 +3,21 @@ import 'package:equatable/equatable.dart';
 
 import '../../entities/nivel_escolar_entity.dart';
 import '../../usecases/nivel_escolar/nivel_escolar_db_usecase.dart';
-import '../../usecases/nivel_escolar/nivel_escolar_usecase.dart';
 
 part '../nivel_escolar/nivel_escolar_state.dart';
 
 class NivelEscolarCubit extends Cubit<NivelEscolarState> {
-  final NivelEscolarUsecase nivelEscolar;
   final NivelEscolarUsecaseDB nivelEscolarDB;
 
-  NivelEscolarCubit({required this.nivelEscolar, required this.nivelEscolarDB})
-      : super(NivelEscolarInitial()) {
-    getNivelEscolarDB();
+  NivelEscolarCubit({required this.nivelEscolarDB})
+      : super(NivelesEscolaresInitial()) {
+    getNivelesEscolaresDB();
   }
 
-  void getNivelEscolarDB() async {
+  void getNivelesEscolaresDB() async {
     final result = await nivelEscolarDB.getNivelesEscolaresUsecaseDB();
-    result.fold((failure) => emit(NivelEscolarError(failure.properties.first)),
-        (data) => emit(NivelEscolarLoaded(data)));
+    result.fold(
+        (failure) => emit(NivelesEscolaresError(failure.properties.first)),
+        (data) => emit(NivelesEscolaresLoaded(data)));
   }
 }

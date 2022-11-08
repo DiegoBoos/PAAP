@@ -3,22 +3,19 @@ import 'package:equatable/equatable.dart';
 
 import '../../entities/residencia_entity.dart';
 import '../../usecases/residencia/residencia_db_usecase.dart';
-import '../../usecases/residencia/residencia_usecase.dart';
 
 part '../residencia/residencia_state.dart';
 
 class ResidenciaCubit extends Cubit<ResidenciaState> {
-  final ResidenciaUsecase residencia;
   final ResidenciaUsecaseDB residenciaDB;
 
-  ResidenciaCubit({required this.residencia, required this.residenciaDB})
-      : super(ResidenciaInitial()) {
-    getResidenciaDB();
+  ResidenciaCubit({required this.residenciaDB}) : super(ResidenciasInitial()) {
+    getResidenciasDB();
   }
 
-  void getResidenciaDB() async {
+  void getResidenciasDB() async {
     final result = await residenciaDB.getResidenciasUsecaseDB();
-    result.fold((failure) => emit(ResidenciaError(failure.properties.first)),
-        (data) => emit(ResidenciaLoaded(data)));
+    result.fold((failure) => emit(ResidenciasError(failure.properties.first)),
+        (data) => emit(ResidenciasLoaded(data)));
   }
 }

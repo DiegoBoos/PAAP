@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../core/error/failure.dart';
 import '../../entities/perfil_entity.dart';
-import '../../entities/vperfil_entity.dart';
+import '../../entities/v_perfil_entity.dart';
 
 abstract class PerfilesRepositoryDB {
   Future<Either<Failure, List<PerfilEntity>>> getPerfilesRepositoryDB();

@@ -1,27 +1,27 @@
 part of 'unidad_cubit.dart';
 
 abstract class UnidadState extends Equatable {
-  final List<UnidadEntity>? unidad;
-  const UnidadState({this.unidad});
+  final List<UnidadEntity>? unidades;
+  const UnidadState({this.unidades});
 
   @override
-  List<Object?> get props => [unidad];
+  List<Object?> get props => [unidades];
 }
 
-class UnidadInitial extends UnidadState {}
+class UnidadesInitial extends UnidadState {}
 
-class UnidadLoading extends UnidadState {}
+class UnidadesLoading extends UnidadState {}
 
-class UnidadLoaded extends UnidadState {
-  final List<UnidadEntity>? unidadLoaded;
+class UnidadesLoaded extends UnidadState {
+  final List<UnidadEntity>? unidadesLoaded;
 
-  const UnidadLoaded(this.unidadLoaded) : super(unidad: unidadLoaded);
+  const UnidadesLoaded(this.unidadesLoaded) : super(unidades: unidadesLoaded);
 }
 
-class UnidadError extends UnidadState {
+class UnidadesError extends UnidadState {
   final String message;
 
-  const UnidadError(this.message);
+  const UnidadesError(this.message);
 
   @override
   List<Object?> get props => [message];

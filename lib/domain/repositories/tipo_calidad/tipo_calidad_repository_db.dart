@@ -8,5 +8,5 @@ abstract class TipoCalidadRepositoryDB {
       getTiposCalidadesRepositoryDB();
 
   Future<Either<Failure, int>> saveTiposCalidadesRepositoryDB(
-      List<TipoCalidadEntity> tipocalidadEntity);
+      List<TipoCalidadEntity> tipoCalidadEntity);
 }

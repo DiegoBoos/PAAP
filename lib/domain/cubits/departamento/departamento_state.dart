@@ -1,28 +1,28 @@
 part of 'departamento_cubit.dart';
 
 abstract class DepartamentoState extends Equatable {
-  final List<DepartamentoEntity>? departamento;
-  const DepartamentoState({this.departamento});
+  final List<DepartamentoEntity>? departamentos;
+  const DepartamentoState({this.departamentos});
 
   @override
-  List<Object?> get props => [departamento];
+  List<Object?> get props => [departamentos];
 }
 
-class DepartamentoInitial extends DepartamentoState {}
+class DepartamentosInitial extends DepartamentoState {}
 
-class DepartamentoLoading extends DepartamentoState {}
+class DepartamentosLoading extends DepartamentoState {}
 
-class DepartamentoLoaded extends DepartamentoState {
-  final List<DepartamentoEntity>? departamentoLoaded;
+class DepartamentosLoaded extends DepartamentoState {
+  final List<DepartamentoEntity>? departamentosLoaded;
 
-  const DepartamentoLoaded(this.departamentoLoaded)
-      : super(departamento: departamentoLoaded);
+  const DepartamentosLoaded(this.departamentosLoaded)
+      : super(departamentos: departamentosLoaded);
 }
 
-class DepartamentoError extends DepartamentoState {
+class DepartamentosError extends DepartamentoState {
   final String message;
 
-  const DepartamentoError(this.message);
+  const DepartamentosError(this.message);
 
   @override
   List<Object?> get props => [message];

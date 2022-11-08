@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/perfil_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
-import '../../../domain/entities/vperfil_entity.dart';
+import '../../../domain/entities/v_perfil_entity.dart';
 import '../../../domain/repositories/perfiles/perfiles_repository.dart';
 import '../../datasources/remote/perfiles/perfiles_remote_ds.dart';
 

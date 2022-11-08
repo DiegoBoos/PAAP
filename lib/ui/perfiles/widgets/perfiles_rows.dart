@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/cubits/perfil/perfil_cubit.dart';
 import '../../../domain/entities/perfil_entity.dart';
 
 class PerfilesRows extends StatelessWidget {
@@ -48,8 +50,12 @@ class PerfilesRows extends StatelessWidget {
             DataCell(Text(perfil.perfilId)),
             DataCell(Text(perfil.nombre)),
             DataCell(IconButton(
-                onPressed: () => Navigator.pushNamed(context, 'VPerfil',
-                    arguments: perfil.perfilId),
+                onPressed: () {
+                  final perfilCubit = BlocProvider.of<PerfilCubit>(context);
+                  perfilCubit.getPerfilDB(perfil.perfilId);
+                  Navigator.pushNamed(context, 'VPerfil',
+                      arguments: perfil.perfilId);
+                },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,
                 ))),

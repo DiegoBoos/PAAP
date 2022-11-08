@@ -1,28 +1,28 @@
 part of 'municipio_cubit.dart';
 
 abstract class MunicipioState extends Equatable {
-  final List<MunicipioEntity>? municipio;
-  const MunicipioState({this.municipio});
+  final List<MunicipioEntity>? municipios;
+  const MunicipioState({this.municipios});
 
   @override
-  List<Object?> get props => [municipio];
+  List<Object?> get props => [municipios];
 }
 
-class MunicipioInitial extends MunicipioState {}
+class MunicipiosInitial extends MunicipioState {}
 
-class MunicipioLoading extends MunicipioState {}
+class MunicipiosLoading extends MunicipioState {}
 
-class MunicipioLoaded extends MunicipioState {
-  final List<MunicipioEntity>? municipioLoaded;
+class MunicipiosLoaded extends MunicipioState {
+  final List<MunicipioEntity>? municipiosLoaded;
 
-  const MunicipioLoaded(this.municipioLoaded)
-      : super(municipio: municipioLoaded);
+  const MunicipiosLoaded(this.municipiosLoaded)
+      : super(municipios: municipiosLoaded);
 }
 
-class MunicipioError extends MunicipioState {
+class MunicipiosError extends MunicipioState {
   final String message;
 
-  const MunicipioError(this.message);
+  const MunicipiosError(this.message);
 
   @override
   List<Object?> get props => [message];

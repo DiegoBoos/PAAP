@@ -1,28 +1,28 @@
 part of 'tipo_movimiento_cubit.dart';
 
 abstract class TipoMovimientoState extends Equatable {
-  final List<TipoMovimientoEntity>? tipoMovimiento;
-  const TipoMovimientoState({this.tipoMovimiento});
+  final List<TipoMovimientoEntity>? tiposMovimientos;
+  const TipoMovimientoState({this.tiposMovimientos});
 
   @override
-  List<Object?> get props => [tipoMovimiento];
+  List<Object?> get props => [tiposMovimientos];
 }
 
-class TipoMovimientoInitial extends TipoMovimientoState {}
+class TiposMovimientosInitial extends TipoMovimientoState {}
 
-class TipoMovimientoLoading extends TipoMovimientoState {}
+class TiposMovimientosLoading extends TipoMovimientoState {}
 
-class TipoMovimientoLoaded extends TipoMovimientoState {
-  final List<TipoMovimientoEntity>? tipoMovimientoLoaded;
+class TiposMovimientosLoaded extends TipoMovimientoState {
+  final List<TipoMovimientoEntity>? tiposMovimientosLoaded;
 
-  const TipoMovimientoLoaded(this.tipoMovimientoLoaded)
-      : super(tipoMovimiento: tipoMovimientoLoaded);
+  const TiposMovimientosLoaded(this.tiposMovimientosLoaded)
+      : super(tiposMovimientos: tiposMovimientosLoaded);
 }
 
-class TipoMovimientoError extends TipoMovimientoState {
+class TiposMovimientosError extends TipoMovimientoState {
   final String message;
 
-  const TipoMovimientoError(this.message);
+  const TiposMovimientosError(this.message);
 
   @override
   List<Object?> get props => [message];

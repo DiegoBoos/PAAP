@@ -6,6 +6,7 @@ import '../../../models/cofinanciador_model.dart';
 
 abstract class CofinanciadorLocalDataSource {
   Future<List<CofinanciadorModel>> getCofinanciadoresDB();
+  Future<CofinanciadorModel?> getCofinanciadorDB(String id);
   Future<int> saveCofinanciadores(
       List<CofinanciadorEntity> cofinanciadorEntity);
 }
@@ -38,6 +39,20 @@ class CofinanciadorLocalDataSourceImpl implements CofinanciadorLocalDataSource {
         res.map((m) => CofinanciadorModel.fromJson(m))).toList();
 
     return cofinanciadoresDB;
+  }
+
+  @override
+  Future<CofinanciadorModel?> getCofinanciadorDB(String id) async {
+    final db = await DBConfig.database;
+
+    final res =
+        await db.query('Cofinanciador', where: 'ID = ?', whereArgs: [id]);
+
+    if (res.isEmpty) return null;
+    final cofinanciadorMap = {for (var e in res[0].entries) e.key: e.value};
+    final cofinanciadorModel = CofinanciadorModel.fromJson(cofinanciadorMap);
+
+    return cofinanciadorModel;
   }
 
   @override

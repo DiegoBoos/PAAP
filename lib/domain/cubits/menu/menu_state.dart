@@ -1,27 +1,27 @@
 part of 'menu_cubit.dart';
 
 abstract class MenuState extends Equatable {
-  final List<MenuEntity>? menu;
-  const MenuState({this.menu});
+  final List<MenuEntity>? menus;
+  const MenuState({this.menus});
 
   @override
-  List<Object?> get props => [menu];
+  List<Object?> get props => [menus];
 }
 
-class MenuInitial extends MenuState {}
+class MenusInitial extends MenuState {}
 
-class MenuLoading extends MenuState {}
+class MenusLoading extends MenuState {}
 
-class MenuLoaded extends MenuState {
-  final List<MenuEntity>? menuLoaded;
+class MenusLoaded extends MenuState {
+  final List<MenuEntity>? menusLoaded;
 
-  const MenuLoaded(this.menuLoaded) : super(menu: menuLoaded);
+  const MenusLoaded(this.menusLoaded) : super(menus: menusLoaded);
 }
 
-class MenuError extends MenuState {
+class MenusError extends MenuState {
   final String message;
 
-  const MenuError(this.message);
+  const MenusError(this.message);
 
   @override
   List<Object?> get props => [message];

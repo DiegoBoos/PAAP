@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/domain/cubits/agrupacion/agrupacion_cubit.dart';
+import 'package:paap/domain/entities/agrupacion_entity.dart';
 
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
@@ -10,10 +13,19 @@ class Conceptos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final agrupacionCubit = BlocProvider.of<AgrupacionCubit>(context);
     return Column(
       children: [
         DropdownButtonFormField(
-            items: [], onChanged: null, hint: const Text('Agrupación')),
+            items: agrupacionCubit.state.agrupaciones!
+                .map<DropdownMenuItem<String>>((AgrupacionEntity value) {
+              return DropdownMenuItem<String>(
+                value: value.agrupacionId,
+                child: Text(value.nombre),
+              );
+            }).toList(),
+            onChanged: (value) {},
+            hint: const Text('Agrupación')),
         const SizedBox(height: 10),
         Card(
           color: Theme.of(context).colorScheme.secondary,

@@ -28,6 +28,21 @@ class CofinanciadorRepositoryDBImpl implements CofinanciadorRepositoryDB {
   }
 
   @override
+  Future<Either<Failure, CofinanciadorEntity?>> getCofinanciadorRepositoryDB(
+      String id) async {
+    try {
+      final cofinanciadorDB =
+          await cofinanciadorLocalDataSource.getCofinanciadorDB(id);
+
+      return Right(cofinanciadorDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, int>> saveCofinanciadoresRepositoryDB(
       List<CofinanciadorEntity> cofinanciadorEntity) async {
     try {

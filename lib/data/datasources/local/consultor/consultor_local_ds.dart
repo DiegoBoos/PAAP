@@ -6,6 +6,7 @@ import '../../../models/consultor_model.dart';
 
 abstract class ConsultorLocalDataSource {
   Future<List<ConsultorModel>> getConsultoresDB();
+  Future<ConsultorModel?> getConsultorDB(String id);
   Future<int> saveConsultores(List<ConsultorEntity> consultorEntity);
 }
 
@@ -44,6 +45,20 @@ class ConsultorLocalDataSourceImpl implements ConsultorLocalDataSource {
             .toList();
 
     return consultoresDB;
+  }
+
+  @override
+  Future<ConsultorModel?> getConsultorDB(String id) async {
+    final db = await DBConfig.database;
+
+    final res =
+        await db.query('Consultor', where: 'ConsultorId = ?', whereArgs: [id]);
+
+    if (res.isEmpty) return null;
+    final consultorMap = {for (var e in res[0].entries) e.key: e.value};
+    final consultorModel = ConsultorModel.fromJson(consultorMap);
+
+    return consultorModel;
   }
 
   @override

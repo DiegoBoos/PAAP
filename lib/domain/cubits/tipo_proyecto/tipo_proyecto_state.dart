@@ -1,28 +1,28 @@
 part of 'tipo_proyecto_cubit.dart';
 
 abstract class TipoProyectoState extends Equatable {
-  final List<TipoProyectoEntity>? tipoProyecto;
-  const TipoProyectoState({this.tipoProyecto});
+  final List<TipoProyectoEntity>? tiposProyectos;
+  const TipoProyectoState({this.tiposProyectos});
 
   @override
-  List<Object?> get props => [tipoProyecto];
+  List<Object?> get props => [tiposProyectos];
 }
 
-class TipoProyectoInitial extends TipoProyectoState {}
+class TiposProyectosInitial extends TipoProyectoState {}
 
-class TipoProyectoLoading extends TipoProyectoState {}
+class TiposProyectosLoading extends TipoProyectoState {}
 
-class TipoProyectoLoaded extends TipoProyectoState {
-  final List<TipoProyectoEntity>? tipoProyectoLoaded;
+class TiposProyectosLoaded extends TipoProyectoState {
+  final List<TipoProyectoEntity>? tiposProyectosLoaded;
 
-  const TipoProyectoLoaded(this.tipoProyectoLoaded)
-      : super(tipoProyecto: tipoProyectoLoaded);
+  const TiposProyectosLoaded(this.tiposProyectosLoaded)
+      : super(tiposProyectos: tiposProyectosLoaded);
 }
 
-class TipoProyectoError extends TipoProyectoState {
+class TiposProyectosError extends TipoProyectoState {
   final String message;
 
-  const TipoProyectoError(this.message);
+  const TiposProyectosError(this.message);
 
   @override
   List<Object?> get props => [message];

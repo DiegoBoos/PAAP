@@ -1,7 +1,7 @@
 part of 'alianza_cubit.dart';
 
 abstract class AlianzaState extends Equatable {
-  final List<AlianzaEntity>? alianza;
+  final VAlianzaEntity? alianza;
   const AlianzaState({this.alianza});
 
   @override
@@ -13,7 +13,7 @@ class AlianzaInitial extends AlianzaState {}
 class AlianzaLoading extends AlianzaState {}
 
 class AlianzaLoaded extends AlianzaState {
-  final List<AlianzaEntity>? alianzaLoaded;
+  final VAlianzaEntity? alianzaLoaded;
 
   const AlianzaLoaded(this.alianzaLoaded) : super(alianza: alianzaLoaded);
 }

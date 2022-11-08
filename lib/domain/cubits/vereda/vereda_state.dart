@@ -1,27 +1,27 @@
 part of 'vereda_cubit.dart';
 
 abstract class VeredaState extends Equatable {
-  final List<VeredaEntity>? vereda;
-  const VeredaState({this.vereda});
+  final List<VeredaEntity>? veredas;
+  const VeredaState({this.veredas});
 
   @override
-  List<Object?> get props => [vereda];
+  List<Object?> get props => [veredas];
 }
 
-class VeredaInitial extends VeredaState {}
+class VeredasInitial extends VeredaState {}
 
-class VeredaLoading extends VeredaState {}
+class VeredasLoading extends VeredaState {}
 
-class VeredaLoaded extends VeredaState {
-  final List<VeredaEntity>? veredaLoaded;
+class VeredasLoaded extends VeredaState {
+  final List<VeredaEntity>? veredasLoaded;
 
-  const VeredaLoaded(this.veredaLoaded) : super(vereda: veredaLoaded);
+  const VeredasLoaded(this.veredasLoaded) : super(veredas: veredasLoaded);
 }
 
-class VeredaError extends VeredaState {
+class VeredasError extends VeredaState {
   final String message;
 
-  const VeredaError(this.message);
+  const VeredasError(this.message);
 
   @override
   List<Object?> get props => [message];

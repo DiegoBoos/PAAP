@@ -1,28 +1,28 @@
 part of 'grupo_especial_cubit.dart';
 
 abstract class GrupoEspecialState extends Equatable {
-  final List<GrupoEspecialEntity>? grupoEspecial;
-  const GrupoEspecialState({this.grupoEspecial});
+  final List<GrupoEspecialEntity>? gruposEspeciales;
+  const GrupoEspecialState({this.gruposEspeciales});
 
   @override
-  List<Object?> get props => [grupoEspecial];
+  List<Object?> get props => [gruposEspeciales];
 }
 
-class GrupoEspecialInitial extends GrupoEspecialState {}
+class GruposEspecialesInitial extends GrupoEspecialState {}
 
-class GrupoEspecialLoading extends GrupoEspecialState {}
+class GruposEspecialesLoading extends GrupoEspecialState {}
 
-class GrupoEspecialLoaded extends GrupoEspecialState {
-  final List<GrupoEspecialEntity>? grupoEspecialLoaded;
+class GruposEspecialesLoaded extends GrupoEspecialState {
+  final List<GrupoEspecialEntity>? gruposEspecialesLoaded;
 
-  const GrupoEspecialLoaded(this.grupoEspecialLoaded)
-      : super(grupoEspecial: grupoEspecialLoaded);
+  const GruposEspecialesLoaded(this.gruposEspecialesLoaded)
+      : super(gruposEspeciales: gruposEspecialesLoaded);
 }
 
-class GrupoEspecialError extends GrupoEspecialState {
+class GruposEspecialesError extends GrupoEspecialState {
   final String message;
 
-  const GrupoEspecialError(this.message);
+  const GruposEspecialesError(this.message);
 
   @override
   List<Object?> get props => [message];

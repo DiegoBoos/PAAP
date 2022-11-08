@@ -1,27 +1,28 @@
 part of 'revision_cubit.dart';
 
 abstract class RevisionState extends Equatable {
-  final List<RevisionEntity>? revision;
-  const RevisionState({this.revision});
+  final List<RevisionEntity>? revisiones;
+  const RevisionState({this.revisiones});
 
   @override
-  List<Object?> get props => [revision];
+  List<Object?> get props => [revisiones];
 }
 
-class RevisionInitial extends RevisionState {}
+class RevisionesInitial extends RevisionState {}
 
-class RevisionLoading extends RevisionState {}
+class RevisionesLoading extends RevisionState {}
 
-class RevisionLoaded extends RevisionState {
-  final List<RevisionEntity>? revisionLoaded;
+class RevisionesLoaded extends RevisionState {
+  final List<RevisionEntity>? revisionesLoaded;
 
-  const RevisionLoaded(this.revisionLoaded) : super(revision: revisionLoaded);
+  const RevisionesLoaded(this.revisionesLoaded)
+      : super(revisiones: revisionesLoaded);
 }
 
-class RevisionError extends RevisionState {
+class RevisionesError extends RevisionState {
   final String message;
 
-  const RevisionError(this.message);
+  const RevisionesError(this.message);
 
   @override
   List<Object?> get props => [message];

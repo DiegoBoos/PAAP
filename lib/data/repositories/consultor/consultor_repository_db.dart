@@ -27,6 +27,20 @@ class ConsultorRepositoryDBImpl implements ConsultorRepositoryDB {
   }
 
   @override
+  Future<Either<Failure, ConsultorEntity?>> getConsultorRepositoryDB(
+      String id) async {
+    try {
+      final consultorDB = await consultorLocalDataSource.getConsultorDB(id);
+
+      return Right(consultorDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, int>> saveConsultoresRepositoryDB(
       List<ConsultorEntity> consultorEntity) async {
     try {

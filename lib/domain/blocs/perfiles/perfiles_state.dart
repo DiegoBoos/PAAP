@@ -1,55 +1,23 @@
 part of 'perfiles_bloc.dart';
 
 abstract class PerfilesState extends Equatable {
-  final List<PerfilEntity>? perfiles;
-  final VPerfilEntity? perfil;
-
-  const PerfilesState({this.perfiles, this.perfil});
-
+  const PerfilesState();
   @override
-  List<Object?> get props => [perfiles, perfil];
+  List<Object?> get props => [];
 }
 
 class PerfilesInitial extends PerfilesState {}
 
-class PerfilInitial extends PerfilesState {}
-
 class PerfilesLoading extends PerfilesState {}
-
-class PerfilLoading extends PerfilesState {}
 
 class PerfilesLoaded extends PerfilesState {
   final List<PerfilEntity>? perfilesLoaded;
 
-  const PerfilesLoaded({this.perfilesLoaded}) : super(perfiles: perfilesLoaded);
-
-  @override
-  List<Object?> get props => [perfiles];
-}
-
-class PerfilLoaded extends PerfilesState {
-  final VPerfilEntity? perfilLoaded;
-
-  const PerfilLoaded({this.perfilLoaded}) : super(perfil: perfilLoaded);
-
-  @override
-  List<Object?> get props => [perfil];
+  const PerfilesLoaded({this.perfilesLoaded});
 }
 
 class PerfilesError extends PerfilesState {
   final String message;
 
   const PerfilesError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class PerfilError extends PerfilesState {
-  final String message;
-
-  const PerfilError(this.message);
-
-  @override
-  List<Object?> get props => [message];
 }

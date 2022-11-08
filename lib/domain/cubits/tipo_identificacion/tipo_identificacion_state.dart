@@ -1,28 +1,28 @@
 part of 'tipo_identificacion_cubit.dart';
 
 abstract class TipoIdentificacionState extends Equatable {
-  final List<TipoIdentificacionEntity>? tipoIdentificacion;
-  const TipoIdentificacionState({this.tipoIdentificacion});
+  final List<TipoIdentificacionEntity>? tiposIdentificaciones;
+  const TipoIdentificacionState({this.tiposIdentificaciones});
 
   @override
-  List<Object?> get props => [tipoIdentificacion];
+  List<Object?> get props => [tiposIdentificaciones];
 }
 
-class TipoIdentificacionInitial extends TipoIdentificacionState {}
+class TiposIdentificacionesInitial extends TipoIdentificacionState {}
 
-class TipoIdentificacionLoading extends TipoIdentificacionState {}
+class TiposIdentificacionesLoading extends TipoIdentificacionState {}
 
-class TipoIdentificacionLoaded extends TipoIdentificacionState {
-  final List<TipoIdentificacionEntity>? tipoIdentificacionLoaded;
+class TiposIdentificacionesLoaded extends TipoIdentificacionState {
+  final List<TipoIdentificacionEntity>? tiposIdentificacionesLoaded;
 
-  const TipoIdentificacionLoaded(this.tipoIdentificacionLoaded)
-      : super(tipoIdentificacion: tipoIdentificacionLoaded);
+  const TiposIdentificacionesLoaded(this.tiposIdentificacionesLoaded)
+      : super(tiposIdentificaciones: tiposIdentificacionesLoaded);
 }
 
-class TipoIdentificacionError extends TipoIdentificacionState {
+class TiposIdentificacionesError extends TipoIdentificacionState {
   final String message;
 
-  const TipoIdentificacionError(this.message);
+  const TiposIdentificacionesError(this.message);
 
   @override
   List<Object?> get props => [message];

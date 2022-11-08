@@ -1,28 +1,28 @@
 part of 'agrupacion_cubit.dart';
 
 abstract class AgrupacionState extends Equatable {
-  final List<AgrupacionEntity>? agrupacion;
-  const AgrupacionState({this.agrupacion});
+  final List<AgrupacionEntity>? agrupaciones;
+  const AgrupacionState({this.agrupaciones});
 
   @override
-  List<Object?> get props => [agrupacion];
+  List<Object?> get props => [agrupaciones];
 }
 
-class AgrupacionInitial extends AgrupacionState {}
+class AgrupacionesInitial extends AgrupacionState {}
 
-class AgrupacionLoading extends AgrupacionState {}
+class AgrupacionesLoading extends AgrupacionState {}
 
-class AgrupacionLoaded extends AgrupacionState {
-  final List<AgrupacionEntity>? agrupacionLoaded;
+class AgrupacionesLoaded extends AgrupacionState {
+  final List<AgrupacionEntity>? agrupacionesLoaded;
 
-  const AgrupacionLoaded(this.agrupacionLoaded)
-      : super(agrupacion: agrupacionLoaded);
+  const AgrupacionesLoaded(this.agrupacionesLoaded)
+      : super(agrupaciones: agrupacionesLoaded);
 }
 
-class AgrupacionError extends AgrupacionState {
+class AgrupacionesError extends AgrupacionState {
   final String message;
 
-  const AgrupacionError(this.message);
+  const AgrupacionesError(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -13,6 +13,11 @@ class BeneficiarioUsecaseDB {
     return repositoryDB.getBeneficiariosRepositoryDB();
   }
 
+  Future<Either<Failure, BeneficiarioEntity?>> getBeneficiarioUsecaseDB(
+      String id) {
+    return repositoryDB.getBeneficiarioRepositoryDB(id);
+  }
+
   Future<Either<Failure, int>> saveBeneficiariosUsecaseDB(
       List<BeneficiarioEntity> beneficiarioEntity) {
     return repositoryDB.saveBeneficiariosRepositoryDB(beneficiarioEntity);

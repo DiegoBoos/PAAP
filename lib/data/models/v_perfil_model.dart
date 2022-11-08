@@ -1,4 +1,4 @@
-import 'package:paap/domain/entities/vperfil_entity.dart';
+import 'package:paap/domain/entities/v_perfil_entity.dart';
 
 class VPerfilModel extends VPerfilEntity {
   VPerfilModel(

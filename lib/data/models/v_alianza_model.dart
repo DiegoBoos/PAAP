@@ -1,0 +1,83 @@
+import 'package:paap/domain/entities/v_alianza_entity.dart';
+
+class VAlianzaModel extends VAlianzaEntity {
+  VAlianzaModel(
+      {required String alianzaId,
+      required String perfilPreinversionId,
+      required String convocatoriaId,
+      required String nombre,
+      required String abreviatura,
+      required String nit,
+      required String municipio,
+      required String direccion,
+      required String contacto,
+      required String telefonoFijo,
+      required String telefonoMovil,
+      required String correo,
+      required String tipoProyecto,
+      required String productoPrincipal,
+      required String productoAsociado,
+      required String valorTotalProyecto,
+      required String incentivoModular,
+      required String legalizado})
+      : super(
+            alianzaId: alianzaId,
+            perfilPreinversionId: perfilPreinversionId,
+            convocatoriaId: convocatoriaId,
+            nombre: nombre,
+            abreviatura: abreviatura,
+            nit: nit,
+            municipio: municipio,
+            direccion: direccion,
+            contacto: contacto,
+            telefonoFijo: telefonoFijo,
+            telefonoMovil: telefonoMovil,
+            correo: correo,
+            tipoProyecto: tipoProyecto,
+            productoPrincipal: productoPrincipal,
+            productoAsociado: productoAsociado,
+            valorTotalProyecto: valorTotalProyecto,
+            incentivoModular: incentivoModular,
+            legalizado: legalizado);
+
+  factory VAlianzaModel.fromJson(Map<String, dynamic> json) => VAlianzaModel(
+      alianzaId: json["alianzaId"],
+      perfilPreinversionId: json["perfilPreinversionId"],
+      convocatoriaId: json["convocatoriaId"],
+      nombre: json["nombre"],
+      abreviatura: json["abreviatura"],
+      nit: json["nit"],
+      municipio: json["municipio"],
+      direccion: json["direccion"],
+      contacto: json["contacto"],
+      telefonoFijo: json["telefonoFijo"]!,
+      telefonoMovil: json["telefonoMovil"],
+      correo: json["correo"],
+      tipoProyecto: json["tipoProyecto"],
+      productoPrincipal: json["productoPrincipal"],
+      productoAsociado: json["productoAsociado"],
+      valorTotalProyecto: json["valorTotalProyecto"],
+      incentivoModular: json["incentivoModular"],
+      legalizado: json["legalizado"]);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        "alianzaId": alianzaId,
+        "perfilPreinversionId": perfilPreinversionId,
+        "convocatoriaId": convocatoriaId,
+        "nombre": nombre,
+        "abreviatura": abreviatura,
+        "municipio": municipio,
+        "direccion": direccion,
+        "contacto": contacto,
+        "telefonoFijo": telefonoFijo,
+        "telefonoMovil": telefonoMovil,
+        "correo": correo,
+        "tipoProyecto": tipoProyecto,
+        "productoPrincipal": productoPrincipal,
+        "productoAsociado": productoAsociado,
+        "valorTotalProyecto": valorTotalProyecto,
+        "incentivoModular": incentivoModular,
+        "legalizado": legalizado,
+      };
+}

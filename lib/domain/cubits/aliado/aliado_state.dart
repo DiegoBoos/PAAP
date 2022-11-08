@@ -1,7 +1,7 @@
 part of 'aliado_cubit.dart';
 
 abstract class AliadoState extends Equatable {
-  final List<AliadoEntity>? aliado;
+  final AliadoEntity? aliado;
   const AliadoState({this.aliado});
 
   @override
@@ -13,7 +13,7 @@ class AliadoInitial extends AliadoState {}
 class AliadoLoading extends AliadoState {}
 
 class AliadoLoaded extends AliadoState {
-  final List<AliadoEntity>? aliadoLoaded;
+  final AliadoEntity? aliadoLoaded;
 
   const AliadoLoaded(this.aliadoLoaded) : super(aliado: aliadoLoaded);
 }
