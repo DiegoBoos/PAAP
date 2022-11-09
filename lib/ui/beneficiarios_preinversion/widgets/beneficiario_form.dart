@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
+import '../../../domain/cubits/beneficiario_preinversion/beneficiario_preinversion_cubit.dart';
+import '../../../domain/cubits/estado_civil/estado_civil_cubit.dart';
 import '../../../domain/cubits/genero/genero_cubit.dart';
+import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
+import '../../../domain/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
 import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
+import '../../../domain/entities/estado_civil_entity.dart';
 import '../../../domain/entities/genero_entity.dart';
+import '../../../domain/entities/grupo_especial_entity.dart';
+import '../../../domain/entities/tipo_discapacidad_entity.dart';
 import '../../../domain/entities/tipo_identificacion_entity.dart';
-import '../../domain/cubits/estado_civil/estado_civil_cubit.dart';
-import '../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
-import '../../domain/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
-import '../../domain/entities/estado_civil_entity.dart';
-import '../../domain/entities/grupo_especial_entity.dart';
-import '../../domain/entities/tipo_discapacidad_entity.dart';
-import '../utils/floating_buttons.dart';
-import '../utils/input_decoration.dart';
-import '../utils/styles.dart';
+import '../../utils/floating_buttons.dart';
+import '../../utils/input_decoration.dart';
+import '../../utils/styles.dart';
 
 class BeneficiarioForm extends StatefulWidget {
   const BeneficiarioForm({super.key});
@@ -33,19 +34,22 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     final grupoEspecialCubit = BlocProvider.of<GrupoEspecialCubit>(context);
     final tipoDiscapacidadCubit =
         BlocProvider.of<TipoDiscapacidadCubit>(context);
+    final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
 
-    return BlocBuilder<BeneficiarioCubit, BeneficiarioState>(
+    return BlocBuilder<BeneficiarioPreinversionCubit,
+        BeneficiarioPreinversionState>(
       builder: (context, state) {
-        if (state is BeneficiarioLoading) {
+        if (state is BeneficiarioPreinversionLoading) {
           return const Center(
               heightFactor: 2, child: CircularProgressIndicator());
         }
-        if (state is BeneficiarioLoaded) {
-          final beneficiario = state.beneficiarioLoaded!;
-          DateTime fechaExpedicion =
-              DateTime.parse(beneficiario.fechaExpedicionDocumento);
-          DateTime fechaNacimiento =
-              DateTime.parse(beneficiario.fechaNacimiento);
+        if (state is BeneficiarioPreinversionLoaded) {
+          final beneficiarioPreinversion =
+              state.beneficiarioPreinversionLoaded!;
+          DateTime fechaExpedicion = DateTime.parse(
+              beneficiarioCubit.state.beneficiario!.fechaExpedicionDocumento);
+          DateTime fechaNacimiento = DateTime.parse(
+              beneficiarioCubit.state.beneficiario!.fechaNacimiento);
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
             child: Card(
@@ -70,7 +74,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                         labelText: 'Tipo de documento')),
                 const SizedBox(height: 20),
                 TextFormField(
-                    initialValue: beneficiario.beneficiarioId,
+                    initialValue:
+                        beneficiarioCubit.state.beneficiario!.beneficiarioId,
                     decoration: CustomInputDecoration.inputDecoration(
                         hintText: 'Documento de identificación',
                         labelText: 'Documento de identificación')),
@@ -112,9 +117,10 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                           icon: const Icon(Icons.calendar_today))),
                 ),
                 const SizedBox(height: 20),
-                //TODO: calcular edad
                 TextFormField(
-                    initialValue: beneficiario.edad,
+                    initialValue: edad(fechaNacimiento.day,
+                            fechaNacimiento.month, fechaNacimiento.year)
+                        .toString(),
                     decoration: CustomInputDecoration.inputDecoration(
                         hintText: 'Edad', labelText: 'Edad')),
                 const SizedBox(height: 20),
@@ -123,7 +129,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiario.nombre1,
+                          initialValue:
+                              beneficiarioCubit.state.beneficiario!.nombre1,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Primer Nombre',
                               labelText: 'Primer Nombre')),
@@ -131,7 +138,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiario.nombre2,
+                          initialValue:
+                              beneficiarioCubit.state.beneficiario!.nombre2,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Segundo Nombre',
                               labelText: 'Segundo Nombre')),
@@ -143,7 +151,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiario.apellido1,
+                          initialValue:
+                              beneficiarioCubit.state.beneficiario!.apellido1,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Primer Apellido',
                               labelText: 'Primer Apellido')),
@@ -151,7 +160,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiario.apellido2,
+                          initialValue:
+                              beneficiarioCubit.state.beneficiario!.apellido2,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Segundo Apellido',
                               labelText: 'Segundo Apellido')),
@@ -230,7 +240,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiarioPreinversion.puntajeSisben,
+                          initialValue:
+                              beneficiarioPreinversion.calificacionSisben,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Puntaje Sisben',
                               labelText: 'Puntaje Sisben')),
@@ -238,7 +249,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiario.telefonoMovil,
+                          initialValue: beneficiarioCubit
+                              .state.beneficiario!.telefonoMovil,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Teléfono', labelText: 'Teléfono')),
                     ),
@@ -253,5 +265,18 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
         return const SizedBox();
       },
     );
+  }
+}
+
+int edad(int birthDay, int birthMonth, int birthYear) {
+  var objeto = DateTime.now();
+  var day = objeto.day;
+  var month = objeto.month + 1;
+  var year = objeto.year;
+
+  if (month < birthMonth || (month == birthMonth && day < birthDay)) {
+    return year - birthYear - 1;
+  } else {
+    return year - birthYear;
   }
 }

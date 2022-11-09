@@ -9,7 +9,7 @@ class BeneficiarioPreinversionUsecaseDB {
   BeneficiarioPreinversionUsecaseDB(this.repositoryDB);
 
   Future<Either<Failure, List<BeneficiarioPreinversionEntity>?>>
-      getBeneficiariosPreinversionsUsecaseDB() {
+      getBeneficiariosPreinversionUsecaseDB() {
     return repositoryDB.getBeneficiariosPreinversionRepositoryDB();
   }
 
@@ -18,7 +18,7 @@ class BeneficiarioPreinversionUsecaseDB {
     return repositoryDB.getBeneficiarioPreinversionRepositoryDB(id);
   }
 
-  Future<Either<Failure, int>> saveBeneficiariosPreinversionsUsecaseDB(
+  Future<Either<Failure, int>> saveBeneficiariosPreinversionUsecaseDB(
       List<BeneficiarioPreinversionEntity> beneficiariosPreinversionEntity) {
     return repositoryDB.saveBeneficiariosPreinversionRepositoryDB(
         beneficiariosPreinversionEntity);

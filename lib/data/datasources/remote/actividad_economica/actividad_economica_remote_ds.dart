@@ -7,28 +7,27 @@ import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
 
-import '../../../models/beneficiario_preinversion_model.dart';
+import '../../../models/actividad_economica_model.dart';
 import '../../../utils.dart';
 
-abstract class BeneficiarioPreinversionRemoteDataSource {
-  Future<List<BeneficiarioPreinversionModel>> getBeneficiariosPreinversion(
+abstract class ActividadEconomicaRemoteDataSource {
+  Future<List<ActividadEconomicaModel>> getActividadesEconomicas(
       UsuarioEntity usuario);
 }
 
-class BeneficiarioPreinversionRemoteDataSourceImpl
-    implements BeneficiarioPreinversionRemoteDataSource {
+class ActividadEconomicaRemoteDataSourceImpl
+    implements ActividadEconomicaRemoteDataSource {
   final http.Client client;
 
-  BeneficiarioPreinversionRemoteDataSourceImpl({required this.client});
+  ActividadEconomicaRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<List<BeneficiarioPreinversionModel>> getBeneficiariosPreinversion(
+  Future<List<ActividadEconomicaModel>> getActividadesEconomicas(
       UsuarioEntity usuario) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final beneficiariosPreinversionSOAP =
-        '''<?xml version="1.0" encoding="utf-8"?>
+    final actividadEconomicaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -41,35 +40,36 @@ class BeneficiarioPreinversionRemoteDataSourceImpl
             <Nombre>string</Nombre>
           </rol>
           <parametros>
-            <string>TablaBeneficiariospreinversion</string>              
+            <string>TablaActividadesEconomicas</string>        
+            <string>1</string>        
           </parametros>
         </ObtenerDatos>
       </soap:Body>
     </soap:Envelope>''';
 
-    final beneficiarioPreinversionResp = await client.post(uri,
+    final actividadEconomicaResp = await client.post(uri,
         headers: {
           "Content-Type": "text/xml; charset=utf-8",
           "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
         },
-        body: beneficiariosPreinversionSOAP);
+        body: actividadEconomicaSOAP);
 
-    if (beneficiarioPreinversionResp.statusCode == 200) {
-      final beneficiarioPreinversionDoc =
-          xml.XmlDocument.parse(beneficiarioPreinversionResp.body);
+    if (actividadEconomicaResp.statusCode == 200) {
+      final actividadEconomicaDoc =
+          xml.XmlDocument.parse(actividadEconomicaResp.body);
 
-      final respuesta = beneficiarioPreinversionDoc
+      final respuesta = actividadEconomicaDoc
           .findAllElements('respuesta')
           .map((e) => e.text)
           .first;
 
-      final mensaje = beneficiarioPreinversionDoc
+      final mensaje = actividadEconomicaDoc
           .findAllElements('mensaje')
           .map((e) => e.text)
           .first;
 
       if (respuesta == 'true') {
-        final xmlString = beneficiarioPreinversionDoc
+        final xmlString = actividadEconomicaDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
             .first;
@@ -78,14 +78,13 @@ class BeneficiarioPreinversionRemoteDataSourceImpl
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final beneficiariosPreinversionRaw =
+        final actividadesEconomicasRaw =
             decodedResp.entries.first.value['Table'];
-        final beneficiariosPreinversion =
-            List.from(beneficiariosPreinversionRaw)
-                .map((e) => BeneficiarioPreinversionModel.fromJson(e))
-                .toList();
+        final actividadesEconomicas = List.from(actividadesEconomicasRaw)
+            .map((e) => ActividadEconomicaModel.fromJson(e))
+            .toList();
 
-        return beneficiariosPreinversion;
+        return actividadesEconomicas;
       } else {
         throw ServerFailure([mensaje]);
       }

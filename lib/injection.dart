@@ -4,12 +4,15 @@ import 'package:get_it/get_it.dart';
 
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
+import 'domain/usecases/actividad_economica/actividad_economica_exports.dart';
 import 'domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import 'domain/usecases/agrupacion/agrupacion_exports.dart';
 import 'domain/usecases/aliado/aliado_exports.dart';
 import 'domain/usecases/alianza/alianza_exports.dart';
 import 'domain/usecases/auth/auth_exports.dart';
 import 'domain/usecases/beneficiario/beneficiario_exports.dart';
+import 'domain/usecases/beneficiario_alianza/beneficiario_alianza_exports.dart';
+import 'domain/usecases/beneficiario_preinversion/beneficiario_preinversion_exports.dart';
 import 'domain/usecases/cofinanciador/cofinanciador_exports.dart';
 import 'domain/usecases/consultor/consultor_exports.dart';
 import 'domain/usecases/convocatoria/convocatoria_exports.dart';
@@ -42,43 +45,45 @@ import 'domain/usecases/vereda/vereda_exports.dart';
 final locator = GetIt.instance;
 
 void init() {
-  internetCubitInit();
-  downloadSyncInit();
-  authBlocInit();
-  menuCubitInit();
-  convocatoriaInit();
-  tipoProyectoInit();
-  unidadInit();
-  productosInit();
-  generosInit();
-  departamentosInit();
-  municipiosInit();
-  tipoVisitaInit();
-  estadoVisitaInit();
-  agrupacionInit();
-  estadoCivilInit();
-  residenciaInit();
-  tipoTenenciaInit();
-  nivelEscolarInit();
-  veredaInit();
-  alianzaInit();
-  aliadoInit();
-  frecuenciaInit();
-  beneficiarioInit();
-  grupoEspecialInit();
-  tipoIdentificacionInit();
-  revisionInit();
-  consultorInit();
-  tipoEntidadInit();
-  cofinanciadorInit();
-  desembolsoInit();
-  rubroInit();
+  actividadEconomicaInit();
   actividadFinancieraInit();
-  tipoMovimientoInit();
-  tipoCalidadInit();
-  tipoActividadProductivaInit();
-
+  agrupacionInit();
+  aliadoInit();
+  alianzaInit();
+  authBlocInit();
+  beneficiarioAlianzaInit();
+  beneficiarioInit();
+  beneficiarioPreinversionInit();
+  cofinanciadorInit();
+  consultorInit();
+  convocatoriaInit();
+  departamentoInit();
+  desembolsoInit();
+  downloadSyncInit();
+  estadoCivilInit();
+  estadoVisitaInit();
+  frecuenciaInit();
+  generosInit();
+  grupoEspecialInit();
+  internetCubitInit();
+  menuCubitInit();
+  municipiosInit();
+  nivelEscolarInit();
   perfilesBlocInit();
+  productosInit();
+  residenciaInit();
+  revisionInit();
+  rubroInit();
+  tipoActividadProductivaInit();
+  tipoCalidadInit();
+  tipoEntidadInit();
+  tipoIdentificacionInit();
+  tipoMovimientoInit();
+  tipoProyectoInit();
+  tipoTenenciaInit();
+  tipoVisitaInit();
+  unidadInit();
+  veredaInit();
 
   // external
   locator.registerLazySingleton(() => http.Client());
@@ -87,73 +92,78 @@ void init() {
 downloadSyncInit() {
   // bloc
   locator.registerFactory(() => DownloadSyncBloc(
-        menu: locator(),
-        menuDB: locator(),
-        convocatoria: locator(),
-        convocatoriaDB: locator(),
-        perfiles: locator(),
-        perfilesDB: locator(),
-        tipoProyecto: locator(),
-        tipoProyectoDB: locator(),
-        unidad: locator(),
-        unidadDB: locator(),
-        productos: locator(),
-        productosDB: locator(),
-        generos: locator(),
-        generosDB: locator(),
-        departamentos: locator(),
-        departamentosDB: locator(),
-        municipios: locator(),
-        municipiosDB: locator(),
-        tipoVisita: locator(),
-        tipoVisitaDB: locator(),
-        estadoVisita: locator(),
-        estadoVisitaDB: locator(),
-        agrupacion: locator(),
-        agrupacionDB: locator(),
-        estadoCivil: locator(),
-        estadoCivilDB: locator(),
-        residencia: locator(),
-        residenciaDB: locator(),
-        tipoTenencia: locator(),
-        tipoTenenciaDB: locator(),
-        nivelEscolar: locator(),
-        nivelEscolarDB: locator(),
-        vereda: locator(),
-        veredaDB: locator(),
-        alianza: locator(),
-        alianzaDB: locator(),
-        aliado: locator(),
-        aliadoDB: locator(),
-        frecuencia: locator(),
-        frecuenciaDB: locator(),
-        beneficiario: locator(),
-        beneficiarioDB: locator(),
-        grupoEspecial: locator(),
-        grupoEspecialDB: locator(),
-        tipoIdentificacion: locator(),
-        tipoIdentificacionDB: locator(),
-        revision: locator(),
-        revisionDB: locator(),
-        consultor: locator(),
-        consultorDB: locator(),
-        tipoEntidad: locator(),
-        tipoEntidadDB: locator(),
-        cofinanciador: locator(),
-        cofinanciadorDB: locator(),
-        desembolso: locator(),
-        desembolsoDB: locator(),
-        rubro: locator(),
-        rubroDB: locator(),
-        actividadFinanciera: locator(),
-        actividadFinancieraDB: locator(),
-        tipoMovimiento: locator(),
-        tipoMovimientoDB: locator(),
-        tipoCalidad: locator(),
-        tipoCalidadDB: locator(),
-        tipoActividadProductiva: locator(),
-        tipoActividadProductivaDB: locator(),
-      ));
+      menu: locator(),
+      menuDB: locator(),
+      convocatoria: locator(),
+      convocatoriaDB: locator(),
+      perfiles: locator(),
+      perfilesDB: locator(),
+      tipoProyecto: locator(),
+      tipoProyectoDB: locator(),
+      unidad: locator(),
+      unidadDB: locator(),
+      productos: locator(),
+      productosDB: locator(),
+      generos: locator(),
+      generosDB: locator(),
+      departamentos: locator(),
+      departamentosDB: locator(),
+      municipios: locator(),
+      municipiosDB: locator(),
+      tipoVisita: locator(),
+      tipoVisitaDB: locator(),
+      estadoVisita: locator(),
+      estadoVisitaDB: locator(),
+      agrupacion: locator(),
+      agrupacionDB: locator(),
+      estadoCivil: locator(),
+      estadoCivilDB: locator(),
+      residencia: locator(),
+      residenciaDB: locator(),
+      tipoTenencia: locator(),
+      tipoTenenciaDB: locator(),
+      nivelEscolar: locator(),
+      nivelEscolarDB: locator(),
+      vereda: locator(),
+      veredaDB: locator(),
+      alianza: locator(),
+      alianzaDB: locator(),
+      aliado: locator(),
+      aliadoDB: locator(),
+      frecuencia: locator(),
+      frecuenciaDB: locator(),
+      beneficiario: locator(),
+      beneficiarioDB: locator(),
+      grupoEspecial: locator(),
+      grupoEspecialDB: locator(),
+      tipoIdentificacion: locator(),
+      tipoIdentificacionDB: locator(),
+      revision: locator(),
+      revisionDB: locator(),
+      consultor: locator(),
+      consultorDB: locator(),
+      tipoEntidad: locator(),
+      tipoEntidadDB: locator(),
+      cofinanciador: locator(),
+      cofinanciadorDB: locator(),
+      desembolso: locator(),
+      desembolsoDB: locator(),
+      rubro: locator(),
+      rubroDB: locator(),
+      actividadFinanciera: locator(),
+      actividadFinancieraDB: locator(),
+      tipoMovimiento: locator(),
+      tipoMovimientoDB: locator(),
+      tipoCalidad: locator(),
+      tipoCalidadDB: locator(),
+      tipoActividadProductiva: locator(),
+      tipoActividadProductivaDB: locator(),
+      actividadEconomica: locator(),
+      actividadEconomicaDB: locator(),
+      beneficiarioPreinversion: locator(),
+      beneficiarioPreinversionDB: locator(),
+      beneficiarioAlianza: locator(),
+      beneficiarioAlianzaDB: locator()));
 }
 
 internetCubitInit() {
@@ -457,7 +467,7 @@ generosInit() {
   );
 }
 
-departamentosInit() {
+departamentoInit() {
   // cubit
   locator.registerFactory(() => DepartamentoCubit(departamentoDB: locator()));
   // remote usecase
@@ -1407,7 +1417,123 @@ tipoActividadProductivaInit() {
   );
 
   // local data source
-  locator.registerLazySingleton<TipoCalidadLocalDataSource>(
-    () => TipoCalidadLocalDataSourceImpl(),
+  locator.registerLazySingleton<TipoActividadProductivaLocalDataSource>(
+    () => TipoActividadProductivaLocalDataSourceImpl(),
+  );
+}
+
+actividadEconomicaInit() {
+  // cubit
+  locator.registerFactory(
+      () => ActividadEconomicaCubit(actividadEconomicaDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => ActividadEconomicaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => ActividadEconomicaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<ActividadEconomicaRepository>(
+    () => ActividadEconomicaRepositoryImpl(
+      actividadEconomicaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<ActividadEconomicaRepositoryDB>(
+    () => ActividadEconomicaRepositoryDBImpl(
+      actividadEconomicaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<ActividadEconomicaRemoteDataSource>(
+    () => ActividadEconomicaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<ActividadEconomicaLocalDataSource>(
+    () => ActividadEconomicaLocalDataSourceImpl(),
+  );
+}
+
+beneficiarioPreinversionInit() {
+  // cubit
+  locator.registerFactory(() => BeneficiariosPreinversionBloc(
+      beneficiarioPreinversionUsecaseDB: locator()));
+
+  // remote usecase
+  locator
+      .registerLazySingleton(() => BeneficiarioPreinversionUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(
+      () => BeneficiarioPreinversionUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<BeneficiarioPreinversionRepository>(
+    () => BeneficiarioPreinversionRepositoryImpl(
+      beneficiarioPreinversionRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<BeneficiarioPreinversionRepositoryDB>(
+    () => BeneficiarioPreinversionRepositoryDBImpl(
+      beneficiarioPreinversionLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<BeneficiarioPreinversionRemoteDataSource>(
+    () => BeneficiarioPreinversionRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<BeneficiarioPreinversionLocalDataSource>(
+    () => BeneficiarioPreinversionLocalDataSourceImpl(),
+  );
+}
+
+beneficiarioAlianzaInit() {
+  // cubit
+  locator.registerFactory(
+      () => BeneficiariosAlianzaBloc(beneficiarioAlianzaUsecaseDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => BeneficiarioAlianzaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => BeneficiarioAlianzaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<BeneficiarioAlianzaRepository>(
+    () => BeneficiarioAlianzaRepositoryImpl(
+      beneficiarioAlianzaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<BeneficiarioAlianzaRepositoryDB>(
+    () => BeneficiarioAlianzaRepositoryDBImpl(
+      beneficiarioAlianzaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<BeneficiarioAlianzaRemoteDataSource>(
+    () => BeneficiarioAlianzaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<BeneficiarioAlianzaLocalDataSource>(
+    () => BeneficiarioAlianzaLocalDataSourceImpl(),
   );
 }

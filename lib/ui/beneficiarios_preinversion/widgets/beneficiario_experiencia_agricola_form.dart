@@ -5,9 +5,9 @@ import 'package:paap/domain/entities/frecuencia_entity.dart';
 import 'package:paap/domain/entities/tipo_actividad_productiva_entity.dart';
 
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
-import '../../domain/cubits/frecuencia/frecuencia_cubit.dart';
-import '../utils/input_decoration.dart';
-import '../utils/styles.dart';
+import '../../../domain/cubits/frecuencia/frecuencia_cubit.dart';
+import '../../utils/input_decoration.dart';
+import '../../utils/styles.dart';
 
 class BeneficiarioExperienciaAgricolaForm extends StatefulWidget {
   const BeneficiarioExperienciaAgricolaForm({super.key});

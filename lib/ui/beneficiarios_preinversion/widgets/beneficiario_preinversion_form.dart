@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/cubits/actividad_economica/actividad_economica_cubit.dart';
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
-import '../../domain/cubits/nivel_escolar/nivel_escolar_cubit.dart';
-import '../../domain/cubits/residencia/residencia_cubit.dart';
-import '../../domain/entities/nivel_escolar_entity.dart';
-import '../../domain/entities/residencia_entity.dart';
-import '../utils/input_decoration.dart';
-import '../utils/styles.dart';
+import '../../../domain/cubits/nivel_escolar/nivel_escolar_cubit.dart';
+import '../../../domain/cubits/residencia/residencia_cubit.dart';
+import '../../../domain/entities/actividad_economica_entity.dart';
+import '../../../domain/entities/nivel_escolar_entity.dart';
+import '../../../domain/entities/residencia_entity.dart';
+import '../../utils/input_decoration.dart';
+import '../../utils/styles.dart';
 
 class BeneficiarioPreinversionForm extends StatefulWidget {
   const BeneficiarioPreinversionForm({super.key});
@@ -72,7 +74,7 @@ class _BeneficiarioPreinversionFormState
                           .map<DropdownMenuItem<String>>(
                               (ActividadEconomicaEntity value) {
                         return DropdownMenuItem<String>(
-                          value: value.id,
+                          value: value.actividadEconomicaId,
                           child: Text(value.nombre),
                         );
                       }).toList(),

@@ -42,7 +42,7 @@ class BeneficiariosPreinversionPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           BlocBuilder<BeneficiariosPreinversionBloc,
-              BeneficiariosPreinversionState>(
+              Beneficiariospreinversiontate>(
             builder: (context, state) {
               if (state is BeneficiariosPreinversionLoading) {
                 return const CustomCircularProgress(

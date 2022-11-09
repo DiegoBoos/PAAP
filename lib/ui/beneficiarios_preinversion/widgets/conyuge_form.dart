@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/cubits/beneficiario/beneficiario_cubit.dart';
-import '../../domain/cubits/genero/genero_cubit.dart';
-import '../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
-import '../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
-import '../../domain/entities/genero_entity.dart';
-import '../../domain/entities/grupo_especial_entity.dart';
-import '../../domain/entities/tipo_identificacion_entity.dart';
-import '../utils/input_decoration.dart';
-import '../utils/styles.dart';
+import '../../../domain/cubits/beneficiario_preinversion/beneficiario_preinversion_cubit.dart';
+import '../../../domain/cubits/genero/genero_cubit.dart';
+import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
+import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
+import '../../../domain/entities/genero_entity.dart';
+import '../../../domain/entities/grupo_especial_entity.dart';
+import '../../../domain/entities/tipo_identificacion_entity.dart';
+import '../../utils/input_decoration.dart';
+import '../../utils/styles.dart';
 
 class ConyugeForm extends StatefulWidget {
   const ConyugeForm({super.key});
@@ -24,21 +24,22 @@ class _ConyugeFormState extends State<ConyugeForm> {
     final tipoIdentificacionCubit =
         BlocProvider.of<TipoIdentificacionCubit>(context);
     final generoCubit = BlocProvider.of<GeneroCubit>(context);
-    final ingresoMensualCubit = BlocProvider.of<IngresoMensualCubit>(context);
     final grupoEspecialCubit = BlocProvider.of<GrupoEspecialCubit>(context);
 
-    return BlocBuilder<BeneficiarioCubit, BeneficiarioState>(
+    return BlocBuilder<BeneficiarioPreinversionCubit,
+        BeneficiarioPreinversionState>(
       builder: (context, state) {
-        if (state is BeneficiarioLoading) {
+        if (state is BeneficiarioPreinversionLoading) {
           return const Center(
               heightFactor: 2, child: CircularProgressIndicator());
         }
-        if (state is BeneficiarioLoaded) {
-          final beneficiario = state.beneficiarioLoaded!;
-          DateTime fechaExpedicion =
-              DateTime.parse(beneficiario.fechaExpedicionDocumento);
+        if (state is BeneficiarioPreinversionLoaded) {
+          final beneficiarioPreinversion =
+              state.beneficiarioPreinversionLoaded!;
+          DateTime fechaExpedicion = DateTime.parse(
+              beneficiarioPreinversion.conyugeFechaExpedicionDocumento);
           DateTime fechaNacimiento =
-              DateTime.parse(beneficiario.fechaNacimiento);
+              DateTime.parse(beneficiarioPreinversion.conyugeFechaNacimiento);
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
             child: Card(
@@ -88,38 +89,18 @@ class _ConyugeFormState extends State<ConyugeForm> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                            initialValue: beneficiario.nombre1,
+                            initialValue:
+                                beneficiarioPreinversion.conyugeNombre,
                             decoration: CustomInputDecoration.inputDecoration(
-                                hintText: 'Primer Nombre',
-                                labelText: 'Primer Nombre')),
+                                hintText: 'Nombre', labelText: 'Nombre')),
                       ),
                       const SizedBox(width: 20),
                       Expanded(
                         child: TextFormField(
-                            initialValue: beneficiario.nombre2,
+                            initialValue:
+                                beneficiarioPreinversion.conyugeApellido,
                             decoration: CustomInputDecoration.inputDecoration(
-                                hintText: 'Segundo Nombre',
-                                labelText: 'Segundo Nombre')),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            initialValue: beneficiario.apellido1,
-                            decoration: CustomInputDecoration.inputDecoration(
-                                hintText: 'Primer Apellido',
-                                labelText: 'Primer Apellido')),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: TextFormField(
-                            initialValue: beneficiario.apellido2,
-                            decoration: CustomInputDecoration.inputDecoration(
-                                hintText: 'Segundo Apellido',
-                                labelText: 'Segundo Apellido')),
+                                hintText: 'Apellido', labelText: 'Apellido')),
                       )
                     ],
                   ),
@@ -156,17 +137,12 @@ class _ConyugeFormState extends State<ConyugeForm> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
-                        child: DropdownButtonFormField(
-                            items: ingresoMensualCubit.state.ingresosMensuales!
-                                .map<DropdownMenuItem<String>>(
-                                    (IngresoMensualEntity value) {
-                              return DropdownMenuItem<String>(
-                                value: value.ingresoMensualId,
-                                child: Text(value.nombre),
-                              );
-                            }).toList(),
-                            onChanged: (value) {},
-                            hint: const Text('Ingresos Mensuales')),
+                        child: TextFormField(
+                            initialValue:
+                                beneficiarioPreinversion.ingresosMensuales,
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Ingresos Mensuales',
+                                labelText: 'Ingresos Mensuales')),
                       ),
                       const SizedBox(width: 20),
                       Expanded(

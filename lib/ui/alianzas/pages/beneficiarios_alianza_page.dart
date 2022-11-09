@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/cofinanciadores/cofinanciadores_bloc.dart';
-import '../../../domain/entities/cofinanciador_entity.dart';
+import '../../../domain/blocs/beneficiarios_alianza/beneficiarios_alianza_bloc.dart';
+import '../../../domain/entities/beneficiario_alianza_entity.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
-import '../widgets/cofinanciadores_rows.dart';
+import '../widgets/beneficiarios_alianza_rows.dart';
 
-class CofinanciadoresPreinversionPage extends StatelessWidget {
-  const CofinanciadoresPreinversionPage({super.key});
+class BeneficiariosAlianzasPage extends StatelessWidget {
+  const BeneficiariosAlianzasPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,9 @@ class CofinanciadoresPreinversionPage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.save),
             onPressed: () =>
-                Navigator.pushNamed(context, 'VCofinanciadorPreInversion')),
+                Navigator.pushNamed(context, 'VBeneficiarioAlianza')),
         appBar: AppBar(
-            title: const Text('Cofinanciadores'),
+            title: const Text('Beneficiarios'),
             centerTitle: true,
             leading: null,
             actions: const [
@@ -33,7 +33,7 @@ class CofinanciadoresPreinversionPage extends StatelessWidget {
           const SizedBox(height: 30),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text('Cofinanciadores', style: Styles.titleStyle),
+            child: Text('BENEFICIARIOS', style: Styles.titleStyle),
           ),
           const SizedBox(height: 20),
           const Padding(
@@ -41,21 +41,21 @@ class CofinanciadoresPreinversionPage extends StatelessWidget {
             child: Text('Consulta', style: Styles.subtitleStyle),
           ),
           const SizedBox(height: 20),
-          BlocBuilder<CofinanciadoresBloc, CofinanciadoresState>(
+          BlocBuilder<BeneficiariosAlianzaBloc, BeneficiariosAlianzaState>(
             builder: (context, state) {
-              if (state is CofinanciadoresLoading) {
+              if (state is BeneficiariosAlianzaLoading) {
                 return const CustomCircularProgress(
                     alignment: Alignment.center);
-              } else if (state is CofinanciadoresLoaded) {
-                List<CofinanciadorEntity> cofinanciadores =
-                    state.cofinanciadoresLoaded!;
-                if (cofinanciadores.isEmpty) {
+              } else if (state is BeneficiariosAlianzaLoaded) {
+                List<BeneficiarioAlianzaEntity> beneficiariosAlianza =
+                    state.beneficiariosAlianzaLoaded!;
+                if (beneficiariosAlianza.isEmpty) {
                   return const SizedBox(
                       child:
                           Center(child: NoDataSvg(title: 'No hay resultados')));
                 }
-                return CofinanciadoresRows(
-                    cofinanciadores: cofinanciadores,
+                return BeneficiariosAlianzaRows(
+                    beneficiariosAlianzas: beneficiariosAlianza,
                     subtitleStyle: Styles.subtitleStyle);
               }
               return const SizedBox();

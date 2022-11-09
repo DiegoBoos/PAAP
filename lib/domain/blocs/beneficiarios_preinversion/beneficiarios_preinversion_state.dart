@@ -1,23 +1,23 @@
 part of 'beneficiarios_preinversion_bloc.dart';
 
-abstract class BeneficiariosPreinversionState extends Equatable {
-  const BeneficiariosPreinversionState();
+abstract class Beneficiariospreinversiontate extends Equatable {
+  const Beneficiariospreinversiontate();
 
   @override
   List<Object> get props => [];
 }
 
-class BeneficiariosPreinversionInitial extends BeneficiariosPreinversionState {}
+class BeneficiariosPreinversionInitial extends Beneficiariospreinversiontate {}
 
-class BeneficiariosPreinversionLoading extends BeneficiariosPreinversionState {}
+class BeneficiariosPreinversionLoading extends Beneficiariospreinversiontate {}
 
-class BeneficiariosPreinversionLoaded extends BeneficiariosPreinversionState {
+class BeneficiariosPreinversionLoaded extends Beneficiariospreinversiontate {
   final List<BeneficiarioPreinversionEntity>? beneficiariosPreinversionLoaded;
 
   const BeneficiariosPreinversionLoaded({this.beneficiariosPreinversionLoaded});
 }
 
-class BeneficiariosPreinversionError extends BeneficiariosPreinversionState {
+class BeneficiariosPreinversionError extends Beneficiariospreinversiontate {
   final String message;
 
   const BeneficiariosPreinversionError(this.message);

@@ -5,7 +5,7 @@ import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../utils/custom_drawer.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
-import '../../beneficiarios_alianza_preinversion/beneficiario_form.dart';
+import '../widgets/beneficiario_form.dart';
 
 class NewEditBeneficiarioPreinversionPage extends StatelessWidget {
   const NewEditBeneficiarioPreinversionPage({super.key});

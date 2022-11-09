@@ -18,11 +18,11 @@ class BeneficiarioPreinversionRepositoryDBImpl
   Future<Either<Failure, List<BeneficiarioPreinversionEntity>>>
       getBeneficiariosPreinversionRepositoryDB() async {
     try {
-      final beneficiariosPreinversionsDB =
+      final beneficiariosPreinversionDB =
           await beneficiarioPreinversionLocalDataSource
-              .getBeneficiariosPreinversionesDB();
+              .getBeneficiariosPreinversionDB();
 
-      return Right(beneficiariosPreinversionsDB);
+      return Right(beneficiariosPreinversionDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -52,7 +52,7 @@ class BeneficiarioPreinversionRepositoryDBImpl
           beneficiarioPreinversionEntity) async {
     try {
       final result = await beneficiarioPreinversionLocalDataSource
-          .saveBeneficiariosPreinversiones(beneficiarioPreinversionEntity);
+          .saveBeneficiariosPreinversion(beneficiarioPreinversionEntity);
       return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));

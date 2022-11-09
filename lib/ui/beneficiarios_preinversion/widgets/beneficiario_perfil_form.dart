@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
-import '../../domain/cubits/departamento/departamento_cubit.dart';
-import '../../domain/cubits/municipio/municipio_cubit.dart';
-import '../../domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
-import '../../domain/entities/departamento_entity.dart';
-import '../../domain/entities/municipio_entity.dart';
-import '../../domain/entities/tipo_tenencia_entity.dart';
-import '../utils/input_decoration.dart';
-import '../utils/styles.dart';
+import '../../../domain/cubits/beneficiario_preinversion/beneficiario_preinversion_cubit.dart';
+import '../../../domain/cubits/departamento/departamento_cubit.dart';
+import '../../../domain/cubits/municipio/municipio_cubit.dart';
+import '../../../domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
+import '../../../domain/entities/departamento_entity.dart';
+import '../../../domain/entities/municipio_entity.dart';
+import '../../../domain/entities/tipo_tenencia_entity.dart';
+import '../../utils/input_decoration.dart';
+import '../../utils/styles.dart';
 
 class BeneficiarioPerfilForm extends StatefulWidget {
   const BeneficiarioPerfilForm({super.key});
@@ -24,14 +24,16 @@ class _BeneficiarioPerfilFormState extends State<BeneficiarioPerfilForm> {
     final departamentoCubit = BlocProvider.of<DepartamentoCubit>(context);
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
     final tipoTenenciaCubit = BlocProvider.of<TipoTenenciaCubit>(context);
-    return BlocBuilder<BeneficiarioCubit, BeneficiarioState>(
+    return BlocBuilder<BeneficiarioPreinversionCubit,
+        BeneficiarioPreinversionState>(
       builder: (context, state) {
-        if (state is BeneficiarioLoading) {
+        if (state is BeneficiarioPreinversionLoading) {
           return const Center(
               heightFactor: 2, child: CircularProgressIndicator());
         }
-        if (state is BeneficiarioLoaded) {
-          final beneficiario = state.beneficiarioLoaded!;
+        if (state is BeneficiarioPreinversionLoaded) {
+          final beneficiarioPreinversion =
+              state.beneficiarioPreinversionLoaded!;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
@@ -78,27 +80,33 @@ class _BeneficiarioPerfilFormState extends State<BeneficiarioPerfilForm> {
                       hint: const Text('Tipo de tenencia')),
                   const SizedBox(height: 20),
                   TextFormField(
-                      initialValue: beneficiario.beneficiarioId,
+                      initialValue: beneficiarioPreinversion.latitud,
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Ubicación - Latitud',
                           labelText: 'Ubicación - Latitud')),
                   TextFormField(
-                      initialValue: beneficiario.beneficiarioId,
+                      initialValue: beneficiarioPreinversion.longitud,
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Ubicación Longitud',
                           labelText: 'Ubicación Longitud')),
                   const SizedBox(height: 20),
                   SwitchListTile(
                       title: const Text('Cotiza BEPS'),
-                      value: false,
+                      value: beneficiarioPreinversion.cotizanteBeps == 'true'
+                          ? true
+                          : false,
                       onChanged: (value) {}),
                   SwitchListTile(
                       title: const Text('Es asociado'),
-                      value: false,
+                      value: beneficiarioPreinversion.asociado == 'true'
+                          ? true
+                          : false,
                       onChanged: (value) {}),
                   SwitchListTile(
                       title: const Text('Está activo en la alianza'),
-                      value: false,
+                      value: beneficiarioPreinversion.activo == 'true'
+                          ? true
+                          : false,
                       onChanged: (value) {})
                 ],
               ),

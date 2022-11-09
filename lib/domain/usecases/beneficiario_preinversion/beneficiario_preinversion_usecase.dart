@@ -11,7 +11,7 @@ class BeneficiarioPreinversionUsecase {
   BeneficiarioPreinversionUsecase(this.repository);
 
   Future<Either<Failure, List<BeneficiarioPreinversionEntity>>>
-      getBeneficiariosPreinversionsUsecase(UsuarioEntity usuario) {
+      getBeneficiariosPreinversionUsecase(UsuarioEntity usuario) {
     return repository.getBeneficiariosPreinversionRepository(usuario);
   }
 }

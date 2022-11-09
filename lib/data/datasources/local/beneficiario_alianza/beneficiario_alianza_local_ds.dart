@@ -1,23 +1,22 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../../../domain/entities/beneficiario_preinversion_entity.dart';
+import '../../../../domain/entities/beneficiario_alianza_entity.dart';
 import '../../../../domain/db/db_config.dart';
-import '../../../models/beneficiario_preinversion_model.dart';
+import '../../../models/beneficiario_alianza_model.dart';
 
-abstract class BeneficiarioPreinversionLocalDataSource {
-  Future<List<BeneficiarioPreinversionModel>> getBeneficiariosPreinversionDB();
-  Future<BeneficiarioPreinversionModel?> getBeneficiarioPreinversionDB(
-      String id);
-  Future<int> saveBeneficiariosPreinversion(
-      List<BeneficiarioPreinversionEntity> beneficiarioPreinversionEntity);
+abstract class BeneficiarioAlianzaLocalDataSource {
+  Future<List<BeneficiarioAlianzaModel>> getBeneficiariosAlianzaDB();
+  Future<BeneficiarioAlianzaModel?> getBeneficiarioAlianzaDB(String id);
+  Future<int> saveBeneficiariosAlianza(
+      List<BeneficiarioAlianzaEntity> beneficiarioAlianzaEntity);
 }
 
-class BeneficiarioPreinversionLocalDataSourceImpl
-    implements BeneficiarioPreinversionLocalDataSource {
-  static createBeneficiarioPreinversionTable(Database db) async {
+class BeneficiarioAlianzaLocalDataSourceImpl
+    implements BeneficiarioAlianzaLocalDataSource {
+  static createBeneficiarioAlianzaTable(Database db) async {
     await db.execute('''
-      CREATE TABLE PerfilPreinversionBeneficiario (
-        PerfilPreInversionId	INTEGER NOT NULL,
+      CREATE TABLE PerfilAlianzaBeneficiario (
+        PerfilAlianzaId	INTEGER NOT NULL,
         BeneficiarioId	INTEGER NOT NULL,
         MunicipioId	INTEGER NOT NULL,
         VeredaId	INTEGER NOT NULL,
@@ -78,55 +77,50 @@ class BeneficiarioPreinversionLocalDataSourceImpl
         FOREIGN KEY(ActividadEconomicaId) REFERENCES ActividadEconomica(ActividadEconomicaId),
         FOREIGN KEY(NivelEscolarId) REFERENCES NivelEscolar(NivelEscolarId),
         FOREIGN KEY(TipoTenenciaId) REFERENCES TipoTenencia(TipoTenenciaId),
-        FOREIGN KEY(PerfilPreInversionId) REFERENCES PerfilPreinversion(PerfilPreInversionId)
+        FOREIGN KEY(PerfilAlianzaId) REFERENCES PerfilAlianza(PerfilAlianzaId)
       )
     ''');
   }
 
   @override
-  Future<List<BeneficiarioPreinversionModel>>
-      getBeneficiariosPreinversionDB() async {
+  Future<List<BeneficiarioAlianzaModel>> getBeneficiariosAlianzaDB() async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreinversionBeneficiario');
+    final res = await db.query('PerfilAlianzaBeneficiario');
 
-    final beneficiariospreinversionDB =
-        List<BeneficiarioPreinversionModel>.from(
-            res.map((m) => BeneficiarioPreinversionModel.fromJson(m))).toList();
+    final beneficiariosalianzaDB = List<BeneficiarioAlianzaModel>.from(
+        res.map((m) => BeneficiarioAlianzaModel.fromJson(m))).toList();
 
-    return beneficiariospreinversionDB;
+    return beneficiariosalianzaDB;
   }
 
   @override
-  Future<BeneficiarioPreinversionModel?> getBeneficiarioPreinversionDB(
-      String id) async {
+  Future<BeneficiarioAlianzaModel?> getBeneficiarioAlianzaDB(String id) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreinversionBeneficiario',
-        where: 'PerfilPreInversionId = ?', whereArgs: [id]);
+    final res = await db.query('PerfilAlianzaBeneficiario',
+        where: 'PerfilAlianzaId = ?', whereArgs: [id]);
 
     if (res.isEmpty) return null;
-    final beneficiarioPreinversionMap = {
+    final beneficiarioAlianzaMap = {
       for (var e in res[0].entries) e.key: e.value
     };
-    final beneficiarioPreinversionModel =
-        BeneficiarioPreinversionModel.fromJson(beneficiarioPreinversionMap);
+    final beneficiarioAlianzaModel =
+        BeneficiarioAlianzaModel.fromJson(beneficiarioAlianzaMap);
 
-    return beneficiarioPreinversionModel;
+    return beneficiarioAlianzaModel;
   }
 
   @override
-  Future<int> saveBeneficiariosPreinversion(
-      List<BeneficiarioPreinversionEntity>
-          beneficiarioPreinversionEntity) async {
+  Future<int> saveBeneficiariosAlianza(
+      List<BeneficiarioAlianzaEntity> beneficiarioAlianzaEntity) async {
     final db = await DBConfig.database;
 
     var batch = db.batch();
-    batch.delete('PerfilPreinversionBeneficiario');
+    batch.delete('PerfilAlianzaBeneficiario');
 
-    for (var beneficiarioPreinversion in beneficiarioPreinversionEntity) {
-      batch.insert(
-          'PerfilPreinversionBeneficiario', beneficiarioPreinversion.toJson());
+    for (var beneficiarioAlianza in beneficiarioAlianzaEntity) {
+      batch.insert('PerfilAlianzaBeneficiario', beneficiarioAlianza.toJson());
     }
 
     final res = await batch.commit();

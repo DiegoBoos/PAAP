@@ -20,10 +20,11 @@ class BeneficiarioPreinversionRepositoryImpl
   Future<Either<Failure, List<BeneficiarioPreinversionEntity>>>
       getBeneficiariosPreinversionRepository(UsuarioEntity usuario) async {
     try {
-      final tipoproyectos = await beneficiarioPreinversionRemoteDataSource
-          .getBeneficiariosPreinversiones(usuario);
+      final beneficiariosPreinversion =
+          await beneficiarioPreinversionRemoteDataSource
+              .getBeneficiariosPreinversion(usuario);
 
-      return Right(tipoproyectos);
+      return Right(beneficiariosPreinversion);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

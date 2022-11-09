@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BeneficiariosAlianzasRows extends StatelessWidget {
-  const BeneficiariosAlianzasRows({
+import '../../../domain/cubits/beneficiario_alianza/beneficiario_alianza_cubit.dart';
+import '../../../domain/entities/beneficiario_alianza_entity.dart';
+
+class BeneficiariosAlianzaRows extends StatelessWidget {
+  const BeneficiariosAlianzaRows({
     Key? key,
     required this.beneficiariosAlianzas,
     required this.subtitleStyle,
@@ -45,16 +48,16 @@ class BeneficiariosAlianzasRows extends StatelessWidget {
               beneficiariosAlianzas[index];
 
           return DataRow(cells: <DataCell>[
-            DataCell(Text(beneficiarioAlianza.beneficiarioAlianzaId)),
-            DataCell(Text(beneficiarioAlianza.nombre1)),
+            DataCell(Text(beneficiarioAlianza.beneficiarioId)),
+            DataCell(Text(beneficiarioAlianza.nombreOrganizacion)),
             DataCell(IconButton(
                 onPressed: () {
                   final beneficiarioAlianzaCubit =
                       BlocProvider.of<BeneficiarioAlianzaCubit>(context);
-                  beneficiarioAlianzaCubit.getbeneficiarioAlianzaDB(
-                      beneficiarioAlianza.beneficiarioAlianzaId);
+                  beneficiarioAlianzaCubit.getBeneficiarioAlianzaDB(
+                      beneficiarioAlianza.beneficiarioId);
                   Navigator.pushNamed(context, 'VbeneficiarioAlianzaAlianza',
-                      arguments: beneficiarioAlianza.beneficiarioAlianzaId);
+                      arguments: beneficiarioAlianza.beneficiarioId);
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

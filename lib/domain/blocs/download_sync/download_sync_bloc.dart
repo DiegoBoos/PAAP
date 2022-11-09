@@ -4,11 +4,14 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../entities/usuario_entity.dart';
+import '../../usecases/actividad_economica/actividad_economica_exports.dart';
 import '../../usecases/actividad_financiera/actividad_financiera_exports.dart';
 import '../../usecases/agrupacion/agrupacion_exports.dart';
 import '../../usecases/aliado/aliado_exports.dart';
 import '../../usecases/alianza/alianza_exports.dart';
 import '../../usecases/beneficiario/beneficiario_exports.dart';
+import '../../usecases/beneficiario_alianza/beneficiario_alianza_exports.dart';
+import '../../usecases/beneficiario_preinversion/beneficiario_preinversion_exports.dart';
 import '../../usecases/cofinanciador/cofinanciador_exports.dart';
 import '../../usecases/consultor/consultor_exports.dart';
 import '../../usecases/convocatoria/convocatoria_exports.dart';
@@ -141,6 +144,15 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final TipoActividadProductivaUsecase tipoActividadProductiva;
   final TipoActividadProductivaUsecaseDB tipoActividadProductivaDB;
 
+  final ActividadEconomicaUsecase actividadEconomica;
+  final ActividadEconomicaUsecaseDB actividadEconomicaDB;
+
+  final BeneficiarioPreinversionUsecase beneficiarioPreinversion;
+  final BeneficiarioPreinversionUsecaseDB beneficiarioPreinversionDB;
+
+  final BeneficiarioAlianzaUsecase beneficiarioAlianza;
+  final BeneficiarioAlianzaUsecaseDB beneficiarioAlianzaDB;
+
   DownloadSyncBloc({
     required this.menu,
     required this.menuDB,
@@ -208,6 +220,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.tipoCalidadDB,
     required this.tipoActividadProductiva,
     required this.tipoActividadProductivaDB,
+    required this.actividadEconomica,
+    required this.actividadEconomicaDB,
+    required this.beneficiarioPreinversion,
+    required this.beneficiarioPreinversionDB,
+    required this.beneficiarioAlianza,
+    required this.beneficiarioAlianzaDB,
   }) : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -376,6 +394,21 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Tipos Actividades Productivas',
           counter: state.progressModel!.counter + 1)));
       await downloadTiposActividadesProductivas(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Actividades Económicas',
+          counter: state.progressModel!.counter + 1)));
+      await downloadActividadesEconomicas(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Beneficiarios Preinversion',
+          counter: state.progressModel!.counter + 1)));
+      await downloadBeneficiariosPreinversion(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Beneficiarios Alianza',
+          counter: state.progressModel!.counter + 1)));
+      await downloadBeneficiariosAlianza(usuario, emit);
 
       emit(DownloadSyncSuccess());
     });
@@ -881,6 +914,58 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       Emitter<DownloadSyncState> emit) async {
     final result = await tipoActividadProductivaDB
         .saveTiposActividadesProductivasUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadActividadesEconomicas(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result =
+        await actividadEconomica.getActividadesEconomicasUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveActividadesEconomicas(data, emit));
+  }
+
+  Future<void> saveActividadesEconomicas(List<ActividadEconomicaEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result =
+        await actividadEconomicaDB.saveActividadesEconomicasUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadBeneficiariosPreinversion(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await beneficiarioPreinversion
+        .getBeneficiariosPreinversionUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveBeneficiariosPreinversion(data, emit));
+  }
+
+  Future<void> saveBeneficiariosPreinversion(
+      List<BeneficiarioPreinversionEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await beneficiarioPreinversionDB
+        .saveBeneficiariosPreinversionUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadBeneficiariosAlianza(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result =
+        await beneficiarioAlianza.getBeneficiariosAlianzaUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveBeneficiariosAlianza(data, emit));
+  }
+
+  Future<void> saveBeneficiariosAlianza(List<BeneficiarioAlianzaEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result =
+        await beneficiarioAlianzaDB.saveBeneficiariosAlianzaUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

@@ -8,7 +8,7 @@ part 'beneficiarios_preinversion_event.dart';
 part 'beneficiarios_preinversion_state.dart';
 
 class BeneficiariosPreinversionBloc extends Bloc<BeneficiariosPreinversionEvent,
-    BeneficiariosPreinversionState> {
+    Beneficiariospreinversiontate> {
   final BeneficiarioPreinversionUsecaseDB beneficiarioPreinversionUsecaseDB;
   BeneficiariosPreinversionBloc(
       {required this.beneficiarioPreinversionUsecaseDB})
@@ -21,7 +21,7 @@ class BeneficiariosPreinversionBloc extends Bloc<BeneficiariosPreinversionEvent,
 
   _getBeneficiariosPreinversion(event, emit) async {
     final result = await beneficiarioPreinversionUsecaseDB
-        .getBeneficiariosPreinversionsUsecaseDB();
+        .getBeneficiariosPreinversionUsecaseDB();
     result.fold(
         (failure) =>
             emit(BeneficiariosPreinversionError(failure.properties.first)),
