@@ -80,12 +80,17 @@ class TipoActividadProductivaRemoteDataSourceImpl
 
         final tiposActividadesProductivasRaw =
             decodedResp.entries.first.value['Table'];
-        final tiposActividadesProductivas =
-            List.from(tiposActividadesProductivasRaw)
-                .map((e) => TipoActividadProductivaModel.fromJson(e))
-                .toList();
 
-        return tiposActividadesProductivas;
+        if (tiposActividadesProductivasRaw is List) {
+          return List.from(tiposActividadesProductivasRaw)
+              .map((e) => TipoActividadProductivaModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            TipoActividadProductivaModel.fromJson(
+                tiposActividadesProductivasRaw)
+          ];
+        }
       } else {
         throw ServerFailure([mensaje]);
       }

@@ -8,6 +8,7 @@ import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
 
 import '../../../models/alianza_model.dart';
+import '../../../models/alianzas_model.dart';
 import '../../../utils.dart';
 
 abstract class AlianzaRemoteDataSource {
@@ -71,10 +72,76 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
 
         final alianzasRaw = decodedResp.entries.first.value['Table'];
         final alianzas = List.from(alianzasRaw)
-            .map((e) => AlianzaModel.fromJson(e))
+            .map((e) => AlianzasModel.fromJson(e))
             .toList();
 
-        return alianzas;
+        List<AlianzaModel> listAlianza = [];
+        for (var alianza in alianzas) {
+          final dsAlianza = await getAlianzaTable(usuario, alianza.id);
+          listAlianza.add(dsAlianza);
+        }
+        return listAlianza;
+      } else {
+        throw ServerFailure([mensaje]);
+      }
+    } else {
+      throw ServerException();
+    }
+  }
+
+  Future<AlianzaModel> getAlianzaTable(
+      UsuarioEntity usuario, String alianzaId) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final alianzaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <ConsultarAlianza xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+            </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <AlianzaId>$alianzaId</AlianzaId>
+          </objeto>
+        </ConsultarAlianza>
+      </soap:Body>
+    </soap:Envelope>''';
+
+    final alianzaResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "${Constants.urlSOAP}/ConsultarAlianza"
+        },
+        body: alianzaSOAP);
+
+    if (alianzaResp.statusCode == 200) {
+      final alianzaDoc = xml.XmlDocument.parse(alianzaResp.body);
+
+      final respuesta =
+          alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      final mensaje =
+          alianzaDoc.findAllElements('mensaje').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        final xmlString = alianzaDoc
+            .findAllElements('objeto')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final decodedResp = json.decode(res);
+
+        final alianza = AlianzaModel.fromJson(decodedResp['objeto']);
+
+        return alianza;
       } else {
         throw ServerFailure([mensaje]);
       }

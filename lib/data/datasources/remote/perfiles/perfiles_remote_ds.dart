@@ -549,16 +549,16 @@ class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
         body: perfilesSOAP);
 
     if (perfilResp.statusCode == 200) {
-      final municipioDoc = xml.XmlDocument.parse(perfilResp.body);
+      final perfilDoc = xml.XmlDocument.parse(perfilResp.body);
 
       final respuesta =
-          municipioDoc.findAllElements('respuesta').map((e) => e.text).first;
+          perfilDoc.findAllElements('respuesta').map((e) => e.text).first;
 
       final mensaje =
-          municipioDoc.findAllElements('mensaje').map((e) => e.text).first;
+          perfilDoc.findAllElements('mensaje').map((e) => e.text).first;
 
       if (respuesta == 'true') {
-        final xmlString = municipioDoc
+        final xmlString = perfilDoc
             .findAllElements('objeto')
             .map((xmlElement) => xmlElement.toXmlString())
             .first;

@@ -48,14 +48,14 @@ class AlianzasRows extends StatelessWidget {
           AlianzaEntity alianza = alianzas[index];
 
           return DataRow(cells: <DataCell>[
-            DataCell(Text(alianza.id)),
+            DataCell(Text(alianza.alianzaId)),
             DataCell(Text(alianza.nombre)),
             DataCell(IconButton(
                 onPressed: () {
                   final alianzaCubit = BlocProvider.of<AlianzaCubit>(context);
-                  alianzaCubit.getAlianzaDB(alianza.id);
+                  alianzaCubit.getAlianzaDB(alianza.alianzaId);
                   Navigator.pushNamed(context, 'VAlianza',
-                      arguments: alianza.id);
+                      arguments: alianza.alianzaId);
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,
