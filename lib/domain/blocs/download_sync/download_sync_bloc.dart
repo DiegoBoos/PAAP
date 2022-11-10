@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../entities/opcion_entity.dart';
 import '../../entities/usuario_entity.dart';
 import '../../usecases/actividad_economica/actividad_economica_exports.dart';
 import '../../usecases/actividad_financiera/actividad_financiera_exports.dart';
@@ -25,6 +26,8 @@ import '../../usecases/grupo_especial/grupo_especial_exports.dart';
 import '../../usecases/menu/menu_exports.dart';
 import '../../usecases/municipio/municipio_exports.dart';
 import '../../usecases/nivel_escolar/nivel_escolar_exports.dart';
+import '../../usecases/opcion/opcion_db_usecase.dart';
+import '../../usecases/opcion/opcion_usecase.dart';
 import '../../usecases/perfiles/perfiles_exports.dart';
 import '../../usecases/producto/producto_exports.dart';
 import '../../usecases/residencia/residencia_exports.dart';
@@ -153,6 +156,9 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final BeneficiarioAlianzaUsecase beneficiarioAlianza;
   final BeneficiarioAlianzaUsecaseDB beneficiarioAlianzaDB;
 
+  final OpcionUsecase opcion;
+  final OpcionUsecaseDB opcionDB;
+
   DownloadSyncBloc({
     required this.menu,
     required this.menuDB,
@@ -226,6 +232,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.beneficiarioPreinversionDB,
     required this.beneficiarioAlianza,
     required this.beneficiarioAlianzaDB,
+    required this.opcion,
+    required this.opcionDB,
   }) : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -399,6 +407,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Actividades Económicas',
           counter: state.progressModel!.counter + 1)));
       await downloadActividadesEconomicas(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Opciones',
+          counter: state.progressModel!.counter + 1)));
+      await downloadOpciones(usuario, emit);
 
       /*   emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Beneficiarios Preinversion',
@@ -966,6 +979,21 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       Emitter<DownloadSyncState> emit) async {
     final result =
         await beneficiarioAlianzaDB.saveBeneficiariosAlianzaUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadOpciones(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await opcion.getOpcionesUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveOpciones(data, emit));
+  }
+
+  Future<void> saveOpciones(
+      List<OpcionEntity> data, Emitter<DownloadSyncState> emit) async {
+    final result = await opcionDB.saveOpcionesUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

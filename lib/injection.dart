@@ -1,10 +1,17 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
+import 'package:paap/data/repositories/opcion/opcion_repository.dart';
 import 'package:paap/domain/usecases/visita/visita_exports.dart';
 
+import 'data/datasources/local/opcion/opcion_local_ds.dart';
+import 'data/datasources/remote/opcion/opcion_remote_ds.dart';
+import 'data/repositories/opcion/opcion_repository_db.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
+import 'domain/cubits/opcion/opcion_cubit.dart';
+import 'domain/repositories/opcion/opcion_repository.dart';
+import 'domain/repositories/opcion/opcion_repository_db.dart';
 import 'domain/usecases/actividad_economica/actividad_economica_exports.dart';
 import 'domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import 'domain/usecases/agrupacion/agrupacion_exports.dart';
@@ -28,6 +35,8 @@ import 'domain/usecases/grupo_especial/grupo_especial_exports.dart';
 import 'domain/usecases/menu/menu_exports.dart';
 import 'domain/usecases/municipio/municipio_exports.dart';
 import 'domain/usecases/nivel_escolar/nivel_escolar_exports.dart';
+import 'domain/usecases/opcion/opcion_db_usecase.dart';
+import 'domain/usecases/opcion/opcion_usecase.dart';
 import 'domain/usecases/perfiles/perfiles_exports.dart';
 import 'domain/usecases/producto/producto_exports.dart';
 import 'domain/usecases/residencia/residencia_exports.dart';
@@ -88,6 +97,7 @@ void init() {
   veredaInit();
   visitaInit();
   evaluacionInit();
+  opcionInit();
   // external
   locator.registerLazySingleton(() => http.Client());
 }
@@ -166,7 +176,9 @@ downloadSyncInit() {
       beneficiarioPreinversion: locator(),
       beneficiarioPreinversionDB: locator(),
       beneficiarioAlianza: locator(),
-      beneficiarioAlianzaDB: locator()));
+      beneficiarioAlianzaDB: locator(),
+      opcion: locator(),
+      opcionDB: locator()));
 }
 
 internetCubitInit() {
@@ -1613,5 +1625,42 @@ evaluacionInit() {
   // local data source
   locator.registerLazySingleton<EvaluacionLocalDataSource>(
     () => EvaluacionLocalDataSourceImpl(),
+  );
+}
+
+opcionInit() {
+  // cubit
+  locator.registerFactory(() => OpcionCubit(opcionDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => OpcionUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => OpcionUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<OpcionRepository>(
+    () => OpcionRepositoryImpl(
+      opcionRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<OpcionRepositoryDB>(
+    () => OpcionRepositoryDBImpl(
+      opcionLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<OpcionRemoteDataSource>(
+    () => OpcionRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<OpcionLocalDataSource>(
+    () => OpcionLocalDataSourceImpl(),
   );
 }

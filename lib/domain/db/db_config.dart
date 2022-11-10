@@ -29,6 +29,7 @@ import '../../data/datasources/local/grupo_especial/grupo_especial_local_ds.dart
 import '../../data/datasources/local/menu/menu_local_ds.dart';
 import '../../data/datasources/local/municipio/municipio_local_ds.dart';
 import '../../data/datasources/local/nivel_escolar/nivel_escolar_local_ds.dart';
+import '../../data/datasources/local/opcion/opcion_local_ds.dart';
 import '../../data/datasources/local/perfiles/perfiles_local_ds.dart';
 import '../../data/datasources/local/producto/producto_local_ds.dart';
 import '../../data/datasources/local/residencia/residencia_local_ds.dart';
@@ -105,6 +106,7 @@ class DBConfig {
       await UnidadLocalDataSourceImpl.createUnidadTable(db);
       await VeredaLocalDataSourceImpl.createVeredaTable(db);
       await VisitaLocalDataSourceImpl.createVisitaTable(db);
+      await OpcionLocalDataSourceImpl.createOpcionTable(db);
     });
 
     return _database!;
