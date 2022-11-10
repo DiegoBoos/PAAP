@@ -5,10 +5,9 @@ import '../../entities/perfil_entity.dart';
 import '../../entities/v_perfil_entity.dart';
 
 abstract class PerfilesRepositoryDB {
-  Future<Either<Failure, List<PerfilEntity>>> getPerfilesRepositoryDB();
-  Future<Either<Failure, List<PerfilEntity>>> getPerfilesFiltrosRepositoryDB(
+  Future<Either<Failure, List<VPerfilEntity>>> getPerfilesRepositoryDB();
+  Future<Either<Failure, List<VPerfilEntity>>> getPerfilesFiltrosRepositoryDB(
       String? id, String? nombre);
   Future<Either<Failure, int>> savePerfilesRepositoryDB(
       List<PerfilEntity> perfiles);
-  Future<Either<Failure, VPerfilEntity?>> getPerfilRepositoryDB(String id);
 }

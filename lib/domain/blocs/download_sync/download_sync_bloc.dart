@@ -250,10 +250,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           counter: state.progressModel!.counter + 1)));
       await downloadUnidades(usuario, emit);
 
-      /* emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Perfiles',
           counter: state.progressModel!.counter + 1)));
-      await downloadPerfiles(usuario, emit); */
+      await downloadPerfiles(usuario, emit);
 
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Productos',
@@ -270,10 +270,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           counter: state.progressModel!.counter + 1)));
       await downloadDepartamentos(usuario, emit);
 
-      /* emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Municipios',
           counter: state.progressModel!.counter + 1)));
-      await downloadMunicipios(usuario, emit); */
+      await downloadMunicipios(usuario, emit);
 
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Tipos Visita',
@@ -400,7 +400,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           counter: state.progressModel!.counter + 1)));
       await downloadActividadesEconomicas(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+      /*   emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Beneficiarios Preinversion',
           counter: state.progressModel!.counter + 1)));
       await downloadBeneficiariosPreinversion(usuario, emit);
@@ -408,7 +408,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Beneficiarios Alianza',
           counter: state.progressModel!.counter + 1)));
-      await downloadBeneficiariosAlianza(usuario, emit);
+      await downloadBeneficiariosAlianza(usuario, emit); */
 
       emit(DownloadSyncSuccess());
     });

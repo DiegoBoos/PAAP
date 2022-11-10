@@ -56,7 +56,7 @@ class _SignInPageState extends State<SignInPage> {
               authBloc.add(SaveUsuario(usuario: usuario));
               downloadSyncBloc.add(DownloadStarted(usuario));
             } else if (internetCubit.state is InternetDisconnected) {
-              //TODO: Do login offline
+              Navigator.pushReplacementNamed(context, 'tabs');
             }
           }
           if (state is AuthError) {
@@ -194,10 +194,17 @@ class _SignInPageState extends State<SignInPage> {
                                   child: Container(
                                     alignment: Alignment.center,
                                     width: double.infinity,
-                                    child: const Text(
-                                      'Ingresar',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                                    child: authBloc.state is AuthLoading
+                                        ? const SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(),
+                                          )
+                                        : const Text(
+                                            'Ingresar',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
                                   )),
                             ),
                             const SizedBox(width: 10),

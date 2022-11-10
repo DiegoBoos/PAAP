@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/alianza/alianza_cubit.dart';
 import '../../../domain/entities/alianza_entity.dart';
 
 class AlianzasRows extends StatelessWidget {
@@ -52,10 +50,7 @@ class AlianzasRows extends StatelessWidget {
             DataCell(Text(alianza.nombre)),
             DataCell(IconButton(
                 onPressed: () {
-                  final alianzaCubit = BlocProvider.of<AlianzaCubit>(context);
-                  alianzaCubit.getAlianzaDB(alianza.alianzaId);
-                  Navigator.pushNamed(context, 'VAlianza',
-                      arguments: alianza.alianzaId);
+                  Navigator.pushNamed(context, 'VAlianza', arguments: alianza);
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

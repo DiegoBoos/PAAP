@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
+import 'package:paap/domain/usecases/visita/visita_exports.dart';
 
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
@@ -20,6 +21,7 @@ import 'domain/usecases/departamento/departamento_exports.dart';
 import 'domain/usecases/desembolso/desembolso_exports.dart';
 import 'domain/usecases/estado_civil/estado_civil_exports.dart';
 import 'domain/usecases/estado_visita/estado_visita_exports.dart';
+import 'domain/usecases/evaluacion/evaluacion_exports.dart';
 import 'domain/usecases/frecuencia/frecuencia_exports.dart';
 import 'domain/usecases/genero/genero_exports.dart';
 import 'domain/usecases/grupo_especial/grupo_especial_exports.dart';
@@ -84,7 +86,8 @@ void init() {
   tipoVisitaInit();
   unidadInit();
   veredaInit();
-
+  visitaInit();
+  evaluacionInit();
   // external
   locator.registerLazySingleton(() => http.Client());
 }
@@ -828,8 +831,9 @@ veredaInit() {
 }
 
 alianzaInit() {
-  // cubit
-  locator.registerFactory(() => AlianzaCubit(alianzaDB: locator()));
+  // bloc
+  locator.registerFactory(() => AlianzasBloc(alianzasDB: locator()));
+
   // remote usecase
   locator.registerLazySingleton(() => AlianzaUsecase(locator()));
 
@@ -1535,5 +1539,79 @@ beneficiarioAlianzaInit() {
   // local data source
   locator.registerLazySingleton<BeneficiarioAlianzaLocalDataSource>(
     () => BeneficiarioAlianzaLocalDataSourceImpl(),
+  );
+}
+
+visitaInit() {
+  // cubit
+  locator.registerFactory(() => VisitaCubit(visitaDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => VisitaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => VisitaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<VisitaRepository>(
+    () => VisitaRepositoryImpl(
+      visitaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<VisitaRepositoryDB>(
+    () => VisitaRepositoryDBImpl(
+      visitaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<VisitaRemoteDataSource>(
+    () => VisitaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<VisitaLocalDataSource>(
+    () => VisitaLocalDataSourceImpl(),
+  );
+}
+
+evaluacionInit() {
+  // cubit
+  locator.registerFactory(() => EvaluacionCubit(evaluacionDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => EvaluacionUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => EvaluacionUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<EvaluacionRepository>(
+    () => EvaluacionRepositoryImpl(
+      evaluacionRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<EvaluacionRepositoryDB>(
+    () => EvaluacionRepositoryDBImpl(
+      evaluacionLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<EvaluacionRemoteDataSource>(
+    () => EvaluacionRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<EvaluacionLocalDataSource>(
+    () => EvaluacionLocalDataSourceImpl(),
   );
 }

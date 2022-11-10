@@ -3,7 +3,7 @@ export 'package:paap/domain/usecases/alianza/alianza_db_usecase.dart';
 export 'package:paap/domain/repositories/alianza/alianza_repository.dart';
 export 'package:paap/domain/repositories/alianza/alianza_repository_db.dart';
 export 'package:paap/domain/entities/alianza_entity.dart';
-export 'package:paap/domain/cubits/alianza/alianza_cubit.dart';
+export 'package:paap/domain/blocs/alianzas/alianzas_bloc.dart';
 export 'package:paap/data/repositories/alianza/alianza_repository.dart';
 export 'package:paap/data/repositories/alianza/alianza_repository_db.dart';
 export 'package:paap/data/datasources/remote/alianza/alianza_remote_ds.dart';

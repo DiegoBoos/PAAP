@@ -11,11 +11,11 @@ class PerfilesUsecaseDB {
 
   PerfilesUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<PerfilEntity>>> getPerfilesUsecaseDB() {
+  Future<Either<Failure, List<VPerfilEntity>>> getPerfilesUsecaseDB() {
     return repositoryDB.getPerfilesRepositoryDB();
   }
 
-  Future<Either<Failure, List<PerfilEntity>>> getPerfilesFiltrosUsecaseDB(
+  Future<Either<Failure, List<VPerfilEntity>>> getPerfilesFiltrosUsecaseDB(
       String? id, String? nombre) {
     return repositoryDB.getPerfilesFiltrosRepositoryDB(id ?? '', nombre ?? '');
   }
@@ -23,9 +23,5 @@ class PerfilesUsecaseDB {
   Future<Either<Failure, int>> savePerfilesUsecaseDB(
       List<PerfilEntity> perfiles) {
     return repositoryDB.savePerfilesRepositoryDB(perfiles);
-  }
-
-  Future<Either<Failure, VPerfilEntity?>> getPerfilUsecaseDB(String id) {
-    return repositoryDB.getPerfilRepositoryDB(id);
   }
 }

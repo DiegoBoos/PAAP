@@ -47,15 +47,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   _logInDB(event, emit) async {
-    final usuario = event.usuario;
+    final verificacionDatosLocalesDB = await _verificacionDatosLocalesDB();
+    if (verificacionDatosLocalesDB == '') {
+      final usuario = event.usuario;
 
-    final result = await authDB.verificacionUsecaseDB(usuario);
-    result.fold((failure) {
-      emit(AuthError(failure.properties.first));
+      final result = await authDB.verificacionUsecaseDB(usuario);
+      result.fold((failure) {
+        emit(AuthError(failure.properties.first));
+      }, (data) {
+        if (data == null) {
+          emit(const AuthError('Usuario no autenticado'));
+        }
+
+        emit(AuthLoaded(data));
+      });
+    } else {
+      emit(AuthError(verificacionDatosLocalesDB));
+    }
+  }
+
+  Future<String> _verificacionDatosLocalesDB() async {
+    final result = await authDB.verificacionDatosLocalesUsecaseDB();
+    return result.fold((failure) {
+      return failure.properties.first.toString();
     }, (data) {
-      if (data == null) return emit(const AuthError('Usuario no autenticado'));
-
-      emit(AuthLoaded(data));
+      if (data == 0) {
+        return 'No existe usuario. Inicie sesión con conexión a internet';
+      }
+      return '';
     });
   }
 

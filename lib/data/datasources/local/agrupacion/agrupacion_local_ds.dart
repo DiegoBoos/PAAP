@@ -16,7 +16,9 @@ class AgrupacionLocalDataSourceImpl implements AgrupacionLocalDataSource {
         AgrupacionId	TEXT NOT NULL,
         Nombre	TEXT,
         Descripcion	TEXT,
-        PRIMARY KEY(AgrupacionId)
+        ConvocatoriaId	TEXT,
+        PRIMARY KEY(AgrupacionId),
+        FOREIGN KEY(ConvocatoriaId) REFERENCES Convocatoria(ConvocatoriaId)
       )
     ''');
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paap/ui/alianzas/pages/alianza_detail_page.dart';
 
 import 'ui/aliados_preinversion/pages/aliados_preinversion_page.dart';
 import 'ui/aliados_preinversion/pages/new_edit_aliado_preinversion_page.dart';
@@ -32,6 +33,9 @@ class AppRouter {
     },
     'VAliadoPreInversion': (BuildContext context) {
       return const NewEditAliadoPreinversionPage();
+    },
+    'VAlianza': (BuildContext context) {
+      return const AlianzaDetailPage();
     }
   };
 }

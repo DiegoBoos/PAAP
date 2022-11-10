@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
-import '../../../domain/entities/perfil_entity.dart';
+import '../../../domain/entities/v_perfil_entity.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
@@ -22,7 +22,6 @@ class _PerfilesPageState extends State<PerfilesPage> {
   List<Map<String, dynamic>> options = [
     {'id': 'id', 'description': 'Filtrar por ID'},
     {'id': 'name', 'description': 'Filtrar por Nombre'},
-    {'id': 'allFilters', 'description': 'Filtrar por ID y Nombre'},
   ];
 
   bool showCard = false;
@@ -67,7 +66,7 @@ class _PerfilesPageState extends State<PerfilesPage> {
                 return const CustomCircularProgress(
                     alignment: Alignment.center);
               } else if (state is PerfilesLoaded) {
-                List<PerfilEntity> perfiles = state.perfilesLoaded!;
+                List<VPerfilEntity> perfiles = state.perfilesLoaded!;
                 if (perfiles.isEmpty) {
                   return const SizedBox(
                       child:
@@ -108,11 +107,6 @@ class _PerfilesPageState extends State<PerfilesPage> {
             showCard = true;
             enableName = true;
             enableId = false;
-          }
-          if (selectedValue == 'allFilters') {
-            showCard = true;
-            enableName = true;
-            enableId = true;
           }
         });
       },

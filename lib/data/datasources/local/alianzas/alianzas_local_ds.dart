@@ -17,24 +17,24 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
   static createAlianzaTable(Database db) async {
     await db.execute('''
       CREATE TABLE Alianza (
-        AlianzaId	INTEGER NOT NULL,
-        PerfilPreInversionId	INTEGER NOT NULL,
-        ConvocatoriaId	INTEGER NOT NULL,
+        AlianzaId	TEXT NOT NULL,
+        PerfilPreInversionId	TEXT NOT NULL,
+        ConvocatoriaId	TEXT NOT NULL,
         Nombre	TEXT,
         Abreviatura	TEXT,
-        NIT	INTEGER,
-        MunicipioId	INTEGER NOT NULL,
+        NIT	TEXT,
+        MunicipioId	TEXT NOT NULL,
         Direccion	TEXT,
         Contacto	TEXT,
         TelefonoFijo	TEXT,
         TelefonoMovil	TEXT,
         Correo	TEXT,
-        TipoProyectoId	INTEGER NOT NULL,
-        ProductoId	INTEGER NOT NULL,
-        ProductoAsociadoId	INTEGER NOT NULL,
-        ValorTotalProyecto	INTEGER,
-        IncentivoModular	INTEGER,
-        Legalizado	INTEGER,
+        TipoProyectoId	TEXT NOT NULL,
+        ProductoId	TEXT NOT NULL,
+        ProductoAsociadoId	TEXT NOT NULL,
+        ValorTotalProyecto	TEXT,
+        IncentivoModular	TEXT,
+        Legalizado	TEXT,
         PRIMARY KEY(AlianzaId),
         FOREIGN KEY(TipoProyectoId) REFERENCES TipoProyecto(TipoProyectoId),
         FOREIGN KEY(ProductoId) REFERENCES Producto(ProductoId),
@@ -84,7 +84,7 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
     AlianzaId as alianzaId,
     PerfilPreInversionId as perfilPreinversionId,
     ConvocatoriaId as convocatoriaId,
-    Nombre as nombre, 
+    Alianza.Nombre as nombre, 
     Abreviatura as abreviatura, 
     NIT as nit, 
     Municipio.Nombre as municipio, 
@@ -98,6 +98,7 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
     ProductoAsociado.Nombre as productoAsociado,
     ValorTotalProyecto as valorTotalProyecto,
     IncentivoModular as incentivoModular
+    Legalizado as legalizado
     from Alianza
     left join Municipio on (Municipio.MunicipioId=Alianza.MunicipioId)
     left join TipoProyecto on (TipoProyecto.TipoProyectoId=Alianza.TipoProyectoId)

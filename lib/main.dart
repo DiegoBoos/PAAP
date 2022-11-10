@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'domain/blocs/alianzas/alianzas_bloc.dart';
 import 'domain/blocs/auth/auth_bloc.dart';
 import 'domain/blocs/beneficiarios_preinversion/beneficiarios_preinversion_bloc.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
@@ -9,7 +10,6 @@ import 'domain/cubits/actividad_economica/actividad_economica_cubit.dart';
 import 'domain/cubits/actividad_financiera/actividad_financiera_cubit.dart';
 import 'domain/cubits/agrupacion/agrupacion_cubit.dart';
 import 'domain/cubits/aliado/aliado_cubit.dart';
-import 'domain/cubits/alianza/alianza_cubit.dart';
 import 'domain/cubits/beneficiario/beneficiario_cubit.dart';
 import 'domain/cubits/cofinanciador/cofinanciador_cubit.dart';
 import 'domain/cubits/consultor/consultor_cubit.dart';
@@ -18,6 +18,7 @@ import 'domain/cubits/departamento/departamento_cubit.dart';
 import 'domain/cubits/desembolso/desembolso_cubit.dart';
 import 'domain/cubits/estado_civil/estado_civil_cubit.dart';
 import 'domain/cubits/estado_visita/estado_visita_cubit.dart';
+import 'domain/cubits/evaluacion/evaluacion_cubit.dart';
 import 'domain/cubits/frecuencia/frecuencia_cubit.dart';
 import 'domain/cubits/genero/genero_cubit.dart';
 import 'domain/cubits/grupo_especial/grupo_especial_cubit.dart';
@@ -39,6 +40,7 @@ import 'domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
 import 'domain/cubits/tipo_visita/tipo_visita_cubit.dart';
 import 'domain/cubits/unidad/unidad_cubit.dart';
 import 'domain/cubits/vereda/vereda_cubit.dart';
+import 'domain/cubits/visita/visita_cubit.dart';
 
 import 'injection.dart' as di;
 import 'router.dart';
@@ -69,7 +71,7 @@ class MyApp extends StatelessWidget {
             create: (_) => di.locator<AliadoCubit>(),
           ),
           BlocProvider(
-            create: (_) => di.locator<AlianzaCubit>(),
+            create: (_) => di.locator<AlianzasBloc>(),
           ),
           BlocProvider(
             create: (_) => di.locator<AuthBloc>(),
@@ -175,6 +177,12 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<VeredaCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<VisitaCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<EvaluacionCubit>(),
           ),
         ],
         child: MaterialApp(

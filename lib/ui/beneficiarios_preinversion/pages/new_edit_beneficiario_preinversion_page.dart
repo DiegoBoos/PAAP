@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/ui/perfiles/widgets/perfiles_drawer.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../utils/custom_drawer.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/beneficiario_form.dart';
@@ -15,15 +15,15 @@ class NewEditBeneficiarioPreinversionPage extends StatelessWidget {
     final beneficiarioId = ModalRoute.of(context)?.settings.arguments as String;
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     return Scaffold(
-        drawer: BlocBuilder<MenuCubit, MenuState>(
+        /* drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
             final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
-            return CustomDrawer(
+            return PerfilesDrawer(
               menuHijo: menuHijo,
-              id: beneficiarioId,
+              perfil: perfil,
             );
           },
-        ),
+        ), */
         appBar:
             AppBar(title: const Text('Detalle Beneficiario'), actions: const [
           Padding(

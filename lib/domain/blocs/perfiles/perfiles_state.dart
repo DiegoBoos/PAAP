@@ -11,7 +11,7 @@ class PerfilesInitial extends PerfilesState {}
 class PerfilesLoading extends PerfilesState {}
 
 class PerfilesLoaded extends PerfilesState {
-  final List<PerfilEntity>? perfilesLoaded;
+  final List<VPerfilEntity>? perfilesLoaded;
 
   const PerfilesLoaded({this.perfilesLoaded});
 }

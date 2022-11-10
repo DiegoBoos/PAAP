@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../utils/custom_drawer.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/aliado_form.dart';
@@ -15,7 +14,7 @@ class NewEditAliadoPreinversionPage extends StatelessWidget {
     final aliadoId = ModalRoute.of(context)?.settings.arguments as String;
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     return Scaffold(
-        drawer: BlocBuilder<MenuCubit, MenuState>(
+        /* drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
             final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
             return CustomDrawer(
@@ -23,7 +22,7 @@ class NewEditAliadoPreinversionPage extends StatelessWidget {
               id: aliadoId,
             );
           },
-        ),
+        ), */
         appBar: AppBar(title: const Text('Detalle Aliado'), actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),

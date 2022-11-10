@@ -6,6 +6,7 @@ import '../../../models/usuario_model.dart';
 
 abstract class AuthLocalDataSource {
   Future<UsuarioModel?> logIn(UsuarioEntity usuario);
+  Future<int> verificacionDatosLocales();
   Future<int> saveUsuario(UsuarioEntity usuarioEntity);
 }
 
@@ -61,5 +62,13 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
     final res = await db.delete('UserAuth', where: 'id = ?', whereArgs: [id]);
     return res;
+  }
+
+  @override
+  Future<int> verificacionDatosLocales() async {
+    final db = await DBConfig.database;
+    final res = await db.query('Usuario');
+    if (res.isEmpty) return 0;
+    return res.length;
   }
 }

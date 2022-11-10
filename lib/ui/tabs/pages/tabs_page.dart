@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/domain/blocs/alianzas/alianzas_bloc.dart';
 
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
@@ -24,6 +25,8 @@ class _TabsPageState extends State<TabsPage> {
 
     final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
     perfilesBloc.add(GetPerfiles());
+    final alianzasBloc = BlocProvider.of<AlianzasBloc>(context);
+    alianzasBloc.add(GetAlianzas());
   }
 
   int _selectedIndex = 0;

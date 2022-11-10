@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:paap/data/datasources/local/beneficiario_preinversion/beneficiario_preinversion_local_ds.dart';
 import 'package:paap/data/datasources/local/tipo_actividad_productiva/tipo_actividad_productiva_local_ds.dart';
+import 'package:paap/domain/usecases/visita/visita_exports.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -103,6 +104,7 @@ class DBConfig {
       await TipoVisitaLocalDataSourceImpl.createTipoVisitaTable(db);
       await UnidadLocalDataSourceImpl.createUnidadTable(db);
       await VeredaLocalDataSourceImpl.createVeredaTable(db);
+      await VisitaLocalDataSourceImpl.createVisitaTable(db);
     });
 
     return _database!;

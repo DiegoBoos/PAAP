@@ -17,4 +17,8 @@ class AuthUsecaseDB {
       UsuarioEntity usuario) {
     return repositoryDB.verificacionRepositoryDB(usuario);
   }
+
+  Future<Either<Failure, int>> verificacionDatosLocalesUsecaseDB() {
+    return repositoryDB.verificacionDatosLocalesRepositoryDB();
+  }
 }
