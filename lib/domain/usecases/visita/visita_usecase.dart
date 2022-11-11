@@ -10,6 +10,11 @@ class VisitaUsecase {
 
   VisitaUsecase(this.repository);
 
+  Future<Either<Failure, List<VisitaEntity>>> getVisitasUsecase(
+      UsuarioEntity usuario) {
+    return repository.getVisitasRepository(usuario);
+  }
+
   Future<Either<Failure, int>> saveVisitaUsecase(
       UsuarioEntity usuario, VisitaEntity visitaEntity) {
     return repository.saveVisitaRepository(usuario, visitaEntity);

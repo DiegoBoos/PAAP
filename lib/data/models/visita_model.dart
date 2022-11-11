@@ -7,7 +7,7 @@ class VisitaModel extends VisitaEntity {
     required String fechaInicial,
     required String fechaFinal,
     required String estadoVisitaId,
-    required String observacion,
+    String? observacion,
     required String usuarioId,
     required String fechaRegistro,
   }) : super(
@@ -16,7 +16,7 @@ class VisitaModel extends VisitaEntity {
             fechaInicial: fechaInicial,
             fechaFinal: fechaFinal,
             estadoVisitaId: estadoVisitaId,
-            observacion: observacion,
+            observacion: observacion ?? '',
             usuarioId: usuarioId,
             fechaRegistro: fechaRegistro);
 

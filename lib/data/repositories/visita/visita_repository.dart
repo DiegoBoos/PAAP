@@ -14,6 +14,20 @@ class VisitaRepositoryImpl implements VisitaRepository {
   VisitaRepositoryImpl({required this.visitaRemoteDataSource});
 
   @override
+  Future<Either<Failure, List<VisitaEntity>>> getVisitasRepository(
+      UsuarioEntity usuario) async {
+    try {
+      final visitas = await visitaRemoteDataSource.getVisitas(usuario);
+
+      return Right(visitas);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, int>> saveVisitaRepository(
       UsuarioEntity usuario, VisitaEntity visitaEntity) async {
     try {

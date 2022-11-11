@@ -5,8 +5,9 @@ import '../../../../domain/entities/visita_entity.dart';
 import '../../../../domain/db/db_config.dart';
 
 abstract class VisitaLocalDataSource {
-  Future<VisitaModel?> getVisitaDB(String id);
+  Future<VisitaModel?> getVisitaDB(String perfilId, String tipoVisitaId);
   Future<int> saveVisitaDB(VisitaEntity visitaEntity);
+  Future<int> saveVisitasDB(List<VisitaEntity> visitasEntity);
   Future<int> clearVisitasDB();
 }
 
@@ -31,16 +32,33 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
   }
 
   @override
-  Future<VisitaModel?> getVisitaDB(String id) async {
+  Future<VisitaModel?> getVisitaDB(String perfilId, String tipoVisitaId) async {
     final db = await DBConfig.database;
-    final res =
-        await db.query('Visita', where: 'TipoVisitaId = ?', whereArgs: [id]);
+    final res = await db.query('Visita',
+        where: 'PerfilId = ? AND TipoVisitaId = ?',
+        whereArgs: [perfilId, tipoVisitaId]);
 
     if (res.isEmpty) return null;
     final visitaMap = {for (var e in res[0].entries) e.key: e.value};
     final visitaModel = VisitaModel.fromJson(visitaMap);
 
     return visitaModel;
+  }
+
+  @override
+  Future<int> saveVisitasDB(List<VisitaEntity> visitasEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+    batch.delete('Visita');
+
+    for (var visita in visitasEntity) {
+      batch.insert('Visita', visita.toJson());
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
   }
 
   @override

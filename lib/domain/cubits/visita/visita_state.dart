@@ -1,15 +1,22 @@
 part of 'visita_cubit.dart';
 
 abstract class VisitaState extends Equatable {
-  const VisitaState();
+  final VisitaEntity? visita;
+  const VisitaState({this.visita});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [visita];
 }
 
 class VisitaInitial extends VisitaState {}
 
 class VisitaLoading extends VisitaState {}
+
+class VisitaLoaded extends VisitaState {
+  final VisitaEntity? visitaLoaded;
+
+  const VisitaLoaded(this.visitaLoaded) : super(visita: visitaLoaded);
+}
 
 class VisitaSaved extends VisitaState {}
 

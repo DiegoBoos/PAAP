@@ -42,6 +42,7 @@ import '../../usecases/tipo_tenencia/tipo_tenencia_exports.dart';
 import '../../usecases/tipo_visita/tipo_visita_exports.dart';
 import '../../usecases/unidad/unidad_exports.dart';
 import '../../usecases/vereda/vereda_exports.dart';
+import '../../usecases/visita/visita_exports.dart';
 
 part 'download_sync_event.dart';
 part 'download_sync_state.dart';
@@ -161,6 +162,9 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final CriterioUsecase criterio;
   final CriterioUsecaseDB criterioDB;
 
+  final VisitaUsecase visita;
+  final VisitaUsecaseDB visitaDB;
+
   DownloadSyncBloc({
     required this.menu,
     required this.menuDB,
@@ -238,6 +242,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.opcionDB,
     required this.criterio,
     required this.criterioDB,
+    required this.visita,
+    required this.visitaDB,
   }) : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -262,10 +268,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           counter: state.progressModel!.counter + 1)));
       await downloadUnidades(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+      /* emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Perfiles',
           counter: state.progressModel!.counter + 1)));
-      await downloadPerfiles(usuario, emit);
+      await downloadPerfiles(usuario, emit); */
 
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Productos',
@@ -282,10 +288,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           counter: state.progressModel!.counter + 1)));
       await downloadDepartamentos(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+      /* emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Municipios',
           counter: state.progressModel!.counter + 1)));
-      await downloadMunicipios(usuario, emit);
+      await downloadMunicipios(usuario, emit); */
 
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Tipos Visita',
@@ -421,6 +427,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Criterios',
           counter: state.progressModel!.counter + 1)));
       await downloadCriterios(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Visitas',
+          counter: state.progressModel!.counter + 1)));
+      await downloadVisitas(usuario, emit);
 
       /*   emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Beneficiarios Preinversion',
@@ -1018,6 +1029,21 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   Future<void> saveCriterios(
       List<CriterioEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await criterioDB.saveCriteriosUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadVisitas(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await visita.getVisitasUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveVisitas(data, emit));
+  }
+
+  Future<void> saveVisitas(
+      List<VisitaEntity> data, Emitter<DownloadSyncState> emit) async {
+    final result = await visitaDB.saveVisitasUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

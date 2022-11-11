@@ -5,6 +5,8 @@ import '../../core/error/failure.dart';
 import '../../entities/usuario_entity.dart';
 
 abstract class VisitaRepository {
+  Future<Either<Failure, List<VisitaEntity>>> getVisitasRepository(
+      UsuarioEntity usuario);
   Future<Either<Failure, int>> saveVisitaRepository(
       UsuarioEntity usuario, VisitaEntity visitaEntity);
 }
