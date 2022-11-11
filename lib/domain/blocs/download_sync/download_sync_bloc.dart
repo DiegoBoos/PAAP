@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../entities/opcion_entity.dart';
 import '../../entities/usuario_entity.dart';
 import '../../usecases/actividad_economica/actividad_economica_exports.dart';
 import '../../usecases/actividad_financiera/actividad_financiera_exports.dart';
@@ -16,6 +15,7 @@ import '../../usecases/beneficiario_preinversion/beneficiario_preinversion_expor
 import '../../usecases/cofinanciador/cofinanciador_exports.dart';
 import '../../usecases/consultor/consultor_exports.dart';
 import '../../usecases/convocatoria/convocatoria_exports.dart';
+import '../../usecases/criterio/criterio_exports.dart';
 import '../../usecases/departamento/departamento_exports.dart';
 import '../../usecases/desembolso/desembolso_exports.dart';
 import '../../usecases/estado_civil/estado_civil_exports.dart';
@@ -26,8 +26,7 @@ import '../../usecases/grupo_especial/grupo_especial_exports.dart';
 import '../../usecases/menu/menu_exports.dart';
 import '../../usecases/municipio/municipio_exports.dart';
 import '../../usecases/nivel_escolar/nivel_escolar_exports.dart';
-import '../../usecases/opcion/opcion_db_usecase.dart';
-import '../../usecases/opcion/opcion_usecase.dart';
+import '../../usecases/opcion/opcion_exports.dart';
 import '../../usecases/perfiles/perfiles_exports.dart';
 import '../../usecases/producto/producto_exports.dart';
 import '../../usecases/residencia/residencia_exports.dart';
@@ -159,6 +158,9 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final OpcionUsecase opcion;
   final OpcionUsecaseDB opcionDB;
 
+  final CriterioUsecase criterio;
+  final CriterioUsecaseDB criterioDB;
+
   DownloadSyncBloc({
     required this.menu,
     required this.menuDB,
@@ -234,6 +236,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.beneficiarioAlianzaDB,
     required this.opcion,
     required this.opcionDB,
+    required this.criterio,
+    required this.criterioDB,
   }) : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -412,6 +416,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Opciones',
           counter: state.progressModel!.counter + 1)));
       await downloadOpciones(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Criterios',
+          counter: state.progressModel!.counter + 1)));
+      await downloadCriterios(usuario, emit);
 
       /*   emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Beneficiarios Preinversion',
@@ -994,6 +1003,21 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   Future<void> saveOpciones(
       List<OpcionEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await opcionDB.saveOpcionesUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadCriterios(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await criterio.getCriteriosUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveCriterios(data, emit));
+  }
+
+  Future<void> saveCriterios(
+      List<CriterioEntity> data, Emitter<DownloadSyncState> emit) async {
+    final result = await criterioDB.saveCriteriosUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

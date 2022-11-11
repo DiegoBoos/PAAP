@@ -53,13 +53,12 @@ class BeneficiariosPreinversionRows extends StatelessWidget {
             DataCell(Text(beneficiarioPreinversion.nombreOrganizacion)),
             DataCell(IconButton(
                 onPressed: () {
-                  //TODO: no existe web service
                   final beneficiarioPreinversionCubit =
                       BlocProvider.of<BeneficiarioPreinversionCubit>(context);
                   beneficiarioPreinversionCubit.getBeneficiarioPreinversionDB(
                       beneficiarioPreinversion.beneficiarioId);
                   Navigator.pushNamed(context, 'VBeneficiarioPreInversion',
-                      arguments: beneficiarioPreinversion.beneficiarioId);
+                      arguments: beneficiarioPreinversion);
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

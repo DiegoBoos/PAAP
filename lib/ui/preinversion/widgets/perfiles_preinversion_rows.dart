@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../../domain/entities/v_alianza_entity.dart';
+import '../../../domain/entities/v_perfil_entity.dart';
 
-class AlianzasRows extends StatelessWidget {
-  const AlianzasRows({
+class PerfilesPreinversionRows extends StatelessWidget {
+  const PerfilesPreinversionRows({
     Key? key,
-    required this.alianzas,
+    required this.perfiles,
     required this.subtitleStyle,
   }) : super(key: key);
 
-  final List<VAlianzaEntity> alianzas;
-
+  final List<VPerfilEntity> perfiles;
   final TextStyle subtitleStyle;
 
   @override
@@ -42,15 +41,16 @@ class AlianzasRows extends StatelessWidget {
             ),
           ),
         ],
-        rows: List.generate(alianzas.length, (index) {
-          VAlianzaEntity alianza = alianzas[index];
+        rows: List.generate(perfiles.length, (index) {
+          VPerfilEntity perfil = perfiles[index];
 
           return DataRow(cells: <DataCell>[
-            DataCell(Text(alianza.alianzaId)),
-            DataCell(Text(alianza.nombre)),
+            DataCell(Text(perfil.perfilId)),
+            DataCell(Text(perfil.nombre)),
             DataCell(IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, 'VAlianza', arguments: alianza);
+                  Navigator.pushNamed(context, 'VPerfilPreInversion',
+                      arguments: perfil);
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

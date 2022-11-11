@@ -5,7 +5,7 @@ import '../../../../domain/db/db_config.dart';
 import '../../../models/opcion_model.dart';
 
 abstract class OpcionLocalDataSource {
-  Future<List<OpcionModel>> getOpcionesDB();
+  Future<List<OpcionModel>> getOpcionesDB(String criterioId);
   Future<int> saveOpciones(List<OpcionEntity> opcionEntity);
 }
 
@@ -23,10 +23,11 @@ class OpcionLocalDataSourceImpl implements OpcionLocalDataSource {
   }
 
   @override
-  Future<List<OpcionModel>> getOpcionesDB() async {
+  Future<List<OpcionModel>> getOpcionesDB(String criterioId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('Opcion');
+    final res = await db
+        .query('Opcion', where: 'CriterioId = ?', whereArgs: [criterioId]);
 
     final opcionsDB =
         List<OpcionModel>.from(res.map((m) => OpcionModel.fromJson(m)))

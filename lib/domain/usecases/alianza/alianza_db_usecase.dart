@@ -9,17 +9,13 @@ class AlianzaUsecaseDB {
 
   AlianzaUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<AlianzaEntity>?>> getAlianzasUsecaseDB() {
+  Future<Either<Failure, List<VAlianzaEntity>?>> getAlianzasUsecaseDB() {
     return repositoryDB.getAlianzasRepositoryDB();
   }
 
-  Future<Either<Failure, List<AlianzaEntity>?>> getAlianzasFiltrosUsecaseDB(
+  Future<Either<Failure, List<VAlianzaEntity>?>> getAlianzasFiltrosUsecaseDB(
       String id, String nombre) {
     return repositoryDB.getAlianzasFiltrosRepositoryDB(id, nombre);
-  }
-
-  Future<Either<Failure, VAlianzaEntity?>> getAlianzaUsecaseDB(String id) {
-    return repositoryDB.getAlianzaRepositoryDB(id);
   }
 
   Future<Either<Failure, int>> saveAlianzasUsecaseDB(

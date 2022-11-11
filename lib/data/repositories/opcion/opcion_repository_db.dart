@@ -13,9 +13,10 @@ class OpcionRepositoryDBImpl implements OpcionRepositoryDB {
   OpcionRepositoryDBImpl({required this.opcionLocalDataSource});
 
   @override
-  Future<Either<Failure, List<OpcionEntity>>> getOpcionesRepositoryDB() async {
+  Future<Either<Failure, List<OpcionEntity>>> getOpcionesRepositoryDB(
+      String criterioId) async {
     try {
-      final opcionesDB = await opcionLocalDataSource.getOpcionesDB();
+      final opcionesDB = await opcionLocalDataSource.getOpcionesDB(criterioId);
 
       return Right(opcionesDB);
     } on ServerFailure catch (e) {

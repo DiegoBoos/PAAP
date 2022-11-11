@@ -3,13 +3,11 @@ import 'package:sqflite/sqflite.dart';
 import '../../../../domain/entities/alianza_entity.dart';
 
 import '../../../../domain/db/db_config.dart';
-import '../../../models/alianza_model.dart';
 import '../../../models/v_alianza_model.dart';
 
 abstract class AlianzasLocalDataSource {
-  Future<List<AlianzaModel>> getAlianzasDB();
-  Future<List<AlianzaModel>> getAlianzasFiltrosDB(String id, String nombre);
-  Future<VAlianzaModel?> getAlianzaDB(String id);
+  Future<List<VAlianzaModel>> getAlianzasDB();
+  Future<List<VAlianzaModel>> getAlianzasFiltrosDB(String id, String nombre);
   Future<int> saveAlianzasDB(List<AlianzaEntity> alianzas);
 }
 
@@ -47,36 +45,50 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
   }
 
   @override
-  Future<List<AlianzaModel>> getAlianzasDB() async {
+  Future<List<VAlianzaModel>> getAlianzasDB() async {
     final db = await DBConfig.database;
 
-    final res = await db.query('Alianza');
+    String sql = '''
+    select
+    AlianzaId as alianzaId,
+    PerfilPreInversionId as perfilPreinversionId,
+    ConvocatoriaId as convocatoriaId,
+    Alianza.Nombre as nombre, 
+    Abreviatura as abreviatura, 
+    NIT as nit, 
+    Municipio.Nombre as municipio, 
+    Direccion as direccion,
+    Contacto as contacto,
+    TelefonoFijo as telefonoFijo, 
+    TelefonoMovil as telefonoMovil,
+    Correo as correo,
+    TipoProyecto.Nombre as tipoProyecto,
+    ProductoPrincipal.Nombre as productoPrincipal,
+    ProductoAsociado.Nombre as productoAsociado,
+    ValorTotalProyecto as valorTotalProyecto,
+    IncentivoModular as incentivoModular,
+    Legalizado as legalizado
+    from Alianza
+    left join Municipio on (Municipio.MunicipioId=Alianza.MunicipioId)
+    left join TipoProyecto on (TipoProyecto.TipoProyectoId=Alianza.TipoProyectoId)
+    left join Producto as ProductoPrincipal on (ProductoPrincipal.ProductoId =Alianza.ProductoId)
+    left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =Alianza.ProductoAsociadoId)    
+    ''';
+
+    final res = await db.rawQuery(sql);
+
+    if (res.isEmpty) return [];
 
     final alianzasDB =
-        List<AlianzaModel>.from(res.map((m) => AlianzaModel.fromJson(m)))
+        List<VAlianzaModel>.from(res.map((m) => VAlianzaModel.fromJson(m)))
             .toList();
 
     return alianzasDB;
   }
 
   @override
-  Future<List<AlianzaModel>> getAlianzasFiltrosDB(
+  Future<List<VAlianzaModel>> getAlianzasFiltrosDB(
       String id, String nombre) async {
-    final db = await DBConfig.database;
-
-    final res = await db.query('Alianza',
-        where: 'AlianzaId LIKE ? AND Nombre LIKE ?',
-        whereArgs: ['%$id%', '%$nombre%']);
-
-    final alianzasDB =
-        List<AlianzaModel>.from(res.map((m) => AlianzaModel.fromJson(m)))
-            .toList();
-
-    return alianzasDB;
-  }
-
-  @override
-  Future<VAlianzaModel?> getAlianzaDB(String id) async {
     final db = await DBConfig.database;
 
     String sql = '''
@@ -104,16 +116,18 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
     left join TipoProyecto on (TipoProyecto.TipoProyectoId=Alianza.TipoProyectoId)
     left join Producto as ProductoPrincipal on (ProductoPrincipal.ProductoId =Alianza.ProductoId)
     left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =Alianza.ProductoAsociadoId)
-    where perfilId = $id
+    where AlianzaId LIKE '%$id%' AND Alianza.Nombre LIKE '%$nombre%'
     ''';
 
     final res = await db.rawQuery(sql);
 
-    if (res.isEmpty) return null;
-    final alianzaMap = {for (var e in res[0].entries) e.key: e.value};
-    final alianzaModel = VAlianzaModel.fromJson(alianzaMap);
+    if (res.isEmpty) return [];
 
-    return alianzaModel;
+    final alianzasDB =
+        List<VAlianzaModel>.from(res.map((m) => VAlianzaModel.fromJson(m)))
+            .toList();
+
+    return alianzasDB;
   }
 
   @override

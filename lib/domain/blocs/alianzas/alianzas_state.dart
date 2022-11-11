@@ -12,7 +12,7 @@ class AlianzasInitial extends AlianzasState {}
 class AlianzasLoading extends AlianzasState {}
 
 class AlianzasLoaded extends AlianzasState {
-  final List<AlianzaEntity>? alianzasLoaded;
+  final List<VAlianzaEntity>? alianzasLoaded;
 
   const AlianzasLoaded({this.alianzasLoaded});
 }

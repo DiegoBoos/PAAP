@@ -14,6 +14,7 @@ import 'domain/cubits/beneficiario/beneficiario_cubit.dart';
 import 'domain/cubits/cofinanciador/cofinanciador_cubit.dart';
 import 'domain/cubits/consultor/consultor_cubit.dart';
 import 'domain/cubits/convocatoria/convocatoria_cubit.dart';
+import 'domain/cubits/criterio/criterio_cubit.dart';
 import 'domain/cubits/departamento/departamento_cubit.dart';
 import 'domain/cubits/desembolso/desembolso_cubit.dart';
 import 'domain/cubits/estado_civil/estado_civil_cubit.dart';
@@ -26,6 +27,7 @@ import 'domain/cubits/internet/internet_cubit.dart';
 import 'domain/cubits/menu/menu_cubit.dart';
 import 'domain/cubits/municipio/municipio_cubit.dart';
 import 'domain/cubits/nivel_escolar/nivel_escolar_cubit.dart';
+import 'domain/cubits/opcion/opcion_cubit.dart';
 import 'domain/cubits/producto/producto_cubit.dart';
 import 'domain/cubits/residencia/residencia_cubit.dart';
 import 'domain/cubits/revision/revision_cubit.dart';
@@ -183,6 +185,12 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<EvaluacionCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<OpcionCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<CriterioCubit>(),
           ),
         ],
         child: MaterialApp(

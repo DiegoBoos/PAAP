@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../entities/alianza_entity.dart';
+import '../../entities/v_alianza_entity.dart';
 import '../../usecases/alianza/alianza_db_usecase.dart';
 
 part 'alianzas_event.dart';

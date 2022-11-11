@@ -13,7 +13,8 @@ class AlianzaRepositoryDBImpl implements AlianzaRepositoryDB {
   AlianzaRepositoryDBImpl({required this.alianzaLocalDataSource});
 
   @override
-  Future<Either<Failure, List<AlianzaEntity>>> getAlianzasRepositoryDB() async {
+  Future<Either<Failure, List<VAlianzaEntity>>>
+      getAlianzasRepositoryDB() async {
     try {
       final alianzasDB = await alianzaLocalDataSource.getAlianzasDB();
 
@@ -26,27 +27,13 @@ class AlianzaRepositoryDBImpl implements AlianzaRepositoryDB {
   }
 
   @override
-  Future<Either<Failure, List<AlianzaEntity>>> getAlianzasFiltrosRepositoryDB(
+  Future<Either<Failure, List<VAlianzaEntity>>> getAlianzasFiltrosRepositoryDB(
       String id, String nombre) async {
     try {
-      final alianzasDB =
+      final alianzasFiltrosDB =
           await alianzaLocalDataSource.getAlianzasFiltrosDB(id, nombre);
 
-      return Right(alianzasDB);
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(e.properties));
-    } on ServerException {
-      return const Left(ServerFailure(['Excepción no controlada']));
-    }
-  }
-
-  @override
-  Future<Either<Failure, VAlianzaEntity?>> getAlianzaRepositoryDB(
-      String id) async {
-    try {
-      final alianzaDB = await alianzaLocalDataSource.getAlianzaDB(id);
-
-      return Right(alianzaDB);
+      return Right(alianzasFiltrosDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -58,9 +45,8 @@ class AlianzaRepositoryDBImpl implements AlianzaRepositoryDB {
   Future<Either<Failure, int>> saveAlianzasRepositoryDB(
       List<AlianzaEntity> alianzaEntity) async {
     try {
-      final alianzaDB =
-          await alianzaLocalDataSource.saveAlianzasDB(alianzaEntity);
-      return Right(alianzaDB);
+      final result = await alianzaLocalDataSource.saveAlianzasDB(alianzaEntity);
+      return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

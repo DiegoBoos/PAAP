@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/ui/preinversion/widgets/perfiles_preinversion_rows.dart';
 
-import '../../../domain/blocs/alianzas/alianzas_bloc.dart';
-import '../../../domain/entities/v_alianza_entity.dart';
+import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
+import '../../../domain/entities/v_perfil_entity.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
-import '../../utils/styles.dart';
-import '../widgets/alianzas_rows.dart';
 import '../../utils/search_card.dart';
+import '../../utils/styles.dart';
 
-class AlianzasPage extends StatefulWidget {
-  const AlianzasPage({super.key});
+class PerfilesPreinversionPage extends StatefulWidget {
+  const PerfilesPreinversionPage({super.key});
 
   @override
-  State<AlianzasPage> createState() => _AlianzasPageState();
+  State<PerfilesPreinversionPage> createState() =>
+      _PerfilesPreinversionPageState();
 }
 
-class _AlianzasPageState extends State<AlianzasPage> {
+class _PerfilesPreinversionPageState extends State<PerfilesPreinversionPage> {
   String? selectedValue;
   List<Map<String, dynamic>> options = [
     {'id': 'id', 'description': 'Filtrar por ID'},
@@ -32,7 +33,7 @@ class _AlianzasPageState extends State<AlianzasPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text('Alianzas'),
+            title: const Text('Perfiles Preinversion'),
             centerTitle: true,
             leading: null,
             actions: const [
@@ -48,7 +49,8 @@ class _AlianzasPageState extends State<AlianzasPage> {
             child: Row(
               children: [
                 const Expanded(
-                  child: Text('ALIANZAS', style: Styles.titleStyle),
+                  child:
+                      Text('PERFILES PREINVERSION', style: Styles.titleStyle),
                 ),
                 Expanded(child: filtersDropdown(context)),
               ],
@@ -62,21 +64,21 @@ class _AlianzasPageState extends State<AlianzasPage> {
           const SizedBox(height: 20),
           if (showCard)
             SearchCard(
-                text: 'Alianza', enableId: enableId, enableName: enableName),
-          BlocBuilder<AlianzasBloc, AlianzasState>(
+                text: 'Perfil', enableId: enableId, enableName: enableName),
+          BlocBuilder<PerfilesBloc, PerfilesState>(
             builder: (context, state) {
-              if (state is AlianzasLoading) {
+              if (state is PerfilesLoading) {
                 return const CustomCircularProgress(
                     alignment: Alignment.center);
-              } else if (state is AlianzasLoaded) {
-                List<VAlianzaEntity> alianzas = state.alianzasLoaded!;
-                if (alianzas.isEmpty) {
+              } else if (state is PerfilesLoaded) {
+                List<VPerfilEntity> perfiles = state.perfilesLoaded!;
+                if (perfiles.isEmpty) {
                   return const SizedBox(
                       child:
                           Center(child: NoDataSvg(title: 'No hay resultados')));
                 }
-                return AlianzasRows(
-                    alianzas: alianzas, subtitleStyle: Styles.subtitleStyle);
+                return PerfilesPreinversionRows(
+                    perfiles: perfiles, subtitleStyle: Styles.subtitleStyle);
               }
               return const SizedBox();
             },

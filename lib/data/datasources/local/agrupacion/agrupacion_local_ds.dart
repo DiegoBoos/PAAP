@@ -5,7 +5,7 @@ import '../../../../domain/db/db_config.dart';
 import '../../../models/agrupacion_model.dart';
 
 abstract class AgrupacionLocalDataSource {
-  Future<List<AgrupacionModel>> getAgrupacionesDB();
+  Future<List<AgrupacionModel>> getAgrupacionesDB(String convocatoriaId);
   Future<int> saveAgrupaciones(List<AgrupacionEntity> agrupacionEntity);
 }
 
@@ -24,10 +24,11 @@ class AgrupacionLocalDataSourceImpl implements AgrupacionLocalDataSource {
   }
 
   @override
-  Future<List<AgrupacionModel>> getAgrupacionesDB() async {
+  Future<List<AgrupacionModel>> getAgrupacionesDB(String convocatoriaId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('Agrupacion');
+    final res = await db.query('Agrupacion',
+        where: 'ConvocatoriaId = ?', whereArgs: [convocatoriaId]);
 
     final agrupacionsDB =
         List<AgrupacionModel>.from(res.map((m) => AgrupacionModel.fromJson(m)))

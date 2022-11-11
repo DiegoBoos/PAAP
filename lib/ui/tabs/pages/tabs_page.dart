@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paap/domain/blocs/alianzas/alianzas_bloc.dart';
+import 'package:paap/ui/preinversion/pages/perfiles_preinversion_page.dart';
 
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
@@ -34,7 +35,7 @@ class _TabsPageState extends State<TabsPage> {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
     const PerfilesPage(),
-    const PerfilesPage(),
+    const PerfilesPreinversionPage(),
     const AlianzasPage(),
   ];
 

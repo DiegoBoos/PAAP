@@ -5,11 +5,9 @@ import '../../entities/alianza_entity.dart';
 import '../../entities/v_alianza_entity.dart';
 
 abstract class AlianzaRepositoryDB {
-  Future<Either<Failure, List<AlianzaEntity>>> getAlianzasRepositoryDB();
-  Future<Either<Failure, List<AlianzaEntity>>> getAlianzasFiltrosRepositoryDB(
+  Future<Either<Failure, List<VAlianzaEntity>>> getAlianzasRepositoryDB();
+  Future<Either<Failure, List<VAlianzaEntity>>> getAlianzasFiltrosRepositoryDB(
       String id, String nombre);
-
-  Future<Either<Failure, VAlianzaEntity?>> getAlianzaRepositoryDB(String id);
 
   Future<Either<Failure, int>> saveAlianzasRepositoryDB(
       List<AlianzaEntity> alianzaEntity);

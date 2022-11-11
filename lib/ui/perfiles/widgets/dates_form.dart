@@ -4,19 +4,20 @@ import 'package:intl/intl.dart';
 import '../../utils/input_decoration.dart';
 
 class DatesForm extends StatelessWidget {
-  DatesForm({
+  const DatesForm({
     Key? key,
     required this.formKeyDates,
     required this.savedDates,
     required this.dateFormat,
+    required this.fechaInicialCtrl,
+    required this.fechaFinalCtrl,
   }) : super(key: key);
 
   final GlobalKey<FormState> formKeyDates;
   final bool savedDates;
   final DateFormat dateFormat;
-
-  final fechaInicialCtrl = TextEditingController();
-  final fechaFinalCtrl = TextEditingController();
+  final TextEditingController fechaInicialCtrl;
+  final TextEditingController fechaFinalCtrl;
 
   @override
   Widget build(BuildContext context) {

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/domain/blocs/alianzas/alianzas_bloc.dart';
 
-import '../../../domain/blocs/alianzas/alianzas_bloc.dart';
-import '../../utils/input_decoration.dart';
+import '../../domain/blocs/perfiles/perfiles_bloc.dart';
+import 'input_decoration.dart';
 
 class SearchCard extends StatelessWidget {
   SearchCard({
     Key? key,
+    required this.text,
     required this.enableId,
     required this.enableName,
   }) : super(key: key);
 
+  final String text;
   final bool enableId;
   final bool enableName;
 
@@ -39,7 +42,7 @@ class SearchCard extends StatelessWidget {
                     TextFormField(
                       controller: idCtrl,
                       decoration: CustomInputDecoration.inputDecoration(
-                          labelText: 'Buscar por ID del alianza',
+                          labelText: 'Buscar por ID del $text',
                           hintText: 'Buscar por ID'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -57,8 +60,8 @@ class SearchCard extends StatelessWidget {
                     TextFormField(
                       controller: nameCtrl,
                       decoration: CustomInputDecoration.inputDecoration(
-                          labelText: 'Buscar por nombre del alianza',
-                          hintText: 'Buscar Alianza'),
+                          labelText: 'Buscar por nombre del $text',
+                          hintText: 'Buscar $text'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Campo requerido';
@@ -80,11 +83,20 @@ class SearchCard extends StatelessWidget {
                         color: Colors.white,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            final alianzasBloc =
-                                BlocProvider.of<AlianzasBloc>(context);
+                            if (text == 'Perfil') {
+                              final perfilesBloc =
+                                  BlocProvider.of<PerfilesBloc>(context);
 
-                            alianzasBloc.add(GetAlianzasFiltros(
-                                id: idCtrl.text, nombre: nameCtrl.text));
+                              perfilesBloc.add(GetPerfilesFiltros(
+                                  id: idCtrl.text, nombre: nameCtrl.text));
+                            }
+                            if (text == 'Alianza') {
+                              final perfilesBloc =
+                                  BlocProvider.of<AlianzasBloc>(context);
+
+                              perfilesBloc.add(GetAlianzasFiltros(
+                                  id: idCtrl.text, nombre: nameCtrl.text));
+                            }
                           }
                         },
                         icon: const Icon(Icons.search)),

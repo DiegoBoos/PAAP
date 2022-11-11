@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:paap/domain/cubits/agrupacion/agrupacion_cubit.dart';
 
 import '../../../domain/entities/v_perfil_entity.dart';
-import '../../utils/input_decoration.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/conceptos.dart';
@@ -21,7 +22,8 @@ class RegistroVisitaPage extends StatefulWidget {
 class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
   final formKeyDates = GlobalKey<FormState>();
   final formKeyRegistro = GlobalKey<FormState>();
-
+  final fechaInicialCtrl = TextEditingController();
+  final fechaFinalCtrl = TextEditingController();
   final dateFormat = DateFormat('yyyy-MM-dd');
   bool toggleConceptos = false;
   bool toggleEvaluacion = true;
@@ -30,7 +32,8 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
   @override
   Widget build(BuildContext context) {
     final perfil = ModalRoute.of(context)?.settings.arguments as VPerfilEntity;
-
+    final agrupacionCubit = BlocProvider.of<AgrupacionCubit>(context);
+    agrupacionCubit.getAgrupacionesDB(perfil.convocatoriaId);
     return Scaffold(
       appBar: AppBar(
           title: const Text('Primera visita del perfil'),
@@ -54,6 +57,8 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
             DatesForm(
                 formKeyDates: formKeyDates,
                 savedDates: savedDates,
+                fechaInicialCtrl: fechaInicialCtrl,
+                fechaFinalCtrl: fechaFinalCtrl,
                 dateFormat: dateFormat),
             const SizedBox(height: 20),
             if (!savedDates)

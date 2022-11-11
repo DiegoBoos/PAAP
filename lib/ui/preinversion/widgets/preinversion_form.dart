@@ -17,6 +17,7 @@ class PreinversionForm extends StatelessWidget {
             enabled: false,
             decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'ID. Preinversion', labelText: 'ID. Preinversion')),
+        const SizedBox(height: 20),
         TextFormField(
             initialValue: perfil.perfilId,
             enabled: false,
@@ -26,6 +27,7 @@ class PreinversionForm extends StatelessWidget {
         TextFormField(
             initialValue: perfil.nombre,
             enabled: false,
+            maxLines: null,
             decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'Nombre del Proyecto',
                 labelText: 'Nombre del Proyecto')),
@@ -46,6 +48,7 @@ class PreinversionForm extends StatelessWidget {
         TextFormField(
             initialValue: perfil.productoAsociado,
             enabled: false,
+            maxLines: null,
             decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'Producto Asociado', labelText: 'Producto Asociado')),
         const SizedBox(height: 20),
@@ -64,6 +67,7 @@ class PreinversionForm extends StatelessWidget {
         TextFormField(
             initialValue: perfil.abreviatura,
             enabled: false,
+            maxLines: null,
             decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'Nombre de la Asociación',
                 labelText: 'Nombre de la Asociación')),
@@ -71,6 +75,7 @@ class PreinversionForm extends StatelessWidget {
         TextFormField(
             initialValue: perfil.direccion,
             enabled: false,
+            maxLines: null,
             decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'Dirección', labelText: 'Dirección')),
         const SizedBox(height: 20),

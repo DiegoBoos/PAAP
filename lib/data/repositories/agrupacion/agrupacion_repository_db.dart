@@ -13,11 +13,11 @@ class AgrupacionRepositoryDBImpl implements AgrupacionRepositoryDB {
   AgrupacionRepositoryDBImpl({required this.agrupacionLocalDataSource});
 
   @override
-  Future<Either<Failure, List<AgrupacionEntity>>>
-      getAgrupacionesRepositoryDB() async {
+  Future<Either<Failure, List<AgrupacionEntity>>> getAgrupacionesRepositoryDB(
+      String convocatoriaId) async {
     try {
       final agrupacionesDB =
-          await agrupacionLocalDataSource.getAgrupacionesDB();
+          await agrupacionLocalDataSource.getAgrupacionesDB(convocatoriaId);
 
       return Right(agrupacionesDB);
     } on ServerFailure catch (e) {

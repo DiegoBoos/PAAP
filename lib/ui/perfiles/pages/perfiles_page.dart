@@ -8,7 +8,7 @@ import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 import '../widgets/perfiles_rows.dart';
-import '../widgets/search_card.dart';
+import '../../utils/search_card.dart';
 
 class PerfilesPage extends StatefulWidget {
   const PerfilesPage({super.key});
@@ -44,12 +44,13 @@ class _PerfilesPageState extends State<PerfilesPage> {
         body: ListView(children: [
           const SizedBox(height: 30),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: const EdgeInsets.only(left: 30.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('PERFILES', style: Styles.titleStyle),
-                filtersDropdown(context),
+                const Expanded(
+                  child: Text('PERFILES', style: Styles.titleStyle),
+                ),
+                Expanded(child: filtersDropdown(context)),
               ],
             ),
           ),
@@ -59,7 +60,9 @@ class _PerfilesPageState extends State<PerfilesPage> {
             child: Text('Consulta', style: Styles.subtitleStyle),
           ),
           const SizedBox(height: 20),
-          if (showCard) SearchCard(enableId: enableId, enableName: enableName),
+          if (showCard)
+            SearchCard(
+                text: 'Perfil', enableId: enableId, enableName: enableName),
           BlocBuilder<PerfilesBloc, PerfilesState>(
             builder: (context, state) {
               if (state is PerfilesLoading) {

@@ -41,7 +41,7 @@ class BeneficiarioPreinversionRemoteDataSourceImpl
             <Nombre>string</Nombre>
           </rol>
           <parametros>
-            <string>TablaBeneficiariospreinversion</string>              
+            <string>TablaPerfilesPreInversionesBeneficiarios</string>              
           </parametros>
         </ObtenerDatos>
       </soap:Body>

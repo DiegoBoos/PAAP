@@ -1,17 +1,9 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
-import 'package:paap/data/repositories/opcion/opcion_repository.dart';
-import 'package:paap/domain/usecases/visita/visita_exports.dart';
 
-import 'data/datasources/local/opcion/opcion_local_ds.dart';
-import 'data/datasources/remote/opcion/opcion_remote_ds.dart';
-import 'data/repositories/opcion/opcion_repository_db.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
-import 'domain/cubits/opcion/opcion_cubit.dart';
-import 'domain/repositories/opcion/opcion_repository.dart';
-import 'domain/repositories/opcion/opcion_repository_db.dart';
 import 'domain/usecases/actividad_economica/actividad_economica_exports.dart';
 import 'domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import 'domain/usecases/agrupacion/agrupacion_exports.dart';
@@ -24,6 +16,7 @@ import 'domain/usecases/beneficiario_preinversion/beneficiario_preinversion_expo
 import 'domain/usecases/cofinanciador/cofinanciador_exports.dart';
 import 'domain/usecases/consultor/consultor_exports.dart';
 import 'domain/usecases/convocatoria/convocatoria_exports.dart';
+import 'domain/usecases/criterio/criterio_exports.dart';
 import 'domain/usecases/departamento/departamento_exports.dart';
 import 'domain/usecases/desembolso/desembolso_exports.dart';
 import 'domain/usecases/estado_civil/estado_civil_exports.dart';
@@ -35,8 +28,7 @@ import 'domain/usecases/grupo_especial/grupo_especial_exports.dart';
 import 'domain/usecases/menu/menu_exports.dart';
 import 'domain/usecases/municipio/municipio_exports.dart';
 import 'domain/usecases/nivel_escolar/nivel_escolar_exports.dart';
-import 'domain/usecases/opcion/opcion_db_usecase.dart';
-import 'domain/usecases/opcion/opcion_usecase.dart';
+import 'domain/usecases/opcion/opcion_exports.dart';
 import 'domain/usecases/perfiles/perfiles_exports.dart';
 import 'domain/usecases/producto/producto_exports.dart';
 import 'domain/usecases/residencia/residencia_exports.dart';
@@ -52,6 +44,7 @@ import 'domain/usecases/tipo_tenencia/tipo_tenencia_exports.dart';
 import 'domain/usecases/tipo_visita/tipo_visita_exports.dart';
 import 'domain/usecases/unidad/unidad_exports.dart';
 import 'domain/usecases/vereda/vereda_exports.dart';
+import 'domain/usecases/visita/visita_exports.dart';
 
 final locator = GetIt.instance;
 
@@ -98,6 +91,7 @@ void init() {
   visitaInit();
   evaluacionInit();
   opcionInit();
+  criterioInit();
   // external
   locator.registerLazySingleton(() => http.Client());
 }
@@ -178,7 +172,9 @@ downloadSyncInit() {
       beneficiarioAlianza: locator(),
       beneficiarioAlianzaDB: locator(),
       opcion: locator(),
-      opcionDB: locator()));
+      opcionDB: locator(),
+      criterio: locator(),
+      criterioDB: locator()));
 }
 
 internetCubitInit() {
@@ -1662,5 +1658,42 @@ opcionInit() {
   // local data source
   locator.registerLazySingleton<OpcionLocalDataSource>(
     () => OpcionLocalDataSourceImpl(),
+  );
+}
+
+criterioInit() {
+  // cubit
+  locator.registerFactory(() => CriterioCubit(criterioDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => CriterioUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => CriterioUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<CriterioRepository>(
+    () => CriterioRepositoryImpl(
+      criterioRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<CriterioRepositoryDB>(
+    () => CriterioRepositoryDBImpl(
+      criterioLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<CriterioRemoteDataSource>(
+    () => CriterioRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<CriterioLocalDataSource>(
+    () => CriterioLocalDataSourceImpl(),
   );
 }

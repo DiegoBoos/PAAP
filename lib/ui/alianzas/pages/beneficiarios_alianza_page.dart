@@ -20,7 +20,7 @@ class BeneficiariosAlianzasPage extends StatelessWidget {
             onPressed: () =>
                 Navigator.pushNamed(context, 'VBeneficiarioAlianza')),
         appBar: AppBar(
-            title: const Text('Beneficiarios'),
+            title: const Text('Beneficiarios Alianza'),
             centerTitle: true,
             leading: null,
             actions: const [
@@ -33,12 +33,13 @@ class BeneficiariosAlianzasPage extends StatelessWidget {
           const SizedBox(height: 30),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text('BENEFICIARIOS', style: Styles.titleStyle),
+            child: Text('BENEFICIARIOS ALIANZA', style: Styles.titleStyle),
           ),
           const SizedBox(height: 20),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text('Consulta', style: Styles.subtitleStyle),
+            child: Text('Consulta, Creación y Modificación',
+                style: Styles.subtitleStyle),
           ),
           const SizedBox(height: 20),
           BlocBuilder<BeneficiariosAlianzaBloc, BeneficiariosAlianzaState>(

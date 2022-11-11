@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:paap/data/datasources/local/beneficiario_preinversion/beneficiario_preinversion_local_ds.dart';
 import 'package:paap/data/datasources/local/tipo_actividad_productiva/tipo_actividad_productiva_local_ds.dart';
 import 'package:paap/domain/usecases/visita/visita_exports.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../data/datasources/local/actividad_economica/actividad_economica_local_ds.dart';
@@ -19,10 +19,12 @@ import '../../data/datasources/local/beneficiario_alianza/beneficiario_alianza_l
 import '../../data/datasources/local/cofinanciador/cofinanciador_local_ds.dart';
 import '../../data/datasources/local/consultor/consultor_local_ds.dart';
 import '../../data/datasources/local/convocatoria/convocatoria_local_ds.dart';
+import '../../data/datasources/local/criterio/criterio_local_ds.dart';
 import '../../data/datasources/local/departamento/departamento_local_ds.dart';
 import '../../data/datasources/local/desembolso/desembolso_local_ds.dart';
 import '../../data/datasources/local/estado_civil/estado_civil_local_ds.dart';
 import '../../data/datasources/local/estado_visita/estado_visita_local_ds.dart';
+import '../../data/datasources/local/evaluacion/evaluacion_local_ds.dart';
 import '../../data/datasources/local/frecuencia/frecuencia_local_ds.dart';
 import '../../data/datasources/local/genero/genero_local_ds.dart';
 import '../../data/datasources/local/grupo_especial/grupo_especial_local_ds.dart';
@@ -57,7 +59,7 @@ class DBConfig {
     //Path donde se almacena la base de datos
     Directory documentDirectory = await getApplicationDocumentsDirectory();
 
-    final path = join(documentDirectory.path, 'paap.db');
+    final path = p.join(documentDirectory.path, 'paap.db');
     print('Ruta base: $path');
     //Crear base de datos
     _database = await openDatabase(path, version: 1, onOpen: (db) {},
@@ -106,7 +108,9 @@ class DBConfig {
       await UnidadLocalDataSourceImpl.createUnidadTable(db);
       await VeredaLocalDataSourceImpl.createVeredaTable(db);
       await VisitaLocalDataSourceImpl.createVisitaTable(db);
+      await EvaluacionLocalDataSourceImpl.createEvaluacionTable(db);
       await OpcionLocalDataSourceImpl.createOpcionTable(db);
+      await CriterioLocalDataSourceImpl.createCriterioTable(db);
     });
 
     return _database!;
@@ -116,7 +120,7 @@ class DBConfig {
     //Path donde se almacena la base de datos
     Directory documentDirectory = await getApplicationDocumentsDirectory();
 
-    final path = join(documentDirectory.path, 'paap.db');
+    final path = p.join(documentDirectory.path, 'paap.db');
 
     //Eliminar base de datos
     databaseFactory.deleteDatabase(path);

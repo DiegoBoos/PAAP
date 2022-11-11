@@ -8,8 +8,9 @@ class OpcionUsecaseDB {
 
   OpcionUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<OpcionEntity>?>> getOpcionesUsecaseDB() {
-    return repositoryDB.getOpcionesRepositoryDB();
+  Future<Either<Failure, List<OpcionEntity>?>> getOpcionesUsecaseDB(
+      String criterioId) {
+    return repositoryDB.getOpcionesRepositoryDB(criterioId);
   }
 
   Future<Either<Failure, int>> saveOpcionesUsecaseDB(

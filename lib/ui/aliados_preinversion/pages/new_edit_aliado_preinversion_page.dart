@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/ui/aliados_preinversion/widgets/aliados_preinversion_drawer.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../../domain/entities/aliado_preinversion_entity.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/aliado_form.dart';
@@ -11,18 +13,19 @@ class NewEditAliadoPreinversionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final aliadoId = ModalRoute.of(context)?.settings.arguments as String;
+    final aliadoPreinversion =
+        ModalRoute.of(context)?.settings.arguments as AliadoPreinversionEntity;
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     return Scaffold(
-        /* drawer: BlocBuilder<MenuCubit, MenuState>(
+        drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
             final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
-            return CustomDrawer(
+            return AliadosPreinversionDrawer(
               menuHijo: menuHijo,
-              id: aliadoId,
+              aliadoPreinversion: aliadoPreinversion,
             );
           },
-        ), */
+        ),
         appBar: AppBar(title: const Text('Detalle Aliado'), actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -44,7 +47,8 @@ class NewEditAliadoPreinversionPage extends StatelessWidget {
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Text(aliadoId == '0' ? 'Creación' : 'Editar',
+              child: Text(
+                  aliadoPreinversion.aliadoId == '0' ? 'Creación' : 'Editar',
                   style: Styles.subtitleStyle),
             ),
             const AliadoForm()

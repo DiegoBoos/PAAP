@@ -8,8 +8,9 @@ class AgrupacionUsecaseDB {
 
   AgrupacionUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<AgrupacionEntity>?>> getAgrupacionesUsecaseDB() {
-    return repositoryDB.getAgrupacionesRepositoryDB();
+  Future<Either<Failure, List<AgrupacionEntity>?>> getAgrupacionesUsecaseDB(
+      String convocatoriaId) {
+    return repositoryDB.getAgrupacionesRepositoryDB(convocatoriaId);
   }
 
   Future<Either<Failure, int>> saveAgrupacionesUsecaseDB(
