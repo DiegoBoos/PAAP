@@ -29,7 +29,7 @@ import 'domain/usecases/menu/menu_exports.dart';
 import 'domain/usecases/municipio/municipio_exports.dart';
 import 'domain/usecases/nivel_escolar/nivel_escolar_exports.dart';
 import 'domain/usecases/opcion/opcion_exports.dart';
-import 'domain/usecases/perfiles/perfiles_exports.dart';
+import 'domain/usecases/perfil/perfil_exports.dart';
 import 'domain/usecases/producto/producto_exports.dart';
 import 'domain/usecases/residencia/residencia_exports.dart';
 import 'domain/usecases/revision/revision_exports.dart';
@@ -377,35 +377,35 @@ perfilesBlocInit() {
       ));
 
   // remote usecase
-  locator.registerLazySingleton(() => PerfilesUsecase(locator()));
+  locator.registerLazySingleton(() => PerfilUsecase(locator()));
 
   // local usecase
-  locator.registerLazySingleton(() => PerfilesUsecaseDB(locator()));
+  locator.registerLazySingleton(() => PerfilUsecaseDB(locator()));
 
   // repository
-  locator.registerLazySingleton<PerfilesRepository>(
-    () => PerfilesRepositoryImpl(
+  locator.registerLazySingleton<PerfilRepository>(
+    () => PerfilRepositoryImpl(
       perfilRemoteDataSource: locator(),
     ),
   );
 
   // repository DB
-  locator.registerLazySingleton<PerfilesRepositoryDB>(
-    () => PerfilesRepositoryDBImpl(
+  locator.registerLazySingleton<PerfilRepositoryDB>(
+    () => PerfilRepositoryDBImpl(
       perfilesLocalDataSource: locator(),
     ),
   );
 
   // remote data source
-  locator.registerLazySingleton<PerfilesRemoteDataSource>(
+  locator.registerLazySingleton<PerfilRemoteDataSource>(
     () => PerfilesRemoteDataSourceImpl(
       client: locator(),
     ),
   );
 
   // local data source
-  locator.registerLazySingleton<PerfilesLocalDataSource>(
-    () => PerfilesLocalDataSourceImpl(),
+  locator.registerLazySingleton<PerfilLocalDataSource>(
+    () => PerfilLocalDataSourceImpl(),
   );
 }
 

@@ -32,7 +32,7 @@ import '../../data/datasources/local/menu/menu_local_ds.dart';
 import '../../data/datasources/local/municipio/municipio_local_ds.dart';
 import '../../data/datasources/local/nivel_escolar/nivel_escolar_local_ds.dart';
 import '../../data/datasources/local/opcion/opcion_local_ds.dart';
-import '../../data/datasources/local/perfiles/perfiles_local_ds.dart';
+import '../../data/datasources/local/perfil/perfil_local_ds.dart';
 import '../../data/datasources/local/producto/producto_local_ds.dart';
 import '../../data/datasources/local/residencia/residencia_local_ds.dart';
 import '../../data/datasources/local/revision/revision_local_ds.dart';
@@ -90,7 +90,7 @@ class DBConfig {
       await MenuLocalDataSourceImpl.createMenuTable(db);
       await MunicipioLocalDataSourceImpl.createMunicipioTable(db);
       await NivelEscolarLocalDataSourceImpl.createNivelEscolarTable(db);
-      await PerfilesLocalDataSourceImpl.createPerfilTable(db);
+      await PerfilLocalDataSourceImpl.createPerfilTable(db);
       await ProductoLocalDataSourceImpl.createProductoTable(db);
       await ResidenciaLocalDataSourceImpl.createResidenciaTable(db);
       await RevisionLocalDataSourceImpl.createRevisionTable(db);

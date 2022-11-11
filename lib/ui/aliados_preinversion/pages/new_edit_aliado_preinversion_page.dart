@@ -51,7 +51,7 @@ class NewEditAliadoPreinversionPage extends StatelessWidget {
                   aliadoPreinversion.aliadoId == '0' ? 'Creación' : 'Editar',
                   style: Styles.subtitleStyle),
             ),
-            const AliadoForm()
+            const AliadoPreinversionForm()
           ]),
         ));
   }

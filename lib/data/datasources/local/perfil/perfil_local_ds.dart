@@ -5,13 +5,13 @@ import '../../../../domain/entities/perfil_entity.dart';
 import '../../../../domain/db/db_config.dart';
 import '../../../models/v_perfil_model.dart';
 
-abstract class PerfilesLocalDataSource {
+abstract class PerfilLocalDataSource {
   Future<List<VPerfilModel>> getPerfilesDB();
   Future<List<VPerfilModel>> getPerfilesFiltrosDB(String id, String nombre);
   Future<int> savePerfilesDB(List<PerfilEntity> perfiles);
 }
 
-class PerfilesLocalDataSourceImpl implements PerfilesLocalDataSource {
+class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
   static createPerfilTable(Database db) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS Perfil (

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/aliado/aliado_cubit.dart';
-import '../../../domain/entities/aliado_entity.dart';
+import '../../../domain/entities/aliado_preinversion_entity.dart';
 
-class AliadosRows extends StatelessWidget {
-  const AliadosRows({
+class AliadosPreinversionRows extends StatelessWidget {
+  const AliadosPreinversionRows({
     Key? key,
-    required this.aliados,
+    required this.aliadosPreinversion,
     required this.subtitleStyle,
   }) : super(key: key);
 
-  final List<AliadoEntity> aliados;
+  final List<AliadoPreinversionEntity> aliadosPreinversion;
   final TextStyle subtitleStyle;
 
   @override
@@ -31,30 +31,24 @@ class AliadosRows extends StatelessWidget {
                   style: subtitleStyle.copyWith(color: Colors.white)),
             ),
           ),
-          DataColumn(
-            label: Expanded(
-              child: Text('Nombre',
-                  style: subtitleStyle.copyWith(color: Colors.white)),
-            ),
-          ),
           const DataColumn(
             label: Expanded(
               child: Text(''),
             ),
           ),
         ],
-        rows: List.generate(aliados.length, (index) {
-          AliadoEntity aliado = aliados[index];
+        rows: List.generate(aliadosPreinversion.length, (index) {
+          AliadoPreinversionEntity aliadoPreinversion =
+              aliadosPreinversion[index];
 
           return DataRow(cells: <DataCell>[
-            DataCell(Text(aliado.aliadoId)),
-            DataCell(Text(aliado.nombre)),
+            DataCell(Text(aliadoPreinversion.aliadoId)),
             DataCell(IconButton(
                 onPressed: () {
                   final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
-                  aliadoCubit.getAliadoDB(aliado.aliadoId);
+                  aliadoCubit.getAliadoDB(aliadoPreinversion.aliadoId);
                   Navigator.pushNamed(context, 'VAliadoPreinversion',
-                      arguments: aliado.aliadoId);
+                      arguments: aliadoPreinversion.aliadoId);
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

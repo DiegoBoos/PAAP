@@ -2,12 +2,12 @@ import 'package:dartz/dartz.dart';
 import '../../core/error/failure.dart';
 import '../../entities/perfil_entity.dart';
 import '../../entities/usuario_entity.dart';
-import '../../repositories/perfiles/perfiles_repository.dart';
+import '../../repositories/perfil/perfil_repository.dart';
 
-class PerfilesUsecase {
-  final PerfilesRepository repository;
+class PerfilUsecase {
+  final PerfilRepository repository;
 
-  PerfilesUsecase(this.repository);
+  PerfilUsecase(this.repository);
 
   Future<Either<Failure, List<PerfilEntity>>> getPerfilesUsecase(
       UsuarioEntity usuario) {

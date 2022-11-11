@@ -4,7 +4,7 @@ import '../../core/error/failure.dart';
 import '../../entities/perfil_entity.dart';
 import '../../entities/v_perfil_entity.dart';
 
-abstract class PerfilesRepositoryDB {
+abstract class PerfilRepositoryDB {
   Future<Either<Failure, List<VPerfilEntity>>> getPerfilesRepositoryDB();
   Future<Either<Failure, List<VPerfilEntity>>> getPerfilesFiltrosRepositoryDB(
       String? id, String? nombre);

@@ -4,12 +4,12 @@ import '../../core/error/failure.dart';
 import '../../entities/perfil_entity.dart';
 
 import '../../entities/v_perfil_entity.dart';
-import '../../repositories/perfiles/perfiles_repository_db.dart';
+import '../../repositories/perfil/perfil_repository_db.dart';
 
-class PerfilesUsecaseDB {
-  final PerfilesRepositoryDB repositoryDB;
+class PerfilUsecaseDB {
+  final PerfilRepositoryDB repositoryDB;
 
-  PerfilesUsecaseDB(this.repositoryDB);
+  PerfilUsecaseDB(this.repositoryDB);
 
   Future<Either<Failure, List<VPerfilEntity>>> getPerfilesUsecaseDB() {
     return repositoryDB.getPerfilesRepositoryDB();

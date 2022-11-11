@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/ui/utils/floating_buttons.dart';
 
-import '../../../domain/cubits/aliado/aliado_cubit.dart';
-import '../../utils/input_decoration.dart';
-
-class AliadoForm extends StatefulWidget {
-  const AliadoForm({super.key});
+class AliadoPreinversionForm extends StatefulWidget {
+  const AliadoPreinversionForm({super.key});
 
   @override
-  State<AliadoForm> createState() => _AliadoFormState();
+  State<AliadoPreinversionForm> createState() => _AliadoPreinversionFormState();
 }
 
-class _AliadoFormState extends State<AliadoForm> {
+class _AliadoPreinversionFormState extends State<AliadoPreinversionForm> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AliadoCubit, AliadoState>(
+    return const SizedBox();
+    /* return BlocBuilder<AliadoPreinversionCubit, AliadoPreinversionState>(
       builder: (context, state) {
-        if (state is AliadoLoading) {
+        if (state is AliadoPreinversionLoading) {
           return const Center(
               heightFactor: 2, child: CircularProgressIndicator());
         }
-        if (state is AliadoLoaded) {
-          final aliado = state.aliadoLoaded!;
+        if (state is AliadoPreinversionLoaded) {
+          final aliadopreinversion = state.aliadopreinversionLoaded!;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
@@ -32,14 +28,15 @@ class _AliadoFormState extends State<AliadoForm> {
                 children: [
                   Expanded(
                     child: TextFormField(
-                        initialValue: aliado.aliadoId,
+                        initialValue: aliadopreinversion.aliadopreinversionId,
                         decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'ID Aliado', labelText: 'ID Aliado')),
+                            hintText: 'ID AliadoPreinversion',
+                            labelText: 'ID AliadoPreinversion')),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
                     child: TextFormField(
-                        initialValue: aliado.aniosExperiencia,
+                        initialValue: aliadopreinversion.aniosExperiencia,
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Años de experiencia',
                             labelText: 'Años de experiencia')),
@@ -48,30 +45,30 @@ class _AliadoFormState extends State<AliadoForm> {
               ),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: aliado.nombre,
+                  initialValue: aliadopreinversion.nombre,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Nombre', labelText: 'Nombre')),
               TextFormField(
-                  initialValue: aliado.nombreContacto,
+                  initialValue: aliadopreinversion.nombreContacto,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Nombre del contacto',
                       labelText: 'Nombre del contacto')),
               TextFormField(
-                  initialValue: aliado.ciudad,
+                  initialValue: aliadopreinversion.ciudad,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Ciudad', labelText: 'Ciudad')),
               TextFormField(
-                  initialValue: aliado.correo,
+                  initialValue: aliadopreinversion.correo,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Correo', labelText: 'Correo')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: aliado.telefonoMovil,
+                  initialValue: aliadopreinversion.telefonoMovil,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Teléfono Móvil', labelText: 'Teléfono Móvil')),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: aliado.estado,
+                  initialValue: aliadopreinversion.estado,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Estado', labelText: 'Estado')),
               const SizedBox(height: 20),
@@ -81,6 +78,6 @@ class _AliadoFormState extends State<AliadoForm> {
         }
         return const SizedBox();
       },
-    );
+    ); */
   }
 }

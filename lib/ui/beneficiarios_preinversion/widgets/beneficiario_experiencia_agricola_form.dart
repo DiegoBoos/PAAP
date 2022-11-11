@@ -125,8 +125,6 @@ class _BeneficiarioExperienciaAgricolaFormState
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Total Área Predio',
                           labelText: 'Total Área Predio')),
-
-                  //TODO: falta si el proyecto es pecuario
                 ],
               ),
             ),

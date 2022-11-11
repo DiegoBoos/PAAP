@@ -5,13 +5,13 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/perfil_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
-import '../../../domain/repositories/perfiles/perfiles_repository.dart';
-import '../../datasources/remote/perfiles/perfiles_remote_ds.dart';
+import '../../../domain/repositories/perfil/perfil_repository.dart';
+import '../../datasources/remote/perfil/perfil_remote_ds.dart';
 
-class PerfilesRepositoryImpl implements PerfilesRepository {
-  final PerfilesRemoteDataSource perfilRemoteDataSource;
+class PerfilRepositoryImpl implements PerfilRepository {
+  final PerfilRemoteDataSource perfilRemoteDataSource;
 
-  PerfilesRepositoryImpl({required this.perfilRemoteDataSource});
+  PerfilRepositoryImpl({required this.perfilRemoteDataSource});
 
   @override
   Future<Either<Failure, List<PerfilEntity>>> getPerfilesRepository(

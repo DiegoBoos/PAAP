@@ -132,9 +132,6 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
       final respuesta =
           visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          visitaDoc.findAllElements('mensaje').map((e) => e.text).first;
-
       if (respuesta == 'true') {
         final xmlString = visitaDoc
             .findAllElements('objeto')
@@ -149,7 +146,6 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
 
         return visita;
       } else {
-        //throw ServerFailure([mensaje]);
         return null;
       }
     } else {

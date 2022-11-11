@@ -1,0 +1,10 @@
+export 'package:paap/domain/usecases/aliado_preinversion/aliado_preinversion_usecase.dart';
+export 'package:paap/domain/usecases/aliado_preinversion/aliado_preinversion_db_usecase.dart';
+export 'package:paap/domain/repositories/aliado_preinversion/aliado_preinversion_repository.dart';
+export 'package:paap/domain/repositories/aliado_preinversion/aliado_preinversion_repository_db.dart';
+export 'package:paap/domain/entities/aliado_preinversion_entity.dart';
+export 'package:paap/domain/blocs/aliados_preinversion/aliados_preinversion_bloc.dart';
+export 'package:paap/data/repositories/aliado_preinversion/aliado_preinversion_repository.dart';
+export 'package:paap/data/repositories/aliado_preinversion/aliado_preinversion_repository_db.dart';
+export 'package:paap/data/datasources/remote/aliado_preinversion/aliado_preinversion_remote_ds.dart';
+export 'package:paap/data/datasources/local/aliado_preinversion/aliado_preinversion_local_ds.dart';

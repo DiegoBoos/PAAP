@@ -5,13 +5,13 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/perfil_entity.dart';
-import '../../../domain/repositories/perfiles/perfiles_repository_db.dart';
-import '../../datasources/local/perfiles/perfiles_local_ds.dart';
+import '../../../domain/repositories/perfil/perfil_repository_db.dart';
+import '../../datasources/local/perfil/perfil_local_ds.dart';
 
-class PerfilesRepositoryDBImpl implements PerfilesRepositoryDB {
-  final PerfilesLocalDataSource perfilesLocalDataSource;
+class PerfilRepositoryDBImpl implements PerfilRepositoryDB {
+  final PerfilLocalDataSource perfilesLocalDataSource;
 
-  PerfilesRepositoryDBImpl({required this.perfilesLocalDataSource});
+  PerfilRepositoryDBImpl({required this.perfilesLocalDataSource});
 
   @override
   Future<Either<Failure, List<VPerfilModel>>> getPerfilesRepositoryDB() async {

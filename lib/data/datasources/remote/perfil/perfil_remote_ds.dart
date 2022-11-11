@@ -12,13 +12,13 @@ import '../../../models/perfil_model.dart';
 import '../../../models/perfiles_model.dart';
 import '../../../utils.dart';
 
-abstract class PerfilesRemoteDataSource {
+abstract class PerfilRemoteDataSource {
   Future<List<PerfilModel>> getPerfiles(UsuarioEntity usuario);
   Future<List<PerfilModel>> getPerfilesFiltros(
       UsuarioEntity usuario, String id, String nombre);
 }
 
-class PerfilesRemoteDataSourceImpl implements PerfilesRemoteDataSource {
+class PerfilesRemoteDataSourceImpl implements PerfilRemoteDataSource {
   final http.Client client;
 
   PerfilesRemoteDataSourceImpl({required this.client});
