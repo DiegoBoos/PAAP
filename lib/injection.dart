@@ -34,6 +34,7 @@ import 'domain/usecases/producto/producto_exports.dart';
 import 'domain/usecases/residencia/residencia_exports.dart';
 import 'domain/usecases/revision/revision_exports.dart';
 import 'domain/usecases/rubro/rubro_exports.dart';
+import 'domain/usecases/sitio_entrega/sitio_entrega_exports.dart';
 import 'domain/usecases/tipo_actividad_productiva/tipo_actividad_productiva_exports.dart';
 import 'domain/usecases/tipo_calidad/tipo_calidad_exports.dart';
 import 'domain/usecases/tipo_entidad/tipo_entidad_exports.dart';
@@ -92,6 +93,7 @@ void init() {
   evaluacionInit();
   opcionInit();
   criterioInit();
+  sitioEntregaInit();
   // external
   locator.registerLazySingleton(() => http.Client());
 }
@@ -177,6 +179,8 @@ downloadSyncInit() {
         criterioDB: locator(),
         visita: locator(),
         visitaDB: locator(),
+        sitioEntrega: locator(),
+        sitioEntregaDB: locator(),
       ));
 }
 
@@ -1698,5 +1702,42 @@ criterioInit() {
   // local data source
   locator.registerLazySingleton<CriterioLocalDataSource>(
     () => CriterioLocalDataSourceImpl(),
+  );
+}
+
+sitioEntregaInit() {
+  // cubit
+  locator.registerFactory(() => SitioEntregaCubit(sitioEntregaDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => SitioEntregaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => SitioEntregaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<SitioEntregaRepository>(
+    () => SitioEntregaRepositoryImpl(
+      sitioEntregaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<SitioEntregaRepositoryDB>(
+    () => SitioEntregaRepositoryDBImpl(
+      sitioEntregaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<SitioEntregaRemoteDataSource>(
+    () => SitioEntregaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<SitioEntregaLocalDataSource>(
+    () => SitioEntregaLocalDataSourceImpl(),
   );
 }

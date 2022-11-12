@@ -46,6 +46,7 @@ import '../../data/datasources/local/tipo_tenencia/tipo_tenencia_local_ds.dart';
 import '../../data/datasources/local/tipo_visita/tipo_visita_local_ds.dart';
 import '../../data/datasources/local/unidad/unidad_local_ds.dart';
 import '../../data/datasources/local/vereda/vereda_local_ds.dart';
+import '../usecases/sitio_entrega/sitio_entrega_exports.dart';
 
 class DBConfig {
   static Database? _database;
@@ -111,6 +112,7 @@ class DBConfig {
       await EvaluacionLocalDataSourceImpl.createEvaluacionTable(db);
       await OpcionLocalDataSourceImpl.createOpcionTable(db);
       await CriterioLocalDataSourceImpl.createCriterioTable(db);
+      await SitioEntregaLocalDataSourceImpl.createSitioEntregaTable(db);
     });
 
     return _database!;

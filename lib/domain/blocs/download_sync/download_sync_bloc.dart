@@ -32,6 +32,7 @@ import '../../usecases/producto/producto_exports.dart';
 import '../../usecases/residencia/residencia_exports.dart';
 import '../../usecases/revision/revision_exports.dart';
 import '../../usecases/rubro/rubro_exports.dart';
+import '../../usecases/sitio_entrega/sitio_entrega_exports.dart';
 import '../../usecases/tipo_actividad_productiva/tipo_actividad_productiva_exports.dart';
 import '../../usecases/tipo_calidad/tipo_calidad_exports.dart';
 import '../../usecases/tipo_entidad/tipo_entidad_exports.dart';
@@ -165,6 +166,9 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final VisitaUsecase visita;
   final VisitaUsecaseDB visitaDB;
 
+  final SitioEntregaUsecase sitioEntrega;
+  final SitioEntregaUsecaseDB sitioEntregaDB;
+
   DownloadSyncBloc({
     required this.menu,
     required this.menuDB,
@@ -244,6 +248,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.criterioDB,
     required this.visita,
     required this.visitaDB,
+    required this.sitioEntrega,
+    required this.sitioEntregaDB,
   }) : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -432,6 +438,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Visitas',
           counter: state.progressModel!.counter + 1)));
       await downloadVisitas(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Sitios de Entrega',
+          counter: state.progressModel!.counter + 1)));
+      await downloadSitiosEntregas(usuario, emit);
 
       /*   emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Beneficiarios Preinversion',
@@ -1044,6 +1055,21 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   Future<void> saveVisitas(
       List<VisitaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await visitaDB.saveVisitasUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadSitiosEntregas(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await sitioEntrega.getSitiosEntregasUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveSitiosEntregas(data, emit));
+  }
+
+  Future<void> saveSitiosEntregas(
+      List<SitioEntregaEntity> data, Emitter<DownloadSyncState> emit) async {
+    final result = await sitioEntregaDB.saveSitiosEntregasUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
