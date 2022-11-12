@@ -42,6 +42,20 @@ class EvaluacionRepositoryDBImpl implements EvaluacionRepositoryDB {
   }
 
   @override
+  Future<Either<Failure, int>> saveEvaluacionesRepositoryDB(
+      List<EvaluacionEntity> evaluacionEntity) async {
+    try {
+      final evaluacionDB =
+          await evaluacionLocalDataSource.saveEvaluacionesDB(evaluacionEntity);
+      return Right(evaluacionDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, int>> clearEvaluacionesRepositoryDB() async {
     try {
       final result = await evaluacionLocalDataSource.clearEvaluacionesDB();

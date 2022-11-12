@@ -4,23 +4,25 @@ class EvaluacionModel extends EvaluacionEntity {
   EvaluacionModel({
     required String evaluacionId,
     required String perfilId,
-    required String resumen,
-    required String fortalezas,
-    required String debilidades,
-    required String riesgos,
-    required String finalizado,
-    required String fechaEvaluacion,
-    required String preAprobado,
+    String? resumen,
+    String? fortalezas,
+    String? debilidades,
+    String? riesgos,
+    String? finalizado,
+    String? usuarioIdCoordinador,
+    String? fechaEvaluacion,
+    String? preAprobado,
   }) : super(
             evaluacionId: evaluacionId,
             perfilId: perfilId,
-            resumen: resumen,
-            fortalezas: fortalezas,
-            debilidades: debilidades,
-            riesgos: riesgos,
-            finalizado: finalizado,
-            fechaEvaluacion: fechaEvaluacion,
-            preAprobado: preAprobado);
+            resumen: resumen ?? '',
+            fortalezas: fortalezas ?? '',
+            debilidades: debilidades ?? '',
+            riesgos: riesgos ?? '',
+            finalizado: finalizado ?? '',
+            usuarioIdCoordinador: usuarioIdCoordinador ?? '',
+            fechaEvaluacion: fechaEvaluacion ?? '',
+            preAprobado: preAprobado ?? '');
 
   factory EvaluacionModel.fromJson(Map<String, dynamic> json) =>
       EvaluacionModel(
@@ -31,6 +33,7 @@ class EvaluacionModel extends EvaluacionEntity {
         debilidades: json["Debilidades"],
         riesgos: json["Riesgos"],
         finalizado: json["Finalizado"],
+        usuarioIdCoordinador: json["UsuarioIdCoordinador"],
         fechaEvaluacion: json["FechaEvaluacion"],
         preAprobado: json["PreAprobado"],
       );
@@ -44,6 +47,7 @@ class EvaluacionModel extends EvaluacionEntity {
         "Debilidades": debilidades,
         "Riesgos": riesgos,
         "Finalizado": finalizado,
+        "UsuarioIdCoordinador": usuarioIdCoordinador,
         "FechaEvaluacion": fechaEvaluacion,
         "PreAprobado": preAprobado,
       };

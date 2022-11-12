@@ -14,6 +14,21 @@ class EvaluacionRepositoryImpl implements EvaluacionRepository {
   EvaluacionRepositoryImpl({required this.evaluacionRemoteDataSource});
 
   @override
+  Future<Either<Failure, List<EvaluacionEntity>>> getEvaluacionesRepository(
+      UsuarioEntity usuario) async {
+    try {
+      final evaluaciones =
+          await evaluacionRemoteDataSource.getEvaluaciones(usuario);
+
+      return Right(evaluaciones);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, int>> saveEvaluacionRepository(
       UsuarioEntity usuario, EvaluacionEntity evaluacionEntity) async {
     try {

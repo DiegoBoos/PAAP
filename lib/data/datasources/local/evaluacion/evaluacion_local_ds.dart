@@ -7,6 +7,7 @@ import '../../../../domain/db/db_config.dart';
 abstract class EvaluacionLocalDataSource {
   Future<EvaluacionModel?> getEvaluacionDB(String id);
   Future<int> saveEvaluacionDB(EvaluacionEntity evaluacionEntity);
+  Future<int> saveEvaluacionesDB(List<EvaluacionEntity> evaluacionEntity);
   Future<int> clearEvaluacionesDB();
 }
 
@@ -14,18 +15,17 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
   static createEvaluacionTable(Database db) async {
     await db.execute('''
       CREATE TABLE Evaluacion (
+        EvaluacionId	TEXT NOT NULL,
         PerfilId	TEXT NOT NULL,
-        TipoEvaluacionId	TEXT NOT NULL,
-        FechaInicial	TEXT,
-        FechaFinal	TEXT,
-        EstadoEvaluacionId	TEXT NOT NULL,
-        Observacion	TEXT,
-        UsuarioId	TEXT NOT NULL,
-        FechaRegistro	TEXT,
-        FOREIGN KEY(EstadoEvaluacionId) REFERENCES EstadoEvaluacion(EstadoEvaluacionId),
-        FOREIGN KEY(TipoEvaluacionId) REFERENCES TipoEvaluacion(TipoEvaluacionId),
-        FOREIGN KEY(UsuarioId) REFERENCES Usuario(UsuarioId),
-        FOREIGN KEY(PerfilId) REFERENCES Perfil(PerfilId)
+        Resumen	TEXT NOT NULL,
+        Fortalezas	TEXT,
+        Debilidades	TEXT,
+        Riesgos	TEXT NOT NULL,
+        Finalizado	TEXT,
+        UsuarioIdCoordinador	TEXT NOT NULL,
+        FechaEvaluacion	TEXT,
+        PreAprobado	TEXT,
+        PRIMARY KEY(EvaluacionId)
       )
     ''');
   }
@@ -51,6 +51,23 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
     batch.delete('Evaluacion');
 
     batch.insert('Evaluacion', evaluacionEntity.toJson());
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<int> saveEvaluacionesDB(
+      List<EvaluacionEntity> evaluacionEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+    batch.delete('Evaluacion');
+
+    for (var evaluacion in evaluacionEntity) {
+      batch.insert('Evaluacion', evaluacion.toJson());
+    }
 
     final res = await batch.commit();
 

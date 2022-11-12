@@ -14,4 +14,9 @@ class EvaluacionUsecase {
       UsuarioEntity usuario, EvaluacionEntity evaluacionEntity) {
     return repository.saveEvaluacionRepository(usuario, evaluacionEntity);
   }
+
+  Future<Either<Failure, List<EvaluacionEntity>>> getEvaluacionesUsecase(
+      UsuarioEntity usuario) {
+    return repository.getEvaluacionesRepository(usuario);
+  }
 }

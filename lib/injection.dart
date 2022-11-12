@@ -22,6 +22,7 @@ import 'domain/usecases/desembolso/desembolso_exports.dart';
 import 'domain/usecases/estado_civil/estado_civil_exports.dart';
 import 'domain/usecases/estado_visita/estado_visita_exports.dart';
 import 'domain/usecases/evaluacion/evaluacion_exports.dart';
+import 'domain/usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
 import 'domain/usecases/frecuencia/frecuencia_exports.dart';
 import 'domain/usecases/genero/genero_exports.dart';
 import 'domain/usecases/grupo_especial/grupo_especial_exports.dart';
@@ -94,6 +95,7 @@ void init() {
   opcionInit();
   criterioInit();
   sitioEntregaInit();
+  evaluacionRespuestaInit();
   // external
   locator.registerLazySingleton(() => http.Client());
 }
@@ -181,6 +183,10 @@ downloadSyncInit() {
         visitaDB: locator(),
         sitioEntrega: locator(),
         sitioEntregaDB: locator(),
+        evaluacion: locator(),
+        evaluacionDB: locator(),
+        evaluacionRespuesta: locator(),
+        evaluacionRespuestaDB: locator(),
       ));
 }
 
@@ -1739,5 +1745,43 @@ sitioEntregaInit() {
   // local data source
   locator.registerLazySingleton<SitioEntregaLocalDataSource>(
     () => SitioEntregaLocalDataSourceImpl(),
+  );
+}
+
+evaluacionRespuestaInit() {
+  // cubit
+  locator.registerFactory(
+      () => EvaluacionRespuestaCubit(evaluacionRespuestaDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => EvaluacionRespuestaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => EvaluacionRespuestaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<EvaluacionRespuestaRepository>(
+    () => EvaluacionRespuestaRepositoryImpl(
+      evaluacionRespuestaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<EvaluacionRespuestaRepositoryDB>(
+    () => EvaluacionRespuestaRepositoryDBImpl(
+      evaluacionRespuestaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<EvaluacionRespuestaRemoteDataSource>(
+    () => EvaluacionRespuestaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<EvaluacionRespuestaLocalDataSource>(
+    () => EvaluacionRespuestaLocalDataSourceImpl(),
   );
 }

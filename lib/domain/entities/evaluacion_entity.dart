@@ -7,6 +7,7 @@ class EvaluacionEntity {
     required this.debilidades,
     required this.riesgos,
     required this.finalizado,
+    required this.usuarioIdCoordinador,
     required this.fechaEvaluacion,
     required this.preAprobado,
   });
@@ -18,6 +19,7 @@ class EvaluacionEntity {
   String debilidades;
   String riesgos;
   String finalizado;
+  String usuarioIdCoordinador;
   String fechaEvaluacion;
   String preAprobado;
 
@@ -30,6 +32,7 @@ class EvaluacionEntity {
         debilidades: json["Debilidades"],
         riesgos: json["Riesgos"],
         finalizado: json["Finalizado"],
+        usuarioIdCoordinador: json["UsuarioIdCoordinador"],
         fechaEvaluacion: json["FechaEvaluacion"],
         preAprobado: json["PreAprobado"],
       );
@@ -42,6 +45,7 @@ class EvaluacionEntity {
         "Debilidades": debilidades,
         "Riesgos": riesgos,
         "Finalizado": finalizado,
+        "UsuarioIdCoordinador": usuarioIdCoordinador,
         "FechaEvaluacion": fechaEvaluacion,
         "PreAprobado": preAprobado,
       };

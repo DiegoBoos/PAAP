@@ -10,5 +10,8 @@ abstract class EvaluacionRepositoryDB {
   Future<Either<Failure, int>> saveEvaluacionRepositoryDB(
       EvaluacionEntity evaluacionEntity);
 
+  Future<Either<Failure, int>> saveEvaluacionesRepositoryDB(
+      List<EvaluacionEntity> evaluacionEntity);
+
   Future<Either<Failure, int>> clearEvaluacionesRepositoryDB();
 }

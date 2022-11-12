@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:paap/domain/usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
 
 import '../../entities/usuario_entity.dart';
 import '../../usecases/actividad_economica/actividad_economica_exports.dart';
@@ -20,6 +21,7 @@ import '../../usecases/departamento/departamento_exports.dart';
 import '../../usecases/desembolso/desembolso_exports.dart';
 import '../../usecases/estado_civil/estado_civil_exports.dart';
 import '../../usecases/estado_visita/estado_visita_exports.dart';
+import '../../usecases/evaluacion/evaluacion_exports.dart';
 import '../../usecases/frecuencia/frecuencia_exports.dart';
 import '../../usecases/genero/genero_exports.dart';
 import '../../usecases/grupo_especial/grupo_especial_exports.dart';
@@ -169,6 +171,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final SitioEntregaUsecase sitioEntrega;
   final SitioEntregaUsecaseDB sitioEntregaDB;
 
+  final EvaluacionUsecase evaluacion;
+  final EvaluacionUsecaseDB evaluacionDB;
+
+  final EvaluacionRespuestaUsecase evaluacionRespuesta;
+  final EvaluacionRespuestaUsecaseDB evaluacionRespuestaDB;
+
   DownloadSyncBloc({
     required this.menu,
     required this.menuDB,
@@ -250,6 +258,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.visitaDB,
     required this.sitioEntrega,
     required this.sitioEntregaDB,
+    required this.evaluacion,
+    required this.evaluacionDB,
+    required this.evaluacionRespuesta,
+    required this.evaluacionRespuestaDB,
   }) : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -443,6 +455,16 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Sitios de Entrega',
           counter: state.progressModel!.counter + 1)));
       await downloadSitiosEntregas(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Evaluaciones',
+          counter: state.progressModel!.counter + 1)));
+      await downloadEvaluaciones(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Evaluaciones Respuestas',
+          counter: state.progressModel!.counter + 1)));
+      await downloadEvaluacionesRespuestas(usuario, emit);
 
       /*   emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Beneficiarios Preinversion',
@@ -1070,6 +1092,38 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   Future<void> saveSitiosEntregas(
       List<SitioEntregaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await sitioEntregaDB.saveSitiosEntregasUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadEvaluaciones(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await evaluacion.getEvaluacionesUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveEvaluaciones(data, emit));
+  }
+
+  Future<void> saveEvaluaciones(
+      List<EvaluacionEntity> data, Emitter<DownloadSyncState> emit) async {
+    final result = await evaluacionDB.saveEvaluacionesUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadEvaluacionesRespuestas(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result =
+        await evaluacionRespuesta.getEvaluacionesRespuestasUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveEvaluacionesRespuestas(data, emit));
+  }
+
+  Future<void> saveEvaluacionesRespuestas(List<EvaluacionRespuestaEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result =
+        await evaluacionRespuestaDB.saveEvaluacionesRespuestasUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

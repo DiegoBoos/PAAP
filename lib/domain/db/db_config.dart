@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:paap/data/datasources/local/beneficiario_preinversion/beneficiario_preinversion_local_ds.dart';
 import 'package:paap/data/datasources/local/tipo_actividad_productiva/tipo_actividad_productiva_local_ds.dart';
+import 'package:paap/domain/usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
 import 'package:paap/domain/usecases/visita/visita_exports.dart';
 
 import 'package:path/path.dart' as p;
@@ -113,6 +114,8 @@ class DBConfig {
       await OpcionLocalDataSourceImpl.createOpcionTable(db);
       await CriterioLocalDataSourceImpl.createCriterioTable(db);
       await SitioEntregaLocalDataSourceImpl.createSitioEntregaTable(db);
+      await EvaluacionRespuestaLocalDataSourceImpl
+          .createEvaluacionRespuestaTable(db);
     });
 
     return _database!;

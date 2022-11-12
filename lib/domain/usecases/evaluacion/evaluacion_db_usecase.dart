@@ -17,6 +17,11 @@ class EvaluacionUsecaseDB {
     return repositoryDB.saveEvaluacionRepositoryDB(evaluacionEntity);
   }
 
+  Future<Either<Failure, int>> saveEvaluacionesUsecaseDB(
+      List<EvaluacionEntity> evaluacionEntity) {
+    return repositoryDB.saveEvaluacionesRepositoryDB(evaluacionEntity);
+  }
+
   Future<Either<Failure, int>> clearEvaluacionesUsecaseDB() {
     return repositoryDB.clearEvaluacionesRepositoryDB();
   }
