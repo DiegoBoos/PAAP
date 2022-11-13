@@ -26,19 +26,4 @@ class PerfilRepositoryImpl implements PerfilRepository {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
-
-  @override
-  Future<Either<Failure, List<PerfilEntity>>> getPerfilesFiltrosRepository(
-      UsuarioEntity usuario, String? id, String? nombre) async {
-    try {
-      final perfiles = await perfilRemoteDataSource.getPerfilesFiltros(
-          usuario, id ?? '', nombre ?? '');
-
-      return Right(perfiles);
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(e.properties));
-    } on ServerException {
-      return const Left(ServerFailure(['Excepción no controlada']));
-    }
-  }
 }

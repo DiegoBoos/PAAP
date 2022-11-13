@@ -3,12 +3,12 @@ import 'package:paap/domain/entities/tipo_tenencia_entity.dart';
 class TipoTenenciaModel extends TipoTenenciaEntity {
   TipoTenenciaModel({
     required String tipoTenenciaId,
-    required String nombre,
-    required String descripcion,
+    String? nombre,
+    String? descripcion,
   }) : super(
             tipoTenenciaId: tipoTenenciaId,
-            nombre: nombre,
-            descripcion: descripcion);
+            nombre: nombre ?? '',
+            descripcion: descripcion ?? '');
 
   factory TipoTenenciaModel.fromJson(Map<String, dynamic> json) =>
       TipoTenenciaModel(

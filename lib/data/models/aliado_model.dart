@@ -3,22 +3,22 @@ import 'package:paap/domain/entities/aliado_entity.dart';
 class AliadoModel extends AliadoEntity {
   AliadoModel({
     required String aliadoId,
-    required String nombre,
-    required String nombreContacto,
-    required String telefonoMovil,
-    required String correo,
-    required String ciudad,
-    required String aniosExperiencia,
-    required String estado,
+    String? nombre,
+    String? nombreContacto,
+    String? telefonoMovil,
+    String? correo,
+    String? ciudad,
+    String? aniosExperiencia,
+    String? estado,
   }) : super(
             aliadoId: aliadoId,
-            nombre: nombre,
-            nombreContacto: nombreContacto,
-            telefonoMovil: telefonoMovil,
-            correo: correo,
-            ciudad: ciudad,
-            aniosExperiencia: aniosExperiencia,
-            estado: estado);
+            nombre: nombre ?? '',
+            nombreContacto: nombreContacto ?? '',
+            telefonoMovil: telefonoMovil ?? '',
+            correo: correo ?? '',
+            ciudad: ciudad ?? '',
+            aniosExperiencia: aniosExperiencia ?? '',
+            estado: estado ?? '');
   factory AliadoModel.fromJson(Map<String, dynamic> json) => AliadoModel(
         aliadoId: json["AliadoId"],
         nombre: json["Nombre"],

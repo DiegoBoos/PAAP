@@ -16,4 +16,6 @@ class OpcionCubit extends Cubit<OpcionState> {
     result.fold((failure) => emit(OpcionesError(failure.properties.first)),
         (data) => emit(OpcionesLoaded(data)));
   }
+
+  void resetState() => emit(OpcionesInitial());
 }

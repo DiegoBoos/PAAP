@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/entities/v_perfil_entity.dart';
-import 'package:paap/ui/preinversion/widgets/preinversion_drawer.dart';
-import '../../../domain/cubits/menu/menu_cubit.dart';
 
+import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../../domain/entities/v_perfil_preinversion_entity.dart';
 import '../../preinversion/widgets/preinversion_form.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
+import '../widgets/preinversion_drawer.dart';
 
 class PerfilPreinversionDetailPage extends StatefulWidget {
   const PerfilPreinversionDetailPage({super.key});
@@ -20,7 +20,8 @@ class _PerfilPreinversionDetailPageState
     extends State<PerfilPreinversionDetailPage> {
   @override
   Widget build(BuildContext context) {
-    final perfil = ModalRoute.of(context)?.settings.arguments as VPerfilEntity;
+    final perfilPreinversion =
+        ModalRoute.of(context)?.settings.arguments as VPerfilPreinversionEntity;
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     return Scaffold(
         drawer: BlocBuilder<MenuCubit, MenuState>(
@@ -28,7 +29,7 @@ class _PerfilPreinversionDetailPageState
             final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
             return PreinversionDrawer(
               menuHijo: menuHijo,
-              perfil: perfil,
+              perfilPreinversion: perfilPreinversion,
             );
           },
         ),
@@ -55,7 +56,7 @@ class _PerfilPreinversionDetailPageState
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Text('Información Básica', style: Styles.subtitleStyle),
             ),
-            PreinversionForm(perfil: perfil)
+            PreinversionForm(perfilPreinversion: perfilPreinversion)
           ]),
         ));
   }

@@ -8,8 +8,9 @@ class EvaluacionUsecaseDB {
 
   EvaluacionUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, EvaluacionEntity?>> getEvaluacionUsecaseDB(String id) {
-    return repositoryDB.getEvaluacionRepositoryDB(id);
+  Future<Either<Failure, EvaluacionEntity?>> getEvaluacionUsecaseDB(
+      String perfilId) {
+    return repositoryDB.getEvaluacionRepositoryDB(perfilId);
   }
 
   Future<Either<Failure, int>> saveEvaluacionUsecaseDB(

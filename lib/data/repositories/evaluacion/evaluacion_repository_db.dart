@@ -14,9 +14,9 @@ class EvaluacionRepositoryDBImpl implements EvaluacionRepositoryDB {
 
   @override
   Future<Either<Failure, EvaluacionEntity?>> getEvaluacionRepositoryDB(
-      String id) async {
+      String perfilId) async {
     try {
-      final result = await evaluacionLocalDataSource.getEvaluacionDB(id);
+      final result = await evaluacionLocalDataSource.getEvaluacionDB(perfilId);
 
       return Right(result);
     } on ServerFailure catch (e) {

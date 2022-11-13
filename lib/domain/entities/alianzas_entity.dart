@@ -6,7 +6,7 @@ class AlianzasEntity {
     required this.valorProyecto,
     required this.incentivoModular,
     required this.ubicacion,
-    this.categorizacion,
+    required this.categorizacion,
   });
 
   String id;
@@ -15,7 +15,7 @@ class AlianzasEntity {
   String valorProyecto;
   String incentivoModular;
   String ubicacion;
-  String? categorizacion;
+  String categorizacion;
 
   factory AlianzasEntity.fromJson(Map<String, dynamic> json) => AlianzasEntity(
         id: json["ID"],

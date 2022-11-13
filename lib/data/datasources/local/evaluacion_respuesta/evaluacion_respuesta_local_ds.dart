@@ -1,3 +1,4 @@
+import 'package:paap/data/models/evaluacion_model.dart';
 import 'package:paap/data/models/evaluacion_respuesta_model.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -8,7 +9,7 @@ abstract class EvaluacionRespuestaLocalDataSource {
   Future<EvaluacionRespuestaModel?> getEvaluacionRespuestaDB(
       String criterioId, String evaluacionId);
   Future<int> saveEvaluacionRespuestaDB(
-      EvaluacionRespuestaEntity evaluacionRespuestaEntity);
+      EvaluacionRespuestaEntity evaluacionRespuestaEntity, String perfilId);
   Future<int> saveEvaluacionesRespuestasDB(
       List<EvaluacionRespuestaEntity> evaluacionRespuestaEntity);
   Future<int> clearEvaluacionesRespuestasDB();
@@ -19,6 +20,14 @@ class EvaluacionRespuestaLocalDataSourceImpl
   static createEvaluacionRespuestaTable(Database db) async {
     await db.execute('''
       CREATE TABLE EvaluacionRespuesta (
+        CriterioId	TEXT NOT NULL,
+        EvaluacionId	TEXT NOT NULL,
+        OpcionId	TEXT NOT NULL,
+        Observacion	TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE EvaluacionRespuestaProduccion (
         CriterioId	TEXT NOT NULL,
         EvaluacionId	TEXT NOT NULL,
         OpcionId	TEXT NOT NULL,
@@ -47,13 +56,42 @@ class EvaluacionRespuestaLocalDataSourceImpl
 
   @override
   Future<int> saveEvaluacionRespuestaDB(
-      EvaluacionRespuestaEntity evaluacionRespuestaEntity) async {
+      EvaluacionRespuestaEntity evaluacionRespuestaEntity,
+      String perfilId) async {
     final db = await DBConfig.database;
-
     var batch = db.batch();
-    batch.delete('EvaluacionRespuesta');
 
-    batch.insert('EvaluacionRespuesta', evaluacionRespuestaEntity.toJson());
+    final resQuery = await db.query('EvaluacionRespuesta',
+        where: 'CriterioId = ? AND EvaluacionId = ?',
+        whereArgs: [
+          evaluacionRespuestaEntity.criterioId,
+          evaluacionRespuestaEntity.evaluacionId
+        ]);
+
+    final resEvaluacionProduccionQuery = await db.query('EvaluacionProduccion',
+        where: 'PerfilId = ?', whereArgs: [perfilId]);
+
+    if (resEvaluacionProduccionQuery.isNotEmpty) {
+      final evaluacionProduccionMap = {
+        for (var e in resEvaluacionProduccionQuery[0].entries) e.key: e.value
+      };
+
+      evaluacionRespuestaEntity.evaluacionId =
+          evaluacionProduccionMap['EvaluacionId'].toString();
+    }
+
+    if (resQuery.isEmpty) {
+      batch.insert(
+          'EvaluacionRespuestaProduccion', evaluacionRespuestaEntity.toJson());
+    } else {
+      batch.update(
+          'EvaluacionRespuestaProduccion', evaluacionRespuestaEntity.toJson(),
+          where: 'CriterioId = ? AND EvaluacionId = ?',
+          whereArgs: [
+            evaluacionRespuestaEntity.criterioId,
+            evaluacionRespuestaEntity.evaluacionId
+          ]);
+    }
 
     final res = await batch.commit();
 

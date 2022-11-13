@@ -2,18 +2,15 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../entities/aliado_entity.dart';
-import '../../usecases/aliado/aliado_db_usecase.dart';
+import '../../entities/aliado_preinversion_entity.dart';
 
 part '../aliado/aliado_state.dart';
 
 class AliadoCubit extends Cubit<AliadoState> {
-  final AliadoUsecaseDB aliadoDB;
+  AliadoCubit() : super(AliadoInitial());
 
-  AliadoCubit({required this.aliadoDB}) : super(AliadoInitial());
-
-  void getAliadoDB(String id) async {
-    final result = await aliadoDB.getAliadoUsecaseDB(id);
-    result.fold((failure) => emit(AliadoError(failure.properties.first)),
-        (data) => emit(AliadoLoaded(data)));
+  void selectAliado(AliadoPreinversionEntity aliadoPreinversionEntity) {
+    final currentState = state;
+    if (currentState is AliadoLoaded) {}
   }
 }

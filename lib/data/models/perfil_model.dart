@@ -4,35 +4,35 @@ class PerfilModel extends PerfilEntity {
   PerfilModel(
       {required String perfilId,
       required String convocatoriaId,
-      required String nombre,
-      required String abreviatura,
+      String? nombre,
+      String? abreviatura,
       required String municipioId,
-      required String direccion,
-      required String contacto,
+      String? direccion,
+      String? contacto,
       String? telefonoFijo,
       String? telefonoMovil,
       String? correo,
       required String tipoProyectoId,
       required String productoId,
       required String productoAsociadoId,
-      required String valorTotalProyecto,
-      required String incentivoModular})
+      String? valorTotalProyecto,
+      String? incentivoModular})
       : super(
             perfilId: perfilId,
             convocatoriaId: convocatoriaId,
-            nombre: nombre,
-            abreviatura: abreviatura,
+            nombre: nombre ?? '',
+            abreviatura: abreviatura ?? '',
             municipioId: municipioId,
-            direccion: direccion,
-            contacto: contacto,
+            direccion: direccion ?? '',
+            contacto: contacto ?? '',
             telefonoFijo: telefonoFijo ?? '',
             telefonoMovil: telefonoMovil ?? '',
             correo: correo ?? '',
             tipoProyectoId: tipoProyectoId,
             productoId: productoId,
             productoAsociadoId: productoAsociadoId,
-            valorTotalProyecto: valorTotalProyecto,
-            incentivoModular: incentivoModular);
+            valorTotalProyecto: valorTotalProyecto ?? '',
+            incentivoModular: incentivoModular ?? '');
 
   factory PerfilModel.fromJson(Map<String, dynamic> json) => PerfilModel(
       perfilId: json["PerfilId"],

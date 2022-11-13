@@ -2,13 +2,11 @@ import '../../domain/entities/estado_civil_entity.dart';
 
 class EstadoCivilModel extends EstadoCivilEntity {
   EstadoCivilModel(
-      {required String estadoCivilId,
-      required String nombre,
-      required String tieneConyuge})
+      {required String estadoCivilId, String? nombre, String? tieneConyuge})
       : super(
             estadoCivilId: estadoCivilId,
-            nombre: nombre,
-            tieneConyuge: tieneConyuge);
+            nombre: nombre ?? '',
+            tieneConyuge: tieneConyuge ?? '');
 
   factory EstadoCivilModel.fromJson(Map<String, dynamic> json) =>
       EstadoCivilModel(

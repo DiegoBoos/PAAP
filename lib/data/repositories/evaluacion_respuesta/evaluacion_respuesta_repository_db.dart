@@ -32,10 +32,11 @@ class EvaluacionRespuestaRepositoryDBImpl
 
   @override
   Future<Either<Failure, int>> saveEvaluacionRespuestaRepositoryDB(
-      EvaluacionRespuestaEntity evaluacionRespuestaEntity) async {
+      EvaluacionRespuestaEntity evaluacionRespuestaEntity,
+      String perfilId) async {
     try {
       final result = await evaluacionRespuestaLocalDataSource
-          .saveEvaluacionRespuestaDB(evaluacionRespuestaEntity);
+          .saveEvaluacionRespuestaDB(evaluacionRespuestaEntity, perfilId);
 
       return Right(result);
     } on ServerFailure catch (e) {

@@ -31,6 +31,7 @@ import 'domain/usecases/municipio/municipio_exports.dart';
 import 'domain/usecases/nivel_escolar/nivel_escolar_exports.dart';
 import 'domain/usecases/opcion/opcion_exports.dart';
 import 'domain/usecases/perfil/perfil_exports.dart';
+import 'domain/usecases/perfil_preinversion/perfil_preinversion_exports.dart';
 import 'domain/usecases/producto/producto_exports.dart';
 import 'domain/usecases/residencia/residencia_exports.dart';
 import 'domain/usecases/revision/revision_exports.dart';
@@ -76,6 +77,7 @@ void init() {
   municipiosInit();
   nivelEscolarInit();
   perfilesBlocInit();
+  perfilesPreinversionBlocInit();
   productosInit();
   residenciaInit();
   revisionInit();
@@ -109,6 +111,8 @@ downloadSyncInit() {
         convocatoriaDB: locator(),
         perfiles: locator(),
         perfilesDB: locator(),
+        perfilesPreinversion: locator(),
+        perfilesPreinversionDB: locator(),
         tipoProyecto: locator(),
         tipoProyectoDB: locator(),
         unidad: locator(),
@@ -377,6 +381,45 @@ unidadInit() {
   // local data source
   locator.registerLazySingleton<UnidadLocalDataSource>(
     () => UnidadLocalDataSourceImpl(),
+  );
+}
+
+perfilesPreinversionBlocInit() {
+  // bloc
+  locator.registerFactory(() => PerfilesPreinversionBloc(
+        perfilesPreinversionDB: locator(),
+      ));
+
+  // remote usecase
+  locator.registerLazySingleton(() => PerfilPreinversionUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => PerfilPreinversionUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<PerfilPreinversionRepository>(
+    () => PerfilPreinversionRepositoryImpl(
+      perfilPreinversionRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<PerfilPreinversionRepositoryDB>(
+    () => PerfilPreinversionRepositoryDBImpl(
+      perfilesPreinversionLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<PerfilPreinversionRemoteDataSource>(
+    () => PerfilesPreinversionRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<PerfilPreinversionLocalDataSource>(
+    () => PerfilPreinversionLocalDataSourceImpl(),
   );
 }
 
@@ -890,7 +933,7 @@ alianzaInit() {
 
 aliadoInit() {
   // cubit
-  locator.registerFactory(() => AliadoCubit(aliadoDB: locator()));
+  locator.registerFactory(() => AliadoCubit());
   // remote usecase
   locator.registerLazySingleton(() => AliadoUsecase(locator()));
 

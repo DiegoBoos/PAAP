@@ -1,0 +1,82 @@
+import 'package:paap/domain/entities/v_perfil_preinversion_entity.dart';
+
+class VPerfilPreinversionModel extends VPerfilPreinversionEntity {
+  VPerfilPreinversionModel({
+    required String perfilPreInversionId,
+    required String perfilId,
+    required String convocatoria,
+    required String nombre,
+    required String abreviatura,
+    required String nit,
+    required String municipio,
+    required String direccion,
+    required String contacto,
+    required String telefonoFijo,
+    required String telefonoMovil,
+    required String correo,
+    required String tipoProyecto,
+    required String producto,
+    required String productoAsociado,
+    required String valorTotalProyecto,
+    required String incentivoModular,
+  }) : super(
+            perfilPreInversionId: perfilPreInversionId,
+            perfilId: perfilId,
+            convocatoria: convocatoria,
+            nombre: nombre,
+            abreviatura: abreviatura,
+            nit: nit,
+            municipio: municipio,
+            direccion: direccion,
+            contacto: contacto,
+            telefonoFijo: telefonoFijo,
+            telefonoMovil: telefonoMovil,
+            correo: correo,
+            tipoProyecto: tipoProyecto,
+            producto: producto,
+            productoAsociado: productoAsociado,
+            valorTotalProyecto: valorTotalProyecto,
+            incentivoModular: incentivoModular);
+
+  factory VPerfilPreinversionModel.fromJson(Map<String, dynamic> json) =>
+      VPerfilPreinversionModel(
+        perfilPreInversionId: json["perfilPreInversionId"],
+        perfilId: json["perfilId"],
+        convocatoria: json["convocatoria"],
+        nombre: json["nombre"],
+        abreviatura: json["abreviatura"],
+        nit: json["nit"],
+        municipio: json["municipio"],
+        direccion: json["direccion"],
+        contacto: json["contacto"],
+        telefonoFijo: json["telefonoFijo"],
+        telefonoMovil: json["telefonoMovil"],
+        correo: json["correo"],
+        tipoProyecto: json["tipoProyecto"],
+        producto: json["producto"],
+        productoAsociado: json["productoAsociado"],
+        valorTotalProyecto: json["valorTotalProyecto"],
+        incentivoModular: json["incentivoModular"],
+      );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        "perfilPreInversionId": perfilPreInversionId,
+        "perfilId": perfilId,
+        "convocatoria": convocatoria,
+        "nombre": nombre,
+        "abreviatura": abreviatura,
+        "nit": nit,
+        "municipio": municipio,
+        "direccion": direccion,
+        "contacto": contacto,
+        "telefonoFijo": telefonoFijo,
+        "telefonoMovil": telefonoMovil,
+        "correo": correo,
+        "tipoProyecto": tipoProyecto,
+        "producto": producto,
+        "productoAsociado": productoAsociado,
+        "valorTotalProyecto": valorTotalProyecto,
+        "incentivoModular": incentivoModular,
+      };
+}

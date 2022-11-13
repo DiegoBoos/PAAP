@@ -3,12 +3,12 @@ import 'package:paap/domain/entities/nivel_escolar_entity.dart';
 class NivelEscolarModel extends NivelEscolarEntity {
   NivelEscolarModel({
     required String nivelEscolarId,
-    required String nombre,
-    required String descripcion,
+    String? nombre,
+    String? descripcion,
   }) : super(
             nivelEscolarId: nivelEscolarId,
-            nombre: nombre,
-            descripcion: descripcion);
+            nombre: nombre ?? '',
+            descripcion: descripcion ?? '');
 
   factory NivelEscolarModel.fromJson(Map<String, dynamic> json) =>
       NivelEscolarModel(

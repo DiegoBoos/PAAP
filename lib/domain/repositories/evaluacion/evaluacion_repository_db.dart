@@ -5,7 +5,7 @@ import '../../entities/evaluacion_entity.dart';
 
 abstract class EvaluacionRepositoryDB {
   Future<Either<Failure, EvaluacionEntity?>> getEvaluacionRepositoryDB(
-      String id);
+      String perfilId);
 
   Future<Either<Failure, int>> saveEvaluacionRepositoryDB(
       EvaluacionEntity evaluacionEntity);

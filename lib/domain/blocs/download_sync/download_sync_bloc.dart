@@ -30,6 +30,7 @@ import '../../usecases/municipio/municipio_exports.dart';
 import '../../usecases/nivel_escolar/nivel_escolar_exports.dart';
 import '../../usecases/opcion/opcion_exports.dart';
 import '../../usecases/perfil/perfil_exports.dart';
+import '../../usecases/perfil_preinversion/perfil_preinversion_exports.dart';
 import '../../usecases/producto/producto_exports.dart';
 import '../../usecases/residencia/residencia_exports.dart';
 import '../../usecases/revision/revision_exports.dart';
@@ -65,6 +66,9 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
 
   final PerfilUsecase perfiles;
   final PerfilUsecaseDB perfilesDB;
+
+  final PerfilPreinversionUsecase perfilesPreinversion;
+  final PerfilPreinversionUsecaseDB perfilesPreinversionDB;
 
   final ProductoUsecase productos;
   final ProductoUsecaseDB productosDB;
@@ -188,6 +192,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.unidadDB,
     required this.perfiles,
     required this.perfilesDB,
+    required this.perfilesPreinversion,
+    required this.perfilesPreinversionDB,
     required this.productos,
     required this.productosDB,
     required this.generos,
@@ -290,6 +296,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Perfiles',
           counter: state.progressModel!.counter + 1)));
       await downloadPerfiles(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Perfiles Preinversion',
+          counter: state.progressModel!.counter + 1)));
+      await downloadPerfilesPreinversion(usuario, emit);
 
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Productos',
@@ -553,6 +564,23 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   Future<void> savePerfiles(
       List<PerfilEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await perfilesDB.savePerfilesUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> downloadPerfilesPreinversion(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result =
+        await perfilesPreinversion.getPerfilesPreinversionUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await savePerfilesPreinversion(data, emit));
+  }
+
+  Future<void> savePerfilesPreinversion(List<PerfilPreinversionEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result =
+        await perfilesPreinversionDB.savePerfilesPreinversionUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paap/domain/blocs/alianzas/alianzas_bloc.dart';
 
 import '../../domain/blocs/perfiles/perfiles_bloc.dart';
+import '../../domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
 import 'input_decoration.dart';
 
 class SearchCard extends StatelessWidget {
@@ -89,6 +90,15 @@ class SearchCard extends StatelessWidget {
 
                               perfilesBloc.add(GetPerfilesFiltros(
                                   id: idCtrl.text, nombre: nameCtrl.text));
+                            }
+                            if (text == 'PreInversion') {
+                              final perfilesPreinversionBloc =
+                                  BlocProvider.of<PerfilesPreinversionBloc>(
+                                      context);
+
+                              perfilesPreinversionBloc.add(
+                                  GetPerfilesPreinversionFiltros(
+                                      id: idCtrl.text, nombre: nameCtrl.text));
                             }
                             if (text == 'Alianza') {
                               final perfilesBloc =

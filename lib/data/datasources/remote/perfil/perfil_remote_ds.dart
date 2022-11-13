@@ -14,8 +14,6 @@ import '../../../utils.dart';
 
 abstract class PerfilRemoteDataSource {
   Future<List<PerfilModel>> getPerfiles(UsuarioEntity usuario);
-  Future<List<PerfilModel>> getPerfilesFiltros(
-      UsuarioEntity usuario, String id, String nombre);
 }
 
 class PerfilesRemoteDataSourceImpl implements PerfilRemoteDataSource {
@@ -85,86 +83,6 @@ class PerfilesRemoteDataSourceImpl implements PerfilRemoteDataSource {
           listPerfil.add(dsPerfil);
         }
         return listPerfil;
-      } else {
-        throw ServerFailure([mensaje]);
-      }
-    } else {
-      throw ServerException();
-    }
-  }
-
-  @override
-  Future<List<PerfilModel>> getPerfilesFiltros(
-      UsuarioEntity usuario, String? id, String? nombre) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
-
-    final perfilesSOAP = '''<?xml version="1.0" encoding="utf-8"?>
-    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-      <soap:Body>
-        <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
-          <usuario>
-            <UsuarioId>${usuario.usuarioId}</UsuarioId>
-            <Contrasena>${usuario.contrasena}</Contrasena>
-          </usuario>
-          <rol>
-            <RolId>400</RolId>
-            <Nombre>string</Nombre>
-          </rol>
-          <parametros>
-            <string>TablaPerfilFiltros</string>        
-            <string>$nombre</string>        
-            <string>$id</string>        
-          </parametros>
-        </ObtenerDatos>
-      </soap:Body>
-    </soap:Envelope>''';
-
-    final perfilesResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: perfilesSOAP);
-
-    if (perfilesResp.statusCode == 200) {
-      final perfilesDoc = xml.XmlDocument.parse(perfilesResp.body);
-
-      final respuesta =
-          perfilesDoc.findAllElements('respuesta').map((e) => e.text).first;
-
-      final mensaje =
-          perfilesDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
-        if (perfilesDoc.findAllElements('NewDataSet').isEmpty) {
-          return [];
-        }
-        final xmlString = perfilesDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
-
-        String res = Utils.convertXmlToJson(xmlString);
-
-        final Map<String, dynamic> decodedResp = json.decode(res);
-
-        final perfilesRaw = decodedResp.entries.first.value['Table'];
-
-        if (perfilesRaw is List) {
-          final perfiles = List.from(perfilesRaw)
-              .map((e) => PerfilesModel.fromJson(e))
-              .toList();
-
-          List<PerfilModel> listPerfil = [];
-          for (var perfil in perfiles) {
-            final dsPerfil = await getPerfilTable(usuario, perfil.id);
-            listPerfil.add(dsPerfil);
-          }
-          return listPerfil;
-        } else {
-          return [PerfilModel.fromJson(perfilesRaw)];
-        }
       } else {
         throw ServerFailure([mensaje]);
       }

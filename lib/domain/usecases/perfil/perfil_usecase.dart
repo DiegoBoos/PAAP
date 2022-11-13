@@ -13,10 +13,4 @@ class PerfilUsecase {
       UsuarioEntity usuario) {
     return repository.getPerfilesRepository(usuario);
   }
-
-  Future<Either<Failure, List<PerfilEntity>>> getPerfilesFiltrosUsecase(
-      UsuarioEntity usuario, String? id, String? nombre) {
-    return repository.getPerfilesFiltrosRepository(
-        usuario, id ?? '', nombre ?? '');
-  }
 }

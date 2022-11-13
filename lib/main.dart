@@ -6,6 +6,7 @@ import 'domain/blocs/auth/auth_bloc.dart';
 import 'domain/blocs/beneficiarios_preinversion/beneficiarios_preinversion_bloc.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/blocs/perfiles/perfiles_bloc.dart';
+import 'domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
 import 'domain/cubits/actividad_economica/actividad_economica_cubit.dart';
 import 'domain/cubits/actividad_financiera/actividad_financiera_cubit.dart';
 import 'domain/cubits/agrupacion/agrupacion_cubit.dart';
@@ -139,6 +140,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<PerfilesBloc>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<PerfilesPreinversionBloc>(),
           ),
           BlocProvider(
             create: (_) => di.locator<ProductoCubit>(),

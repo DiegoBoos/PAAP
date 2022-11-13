@@ -46,9 +46,9 @@ class AliadosPreinversionRows extends StatelessWidget {
             DataCell(IconButton(
                 onPressed: () {
                   final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
-                  aliadoCubit.getAliadoDB(aliadoPreinversion.aliadoId);
+                  aliadoCubit.selectAliado(aliadoPreinversion);
                   Navigator.pushNamed(context, 'VAliadoPreinversion',
-                      arguments: aliadoPreinversion.aliadoId);
+                      arguments: aliadoPreinversion);
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

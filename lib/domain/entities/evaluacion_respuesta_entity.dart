@@ -10,6 +10,18 @@ class EvaluacionRespuestaEntity {
   String opcionId;
   String observacion;
 
+  EvaluacionRespuestaEntity copyWith(
+      {String? criterioId,
+      String? evaluacionId,
+      String? opcionId,
+      String? observacion}) {
+    return EvaluacionRespuestaEntity(
+        criterioId: criterioId ?? this.criterioId,
+        evaluacionId: evaluacionId ?? this.evaluacionId,
+        opcionId: opcionId ?? this.opcionId,
+        observacion: observacion ?? this.observacion);
+  }
+
   factory EvaluacionRespuestaEntity.fromJson(Map<String, dynamic> json) =>
       EvaluacionRespuestaEntity(
         criterioId: json["CriterioId"],

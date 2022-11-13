@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/menu_entity.dart';
-import '../../../domain/entities/v_perfil_entity.dart';
+import '../../../domain/entities/v_perfil_preinversion_entity.dart';
 
 class PreinversionDrawer extends StatelessWidget {
   const PreinversionDrawer(
-      {Key? key, required this.menuHijo, required this.perfil})
+      {Key? key, required this.menuHijo, required this.perfilPreinversion})
       : super(key: key);
   final List<MenuEntity> menuHijo;
-  final VPerfilEntity perfil;
+  final VPerfilPreinversionEntity perfilPreinversion;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -27,7 +27,8 @@ class PreinversionDrawer extends StatelessWidget {
                     return;
                   }
 
-                  Navigator.pushNamed(context, submenu.ruta, arguments: perfil);
+                  Navigator.pushNamed(context, submenu.ruta,
+                      arguments: perfilPreinversion);
                 });
           },
         ));

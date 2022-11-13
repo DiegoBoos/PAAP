@@ -2,8 +2,8 @@ import 'package:paap/domain/entities/departamento_entity.dart';
 
 class DepartamentoModel extends DepartamentoEntity {
   DepartamentoModel(
-      {required String id, required String nombre, required String paisid})
-      : super(id: id, nombre: nombre, paisid: paisid);
+      {required String id, String? nombre, required String paisid})
+      : super(id: id, nombre: nombre ?? '', paisid: paisid);
 
   factory DepartamentoModel.fromJson(Map<String, dynamic> json) =>
       DepartamentoModel(

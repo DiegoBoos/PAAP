@@ -13,13 +13,13 @@ class ProductoLocalDataSourceImpl implements ProductoLocalDataSource {
   static createProductoTable(Database db) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS Producto (
-        ProductoId	TEXT NOT NULL,
+        ProductoId	TEXT,
         Nombre	TEXT,
-        UnidadId	TEXT NOT NULL,
+        Unidad	TEXT,
+        Simbolo	TEXT,
         EsProducto	TEXT,
         EsAsociado	TEXT,
-        PRIMARY KEY(ProductoId),
-        FOREIGN KEY(UnidadId) REFERENCES Unidad(UnidadId)
+        PRIMARY KEY(ProductoId)
       )
     ''');
   }

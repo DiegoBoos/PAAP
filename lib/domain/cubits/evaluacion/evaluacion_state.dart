@@ -1,15 +1,23 @@
 part of 'evaluacion_cubit.dart';
 
 abstract class EvaluacionState extends Equatable {
-  const EvaluacionState();
+  final EvaluacionEntity? evaluacion;
+  const EvaluacionState({this.evaluacion});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [evaluacion];
 }
 
 class EvaluacionInitial extends EvaluacionState {}
 
 class EvaluacionLoading extends EvaluacionState {}
+
+class EvaluacionLoaded extends EvaluacionState {
+  final EvaluacionEntity? evaluacionLoaded;
+
+  const EvaluacionLoaded(this.evaluacionLoaded)
+      : super(evaluacion: evaluacionLoaded);
+}
 
 class EvaluacionSaved extends EvaluacionState {}
 

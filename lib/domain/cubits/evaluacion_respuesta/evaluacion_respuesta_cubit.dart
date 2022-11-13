@@ -17,13 +17,14 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
         criterioId, evaluacionId);
     result.fold(
         (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
-        (data) => emit(EvaluacionRespuestaSaved()));
+        (data) => emit(EvaluacionRespuestaLoaded(data!)));
   }
 
   void saveEvaluacionRespuestaDB(
-      EvaluacionRespuestaEntity evaluacionEntity) async {
-    final result = await evaluacionRespuestaDB
-        .saveEvaluacionRespuestaUsecaseDB(evaluacionEntity);
+      EvaluacionRespuestaEntity evaluacionRespuestaEntity,
+      String perfilId) async {
+    final result = await evaluacionRespuestaDB.saveEvaluacionRespuestaUsecaseDB(
+        evaluacionRespuestaEntity, perfilId);
     result.fold(
         (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
         (data) => emit(EvaluacionRespuestaSaved()));
@@ -35,5 +36,31 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
     result.fold(
         (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
         (data) => emit(EvaluacionRespuestaCleared()));
+  }
+
+  void resetState() => emit(EvaluacionRespuestaInitial());
+
+  void changeCriterio(String criterioId) {
+    final currentState = state;
+
+    final newEvaluacionRespuesta =
+        currentState.evaluacionRespuesta!.copyWith(criterioId: criterioId);
+    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+  }
+
+  void changeOpcion(String opcionId) {
+    final currentState = state;
+
+    final newEvaluacionRespuesta =
+        currentState.evaluacionRespuesta!.copyWith(opcionId: opcionId);
+    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+  }
+
+  void changeObservacion(String observacion) {
+    final currentState = state;
+
+    final newEvaluacionRespuesta =
+        currentState.evaluacionRespuesta!.copyWith(observacion: observacion);
+    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
   }
 }

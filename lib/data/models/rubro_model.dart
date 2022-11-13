@@ -3,15 +3,15 @@ import 'package:paap/domain/entities/rubro_entity.dart';
 class RubroModel extends RubroEntity {
   RubroModel({
     required String rubroId,
-    required String nombre,
-    required String descripcion,
-    required String activo,
+    String? nombre,
+    String? descripcion,
+    String? activo,
     required String actividadFinancieraId,
   }) : super(
             rubroId: rubroId,
-            nombre: nombre,
-            descripcion: descripcion,
-            activo: activo,
+            nombre: nombre ?? '',
+            descripcion: descripcion ?? '',
+            activo: activo ?? '',
             actividadFinancieraId: actividadFinancieraId);
 
   factory RubroModel.fromJson(Map<String, dynamic> json) => RubroModel(

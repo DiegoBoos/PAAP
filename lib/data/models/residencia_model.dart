@@ -1,8 +1,8 @@
 import 'package:paap/domain/entities/residencia_entity.dart';
 
 class ResidenciaModel extends ResidenciaEntity {
-  ResidenciaModel({required String residenciaId, required String nombre})
-      : super(residenciaId: residenciaId, nombre: nombre);
+  ResidenciaModel({required String residenciaId, String? nombre})
+      : super(residenciaId: residenciaId, nombre: nombre ?? '');
 
   factory ResidenciaModel.fromJson(Map<String, dynamic> json) =>
       ResidenciaModel(

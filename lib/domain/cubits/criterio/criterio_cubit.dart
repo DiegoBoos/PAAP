@@ -16,4 +16,6 @@ class CriterioCubit extends Cubit<CriterioState> {
     result.fold((failure) => emit(CriteriosError(failure.properties.first)),
         (data) => emit(CriteriosLoaded(data)));
   }
+
+  void resetState() => emit(CriteriosInitial());
 }

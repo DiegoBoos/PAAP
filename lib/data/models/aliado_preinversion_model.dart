@@ -5,19 +5,19 @@ class AliadoPreinversionModel extends AliadoPreinversionEntity {
     required String perfilPreInversionId,
     required String aliadoId,
     required String productoId,
-    required String volumenCompra,
+    String? volumenCompra,
     required String unidadId,
     required String frecuenciaId,
-    required String porcentajeCompra,
+    String? porcentajeCompra,
     required String sitioEntregaId,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
           aliadoId: aliadoId,
           productoId: productoId,
-          volumenCompra: volumenCompra,
+          volumenCompra: volumenCompra ?? '',
           unidadId: unidadId,
           frecuenciaId: frecuenciaId,
-          porcentajeCompra: porcentajeCompra,
+          porcentajeCompra: porcentajeCompra ?? '',
           sitioEntregaId: sitioEntregaId,
         );
 

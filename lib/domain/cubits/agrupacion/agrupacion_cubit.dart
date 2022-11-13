@@ -16,4 +16,6 @@ class AgrupacionCubit extends Cubit<AgrupacionState> {
     result.fold((failure) => emit(AgrupacionesError(failure.properties.first)),
         (data) => emit(AgrupacionesLoaded(data)));
   }
+
+  void resetState() => emit(AgrupacionesInitial());
 }

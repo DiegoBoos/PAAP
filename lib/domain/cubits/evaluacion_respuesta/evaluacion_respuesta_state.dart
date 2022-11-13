@@ -1,15 +1,31 @@
 part of 'evaluacion_respuesta_cubit.dart';
 
 abstract class EvaluacionRespuestaState extends Equatable {
-  const EvaluacionRespuestaState();
+  final EvaluacionRespuestaEntity? evaluacionRespuesta;
+  const EvaluacionRespuestaState({this.evaluacionRespuesta});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [evaluacionRespuesta];
 }
 
-class EvaluacionRespuestaInitial extends EvaluacionRespuestaState {}
+class EvaluacionRespuestaInitial extends EvaluacionRespuestaState {
+  EvaluacionRespuestaInitial()
+      : super(
+            evaluacionRespuesta: EvaluacionRespuestaEntity(
+                criterioId: '',
+                evaluacionId: '',
+                observacion: '',
+                opcionId: ''));
+}
 
 class EvaluacionRespuestaLoading extends EvaluacionRespuestaState {}
+
+class EvaluacionRespuestaLoaded extends EvaluacionRespuestaState {
+  final EvaluacionRespuestaEntity evaluacionRespuestaLoaded;
+
+  const EvaluacionRespuestaLoaded(this.evaluacionRespuestaLoaded)
+      : super(evaluacionRespuesta: evaluacionRespuestaLoaded);
+}
 
 class EvaluacionRespuestaSaved extends EvaluacionRespuestaState {}
 

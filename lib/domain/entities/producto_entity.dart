@@ -2,29 +2,33 @@ class ProductoEntity {
   ProductoEntity(
       {required this.id,
       required this.nombre,
-      required this.unidadid,
-      required this.esproducto,
-      required this.esasociado});
+      required this.unidad,
+      required this.simbolo,
+      required this.esProducto,
+      required this.esAsociado});
 
   String id;
   String nombre;
-  String unidadid;
-  String esproducto;
-  String esasociado;
+  String unidad;
+  String simbolo;
+  String esProducto;
+  String esAsociado;
 
   factory ProductoEntity.fromJson(Map<String, dynamic> json) => ProductoEntity(
         id: json["ProductoId"],
         nombre: json["Nombre"],
-        unidadid: json["UnidadId"],
-        esproducto: json["EsProducto"],
-        esasociado: json["EsAsociado"],
+        unidad: json["Unidad"],
+        simbolo: json["Simbolo"],
+        esProducto: json["EsProducto"],
+        esAsociado: json["EsAsociado"],
       );
 
   Map<String, dynamic> toJson() => {
         "ProductoId": id,
         "Nombre": nombre,
-        "UnidadId": unidadid,
-        "EsProducto": esproducto,
-        "EsAsociado": esasociado
+        "Unidad": unidad,
+        "Simbolo": simbolo,
+        "EsProducto": esProducto,
+        "EsAsociado": esAsociado
       };
 }

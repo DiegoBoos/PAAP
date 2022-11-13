@@ -26,7 +26,7 @@ class EvaluacionModel extends EvaluacionEntity {
 
   factory EvaluacionModel.fromJson(Map<String, dynamic> json) =>
       EvaluacionModel(
-        evaluacionId: json["EvaluacionId"],
+        evaluacionId: json["EvaluacionId"].toString(),
         perfilId: json["PerfilId"],
         resumen: json["Resumen"],
         fortalezas: json["Fortalezas"],

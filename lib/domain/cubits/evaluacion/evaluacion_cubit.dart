@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 
 import '../../entities/evaluacion_entity.dart';
 import '../../usecases/evaluacion/evaluacion_db_usecase.dart';
-
 part 'evaluacion_state.dart';
 
 class EvaluacionCubit extends Cubit<EvaluacionState> {
@@ -11,10 +10,10 @@ class EvaluacionCubit extends Cubit<EvaluacionState> {
 
   EvaluacionCubit({required this.evaluacionDB}) : super(EvaluacionInitial());
 
-  void getEvaluacionDB(String id) async {
-    final result = await evaluacionDB.getEvaluacionUsecaseDB(id);
+  void getEvaluacionDB(String perfilId) async {
+    final result = await evaluacionDB.getEvaluacionUsecaseDB(perfilId);
     result.fold((failure) => emit(EvaluacionError(failure.properties.first)),
-        (data) => emit(EvaluacionSaved()));
+        (data) => emit(EvaluacionLoaded(data)));
   }
 
   void saveEvaluacionDB(EvaluacionEntity evaluacionEntity) async {
@@ -28,4 +27,6 @@ class EvaluacionCubit extends Cubit<EvaluacionState> {
     result.fold((failure) => emit(EvaluacionError(failure.properties.first)),
         (data) => emit(EvaluacionCleared()));
   }
+
+  void resetState() => emit(EvaluacionInitial());
 }

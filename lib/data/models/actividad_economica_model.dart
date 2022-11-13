@@ -3,12 +3,12 @@ import 'package:paap/domain/entities/actividad_economica_entity.dart';
 class ActividadEconomicaModel extends ActividadEconomicaEntity {
   ActividadEconomicaModel({
     required String actividadEconomicaId,
-    required String nombre,
-    required String descripcion,
+    String? nombre,
+    String? descripcion,
   }) : super(
             actividadEconomicaId: actividadEconomicaId,
-            nombre: nombre,
-            descripcion: descripcion);
+            nombre: nombre ?? '',
+            descripcion: descripcion ?? '');
 
   factory ActividadEconomicaModel.fromJson(Map<String, dynamic> json) =>
       ActividadEconomicaModel(

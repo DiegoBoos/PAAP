@@ -6,7 +6,7 @@ class PerfilesEntity {
     required this.valorProyecto,
     required this.incentivoModular,
     required this.ubicacion,
-    this.categorizacion,
+    required this.categorizacion,
   });
 
   String id;
@@ -15,7 +15,7 @@ class PerfilesEntity {
   String valorProyecto;
   String incentivoModular;
   String ubicacion;
-  String? categorizacion;
+  String categorizacion;
 
   factory PerfilesEntity.fromJson(Map<String, dynamic> json) => PerfilesEntity(
         id: json["ID"],

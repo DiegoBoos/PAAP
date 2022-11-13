@@ -2,8 +2,8 @@ import 'package:paap/domain/entities/tipo_identificacion_entity.dart';
 
 class TipoIdentificacionModel extends TipoIdentificacionEntity {
   TipoIdentificacionModel(
-      {required String tipoIdentificacionId, required String nombre})
-      : super(tipoIdentificacionId: tipoIdentificacionId, nombre: nombre);
+      {required String tipoIdentificacionId, String? nombre})
+      : super(tipoIdentificacionId: tipoIdentificacionId, nombre: nombre ?? '');
 
   factory TipoIdentificacionModel.fromJson(Map<String, dynamic> json) =>
       TipoIdentificacionModel(

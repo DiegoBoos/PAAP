@@ -4,21 +4,21 @@ class VisitaModel extends VisitaEntity {
   VisitaModel({
     required String perfilId,
     required String tipoVisitaId,
-    required String fechaInicial,
-    required String fechaFinal,
+    String? fechaInicial,
+    String? fechaFinal,
     required String estadoVisitaId,
     String? observacion,
     required String usuarioId,
-    required String fechaRegistro,
+    String? fechaRegistro,
   }) : super(
             perfilId: perfilId,
             tipoVisitaId: tipoVisitaId,
-            fechaInicial: fechaInicial,
-            fechaFinal: fechaFinal,
+            fechaInicial: fechaInicial ?? '',
+            fechaFinal: fechaFinal ?? '',
             estadoVisitaId: estadoVisitaId,
             observacion: observacion ?? '',
             usuarioId: usuarioId,
-            fechaRegistro: fechaRegistro);
+            fechaRegistro: fechaRegistro ?? '');
 
   factory VisitaModel.fromJson(Map<String, dynamic> json) => VisitaModel(
         perfilId: json["PerfilId"],

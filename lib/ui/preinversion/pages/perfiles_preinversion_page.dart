@@ -64,7 +64,9 @@ class _PerfilesPreinversionPageState extends State<PerfilesPreinversionPage> {
           const SizedBox(height: 20),
           if (showCard)
             SearchCard(
-                text: 'Perfil', enableId: enableId, enableName: enableName),
+                text: 'PreInversion',
+                enableId: enableId,
+                enableName: enableName),
           BlocBuilder<PerfilesBloc, PerfilesState>(
             builder: (context, state) {
               if (state is PerfilesLoading) {

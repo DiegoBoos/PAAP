@@ -9,7 +9,7 @@ abstract class EvaluacionRespuestaRepositoryDB {
           String criterioId, String evaluacionId);
 
   Future<Either<Failure, int>> saveEvaluacionRespuestaRepositoryDB(
-      EvaluacionRespuestaEntity evaluacionRespuestaEntity);
+      EvaluacionRespuestaEntity evaluacionRespuestaEntity, String perfilId);
 
   Future<Either<Failure, int>> saveEvaluacionesRespuestasRepositoryDB(
       List<EvaluacionRespuestaEntity> evaluacionRespuestaEntity);
