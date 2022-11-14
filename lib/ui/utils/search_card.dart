@@ -46,9 +46,9 @@ class SearchCard extends StatelessWidget {
                           labelText: 'Buscar por ID del $text',
                           hintText: 'Buscar por ID'),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        /* if (value == null || value.isEmpty) {
                           return 'Campo requerido';
-                        }
+                        } */
                         return null;
                       },
                     ),
@@ -64,9 +64,9 @@ class SearchCard extends StatelessWidget {
                           labelText: 'Buscar por nombre del $text',
                           hintText: 'Buscar $text'),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        /* if (value == null || value.isEmpty) {
                           return 'Campo requerido';
-                        }
+                        } */
                         return null;
                       },
                     ),

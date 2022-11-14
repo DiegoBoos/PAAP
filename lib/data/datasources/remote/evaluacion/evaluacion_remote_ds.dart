@@ -13,8 +13,8 @@ import '../../../utils.dart';
 
 abstract class EvaluacionRemoteDataSource {
   Future<List<EvaluacionModel>> getEvaluaciones(UsuarioEntity usuario);
-  Future<int> saveEvaluacion(
-      UsuarioEntity usuario, EvaluacionEntity evaluacionEntity);
+  Future<List<EvaluacionEntity>> saveEvaluaciones(
+      UsuarioEntity usuario, List<EvaluacionEntity> evaluacionesEntity);
 }
 
 class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
@@ -90,13 +90,24 @@ class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
   }
 
   @override
-  Future<int> saveEvaluacion(
+  Future<List<EvaluacionEntity>> saveEvaluaciones(
+      UsuarioEntity usuario, List<EvaluacionEntity> evaluacionesEntity) async {
+    List<EvaluacionEntity> evaluacionesUpload = [];
+    for (var evaluacion in evaluacionesEntity) {
+      final resp = await saveVisita(usuario, evaluacion);
+      if (resp != null) {
+        evaluacionesUpload.add(resp);
+      }
+    }
+    return evaluacionesUpload;
+  }
+
+  Future<EvaluacionEntity?> saveVisita(
       UsuarioEntity usuario, EvaluacionEntity evaluacionEntity) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final evaluacionSOAP = '''
-    <?xml version="1.0" encoding="utf-8"?>
+    final evaluacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarEvaluacion xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -127,7 +138,7 @@ class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
     final evaluacionResp = await client.post(uri,
         headers: {
           "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          "SOAPAction": "${Constants.urlSOAP}/GuardarEvaluacion"
         },
         body: evaluacionSOAP);
 
@@ -137,16 +148,13 @@ class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
       final respuesta =
           evaluacionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          evaluacionDoc.findAllElements('mensaje').map((e) => e.text).first;
-
       if (respuesta == 'true') {
-        return 1;
+        return evaluacionEntity;
       } else {
-        throw ServerFailure([mensaje]);
+        return null;
       }
     } else {
-      throw ServerException();
+      return null;
     }
   }
 }

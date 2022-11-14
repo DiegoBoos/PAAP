@@ -28,11 +28,11 @@ class VisitaRepositoryImpl implements VisitaRepository {
   }
 
   @override
-  Future<Either<Failure, int>> saveVisitaRepository(
-      UsuarioEntity usuario, VisitaEntity visitaEntity) async {
+  Future<Either<Failure, List<VisitaEntity>>> saveVisitasRepository(
+      UsuarioEntity usuario, List<VisitaEntity> visitasEntity) async {
     try {
       final result =
-          await visitaRemoteDataSource.saveVisita(usuario, visitaEntity);
+          await visitaRemoteDataSource.saveVisitas(usuario, visitasEntity);
 
       return Right(result);
     } on ServerFailure catch (e) {

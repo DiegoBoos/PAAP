@@ -10,6 +10,7 @@ class Conceptos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final evaluacionCubit = BlocProvider.of<EvaluacionCubit>(context);
     return BlocBuilder<EvaluacionCubit, EvaluacionState>(
       builder: (context, state) {
         if (state is EvaluacionLoading) {
@@ -42,6 +43,9 @@ class Conceptos extends StatelessWidget {
                   maxLines: null,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Fortalezas', labelText: 'Fortalezas'),
+                  onSaved: (newValue) {
+                    evaluacionCubit.changeFortalezas(newValue!);
+                  },
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -49,6 +53,9 @@ class Conceptos extends StatelessWidget {
                   maxLines: null,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Debilidadaes', labelText: 'Debilidadaes'),
+                  onSaved: (newValue) {
+                    evaluacionCubit.changeDebilidades(newValue!);
+                  },
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -56,6 +63,9 @@ class Conceptos extends StatelessWidget {
                   maxLines: null,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Riesgos', labelText: 'Riesgos'),
+                  onSaved: (newValue) {
+                    evaluacionCubit.changeRiesgos(newValue!);
+                  },
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -63,6 +73,9 @@ class Conceptos extends StatelessWidget {
                   maxLines: null,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Resumen', labelText: 'Resumen'),
+                  onSaved: (newValue) {
+                    evaluacionCubit.changeResumen(newValue!);
+                  },
                 )
               ],
             );
@@ -90,21 +103,33 @@ class Conceptos extends StatelessWidget {
                 TextFormField(
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Fortalezas', labelText: 'Fortalezas'),
+                  onSaved: (newValue) {
+                    evaluacionCubit.changeFortalezas(newValue!);
+                  },
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Debilidadaes', labelText: 'Debilidadaes'),
+                  onSaved: (newValue) {
+                    evaluacionCubit.changeDebilidades(newValue!);
+                  },
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Riesgos', labelText: 'Riesgos'),
+                  onSaved: (newValue) {
+                    evaluacionCubit.changeRiesgos(newValue!);
+                  },
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Resumen', labelText: 'Resumen'),
+                  onSaved: (newValue) {
+                    evaluacionCubit.changeResumen(newValue!);
+                  },
                 )
               ],
             );

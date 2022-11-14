@@ -14,4 +14,10 @@ abstract class EvaluacionRepositoryDB {
       List<EvaluacionEntity> evaluacionEntity);
 
   Future<Either<Failure, int>> clearEvaluacionesRepositoryDB();
+
+  Future<Either<Failure, List<EvaluacionEntity>>>
+      getEvaluacionesProduccionRepositoryDB();
+
+  Future<Either<Failure, int>> updateEvaluacionesProduccionDBRepositoryDB(
+      List<EvaluacionEntity> evaluacionesEntity);
 }

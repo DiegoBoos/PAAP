@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/domain/entities/v_perfil_entity.dart';
 
 import '../../../domain/cubits/agrupacion/agrupacion_cubit.dart';
 import '../../../domain/cubits/criterio/criterio_cubit.dart';
+import '../../../domain/cubits/evaluacion/evaluacion_cubit.dart';
 import '../../../domain/cubits/evaluacion_respuesta/evaluacion_respuesta_cubit.dart';
 import '../../../domain/cubits/opcion/opcion_cubit.dart';
 import '../../../domain/entities/agrupacion_entity.dart';
 import '../../../domain/entities/criterio_entity.dart';
 import '../../../domain/entities/opcion_entity.dart';
 import '../../utils/input_decoration.dart';
+import '../../utils/loading_page.dart';
+import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 
 class MatrizEvaluacion extends StatefulWidget {
-  const MatrizEvaluacion({super.key});
-
+  const MatrizEvaluacion({super.key, required this.perfil});
+  final VPerfilEntity perfil;
   @override
   State<MatrizEvaluacion> createState() => _MatrizEvaluacionState();
 }
 
 class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
+  @override
+  void initState() {
+    super.initState();
+    final evaluacionCubit = BlocProvider.of<EvaluacionCubit>(context);
+    evaluacionCubit.getEvaluacionDB(widget.perfil.perfilId);
+  }
+
   late AgrupacionEntity agrupacion = AgrupacionEntity(
       agrupacionId: '', nombre: '', descripcion: '', convocatoriaId: '');
   bool showOpciones = false;
@@ -44,6 +55,7 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
               );
             }).toList(),
             onChanged: (String? value) {
+              showOpciones = false;
               setState(() {
                 agrupacion = agrupacionCubit.state.agrupaciones!
                     .firstWhere(((element) => element.agrupacionId == value));
@@ -83,52 +95,122 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
               Text('Variable: Puntaje Obtenido en ${agrupacion.nombre}',
                   style: Styles.subtitleStyle),
               const SizedBox(height: 20),
-              DropdownButtonFormField(
-                  isExpanded: true,
-                  items: criterioCubit.state.criterios!
-                      .map<DropdownMenuItem<String>>((CriterioEntity value) {
-                    return DropdownMenuItem<String>(
-                      value: value.criterioId,
-                      child: Text(value.nombre),
+              BlocBuilder<EvaluacionCubit, EvaluacionState>(
+                builder: (context, state) {
+                  if (state is EvaluacionLoaded) {
+                    final evaluacionState = state;
+
+                    return BlocBuilder<CriterioCubit, CriterioState>(
+                      builder: (context, state) {
+                        if (state is CriteriosLoading) {
+                          return const CustomCircularProgress(
+                              alignment: Alignment.center);
+                        } else if (state is CriteriosLoaded) {
+                          List<CriterioEntity> criterios =
+                              state.criteriosLoaded!;
+                          if (criterios.isEmpty) {
+                            showOpciones = false;
+                            return const SizedBox(
+                                child: Center(
+                                    child:
+                                        NoDataSvg(title: 'No hay criterios')));
+                          }
+                          return DropdownButtonFormField(
+                              isExpanded: true,
+                              items: criterioCubit.state.criterios!
+                                  .map<DropdownMenuItem<String>>(
+                                      (CriterioEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.criterioId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                opcionCubit.getOpcionesDB(value!);
+                                evaluacionRespuestaCubit
+                                    .getEvaluacionRespuestaDB(
+                                        value,
+                                        evaluacionState
+                                            .evaluacion!.evaluacionId);
+                                evaluacionRespuestaCubit.changeCriterio(value);
+                                evaluacionRespuestaCubit.changeOpcion('');
+
+                                setState(() => showOpciones = true);
+                              },
+                              hint: const Text('Criterios'));
+                        }
+                        return const SizedBox();
+                      },
                     );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    opcionCubit.getOpcionesDB(value!);
-
-                    evaluacionRespuestaCubit.changeCriterio(value);
-                    evaluacionRespuestaCubit.changeOpcion('');
-
-                    setState(() => showOpciones = true);
-                  },
-                  hint: const Text('Criterios')),
-              if (showOpciones)
-                DropdownButtonFormField(
-                    isExpanded: true,
-                    value: evaluacionRespuestaCubit
-                                .state.evaluacionRespuesta!.opcionId !=
-                            ''
-                        ? evaluacionRespuestaCubit
-                            .state.evaluacionRespuesta!.opcionId
-                        : null,
-                    items: opcionCubit.state.opciones!
-                        .map<DropdownMenuItem<String>>((OpcionEntity value) {
-                      return DropdownMenuItem<String>(
-                        value: value.opcionId,
-                        child: Text(value.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      evaluacionRespuestaCubit.changeOpcion(value!);
-                    },
-                    hint: const Text('Opciones')),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: CustomInputDecoration.inputDecoration(
-                    hintText: 'Observaciones', labelText: 'Observaciones'),
-                onSaved: (String? newValue) {
-                  evaluacionRespuestaCubit.changeObservacion(newValue!);
+                  }
+                  return const SizedBox();
                 },
-              )
+              ),
+              if (showOpciones)
+                BlocBuilder<EvaluacionRespuestaCubit, EvaluacionRespuestaState>(
+                  builder: (context, state) {
+                    if (state is EvaluacionRespuestaLoaded) {
+                      final evaluacionRespuestaState =
+                          state.evaluacionRespuestaLoaded;
+                      evaluacionRespuestaCubit.changeObservacion(
+                          state.evaluacionRespuestaLoaded.observacion);
+                      return BlocBuilder<OpcionCubit, OpcionState>(
+                        builder: (context, state) {
+                          if (state is OpcionesLoading) {
+                            return const CustomCircularProgress(
+                                alignment: Alignment.center);
+                          } else if (state is OpcionesLoaded) {
+                            List<OpcionEntity> opciones = state.opcionesLoaded!;
+                            if (opciones.isEmpty) {
+                              return const SizedBox(
+                                  child: Center(
+                                      child:
+                                          NoDataSvg(title: 'No hay opciones')));
+                            }
+                            return Column(
+                              children: [
+                                DropdownButtonFormField(
+                                    isExpanded: true,
+                                    value:
+                                        evaluacionRespuestaState.opcionId != ''
+                                            ? evaluacionRespuestaState.opcionId
+                                            : null,
+                                    items: opcionCubit.state.opciones!
+                                        .map<DropdownMenuItem<String>>(
+                                            (OpcionEntity value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value.opcionId,
+                                        child: Text(value.nombre),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? value) {
+                                      evaluacionRespuestaCubit
+                                          .changeOpcion(value!);
+                                    },
+                                    hint: const Text('Opciones')),
+                                const SizedBox(height: 20),
+                                TextFormField(
+                                  initialValue:
+                                      evaluacionRespuestaState.observacion,
+                                  decoration:
+                                      CustomInputDecoration.inputDecoration(
+                                          hintText: 'Observaciones',
+                                          labelText: 'Observaciones'),
+                                  onSaved: (String? newValue) {
+                                    evaluacionRespuestaCubit
+                                        .changeObservacion(newValue!);
+                                  },
+                                )
+                              ],
+                            );
+                          }
+                          return const SizedBox();
+                        },
+                      );
+                    }
+                    return const SizedBox();
+                  },
+                ),
             ],
           ),
       ],

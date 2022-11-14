@@ -14,8 +14,9 @@ import '../../../utils.dart';
 abstract class EvaluacionRespuestaRemoteDataSource {
   Future<List<EvaluacionRespuestaModel>> getEvaluacionesRespuestas(
       UsuarioEntity usuario);
-  Future<int> saveEvaluacionRespuesta(UsuarioEntity usuario,
-      EvaluacionRespuestaEntity evaluacionRespuestaEntity);
+  Future<List<EvaluacionRespuestaEntity>> saveEvaluacionesRespuestas(
+      UsuarioEntity usuario,
+      List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity);
 }
 
 class EvaluacionRespuestaRemoteDataSourceImpl
@@ -99,13 +100,25 @@ class EvaluacionRespuestaRemoteDataSourceImpl
   }
 
   @override
-  Future<int> saveEvaluacionRespuesta(UsuarioEntity usuario,
+  Future<List<EvaluacionRespuestaEntity>> saveEvaluacionesRespuestas(
+      UsuarioEntity usuario,
+      List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity) async {
+    List<EvaluacionRespuestaEntity> evaluacionesRespuestasUpload = [];
+    for (var evaluacionRespuesta in evaluacionesRespuestasEntity) {
+      final resp = await saveVisita(usuario, evaluacionRespuesta);
+      if (resp != null) {
+        evaluacionesRespuestasUpload.add(resp);
+      }
+    }
+    return evaluacionesRespuestasUpload;
+  }
+
+  Future<EvaluacionRespuestaEntity?> saveVisita(UsuarioEntity usuario,
       EvaluacionRespuestaEntity evaluacionRespuestaEntity) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final evaluacionRespuestaSOAP = '''
-    <?xml version="1.0" encoding="utf-8"?>
+    final evaluacionRespuestaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarEvaluacionRespuesta xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -118,10 +131,10 @@ class EvaluacionRespuestaRemoteDataSourceImpl
             <Nombre>string</Nombre>
           </rol>
           <objeto>
-            <CriterioId>${evaluacionRespuestaEntity.criterioId}</EvaluacionRespuestaId>
-            <EvaluacionId>${evaluacionRespuestaEntity.evaluacionId}</PerfilId>
-            <OpcionId>${evaluacionRespuestaEntity.opcionId}</Resumen>
-            <Observacion>${evaluacionRespuestaEntity.observacion}</Fortalezas>
+            <CriterioId>${evaluacionRespuestaEntity.criterioId}</CriterioId>
+            <EvaluacionId>${evaluacionRespuestaEntity.evaluacionId}</EvaluacionId>
+            <OpcionId>${evaluacionRespuestaEntity.opcionId}</OpcionId>
+            <Observacion>${evaluacionRespuestaEntity.observacion}</Observacion>
           </objeto>
         </GuardarEvaluacionRespuesta>
       </soap:Body>
@@ -131,7 +144,7 @@ class EvaluacionRespuestaRemoteDataSourceImpl
     final evaluacionRespuestaResp = await client.post(uri,
         headers: {
           "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          "SOAPAction": "${Constants.urlSOAP}/GuardarEvaluacionRespuesta"
         },
         body: evaluacionRespuestaSOAP);
 
@@ -144,18 +157,13 @@ class EvaluacionRespuestaRemoteDataSourceImpl
           .map((e) => e.text)
           .first;
 
-      final mensaje = evaluacionRespuestaDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
       if (respuesta == 'true') {
-        return 1;
+        return evaluacionRespuestaEntity;
       } else {
-        throw ServerFailure([mensaje]);
+        return null;
       }
     } else {
-      throw ServerException();
+      return null;
     }
   }
 }

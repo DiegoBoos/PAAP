@@ -7,7 +7,7 @@ import '../../entities/usuario_entity.dart';
 abstract class EvaluacionRespuestaRepository {
   Future<Either<Failure, List<EvaluacionRespuestaEntity>>>
       getEvaluacionesRespuestasRepository(UsuarioEntity usuario);
-  Future<Either<Failure, int>> saveEvaluacionRespuestaRepository(
-      UsuarioEntity usuario,
-      EvaluacionRespuestaEntity evaluacionRespuestaEntity);
+  Future<Either<Failure, List<EvaluacionRespuestaEntity>>>
+      saveEvaluacionesRespuestasRepository(UsuarioEntity usuario,
+          List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity);
 }

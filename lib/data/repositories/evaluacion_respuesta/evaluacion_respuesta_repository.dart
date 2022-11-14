@@ -31,12 +31,12 @@ class EvaluacionRespuestaRepositoryImpl
   }
 
   @override
-  Future<Either<Failure, int>> saveEvaluacionRespuestaRepository(
-      UsuarioEntity usuario,
-      EvaluacionRespuestaEntity evaluacionRespuestaEntity) async {
+  Future<Either<Failure, List<EvaluacionRespuestaEntity>>>
+      saveEvaluacionesRespuestasRepository(UsuarioEntity usuario,
+          List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity) async {
     try {
       final result = await evaluacionRespuestaRemoteDataSource
-          .saveEvaluacionRespuesta(usuario, evaluacionRespuestaEntity);
+          .saveEvaluacionesRespuestas(usuario, evaluacionesRespuestasEntity);
 
       return Right(result);
     } on ServerFailure catch (e) {

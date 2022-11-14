@@ -20,13 +20,30 @@ class EvaluacionRespuestaUsecaseDB {
         evaluacionRespuestaEntity, perfilId);
   }
 
-  Future<Either<Failure, int>> saveEvaluacionesRespuestasUsecaseDB(
+  /* Future<Either<Failure, int>> saveEvaluacionesRespuestasUsecaseDB(
       List<EvaluacionRespuestaEntity> evaluacionRespuestaEntity) {
     return repositoryDB
         .saveEvaluacionesRespuestasRepositoryDB(evaluacionRespuestaEntity);
+  } */
+
+  Future<Either<Failure, int>> saveEvaluacionesRespuestasUsecaseDB(
+      List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity) {
+    return repositoryDB
+        .saveEvaluacionesRespuestasRepositoryDB(evaluacionesRespuestasEntity);
   }
 
   Future<Either<Failure, int>> clearEvaluacionesRespuestasUsecaseDB() {
     return repositoryDB.clearEvaluacionesRespuestasRepositoryDB();
+  }
+
+  Future<Either<Failure, List<EvaluacionRespuestaEntity>>>
+      getEvaluacionesRespuestasProduccionUsecaseDB() {
+    return repositoryDB.getEvaluacionesRespuestasProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> updateEvaluacionesRespuestasProduccionUsecaseDB(
+      List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity) {
+    return repositoryDB.updateEvaluacionesRespuestasProduccionDBRepositoryDB(
+        evaluacionesRespuestasEntity);
   }
 }

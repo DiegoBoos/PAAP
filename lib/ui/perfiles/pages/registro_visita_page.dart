@@ -109,7 +109,8 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                 estadoVisitaId: '1',
                                 observacion: '',
                                 usuarioId: authBloc.state.usuario!.usuarioId,
-                                fechaRegistro: DateTime.now().toString());
+                                fechaRegistro: DateTime.now().toIso8601String(),
+                                recordStatus: 'N');
 
                             visitaCubit.getVisitaDB(newVisita);
                           },
@@ -160,11 +161,34 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                         Colors.blue[900])),
                               ),
                             ),
-                            if (toggleEvaluacion) const MatrizEvaluacion(),
+                            if (toggleEvaluacion)
+                              MatrizEvaluacion(perfil: perfil),
                             if (toggleConceptos) const Conceptos(),
                             SaveFinishCancelButtons(
                                 onCanceled: null,
-                                onFinished: null,
+                                onFinished: () {
+                                  /* final evaluacionCubit =
+                                      BlocProvider.of<EvaluacionCubit>(context);
+
+                                  final evaluacion =
+                                      evaluacionCubit.state.evaluacion!;
+                                  evaluacion.finalizado = 'true';
+                                  evaluacionCubit.saveEvaluacionDB(evaluacion); */
+                                  if (!formKeyRegistro.currentState!
+                                      .validate()) {
+                                    return;
+                                  }
+                                  formKeyRegistro.currentState!.save();
+
+                                  final evaluacionCubit =
+                                      BlocProvider.of<EvaluacionCubit>(context);
+
+                                  final evaluacion =
+                                      evaluacionCubit.state.evaluacion!;
+
+                                  evaluacion.finalizado = 'true';
+                                  evaluacionCubit.saveEvaluacionDB(evaluacion);
+                                },
                                 onSaved: () {
                                   if (!formKeyRegistro.currentState!
                                       .validate()) {

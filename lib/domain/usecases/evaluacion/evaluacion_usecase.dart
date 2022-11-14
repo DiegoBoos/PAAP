@@ -10,13 +10,18 @@ class EvaluacionUsecase {
 
   EvaluacionUsecase(this.repository);
 
-  Future<Either<Failure, int>> saveEvaluacionUsecase(
+/*   Future<Either<Failure, int>> saveEvaluacionUsecase(
       UsuarioEntity usuario, EvaluacionEntity evaluacionEntity) {
     return repository.saveEvaluacionRepository(usuario, evaluacionEntity);
-  }
+  } */
 
   Future<Either<Failure, List<EvaluacionEntity>>> getEvaluacionesUsecase(
       UsuarioEntity usuario) {
     return repository.getEvaluacionesRepository(usuario);
+  }
+
+  Future<Either<Failure, List<EvaluacionEntity>>> saveEvaluacionesUsecase(
+      UsuarioEntity usuario, List<EvaluacionEntity> evaluacionesEntity) {
+    return repository.saveEvaluacionesRepository(usuario, evaluacionesEntity);
   }
 }

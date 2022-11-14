@@ -21,4 +21,13 @@ class VisitaUsecaseDB {
   Future<Either<Failure, int>> clearVisitasUsecaseDB() {
     return repositoryDB.clearVisitasRepositoryDB();
   }
+
+  Future<Either<Failure, List<VisitaEntity>>> getVisitasProduccionUsecaseDB() {
+    return repositoryDB.getVisitasProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> updateVisitasProduccionUsecaseDB(
+      List<VisitaEntity> visitasEntity) {
+    return repositoryDB.updateVisitasProduccionDBRepositoryDB(visitasEntity);
+  }
 }

@@ -8,6 +8,7 @@ class VisitaEntity {
     required this.observacion,
     required this.usuarioId,
     required this.fechaRegistro,
+    required this.recordStatus,
   });
 
   String perfilId;
@@ -18,6 +19,7 @@ class VisitaEntity {
   String observacion;
   String usuarioId;
   String fechaRegistro;
+  String recordStatus;
 
   factory VisitaEntity.fromJson(Map<String, dynamic> json) => VisitaEntity(
         perfilId: json["PerfilId"],
@@ -28,6 +30,7 @@ class VisitaEntity {
         observacion: json["Observacion"],
         usuarioId: json["UsuarioId"],
         fechaRegistro: json["FechaRegistro"],
+        recordStatus: json["FechaRegistro"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,5 +42,6 @@ class VisitaEntity {
         "Observacion": observacion,
         "UsuarioId": usuarioId,
         "FechaRegistro": fechaRegistro,
+        "RecordStatus": recordStatus,
       };
 }

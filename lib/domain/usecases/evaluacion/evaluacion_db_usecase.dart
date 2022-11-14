@@ -19,11 +19,27 @@ class EvaluacionUsecaseDB {
   }
 
   Future<Either<Failure, int>> saveEvaluacionesUsecaseDB(
+      List<EvaluacionEntity> evaluacionesEntity) {
+    return repositoryDB.saveEvaluacionesRepositoryDB(evaluacionesEntity);
+  }
+
+/*   Future<Either<Failure, int>> saveEvaluacionesUsecaseDB(
       List<EvaluacionEntity> evaluacionEntity) {
     return repositoryDB.saveEvaluacionesRepositoryDB(evaluacionEntity);
-  }
+  } */
 
   Future<Either<Failure, int>> clearEvaluacionesUsecaseDB() {
     return repositoryDB.clearEvaluacionesRepositoryDB();
+  }
+
+  Future<Either<Failure, List<EvaluacionEntity>>>
+      getEvaluacionesProduccionUsecaseDB() {
+    return repositoryDB.getEvaluacionesProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> updateEvaluacionesProduccionUsecaseDB(
+      List<EvaluacionEntity> evaluacionesEntity) {
+    return repositoryDB
+        .updateEvaluacionesProduccionDBRepositoryDB(evaluacionesEntity);
   }
 }

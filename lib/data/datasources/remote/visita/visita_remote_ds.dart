@@ -14,7 +14,8 @@ import '../../../utils.dart';
 
 abstract class VisitaRemoteDataSource {
   Future<List<VisitaModel>> getVisitas(UsuarioEntity usuario);
-  Future<int> saveVisita(UsuarioEntity usuario, VisitaEntity visitaEntity);
+  Future<List<VisitaEntity>> saveVisitas(
+      UsuarioEntity usuario, List<VisitaEntity> visitasEntity);
 }
 
 class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
@@ -154,7 +155,19 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
   }
 
   @override
-  Future<int> saveVisita(
+  Future<List<VisitaEntity>> saveVisitas(
+      UsuarioEntity usuario, List<VisitaEntity> visitasEntity) async {
+    List<VisitaEntity> visitasUpload = [];
+    for (var visita in visitasEntity) {
+      final resp = await saveVisita(usuario, visita);
+      if (resp != null) {
+        visitasUpload.add(resp);
+      }
+    }
+    return visitasUpload;
+  }
+
+  Future<VisitaEntity?> saveVisita(
       UsuarioEntity usuario, VisitaEntity visitaEntity) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
@@ -189,7 +202,7 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
     final visitaResp = await client.post(uri,
         headers: {
           "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          "SOAPAction": "${Constants.urlSOAP}/GuardarVisita"
         },
         body: visitaSOAP);
 
@@ -199,16 +212,13 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
       final respuesta =
           visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          visitaDoc.findAllElements('mensaje').map((e) => e.text).first;
-
       if (respuesta == 'true') {
-        return 1;
+        return visitaEntity;
       } else {
-        throw ServerFailure([mensaje]);
+        return null;
       }
     } else {
-      throw ServerException();
+      return null;
     }
   }
 }

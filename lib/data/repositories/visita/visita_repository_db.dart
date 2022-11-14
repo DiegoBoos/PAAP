@@ -13,6 +13,20 @@ class VisitaRepositoryDBImpl implements VisitaRepositoryDB {
   VisitaRepositoryDBImpl({required this.visitaLocalDataSource});
 
   @override
+  Future<Either<Failure, List<VisitaEntity>>>
+      getVisitasProduccionRepositoryDB() async {
+    try {
+      final visitasDB = await visitaLocalDataSource.getVisitasProduccionDB();
+
+      return Right(visitasDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, VisitaEntity>> getVisitaRepositoryDB(
       VisitaEntity visitaEntity) async {
     try {
@@ -31,6 +45,21 @@ class VisitaRepositoryDBImpl implements VisitaRepositoryDB {
       List<VisitaEntity> visitasEntity) async {
     try {
       final result = await visitaLocalDataSource.saveVisitasDB(visitasEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> updateVisitasProduccionDBRepositoryDB(
+      List<VisitaEntity> visitasEntity) async {
+    try {
+      final result =
+          await visitaLocalDataSource.updateVisitasProduccionDB(visitasEntity);
 
       return Right(result);
     } on ServerFailure catch (e) {

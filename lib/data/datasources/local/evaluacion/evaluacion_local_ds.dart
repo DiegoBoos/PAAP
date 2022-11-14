@@ -6,8 +6,11 @@ import '../../../../domain/db/db_config.dart';
 
 abstract class EvaluacionLocalDataSource {
   Future<EvaluacionModel?> getEvaluacionDB(String perfilId);
+  Future<List<EvaluacionModel>> getEvaluacionesProduccionDB();
   Future<int> saveEvaluacionDB(EvaluacionEntity evaluacionEntity);
   Future<int> saveEvaluacionesDB(List<EvaluacionEntity> evaluacionEntity);
+  Future<int> updateEvaluacionesProduccionDB(
+      List<EvaluacionEntity> evaluacionesEntity);
   Future<int> clearEvaluacionesDB();
 }
 
@@ -25,22 +28,8 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
         UsuarioIdCoordinador	TEXT NOT NULL,
         FechaEvaluacion	TEXT,
         PreAprobado	TEXT,
+        RecordStatus	TEXT,
         PRIMARY KEY(EvaluacionId)
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE EvaluacionProduccion (
-        EvaluacionId	INTEGER,
-        PerfilId	TEXT NOT NULL,
-        Resumen	TEXT NOT NULL,
-        Fortalezas	TEXT,
-        Debilidades	TEXT,
-        Riesgos	TEXT NOT NULL,
-        Finalizado	TEXT,
-        UsuarioIdCoordinador	TEXT NOT NULL,
-        FechaEvaluacion	TEXT,
-        PreAprobado	TEXT,
-        PRIMARY KEY(EvaluacionId AUTOINCREMENT)
       )
     ''');
   }
@@ -48,6 +37,7 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
   @override
   Future<EvaluacionModel?> getEvaluacionDB(String perfilId) async {
     final db = await DBConfig.database;
+
     final res = await db
         .query('Evaluacion', where: 'PerfilId = ?', whereArgs: [perfilId]);
 
@@ -61,15 +51,11 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
   @override
   Future<int> saveEvaluacionDB(EvaluacionEntity evaluacionEntity) async {
     final db = await DBConfig.database;
+    evaluacionEntity.recordStatus = 'E';
+    final res = await db.update('Evaluacion', evaluacionEntity.toJson(),
+        where: 'EvaluacionId = ?', whereArgs: [evaluacionEntity.evaluacionId]);
 
-    var batch = db.batch();
-    batch.delete('Evaluacion');
-
-    batch.insert('Evaluacion', evaluacionEntity.toJson());
-
-    final res = await batch.commit();
-
-    return res.length;
+    return res;
   }
 
   @override
@@ -81,7 +67,43 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
     batch.delete('Evaluacion');
 
     for (var evaluacion in evaluacionEntity) {
+      evaluacion.recordStatus = 'R';
       batch.insert('Evaluacion', evaluacion.toJson());
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<List<EvaluacionModel>> getEvaluacionesProduccionDB() async {
+    final db = await DBConfig.database;
+
+    final res = await db
+        .query('Evaluacion', where: 'RecordStatus <> ?', whereArgs: ['R']);
+
+    if (res.isEmpty) return [];
+
+    final evaluacionesModel =
+        List<EvaluacionModel>.from(res.map((m) => EvaluacionModel.fromJson(m)))
+            .toList();
+
+    return evaluacionesModel;
+  }
+
+  @override
+  Future<int> updateEvaluacionesProduccionDB(
+      List<EvaluacionEntity> evaluacionesProduccionEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+
+    for (var evaluacionProduccion in evaluacionesProduccionEntity) {
+      evaluacionProduccion.recordStatus = 'R';
+      batch.update('Evaluacion', evaluacionProduccion.toJson(),
+          where: 'EvaluacionId = ?',
+          whereArgs: [evaluacionProduccion.evaluacionId]);
     }
 
     final res = await batch.commit();

@@ -458,14 +458,14 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       await downloadCriterios(usuario, emit);
 
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Visitas',
-          counter: state.progressModel!.counter + 1)));
-      await downloadVisitas(usuario, emit);
-
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Sitios de Entrega',
           counter: state.progressModel!.counter + 1)));
       await downloadSitiosEntregas(usuario, emit);
+
+      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+          title: 'Sincronizando Visitas',
+          counter: state.progressModel!.counter + 1)));
+      await downloadVisitas(usuario, emit);
 
       emit(DownloadSyncInProgress(state.progressModel!.copyWith(
           title: 'Sincronizando Evaluaciones',

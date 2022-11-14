@@ -12,6 +12,7 @@ class EvaluacionModel extends EvaluacionEntity {
     String? usuarioIdCoordinador,
     String? fechaEvaluacion,
     String? preAprobado,
+    String? recordStatus,
   }) : super(
             evaluacionId: evaluacionId,
             perfilId: perfilId,
@@ -22,7 +23,8 @@ class EvaluacionModel extends EvaluacionEntity {
             finalizado: finalizado ?? '',
             usuarioIdCoordinador: usuarioIdCoordinador ?? '',
             fechaEvaluacion: fechaEvaluacion ?? '',
-            preAprobado: preAprobado ?? '');
+            preAprobado: preAprobado ?? '',
+            recordStatus: recordStatus ?? '');
 
   factory EvaluacionModel.fromJson(Map<String, dynamic> json) =>
       EvaluacionModel(
@@ -36,6 +38,7 @@ class EvaluacionModel extends EvaluacionEntity {
         usuarioIdCoordinador: json["UsuarioIdCoordinador"],
         fechaEvaluacion: json["FechaEvaluacion"],
         preAprobado: json["PreAprobado"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -50,5 +53,6 @@ class EvaluacionModel extends EvaluacionEntity {
         "UsuarioIdCoordinador": usuarioIdCoordinador,
         "FechaEvaluacion": fechaEvaluacion,
         "PreAprobado": preAprobado,
+        "RecordStatus": recordStatus,
       };
 }

@@ -15,6 +15,21 @@ class EvaluacionRespuestaRepositoryDBImpl
       {required this.evaluacionRespuestaLocalDataSource});
 
   @override
+  Future<Either<Failure, List<EvaluacionRespuestaEntity>>>
+      getEvaluacionesRespuestasProduccionRepositoryDB() async {
+    try {
+      final evaluacionesRespuestasDB = await evaluacionRespuestaLocalDataSource
+          .getEvaluacionesRespuestasProduccionDB();
+
+      return Right(evaluacionesRespuestasDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, EvaluacionRespuestaEntity?>>
       getEvaluacionRespuestaRepositoryDB(
           String criterioId, String evaluacionId) async {
@@ -53,6 +68,23 @@ class EvaluacionRespuestaRepositoryDBImpl
       final evaluacionRespuestaDB = await evaluacionRespuestaLocalDataSource
           .saveEvaluacionesRespuestasDB(evaluacionEntity);
       return Right(evaluacionRespuestaDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      updateEvaluacionesRespuestasProduccionDBRepositoryDB(
+          List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity) async {
+    try {
+      final result = await evaluacionRespuestaLocalDataSource
+          .updateEvaluacionesRespuestasProduccionDB(
+              evaluacionesRespuestasEntity);
+
+      return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

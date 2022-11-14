@@ -7,7 +7,9 @@ import '../../../models/visita_model.dart';
 
 abstract class VisitaLocalDataSource {
   Future<VisitaModel> getVisitaDB(VisitaEntity visitaEntity);
+  Future<List<VisitaModel>> getVisitasProduccionDB();
   Future<int> saveVisitasDB(List<VisitaEntity> visitasEntity);
+  Future<int> updateVisitasProduccionDB(List<VisitaEntity> visitasEntity);
   Future<int> clearVisitasDB();
 }
 
@@ -23,22 +25,7 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
         Observacion	TEXT,
         UsuarioId	TEXT NOT NULL,
         FechaRegistro	TEXT,
-        FOREIGN KEY(EstadoVisitaId) REFERENCES EstadoVisita(EstadoVisitaId),
-        FOREIGN KEY(TipoVisitaId) REFERENCES TipoVisita(TipoVisitaId),
-        FOREIGN KEY(UsuarioId) REFERENCES Usuario(UsuarioId),
-        FOREIGN KEY(PerfilId) REFERENCES Perfil(PerfilId)
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE VisitaProduccion (
-        PerfilId	TEXT NOT NULL,
-        TipoVisitaId	TEXT NOT NULL,
-        FechaInicial	TEXT,
-        FechaFinal	TEXT,
-        EstadoVisitaId	TEXT NOT NULL,
-        Observacion	TEXT,
-        UsuarioId	TEXT NOT NULL,
-        FechaRegistro	TEXT,
+        RecordStatus	TEXT,
         FOREIGN KEY(EstadoVisitaId) REFERENCES EstadoVisita(EstadoVisitaId),
         FOREIGN KEY(TipoVisitaId) REFERENCES TipoVisita(TipoVisitaId),
         FOREIGN KEY(UsuarioId) REFERENCES Usuario(UsuarioId),
@@ -54,11 +41,8 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
         where: 'PerfilId = ? AND TipoVisitaId = ?',
         whereArgs: [visitaEntity.perfilId, visitaEntity.tipoVisitaId]);
 
-    final resProduccion = await db.query('VisitaProduccion',
-        where: 'PerfilId = ? AND TipoVisitaId = ?',
-        whereArgs: [visitaEntity.perfilId, visitaEntity.tipoVisitaId]);
-
-    if (res.isEmpty && resProduccion.isEmpty) {
+    if (res.isEmpty) {
+      visitaEntity.recordStatus = 'N';
       await saveVisitaDB(visitaEntity);
       EvaluacionEntity newEvaluacion = EvaluacionEntity(
           evaluacionId: '',
@@ -70,15 +54,13 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
           finalizado: 'false',
           usuarioIdCoordinador: '',
           fechaEvaluacion: '',
-          preAprobado: 'false');
+          preAprobado: 'false',
+          recordStatus: 'N');
       await saveEvaluacionDB(newEvaluacion);
       return VisitaModel.fromJson(visitaEntity.toJson());
     }
 
-    final visitaMap = {
-      for (var e in res.isNotEmpty ? res[0].entries : resProduccion[0].entries)
-        e.key: e.value
-    };
+    final visitaMap = {for (var e in res[0].entries) e.key: e.value};
     final visitaModel = VisitaModel.fromJson(visitaMap);
 
     return visitaModel;
@@ -92,6 +74,7 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
     batch.delete('Visita');
 
     for (var visita in visitasEntity) {
+      visita.recordStatus = 'R';
       batch.insert('Visita', visita.toJson());
     }
 
@@ -114,8 +97,7 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
 
   Future<int> saveVisitaDB(VisitaEntity visitaEntity) async {
     final db = await DBConfig.database;
-
-    final res = await db.insert('VisitaProduccion', visitaEntity.toJson());
+    final res = await db.insert('Visita', visitaEntity.toJson());
 
     return res;
   }
@@ -123,9 +105,46 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
   Future<int> saveEvaluacionDB(EvaluacionEntity evaluacionEntity) async {
     final db = await DBConfig.database;
 
-    final res =
-        await db.insert('EvaluacionProduccion', evaluacionEntity.toJson());
+    final res = await db.insert('Evaluacion', evaluacionEntity.toJson());
 
     return res;
+  }
+
+  @override
+  Future<List<VisitaModel>> getVisitasProduccionDB() async {
+    final db = await DBConfig.database;
+
+    final res =
+        await db.query('Visita', where: 'RecordStatus <> ?', whereArgs: ['R']);
+
+    if (res.isEmpty) return [];
+
+    final visitasModel =
+        List<VisitaModel>.from(res.map((m) => VisitaModel.fromJson(m)))
+            .toList();
+
+    return visitasModel;
+  }
+
+  @override
+  Future<int> updateVisitasProduccionDB(
+      List<VisitaEntity> visitasProduccionEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+
+    for (var visitaProduccion in visitasProduccionEntity) {
+      visitaProduccion.recordStatus = 'R';
+      batch.update('Visita', visitaProduccion.toJson(),
+          where: 'PerfilId = ? AND TipoVisitaId= ?',
+          whereArgs: [
+            visitaProduccion.perfilId,
+            visitaProduccion.tipoVisitaId
+          ]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
   }
 }

@@ -15,7 +15,8 @@ class EvaluacionRespuestaInitial extends EvaluacionRespuestaState {
                 criterioId: '',
                 evaluacionId: '',
                 observacion: '',
-                opcionId: ''));
+                opcionId: '',
+                recordStatus: ''));
 }
 
 class EvaluacionRespuestaLoading extends EvaluacionRespuestaState {}

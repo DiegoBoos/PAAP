@@ -9,4 +9,8 @@ abstract class VisitaRepositoryDB {
   Future<Either<Failure, int>> saveVisitasRepositoryDB(
       List<VisitaEntity> visitasEntity);
   Future<Either<Failure, int>> clearVisitasRepositoryDB();
+  Future<Either<Failure, List<VisitaEntity>>>
+      getVisitasProduccionRepositoryDB();
+  Future<Either<Failure, int>> updateVisitasProduccionDBRepositoryDB(
+      List<VisitaEntity> visitasEntity);
 }
