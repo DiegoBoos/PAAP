@@ -45,7 +45,7 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
       visitaEntity.recordStatus = 'N';
       await saveVisitaDB(visitaEntity);
       EvaluacionEntity newEvaluacion = EvaluacionEntity(
-          evaluacionId: '',
+          evaluacionId: '0',
           perfilId: visitaEntity.perfilId,
           resumen: '',
           fortalezas: '',

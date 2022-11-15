@@ -10,4 +10,5 @@ abstract class PerfilRepositoryDB {
       String? id, String? nombre);
   Future<Either<Failure, int>> savePerfilesRepositoryDB(
       List<PerfilEntity> perfiles);
+  Future<Either<Failure, List<String>>> getMunicipiosPerfilesRepositoryDB();
 }

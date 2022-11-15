@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../data/models/vereda_model.dart';
 import '../../entities/usuario_entity.dart';
 import '../../usecases/actividad_economica/actividad_economica_exports.dart';
 import '../../usecases/actividad_financiera/actividad_financiera_exports.dart';
@@ -383,7 +384,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
 
       await downloadTiposDiscapacidades(usuario, emit);
 
-      //await downloadVeredas(usuario, emit);
+      //await getMunicipiosPerfilesDB(usuario, emit);
     });
 
     on<DownloadStatusChanged>((event, emit) {
@@ -1454,7 +1455,6 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
 
   /* Future<void> downloadVeredas(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
-   
     final result = await vereda.getVeredasUsecase(usuario);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)),
@@ -1465,8 +1465,28 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<VeredaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await veredaDB.saveVeredasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
-        
-        });
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   } */
+
+  Future<void> getMunicipiosPerfilesDB(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilesDB.getMunicipiosPerfilesUsecaseDB();
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await downloadVeredas(usuario, data, emit));
+  }
+
+  Future<void> downloadVeredas(UsuarioEntity usuario, List<String> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await vereda.downloadVeredas(usuario, data);
+    return result.fold(
+        (failure) => [], (data) async => await saveVeredas(data, emit));
+  }
+
+  Future<void> saveVeredas(
+      List<VeredaModel> data, Emitter<DownloadSyncState> emit) async {
+    final result = await veredaDB.saveVeredasUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
 }

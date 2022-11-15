@@ -29,7 +29,7 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
         FechaEvaluacion	TEXT,
         PreAprobado	TEXT,
         RecordStatus	TEXT,
-        PRIMARY KEY(EvaluacionId)
+        PRIMARY KEY("EvaluacionId" AUTOINCREMENT)
       )
     ''');
   }

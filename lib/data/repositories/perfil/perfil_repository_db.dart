@@ -53,4 +53,18 @@ class PerfilRepositoryDBImpl implements PerfilRepositoryDB {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<String>>>
+      getMunicipiosPerfilesRepositoryDB() async {
+    try {
+      final municipiosperfilesDB =
+          await perfilesLocalDataSource.getMunicipiosPerfilesDB();
+      return Right(municipiosperfilesDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

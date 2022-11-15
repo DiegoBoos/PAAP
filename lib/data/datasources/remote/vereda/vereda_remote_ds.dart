@@ -4,6 +4,7 @@ import 'package:xml/xml.dart' as xml;
 
 import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
+import '../../../../domain/entities/vereda_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
 
@@ -14,12 +15,30 @@ import '../../../utils.dart';
 
 abstract class VeredaRemoteDataSource {
   Future<List<VeredaModel>> getVeredas(UsuarioEntity usuario);
+  Future<List<VeredaModel>> downloadVeredas(
+      UsuarioEntity usuario, List<String> municipiosIds);
 }
 
 class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
   final http.Client client;
 
   VeredaRemoteDataSourceImpl({required this.client});
+
+  @override
+  Future<List<VeredaModel>> downloadVeredas(
+      UsuarioEntity usuario, List<String> municipiosIds) async {
+    List<VeredaModel> veredas = [];
+    for (var municipioId in municipiosIds) {
+      final respVeredasMunicipio =
+          await getVeredasByMunicipio(usuario, municipioId.toString());
+      if (respVeredasMunicipio.isNotEmpty) {
+        for (var vereda in respVeredasMunicipio) {
+          veredas.add(vereda);
+        }
+      }
+    }
+    return veredas;
+  }
 
   @override
   Future<List<VeredaModel>> getVeredas(UsuarioEntity usuario) async {
@@ -37,7 +56,7 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
 
     for (var municipio in municipios) {
       final veredasMunicipio =
-          await getVeredasBMunicipio(usuario, municipio.id);
+          await getVeredasByMunicipio(usuario, municipio.id);
 
       if (veredasMunicipio.isNotEmpty) {
         veredas.addAll(veredasMunicipio);
@@ -46,7 +65,7 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
     return veredas;
   }
 
-  Future<List<VeredaModel>> getVeredasBMunicipio(
+  Future<List<VeredaModel>> getVeredasByMunicipio(
       UsuarioEntity usuario, String municipioId) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
@@ -108,7 +127,7 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
         return [];
       }
     } else {
-      throw ServerException();
+      return [];
     }
   }
 

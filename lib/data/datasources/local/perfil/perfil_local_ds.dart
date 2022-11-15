@@ -9,6 +9,7 @@ abstract class PerfilLocalDataSource {
   Future<List<VPerfilModel>> getPerfilesDB();
   Future<List<VPerfilModel>> getPerfilesFiltrosDB(String id, String nombre);
   Future<int> savePerfilesDB(List<PerfilEntity> perfiles);
+  Future<List<String>> getMunicipiosPerfilesDB();
 }
 
 class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
@@ -136,5 +137,31 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
     final res = await batch.commit();
 
     return res.length;
+  }
+
+  @override
+  Future<List<String>> getMunicipiosPerfilesDB() async {
+    final db = await DBConfig.database;
+
+    /*  List<Map> listMunicipios =
+        await db.rawQuery('select distinct MunicipioId from perfil'); */
+
+    final cursor = await db.query('Perfil',
+        distinct: true,
+        columns: ['MunicipioId'],
+        where: null,
+        whereArgs: null,
+        groupBy: 'MunicipioId');
+
+    List<String> listMunicipiosId = [];
+
+    for (var e in cursor) {
+      listMunicipiosId.add(e.entries.first.value.toString());
+    }
+
+    /*  final listMunicipios = List<Map<String, Object?>>.from(
+        cursor.map((m) => {print(m), m['MunicipioId']})).toList(); */
+
+    return listMunicipiosId;
   }
 }

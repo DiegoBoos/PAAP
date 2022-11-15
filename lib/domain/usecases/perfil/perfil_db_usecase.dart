@@ -24,4 +24,8 @@ class PerfilUsecaseDB {
       List<PerfilEntity> perfiles) {
     return repositoryDB.savePerfilesRepositoryDB(perfiles);
   }
+
+  Future<Either<Failure, List<String>>> getMunicipiosPerfilesUsecaseDB() {
+    return repositoryDB.getMunicipiosPerfilesRepositoryDB();
+  }
 }
