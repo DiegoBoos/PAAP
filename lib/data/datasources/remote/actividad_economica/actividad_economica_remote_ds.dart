@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -63,12 +62,8 @@ class ActividadEconomicaRemoteDataSourceImpl
           .map((e) => e.text)
           .first;
 
-      final mensaje = actividadEconomicaDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          actividadEconomicaDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = actividadEconomicaDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -80,13 +75,16 @@ class ActividadEconomicaRemoteDataSourceImpl
 
         final actividadesEconomicasRaw =
             decodedResp.entries.first.value['Table'];
-        final actividadesEconomicas = List.from(actividadesEconomicasRaw)
-            .map((e) => ActividadEconomicaModel.fromJson(e))
-            .toList();
 
-        return actividadesEconomicas;
+        if (actividadesEconomicasRaw is List) {
+          return List.from(actividadesEconomicasRaw)
+              .map((e) => ActividadEconomicaModel.fromJson(e))
+              .toList();
+        } else {
+          return [ActividadEconomicaModel.fromJson(actividadesEconomicasRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:paap/data/datasources/local/beneficiario_preinversion/beneficiario_preinversion_local_ds.dart';
+import 'package:paap/data/datasources/local/perfil_preinversion_aliado/perfil_preinversion_aliado_local_ds.dart';
+import 'package:paap/data/datasources/local/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_local_ds.dart';
 import 'package:paap/data/datasources/local/tipo_actividad_productiva/tipo_actividad_productiva_local_ds.dart';
 import 'package:paap/domain/usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
 import 'package:paap/domain/usecases/visita/visita_exports.dart';
@@ -35,11 +36,18 @@ import '../../data/datasources/local/nivel_escolar/nivel_escolar_local_ds.dart';
 import '../../data/datasources/local/opcion/opcion_local_ds.dart';
 import '../../data/datasources/local/perfil/perfil_local_ds.dart';
 import '../../data/datasources/local/perfil_preinversion/perfil_preinversion_local_ds.dart';
+import '../../data/datasources/local/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_local_ds.dart';
+import '../../data/datasources/local/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_local_ds.dart';
+import '../../data/datasources/local/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_local_ds.dart';
+import '../../data/datasources/local/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_local_ds.dart';
+import '../../data/datasources/local/perfil_preinversion_consultor/perfil_preinversion_consultor_local_ds.dart';
+import '../../data/datasources/local/perfil_preinversion_precio/perfil_preinversion_precio_local_ds.dart';
 import '../../data/datasources/local/producto/producto_local_ds.dart';
 import '../../data/datasources/local/residencia/residencia_local_ds.dart';
 import '../../data/datasources/local/revision/revision_local_ds.dart';
 import '../../data/datasources/local/rubro/rubro_local_ds.dart';
 import '../../data/datasources/local/tipo_calidad/tipo_calidad_local_ds.dart';
+import '../../data/datasources/local/tipo_discapacidad/tipo_discapacidad_local_ds.dart';
 import '../../data/datasources/local/tipo_entidad/tipo_entidad_local_ds.dart';
 import '../../data/datasources/local/tipo_identificacion/tipo_identificacion_local_ds.dart';
 import '../../data/datasources/local/tipo_movimiento/tipo_movimiento_local_ds.dart';
@@ -78,8 +86,8 @@ class DBConfig {
       await BeneficiarioAlianzaLocalDataSourceImpl
           .createBeneficiarioAlianzaTable(db);
       await BeneficiarioLocalDataSourceImpl.createBeneficiarioTable(db);
-      await BeneficiarioPreinversionLocalDataSourceImpl
-          .createBeneficiarioPreinversionTable(db);
+      await PerfilPreInversionBeneficiarioLocalDataSourceImpl
+          .createPerfilPreInversionBeneficiarioTable(db);
       await CofinanciadorLocalDataSourceImpl.createCofinanciadorTable(db);
       await ConsultorLocalDataSourceImpl.createConsultorTable(db);
       await ConvocatoriaLocalDataSourceImpl.createConvocatoriaTable(db);
@@ -93,7 +101,7 @@ class DBConfig {
       await MenuLocalDataSourceImpl.createMenuTable(db);
       await MunicipioLocalDataSourceImpl.createMunicipioTable(db);
       await NivelEscolarLocalDataSourceImpl.createNivelEscolarTable(db);
-      await PerfilPreinversionLocalDataSourceImpl.createPerfilPreinversionTable(
+      await PerfilPreInversionLocalDataSourceImpl.createPerfilPreInversionTable(
           db);
       await PerfilLocalDataSourceImpl.createPerfilTable(db);
       await ProductoLocalDataSourceImpl.createProductoTable(db);
@@ -103,6 +111,7 @@ class DBConfig {
       await TipoActividadProductivaLocalDataSourceImpl
           .createTipoActividadProductivaTable(db);
       await TipoCalidadLocalDataSourceImpl.createTipoCalidadTable(db);
+      await TipoDiscapacidadLocalDataSourceImpl.createTipoDiscapacidadTable(db);
       await TipoEntidadLocalDataSourceImpl.createTipoEntidadTable(db);
       await TipoIdentificacionLocalDataSourceImpl.createTipoIdentificacionTable(
           db);
@@ -119,6 +128,20 @@ class DBConfig {
       await SitioEntregaLocalDataSourceImpl.createSitioEntregaTable(db);
       await EvaluacionRespuestaLocalDataSourceImpl
           .createEvaluacionRespuestaTable(db);
+      await PerfilPreInversionAliadoLocalDataSourceImpl
+          .createPerfilPreInversionAliadoTable(db);
+      await PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
+          .createPerfilPreInversionCofinanciadorActividadFinancieraTable(db);
+      await PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
+          .createPerfilPreInversionCofinanciadorDesembolsoTable(db);
+      await PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
+          .createPerfilPreInversionCofinanciadorRubroTable(db);
+      await PerfilPreInversionCofinanciadorLocalDataSourceImpl
+          .createPerfilPreInversionCofinanciadorTable(db);
+      await PerfilPreInversionConsultorLocalDataSourceImpl
+          .createPerfilPreInversionConsultorTable(db);
+      await PerfilPreInversionPrecioLocalDataSourceImpl
+          .createPerfilPreInversionPrecioTable(db);
     });
 
     return _database!;

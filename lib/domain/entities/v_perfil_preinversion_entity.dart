@@ -1,5 +1,5 @@
-class VPerfilPreinversionEntity {
-  VPerfilPreinversionEntity({
+class VPerfilPreInversionEntity {
+  VPerfilPreInversionEntity({
     required this.perfilPreInversionId,
     required this.perfilId,
     required this.convocatoria,
@@ -37,8 +37,8 @@ class VPerfilPreinversionEntity {
   final String valorTotalProyecto;
   final String incentivoModular;
 
-  factory VPerfilPreinversionEntity.fromJson(Map<String, dynamic> json) =>
-      VPerfilPreinversionEntity(
+  factory VPerfilPreInversionEntity.fromJson(Map<String, dynamic> json) =>
+      VPerfilPreInversionEntity(
         perfilPreInversionId: json["perfilPreInversionId"],
         perfilId: json["perfilId"],
         convocatoria: json["convocatoria"],

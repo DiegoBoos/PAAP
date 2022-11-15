@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -56,10 +55,8 @@ class ConsultorRemoteDataSourceImpl implements ConsultorRemoteDataSource {
       final respuesta =
           consultorDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          consultorDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          consultorDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = consultorDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,13 +67,16 @@ class ConsultorRemoteDataSourceImpl implements ConsultorRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final consultoresRaw = decodedResp.entries.first.value['Table'];
-        final consultores = List.from(consultoresRaw)
-            .map((e) => ConsultorModel.fromJson(e))
-            .toList();
 
-        return consultores;
+        if (consultoresRaw is List) {
+          return List.from(consultoresRaw)
+              .map((e) => ConsultorModel.fromJson(e))
+              .toList();
+        } else {
+          return [ConsultorModel.fromJson(consultoresRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

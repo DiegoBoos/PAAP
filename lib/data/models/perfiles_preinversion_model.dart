@@ -1,7 +1,7 @@
 import 'package:paap/domain/entities/perfiles_entity.dart';
 
-class PerfilesPreinversionModel extends PerfilesEntity {
-  PerfilesPreinversionModel({
+class PerfilesPreInversionModel extends PerfilesEntity {
+  PerfilesPreInversionModel({
     required String id,
     String? nombre,
     String? abreviatura,
@@ -18,8 +18,8 @@ class PerfilesPreinversionModel extends PerfilesEntity {
             ubicacion: ubicacion ?? '',
             categorizacion: categorizacion ?? '');
 
-  factory PerfilesPreinversionModel.fromJson(Map<String, dynamic> json) =>
-      PerfilesPreinversionModel(
+  factory PerfilesPreInversionModel.fromJson(Map<String, dynamic> json) =>
+      PerfilesPreInversionModel(
         id: json["ID"],
         nombre: json["Nombre"],
         abreviatura: json["Abreviatura"],

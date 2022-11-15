@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -60,10 +59,8 @@ class CofinanciadorRemoteDataSourceImpl
           .map((e) => e.text)
           .first;
 
-      final mensaje =
-          cofinanciadorDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          cofinanciadorDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = cofinanciadorDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -74,13 +71,16 @@ class CofinanciadorRemoteDataSourceImpl
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final cofinanciadoresRaw = decodedResp.entries.first.value['Table'];
-        final cofinanciadores = List.from(cofinanciadoresRaw)
-            .map((e) => CofinanciadorModel.fromJson(e))
-            .toList();
 
-        return cofinanciadores;
+        if (cofinanciadoresRaw is List) {
+          return List.from(cofinanciadoresRaw)
+              .map((e) => CofinanciadorModel.fromJson(e))
+              .toList();
+        } else {
+          return [CofinanciadorModel.fromJson(cofinanciadoresRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

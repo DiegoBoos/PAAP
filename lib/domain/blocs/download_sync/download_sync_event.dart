@@ -13,6 +13,15 @@ class DownloadStarted extends DownloadSyncEvent {
   const DownloadStarted(this.usuario);
 }
 
+class DownloadStatusChanged extends DownloadSyncEvent {
+  final DownloadProgressModel progress;
+
+  const DownloadStatusChanged(this.progress);
+
+  @override
+  List<Object> get props => [progress];
+}
+
 class DownloadSyncError extends DownloadSyncEvent {
   final String message;
 

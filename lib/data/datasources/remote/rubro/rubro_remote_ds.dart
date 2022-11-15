@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -57,10 +56,8 @@ class RubroRemoteDataSourceImpl implements RubroRemoteDataSource {
       final respuesta =
           rubroDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          rubroDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          rubroDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = rubroDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -71,12 +68,16 @@ class RubroRemoteDataSourceImpl implements RubroRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final rubrosRaw = decodedResp.entries.first.value['Table'];
-        final rubros =
-            List.from(rubrosRaw).map((e) => RubroModel.fromJson(e)).toList();
 
-        return rubros;
+        if (rubrosRaw is List) {
+          return List.from(rubrosRaw)
+              .map((e) => RubroModel.fromJson(e))
+              .toList();
+        } else {
+          return [RubroModel.fromJson(rubrosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

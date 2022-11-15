@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -58,10 +57,8 @@ class DepartamentoRemoteDataSourceImpl implements DepartamentoRemoteDataSource {
       final respuesta =
           departamentoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          departamentoDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          departamentoDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = departamentoDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -72,13 +69,16 @@ class DepartamentoRemoteDataSourceImpl implements DepartamentoRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final departamentosRaw = decodedResp.entries.first.value['Table'];
-        final departamentos = List.from(departamentosRaw)
-            .map((e) => DepartamentoModel.fromJson(e))
-            .toList();
 
-        return departamentos;
+        if (departamentosRaw is List) {
+          return List.from(departamentosRaw)
+              .map((e) => DepartamentoModel.fromJson(e))
+              .toList();
+        } else {
+          return [DepartamentoModel.fromJson(departamentosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

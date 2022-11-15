@@ -28,21 +28,29 @@ class EvaluacionCubit extends Cubit<EvaluacionState> {
         (data) => emit(EvaluacionCleared()));
   }
 
-  void resetState() => emit(EvaluacionInitial());
+  void initState() => emit(EvaluacionInitial());
 
   void changeResumen(String value) {
-    state.evaluacion!.copyWith(resumen: value);
+    final resumenChanged = state.evaluacion!.copyWith(resumen: value);
+    emit(EvaluacionLoaded(resumenChanged));
   }
 
   void changeFortalezas(String value) {
-    state.evaluacion!.copyWith(fortalezas: value);
+    final fortalezasChanged = state.evaluacion!.copyWith(fortalezas: value);
+    emit(EvaluacionLoaded(fortalezasChanged));
   }
 
   void changeDebilidades(String value) {
-    state.evaluacion!.copyWith(debilidades: value);
+    final debilidadesChanged = state.evaluacion!.copyWith(debilidades: value);
+    emit(EvaluacionLoaded(debilidadesChanged));
   }
 
   void changeRiesgos(String value) {
-    state.evaluacion!.copyWith(riesgos: value);
+    final riesgosChanged = state.evaluacion!.copyWith(riesgos: value);
+    emit(EvaluacionLoaded(riesgosChanged));
+  }
+
+  void changeFinalizado(String value) {
+    state.evaluacion!.copyWith(finalizado: value);
   }
 }

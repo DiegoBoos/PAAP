@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -57,10 +56,8 @@ class CriterioRemoteDataSourceImpl implements CriterioRemoteDataSource {
       final respuesta =
           criterioDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          criterioDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          criterioDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = criterioDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -71,13 +68,15 @@ class CriterioRemoteDataSourceImpl implements CriterioRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final criteriosRaw = decodedResp.entries.first.value['Table'];
-        final criterios = List.from(criteriosRaw)
-            .map((e) => CriterioModel.fromJson(e))
-            .toList();
-
-        return criterios;
+        if (criteriosRaw is List) {
+          return List.from(criteriosRaw)
+              .map((e) => CriterioModel.fromJson(e))
+              .toList();
+        } else {
+          return [CriterioModel.fromJson(criteriosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

@@ -13,6 +13,15 @@ class UploadStarted extends UploadSyncEvent {
   const UploadStarted(this.usuario);
 }
 
+class UploadStatusChanged extends UploadSyncEvent {
+  final UploadProgressModel progress;
+
+  const UploadStatusChanged(this.progress);
+
+  @override
+  List<Object> get props => [progress];
+}
+
 class UploadSyncError extends UploadSyncEvent {
   final String message;
 

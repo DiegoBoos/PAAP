@@ -4,7 +4,7 @@ import '../../core/error/failure.dart';
 import '../../entities/perfil_preinversion_entity.dart';
 import '../../entities/usuario_entity.dart';
 
-abstract class PerfilPreinversionRepository {
-  Future<Either<Failure, List<PerfilPreinversionEntity>>>
-      getPerfilesPreinversionRepository(UsuarioEntity usuario);
+abstract class PerfilPreInversionRepository {
+  Future<Either<Failure, List<PerfilPreInversionEntity>>>
+      getPerfilesPreInversionRepository(UsuarioEntity usuario);
 }

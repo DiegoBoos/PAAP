@@ -57,10 +57,8 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
       final respuesta =
           alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          alianzaDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          alianzaDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = alianzaDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -82,7 +80,7 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
         }
         return listAlianza;
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

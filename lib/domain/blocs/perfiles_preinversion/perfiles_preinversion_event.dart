@@ -1,17 +1,17 @@
 part of 'perfiles_preinversion_bloc.dart';
 
-abstract class PerfilesPreinversionEvent extends Equatable {
-  const PerfilesPreinversionEvent();
+abstract class PerfilesPreInversionEvent extends Equatable {
+  const PerfilesPreInversionEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class GetPerfilesPreinversion extends PerfilesPreinversionEvent {}
+class GetPerfilesPreInversion extends PerfilesPreInversionEvent {}
 
-class GetPerfilesPreinversionFiltros extends PerfilesPreinversionEvent {
+class GetPerfilesPreInversionFiltros extends PerfilesPreInversionEvent {
   final String? id;
   final String? nombre;
 
-  const GetPerfilesPreinversionFiltros({this.id, this.nombre});
+  const GetPerfilesPreInversionFiltros({this.id, this.nombre});
 }

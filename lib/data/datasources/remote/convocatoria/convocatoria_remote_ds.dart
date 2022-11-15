@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -57,10 +56,8 @@ class ConvocatoriaRemoteDataSourceImpl implements ConvocatoriaRemoteDataSource {
       final respuesta =
           convocatoriaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          convocatoriaDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          convocatoriaDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = convocatoriaDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -71,13 +68,16 @@ class ConvocatoriaRemoteDataSourceImpl implements ConvocatoriaRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final convocatoriasRaw = decodedResp.entries.first.value['Table'];
-        final convocatorias = List.from(convocatoriasRaw)
-            .map((e) => ConvocatoriaModel.fromJson(e))
-            .toList();
 
-        return convocatorias;
+        if (convocatoriasRaw is List) {
+          return List.from(convocatoriasRaw)
+              .map((e) => ConvocatoriaModel.fromJson(e))
+              .toList();
+        } else {
+          return [ConvocatoriaModel.fromJson(convocatoriasRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

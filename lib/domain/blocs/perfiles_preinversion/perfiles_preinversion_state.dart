@@ -1,23 +1,23 @@
 part of 'perfiles_preinversion_bloc.dart';
 
-abstract class PerfilesPreinversionState extends Equatable {
-  const PerfilesPreinversionState();
+abstract class PerfilesPreInversionState extends Equatable {
+  const PerfilesPreInversionState();
   @override
   List<Object?> get props => [];
 }
 
-class PerfilesPreinversionInitial extends PerfilesPreinversionState {}
+class PerfilesPreInversionInitial extends PerfilesPreInversionState {}
 
-class PerfilesPreinversionLoading extends PerfilesPreinversionState {}
+class PerfilesPreInversionLoading extends PerfilesPreInversionState {}
 
-class PerfilesPreinversionLoaded extends PerfilesPreinversionState {
-  final List<VPerfilPreinversionEntity>? perfilesPreinversionLoaded;
+class PerfilesPreInversionLoaded extends PerfilesPreInversionState {
+  final List<VPerfilPreInversionEntity>? perfilesPreInversionLoaded;
 
-  const PerfilesPreinversionLoaded({this.perfilesPreinversionLoaded});
+  const PerfilesPreInversionLoaded({this.perfilesPreInversionLoaded});
 }
 
-class PerfilesPreinversionError extends PerfilesPreinversionState {
+class PerfilesPreInversionError extends PerfilesPreInversionState {
   final String message;
 
-  const PerfilesPreinversionError(this.message);
+  const PerfilesPreInversionError(this.message);
 }

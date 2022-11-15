@@ -23,5 +23,5 @@ class VisitaCubit extends Cubit<VisitaState> {
         (data) => emit(VisitaCleared()));
   }
 
-  void resetState() => emit(VisitaInitial());
+  void initState() => emit(VisitaInitial());
 }

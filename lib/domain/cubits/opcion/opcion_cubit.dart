@@ -17,5 +17,5 @@ class OpcionCubit extends Cubit<OpcionState> {
         (data) => emit(OpcionesLoaded(data)));
   }
 
-  void resetState() => emit(OpcionesInitial());
+  void initState() => emit(OpcionesInitial());
 }

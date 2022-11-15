@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/ui/utils/custom_general_dialog.dart';
 import 'package:paap/ui/utils/custom_snack_bar.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
@@ -54,7 +55,21 @@ class _SignInPageState extends State<SignInPage> {
             if (internetCubit.state is InternetConnected) {
               final usuario = state.usuarioAutenticado!;
               authBloc.add(SaveUsuario(usuario: usuario));
-              downloadSyncBloc.add(DownloadStarted(usuario));
+              showDialog(
+                  context: context,
+                  builder: (_) => CustomGeneralDialog(
+                      title: '¿Desea Sincronizar?',
+                      subtitle: '',
+                      confirmText: 'Sincronizar',
+                      cancelText: 'Continuar Offline',
+                      onTapConfirm: () {
+                        Navigator.pop(context);
+                        downloadSyncBloc.add(DownloadStarted(usuario));
+                      },
+                      onTapCancel: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(context, 'tabs');
+                      }));
             } else if (internetCubit.state is InternetDisconnected) {
               Navigator.pushReplacementNamed(context, 'tabs');
             }
@@ -66,15 +81,16 @@ class _SignInPageState extends State<SignInPage> {
         }),
         BlocListener<DownloadSyncBloc, DownloadSyncState>(
             listener: (context, state) {
+          if (state is DownloadSyncFailure) {
+            CustomSnackBar.showSnackBar(context, state.message, Colors.red);
+            Navigator.pushReplacementNamed(context, 'sign-in');
+            return;
+          }
           if (state is DownloadSyncSuccess) {
             CustomSnackBar.showSnackBar(
                 context, 'Descarga exitosa', Colors.green);
 
             Navigator.pushReplacementNamed(context, 'tabs');
-          }
-          if (state is DownloadSyncFailure) {
-            CustomSnackBar.showSnackBar(
-                context, 'Error en la sincronización', Colors.red);
           }
         }),
       ],
@@ -82,7 +98,9 @@ class _SignInPageState extends State<SignInPage> {
         builder: (context, state) {
           if (state is DownloadSyncInProgress) {
             return LoadingPage(
-                title:
+                title: 'Sincronizando...',
+                percent: state.progress.percent,
+                text:
                     '${state.progress.title} ${state.progress.counter}/${state.progress.total}');
           }
           return Scaffold(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/entities/v_perfil_entity.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/perfil_form.dart';
@@ -13,7 +12,6 @@ class PerfilDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final perfil = ModalRoute.of(context)?.settings.arguments as VPerfilEntity;
     final menuCubit = BlocProvider.of<MenuCubit>(context);
 
     return Scaffold(
@@ -22,7 +20,6 @@ class PerfilDetailPage extends StatelessWidget {
             final menuHijo = menuCubit.perfilesMenuSorted(state.menus!);
             return PerfilesDrawer(
               menuHijo: menuHijo,
-              perfil: perfil,
             );
           },
         ),
@@ -49,7 +46,7 @@ class PerfilDetailPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Text('Información Básica', style: Styles.subtitleStyle),
             ),
-            PerfilForm(perfil: perfil)
+            const PerfilForm()
           ]),
         ));
   }

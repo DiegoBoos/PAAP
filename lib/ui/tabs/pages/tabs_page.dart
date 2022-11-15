@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paap/domain/blocs/alianzas/alianzas_bloc.dart';
-import 'package:paap/ui/preinversion/pages/perfiles_preinversion_page.dart';
+import 'package:paap/domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
+import 'package:paap/domain/blocs/upload_sync/upload_sync_bloc.dart';
+import 'package:paap/ui/perfil_preinversion/pages/perfiles_preinversion_page.dart';
 
+import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
+import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/entities/menu_entity.dart';
 import '../../alianzas/pages/alianzas_page.dart';
 import '../../perfiles/pages/perfiles_page.dart';
+import '../../utils/custom_general_dialog.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/loading_page.dart';
 import 'home_page.dart';
@@ -26,6 +31,9 @@ class _TabsPageState extends State<TabsPage> {
 
     final perfilesBloc = BlocProvider.of<PerfilesBloc>(context);
     perfilesBloc.add(GetPerfiles());
+    final perfilesPreInversionBloc =
+        BlocProvider.of<PerfilesPreInversionBloc>(context);
+    perfilesPreInversionBloc.add(GetPerfilesPreInversion());
     final alianzasBloc = BlocProvider.of<AlianzasBloc>(context);
     alianzasBloc.add(GetAlianzas());
   }
@@ -35,41 +43,102 @@ class _TabsPageState extends State<TabsPage> {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
     const PerfilesPage(),
-    const PerfilesPreinversionPage(),
+    const PerfilesPreInversionPage(),
     const AlianzasPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BlocConsumer<MenuCubit, MenuState>(
-        listener: (context, state) {
-          if (state is MenusError) {
-            CustomSnackBar.showSnackBar(context, state.message, Colors.red);
-          }
-        },
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    final internetCubit = BlocProvider.of<InternetCubit>(context);
+
+    return BlocListener<UploadSyncBloc, UploadSyncState>(
+      listener: (context, state) {
+        if (state is UploadSyncFailure) {
+          CustomSnackBar.showSnackBar(context, state.message, Colors.red);
+          return;
+        }
+        if (state is UploadSyncSuccess) {
+          CustomSnackBar.showSnackBar(
+              context, 'Sincronización exitosa', Colors.green);
+        }
+      },
+      child: BlocBuilder<UploadSyncBloc, UploadSyncState>(
         builder: (context, state) {
-          if (state is MenusLoading) {
-            return const Padding(
-              padding: EdgeInsets.only(bottom: 20.0),
-              child: CustomCircularProgress(alignment: Alignment.bottomCenter),
-            );
-          } else if (state is MenusLoaded) {
-            final menu = state.menus!;
-
-            final tabsMenu = tabsMenuSorted(menu);
-
-            return BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                currentIndex: _selectedIndex,
-                onTap: _onItemTapped,
-                items: tabsMenu
-                    .map((menu) => BottomNavigationBarItem(
-                        icon: Icon(setIcon(menu.menuId)), label: menu.nombre))
-                    .toList());
+          if (state is UploadSyncInProgress) {
+            return LoadingPage(
+                title: 'Sincronizando...',
+                percent: state.progress.percent,
+                text:
+                    '${state.progress.title} ${state.progress.counter}/${state.progress.total}');
           }
-          return const SizedBox();
+          return Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: FloatingActionButton(
+              mini: true,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              onPressed: () {
+                if (internetCubit.state is InternetConnected) {
+                  showDialog(
+                      context: context,
+                      builder: (_) => CustomGeneralDialog(
+                          title: '¿Desea Sincronizar?',
+                          subtitle: '',
+                          confirmText: 'Sincronizar',
+                          cancelText: 'Cancelar',
+                          onTapConfirm: () {
+                            Navigator.pop(context);
+                            BlocProvider.of<UploadSyncBloc>(context)
+                                .add(UploadStarted(authBloc.state.usuario!));
+                          },
+                          onTapCancel: () {
+                            Navigator.pop(context);
+                          }));
+                } else if (internetCubit.state is InternetDisconnected) {
+                  CustomSnackBar.showSnackBar(
+                      context,
+                      'No fue posible sincronizar, no hay conexión a internet',
+                      Colors.red);
+                  return;
+                }
+              },
+              child: const Icon(Icons.cloud_upload),
+            ),
+            body: _widgetOptions.elementAt(_selectedIndex),
+            bottomNavigationBar: BlocConsumer<MenuCubit, MenuState>(
+              listener: (context, state) {
+                if (state is MenusError) {
+                  CustomSnackBar.showSnackBar(
+                      context, state.message, Colors.red);
+                }
+              },
+              builder: (context, state) {
+                if (state is MenusLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.only(bottom: 20.0),
+                    child: CustomCircularProgress(
+                        alignment: Alignment.bottomCenter),
+                  );
+                } else if (state is MenusLoaded) {
+                  final menu = state.menus!;
+
+                  final tabsMenu = tabsMenuSorted(menu);
+
+                  return BottomNavigationBar(
+                      type: BottomNavigationBarType.fixed,
+                      currentIndex: _selectedIndex,
+                      onTap: _onItemTapped,
+                      items: tabsMenu
+                          .map((menu) => BottomNavigationBarItem(
+                              icon: Icon(setIcon(menu.menuId)),
+                              label: menu.nombre))
+                          .toList());
+                }
+                return const SizedBox();
+              },
+            ),
+          );
         },
       ),
     );

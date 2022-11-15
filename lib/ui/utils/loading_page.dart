@@ -1,27 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:paap/domain/cubits/internet/internet_cubit.dart';
+
+import '../../domain/blocs/download_sync/download_sync_bloc.dart';
+import 'network_icon.dart';
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({
     Key? key,
+    required this.percent,
     required this.title,
+    required this.text,
   }) : super(key: key);
 
+  final double percent;
   final String title;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SpinKitCircle(
-            color: Colors.blue[900],
-            size: 100.0,
-          ),
-          const SizedBox(height: 10),
-          Text(title)
-        ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(title: Text(title), centerTitle: true, actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: BlocListener<InternetCubit, InternetState>(
+              listener: (context, state) {
+                if (state is InternetDisconnected) {
+                  final downloadSyncBloc =
+                      BlocProvider.of<DownloadSyncBloc>(context);
+
+                  downloadSyncBloc.add(const DownloadSyncError(
+                      'Error en la sincronización, no hay conexión a internet'));
+                }
+              },
+              child: const NetworkIcon(),
+            ),
+          )
+        ]),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            LinearProgressIndicator(
+              value: percent,
+              minHeight: 5,
+            ),
+            Expanded(child: Container()),
+            SpinKitCircle(
+              color: Colors.blue[900],
+              size: 100.0,
+            ),
+            const SizedBox(height: 10),
+            Text(text),
+            Expanded(child: Container()),
+          ],
+        ),
       ),
     );
   }

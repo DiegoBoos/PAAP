@@ -9,8 +9,8 @@ import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 import '../widgets/consultores_rows.dart';
 
-class ConsultorPreinversionPage extends StatelessWidget {
-  const ConsultorPreinversionPage({super.key});
+class ConsultorPreInversionPage extends StatelessWidget {
+  const ConsultorPreInversionPage({super.key});
 
   @override
   Widget build(BuildContext context) {

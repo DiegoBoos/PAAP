@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -56,10 +55,8 @@ class FrecuenciaRemoteDataSourceImpl implements FrecuenciaRemoteDataSource {
       final respuesta =
           frecuenciaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          frecuenciaDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          frecuenciaDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = frecuenciaDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,13 +67,16 @@ class FrecuenciaRemoteDataSourceImpl implements FrecuenciaRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final frecuenciasRaw = decodedResp.entries.first.value['Table'];
-        final frecuencias = List.from(frecuenciasRaw)
-            .map((e) => FrecuenciaModel.fromJson(e))
-            .toList();
 
-        return frecuencias;
+        if (frecuenciasRaw is List) {
+          return List.from(frecuenciasRaw)
+              .map((e) => FrecuenciaModel.fromJson(e))
+              .toList();
+        } else {
+          return [FrecuenciaModel.fromJson(frecuenciasRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

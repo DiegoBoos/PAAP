@@ -14,12 +14,12 @@ class NetworkIcon extends StatelessWidget {
       builder: (context, state) {
         if (state is InternetConnected &&
             state.connnectionType == ConnnectionType.wifi) {
-          return const Icon(Icons.wifi_outlined, color: Colors.green);
+          return const Icon(Icons.wifi, color: Colors.green);
         } else if (state is InternetConnected &&
             state.connnectionType == ConnnectionType.mobile) {
           return const Icon(Icons.lte_mobiledata_outlined, color: Colors.green);
         } else if (state is InternetDisconnected) {
-          return const Icon(Icons.offline_bolt_outlined, color: Colors.red);
+          return const Icon(Icons.wifi_off, color: Colors.red);
         }
         return const SizedBox();
       },

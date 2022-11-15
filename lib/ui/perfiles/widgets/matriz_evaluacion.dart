@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/entities/v_perfil_entity.dart';
 
 import '../../../domain/cubits/agrupacion/agrupacion_cubit.dart';
 import '../../../domain/cubits/criterio/criterio_cubit.dart';
@@ -16,20 +15,13 @@ import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 
 class MatrizEvaluacion extends StatefulWidget {
-  const MatrizEvaluacion({super.key, required this.perfil});
-  final VPerfilEntity perfil;
+  const MatrizEvaluacion({super.key});
+
   @override
   State<MatrizEvaluacion> createState() => _MatrizEvaluacionState();
 }
 
 class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
-  @override
-  void initState() {
-    super.initState();
-    final evaluacionCubit = BlocProvider.of<EvaluacionCubit>(context);
-    evaluacionCubit.getEvaluacionDB(widget.perfil.perfilId);
-  }
-
   late AgrupacionEntity agrupacion = AgrupacionEntity(
       agrupacionId: '', nombre: '', descripcion: '', convocatoriaId: '');
   bool showOpciones = false;
@@ -152,8 +144,7 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                     if (state is EvaluacionRespuestaLoaded) {
                       final evaluacionRespuestaState =
                           state.evaluacionRespuestaLoaded;
-                      evaluacionRespuestaCubit.changeObservacion(
-                          state.evaluacionRespuestaLoaded.observacion);
+
                       return BlocBuilder<OpcionCubit, OpcionState>(
                         builder: (context, state) {
                           if (state is OpcionesLoading) {

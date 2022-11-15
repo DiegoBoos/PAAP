@@ -1,7 +1,7 @@
 import 'package:paap/domain/entities/perfil_preinversion_entity.dart';
 
-class PerfilPreinversionModel extends PerfilPreinversionEntity {
-  PerfilPreinversionModel({
+class PerfilPreInversionModel extends PerfilPreInversionEntity {
+  PerfilPreInversionModel({
     required String perfilPreInversionId,
     required String perfilId,
     String? convocatoriaId,
@@ -38,8 +38,8 @@ class PerfilPreinversionModel extends PerfilPreinversionEntity {
             valorTotalProyecto: valorTotalProyecto ?? '',
             incentivoModular: incentivoModular ?? '');
 
-  factory PerfilPreinversionModel.fromJson(Map<String, dynamic> json) =>
-      PerfilPreinversionModel(
+  factory PerfilPreInversionModel.fromJson(Map<String, dynamic> json) =>
+      PerfilPreInversionModel(
         perfilPreInversionId: json["PerfilPreInversionId"],
         perfilId: json["PerfilId"],
         convocatoriaId: json["ConvocatoriaId"],

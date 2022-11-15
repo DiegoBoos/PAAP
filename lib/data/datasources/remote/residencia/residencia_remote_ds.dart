@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -56,10 +55,8 @@ class ResidenciaRemoteDataSourceImpl implements ResidenciaRemoteDataSource {
       final respuesta =
           residenciaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          residenciaDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          residenciaDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = residenciaDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,13 +67,16 @@ class ResidenciaRemoteDataSourceImpl implements ResidenciaRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final residenciasRaw = decodedResp.entries.first.value['Table'];
-        final residencias = List.from(residenciasRaw)
-            .map((e) => ResidenciaModel.fromJson(e))
-            .toList();
 
-        return residencias;
+        if (residenciasRaw is List) {
+          return List.from(residenciasRaw)
+              .map((e) => ResidenciaModel.fromJson(e))
+              .toList();
+        } else {
+          return [ResidenciaModel.fromJson(residenciasRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -60,10 +59,8 @@ class GrupoEspecialRemoteDataSourceImpl
           .map((e) => e.text)
           .first;
 
-      final mensaje =
-          grupoEspecialDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          grupoEspecialDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = grupoEspecialDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -74,13 +71,16 @@ class GrupoEspecialRemoteDataSourceImpl
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final gruposEspecialesRaw = decodedResp.entries.first.value['Table'];
-        final gruposEspeciales = List.from(gruposEspecialesRaw)
-            .map((e) => GrupoEspecialModel.fromJson(e))
-            .toList();
 
-        return gruposEspeciales;
+        if (gruposEspecialesRaw is List) {
+          return List.from(gruposEspecialesRaw)
+              .map((e) => GrupoEspecialModel.fromJson(e))
+              .toList();
+        } else {
+          return [GrupoEspecialModel.fromJson(gruposEspecialesRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

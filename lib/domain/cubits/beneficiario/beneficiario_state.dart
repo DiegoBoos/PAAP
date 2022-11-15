@@ -8,7 +8,23 @@ abstract class BeneficiarioState extends Equatable {
   List<Object?> get props => [beneficiario];
 }
 
-class BeneficiarioInitial extends BeneficiarioState {}
+class BeneficiarioInitial extends BeneficiarioState {
+  BeneficiarioInitial()
+      : super(
+            beneficiario: BeneficiarioEntity(
+                beneficiarioId: '',
+                nombre1: '',
+                nombre2: '',
+                apellido1: '',
+                apellido2: '',
+                generoId: '',
+                fechaNacimiento: '',
+                fechaExpedicionDocumento: '',
+                grupoEspecialId: '',
+                telefonoMovil: '',
+                activo: '',
+                tipoIdentificacionId: ''));
+}
 
 class BeneficiarioLoading extends BeneficiarioState {}
 

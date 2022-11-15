@@ -4,19 +4,19 @@ import '../../../../domain/db/db_config.dart';
 import '../../../../domain/entities/perfil_preinversion_entity.dart';
 import '../../../models/v_perfil_preinversion_model.dart';
 
-abstract class PerfilPreinversionLocalDataSource {
-  Future<List<VPerfilPreinversionModel>> getPerfilesPreinversionDB();
-  Future<List<VPerfilPreinversionModel>> getPerfilesPreinversionFiltrosDB(
+abstract class PerfilPreInversionLocalDataSource {
+  Future<List<VPerfilPreInversionModel>> getPerfilesPreInversionDB();
+  Future<List<VPerfilPreInversionModel>> getPerfilesPreInversionFiltrosDB(
       String id, String nombre);
-  Future<int> savePerfilesPreinversionDB(
-      List<PerfilPreinversionEntity> perfilesPreinversion);
+  Future<int> savePerfilesPreInversionDB(
+      List<PerfilPreInversionEntity> perfilesPreInversion);
 }
 
-class PerfilPreinversionLocalDataSourceImpl
-    implements PerfilPreinversionLocalDataSource {
-  static createPerfilPreinversionTable(Database db) async {
+class PerfilPreInversionLocalDataSourceImpl
+    implements PerfilPreInversionLocalDataSource {
+  static createPerfilPreInversionTable(Database db) async {
     await db.execute('''
-      CREATE TABLE PerfilPreinversion (
+      CREATE TABLE PerfilPreInversion (
         PerfilPreInversionId	TEXT NOT NULL,
         PerfilId	TEXT NOT NULL,
         ConvocatoriaId	TEXT NOT NULL,
@@ -46,98 +46,99 @@ class PerfilPreinversionLocalDataSourceImpl
   }
 
   @override
-  Future<List<VPerfilPreinversionModel>> getPerfilesPreinversionDB() async {
+  Future<List<VPerfilPreInversionModel>> getPerfilesPreInversionDB() async {
     final db = await DBConfig.database;
 
     String sql = '''
     select
     PerfilPreInversionId as perfilPreInversionId,
-    PerfilId as perfilId,
-    ConvocatoriaId as convocatoriaId,
-    PerfilPreinversion.Nombre as nombre, 
-    Abreviatura as abreviatura, 
+    PerfilPreInversion.PerfilId as perfilId,
+    Convocatoria.Nombre as convocatoria,
+    PerfilPreInversion.Nombre as nombre, 
+    PerfilPreInversion.Abreviatura as abreviatura, 
     NIT  as nit, 
     Municipio.Nombre  as municipio, 
-    Direccion as direccion,
-    Contacto as contacto,
-    TelefonoFijo as telefonoFijo, 
-    TelefonoMovil as telefonoMovil,
-    Correo as correo,
+    PerfilPreInversion.Direccion as direccion,
+    PerfilPreInversion.Contacto as contacto,
+    PerfilPreInversion.TelefonoFijo as telefonoFijo, 
+    PerfilPreInversion.TelefonoMovil as telefonoMovil,
+    PerfilPreInversion.Correo as correo,
     TipoProyecto.Nombre as tipoProyecto,
     Producto.Nombre as producto,
     ProductoAsociado.Nombre as productoAsociado,
-    ValorTotalProyecto as valorTotalProyecto,
-    IncentivoModular as incentivoModular
-    from PerfilPreinversion
-    left join Perfil on (Perfil.PerfilId=PerfilPreinversion.PerfilId)
-    left join Convocatoria on (Convocatoria.ConvocatoriaId=PerfilPreinversion.ConvocatoriaId)
-    left join Municipio on (Municipio.MunicipioId=PerfilPreinversion.MunicipioId)
-    left join TipoProyecto on (TipoProyecto.TipoProyectoId=PerfilPreinversion.TipoProyectoId)
-    left join Producto on (Producto.ProductoId =PerfilPreinversion.ProductoId)
-    left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =PerfilPreinversion.ProductoAsociadoId)
+    PerfilPreInversion.ValorTotalProyecto as valorTotalProyecto,
+    PerfilPreInversion.IncentivoModular as incentivoModular
+    from PerfilPreInversion
+    left join Perfil on (Perfil.PerfilId=PerfilPreInversion.PerfilId)
+    left join Convocatoria on (Convocatoria.ConvocatoriaId=PerfilPreInversion.ConvocatoriaId)
+    left join Municipio on (Municipio.MunicipioId=PerfilPreInversion.MunicipioId)
+    left join TipoProyecto on (TipoProyecto.TipoProyectoId=PerfilPreInversion.TipoProyectoId)
+    left join Producto on (Producto.ProductoId =PerfilPreInversion.ProductoId)
+    left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =PerfilPreInversion.ProductoAsociadoId)
     ''';
 
     final res = await db.rawQuery(sql);
 
     if (res.isEmpty) return [];
 
-    final vPerfilesPreinversionModel = List<VPerfilPreinversionModel>.from(
-        res.map((m) => VPerfilPreinversionModel.fromJson(m))).toList();
+    final vPerfilesPreInversionModel = List<VPerfilPreInversionModel>.from(
+        res.map((m) => VPerfilPreInversionModel.fromJson(m))).toList();
 
-    return vPerfilesPreinversionModel;
+    return vPerfilesPreInversionModel;
   }
 
   @override
-  Future<List<VPerfilPreinversionModel>> getPerfilesPreinversionFiltrosDB(
+  Future<List<VPerfilPreInversionModel>> getPerfilesPreInversionFiltrosDB(
       String id, String nombre) async {
     final db = await DBConfig.database;
 
     String sql = '''
     select
     PerfilPreInversionId as perfilPreInversionId,
-    PerfilId as perfilId,
-    PerfilPreinversion.ConvocatoriaId as convocatoriaId,
-    PerfilPreinversion.Nombre as nombre, 
-    Abreviatura as abreviatura, 
+    PerfilPreInversion.PerfilId as perfilId,
+    Convocatoria.Nombre as convocatoria,
+    PerfilPreInversion.Nombre as nombre, 
+    PerfilPreInversion.Abreviatura as abreviatura, 
     NIT  as nit, 
     Municipio.Nombre  as municipio, 
-    Direccion as direccion,
-    Contacto as contacto,
-    TelefonoFijo as telefonoFijo, 
-    TelefonoMovil as telefonoMovil,
-    Correo as correo,
+    PerfilPreInversion.Direccion as direccion,
+    PerfilPreInversion.Contacto as contacto,
+    PerfilPreInversion.TelefonoFijo as telefonoFijo, 
+    PerfilPreInversion.TelefonoMovil as telefonoMovil,
+    PerfilPreInversion.Correo as correo,
     TipoProyecto.Nombre as tipoProyecto,
     Producto.Nombre as producto,
     ProductoAsociado.Nombre as productoAsociado,
-    ValorTotalProyecto as valorTotalProyecto,
-    IncentivoModular as incentivoModular
-    from PerfilPreinversion
-    left join Convocatoria on (Convocatoria.ConvocatoriaId=PerfilPreinversion.ConvocatoriaId)
-    left join Municipio on (Municipio.MunicipioId=PerfilPreinversion.MunicipioId)
-    left join TipoProyecto on (TipoProyecto.TipoProyectoId=PerfilPreinversion.TipoProyectoId)
-    left join Producto on (Producto.ProductoId =PerfilPreinversion.ProductoId)
-    left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =PerfilPreinversion.ProductoAsociadoId)
-    where PerfilPreinversionId LIKE '%$id%' AND PerfilPreinversion.Nombre LIKE '%$nombre%'
+    PerfilPreInversion.ValorTotalProyecto as valorTotalProyecto,
+    PerfilPreInversion.IncentivoModular as incentivoModular
+    from PerfilPreInversion
+    left join Perfil on (Perfil.PerfilId=PerfilPreInversion.PerfilId)
+    left join Convocatoria on (Convocatoria.ConvocatoriaId=PerfilPreInversion.ConvocatoriaId)
+    left join Municipio on (Municipio.MunicipioId=PerfilPreInversion.MunicipioId)
+    left join TipoProyecto on (TipoProyecto.TipoProyectoId=PerfilPreInversion.TipoProyectoId)
+    left join Producto on (Producto.ProductoId =PerfilPreInversion.ProductoId)
+    left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =PerfilPreInversion.ProductoAsociadoId)
+    where PerfilPreInversionId LIKE '%$id%' AND PerfilPreInversion.Nombre LIKE '%$nombre%'
     ''';
 
     final res = await db.rawQuery(sql);
 
-    final perfilesPreinversionDB = List<VPerfilPreinversionModel>.from(
-        res.map((m) => VPerfilPreinversionModel.fromJson(m))).toList();
+    final perfilesPreInversionDB = List<VPerfilPreInversionModel>.from(
+        res.map((m) => VPerfilPreInversionModel.fromJson(m))).toList();
 
-    return perfilesPreinversionDB;
+    return perfilesPreInversionDB;
   }
 
   @override
-  Future<int> savePerfilesPreinversionDB(
-      List<PerfilPreinversionEntity> perfilPreinversionEntity) async {
+  Future<int> savePerfilesPreInversionDB(
+      List<PerfilPreInversionEntity> perfilPreInversionEntity) async {
     final db = await DBConfig.database;
 
     var batch = db.batch();
-    batch.delete('PerfilPreinversion');
+    batch.delete('PerfilPreInversion');
 
-    for (var perfilPreinversion in perfilPreinversionEntity) {
-      batch.insert('PerfilPreinversion', perfilPreinversion.toJson());
+    for (var perfilPreInversion in perfilPreInversionEntity) {
+      batch.insert('PerfilPreInversion', perfilPreInversion.toJson());
     }
 
     final res = await batch.commit();

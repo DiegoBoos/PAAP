@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -56,10 +55,8 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
       final respuesta =
           menuDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          menuDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          menuDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = menuDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,12 +67,14 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final menusRaw = decodedResp.entries.first.value['Table'];
-        final menus =
-            List.from(menusRaw).map((e) => MenuModel.fromJson(e)).toList();
 
-        return menus;
+        if (menusRaw is List) {
+          return List.from(menusRaw).map((e) => MenuModel.fromJson(e)).toList();
+        } else {
+          return [MenuModel.fromJson(menusRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

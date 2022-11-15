@@ -41,7 +41,7 @@ class EvaluacionEntity {
       );
 
   Map<String, dynamic> toJson() => {
-        "EvaluacionId": null,
+        "EvaluacionId": evaluacionId,
         "PerfilId": perfilId,
         "Resumen": resumen,
         "Fortalezas": fortalezas,

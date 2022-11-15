@@ -36,7 +36,7 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
         PRIMARY KEY(AlianzaId),
         FOREIGN KEY(TipoProyectoId) REFERENCES TipoProyecto(TipoProyectoId),
         FOREIGN KEY(ProductoId) REFERENCES Producto(ProductoId),
-        FOREIGN KEY(PerfilPreInversionId) REFERENCES PerfilPreinversion(PerfilPreInversionId),
+        FOREIGN KEY(PerfilPreInversionId) REFERENCES PerfilPreInversion(PerfilPreInversionId),
         FOREIGN KEY(MunicipioId) REFERENCES Municipio(MunicipioId),
         FOREIGN KEY(ProductoAsociadoId) REFERENCES Producto(ProductoId),
         FOREIGN KEY(ConvocatoriaId) REFERENCES Convocatoria(ConvocatoriaId)
@@ -51,7 +51,7 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
     String sql = '''
     select
     AlianzaId as alianzaId,
-    PerfilPreInversionId as perfilPreinversionId,
+    PerfilPreInversionId as perfilPreInversionId,
     ConvocatoriaId as convocatoriaId,
     Alianza.Nombre as nombre, 
     Abreviatura as abreviatura, 
@@ -94,7 +94,7 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
     String sql = '''
     select
     AlianzaId as alianzaId,
-    PerfilPreInversionId as perfilPreinversionId,
+    PerfilPreInversionId as perfilPreInversionId,
     ConvocatoriaId as convocatoriaId,
     Alianza.Nombre as nombre, 
     Abreviatura as abreviatura, 

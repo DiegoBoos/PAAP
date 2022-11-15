@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -25,7 +24,7 @@ class TipoProyectoRemoteDataSourceImpl implements TipoProyectoRemoteDataSource {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final tipoproyectoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    final tipoProyectoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -45,24 +44,22 @@ class TipoProyectoRemoteDataSourceImpl implements TipoProyectoRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final tipoproyectoResp = await client.post(uri,
+    final tipoProyectoResp = await client.post(uri,
         headers: {
           "Content-Type": "text/xml; charset=utf-8",
           "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
         },
-        body: tipoproyectoSOAP);
+        body: tipoProyectoSOAP);
 
-    if (tipoproyectoResp.statusCode == 200) {
-      final tipoproyectoDoc = xml.XmlDocument.parse(tipoproyectoResp.body);
+    if (tipoProyectoResp.statusCode == 200) {
+      final tipoProyectoDoc = xml.XmlDocument.parse(tipoProyectoResp.body);
 
       final respuesta =
-          tipoproyectoDoc.findAllElements('respuesta').map((e) => e.text).first;
+          tipoProyectoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          tipoproyectoDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
-        final xmlString = tipoproyectoDoc
+      if (respuesta == 'true' &&
+          tipoProyectoDoc.findAllElements('NewDataSet').isNotEmpty) {
+        final xmlString = tipoProyectoDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
             .first;
@@ -71,14 +68,17 @@ class TipoProyectoRemoteDataSourceImpl implements TipoProyectoRemoteDataSource {
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final tipoproyectosRaw = decodedResp.entries.first.value['Table'];
-        final tipoproyectos = List.from(tipoproyectosRaw)
-            .map((e) => TipoProyectoModel.fromJson(e))
-            .toList();
+        final tiposProyectosRaw = decodedResp.entries.first.value['Table'];
 
-        return tipoproyectos;
+        if (tiposProyectosRaw is List) {
+          return List.from(tiposProyectosRaw)
+              .map((e) => TipoProyectoModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoProyectoModel.fromJson(tiposProyectosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

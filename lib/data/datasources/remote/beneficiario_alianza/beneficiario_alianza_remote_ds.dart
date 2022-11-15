@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -40,7 +39,7 @@ class BeneficiarioAlianzaRemoteDataSourceImpl
             <Nombre>string</Nombre>
           </rol>
           <parametros>
-            <string>TablaBeneficiariosalianza</string>              
+            <string>TablaAlianzasBeneficiarios</string>              
           </parametros>
         </ObtenerDatos>
       </soap:Body>
@@ -62,12 +61,8 @@ class BeneficiarioAlianzaRemoteDataSourceImpl
           .map((e) => e.text)
           .first;
 
-      final mensaje = beneficiarioAlianzaDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          beneficiarioAlianzaDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = beneficiarioAlianzaDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -79,13 +74,15 @@ class BeneficiarioAlianzaRemoteDataSourceImpl
 
         final beneficiariosAlianzaRaw =
             decodedResp.entries.first.value['Table'];
-        final beneficiariosAlianza = List.from(beneficiariosAlianzaRaw)
-            .map((e) => BeneficiarioAlianzaModel.fromJson(e))
-            .toList();
-
-        return beneficiariosAlianza;
+        if (beneficiariosAlianzaRaw is List) {
+          return List.from(beneficiariosAlianzaRaw)
+              .map((e) => BeneficiarioAlianzaModel.fromJson(e))
+              .toList();
+        } else {
+          return [BeneficiarioAlianzaModel.fromJson(beneficiariosAlianzaRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

@@ -58,10 +58,8 @@ class PerfilesRemoteDataSourceImpl implements PerfilRemoteDataSource {
       final respuesta =
           perfilesDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          perfilesDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          perfilesDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = perfilesDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -84,7 +82,7 @@ class PerfilesRemoteDataSourceImpl implements PerfilRemoteDataSource {
         }
         return listPerfil;
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

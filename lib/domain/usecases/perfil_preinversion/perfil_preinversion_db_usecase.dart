@@ -6,25 +6,25 @@ import '../../entities/perfil_preinversion_entity.dart';
 import '../../entities/v_perfil_preinversion_entity.dart';
 import '../../repositories/perfil_preinversion/perfil_preinversion_repository_db.dart';
 
-class PerfilPreinversionUsecaseDB {
-  final PerfilPreinversionRepositoryDB repositoryDB;
+class PerfilPreInversionUsecaseDB {
+  final PerfilPreInversionRepositoryDB repositoryDB;
 
-  PerfilPreinversionUsecaseDB(this.repositoryDB);
+  PerfilPreInversionUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<VPerfilPreinversionEntity>>>
-      getPerfilesPreinversionUsecaseDB() {
-    return repositoryDB.getPerfilesPreinversionRepositoryDB();
+  Future<Either<Failure, List<VPerfilPreInversionEntity>>>
+      getPerfilesPreInversionUsecaseDB() {
+    return repositoryDB.getPerfilesPreInversionRepositoryDB();
   }
 
-  Future<Either<Failure, List<VPerfilPreinversionEntity>>>
-      getPerfilesPreinversionFiltrosUsecaseDB(String? id, String? nombre) {
-    return repositoryDB.getPerfilesPreinversionFiltrosRepositoryDB(
+  Future<Either<Failure, List<VPerfilPreInversionEntity>>>
+      getPerfilesPreInversionFiltrosUsecaseDB(String? id, String? nombre) {
+    return repositoryDB.getPerfilesPreInversionFiltrosRepositoryDB(
         id ?? '', nombre ?? '');
   }
 
-  Future<Either<Failure, int>> savePerfilesPreinversionUsecaseDB(
-      List<PerfilPreinversionEntity> perfilesPreinversion) {
+  Future<Either<Failure, int>> savePerfilesPreInversionUsecaseDB(
+      List<PerfilPreInversionEntity> perfilesPreInversion) {
     return repositoryDB
-        .savePerfilesPreinversionRepositoryDB(perfilesPreinversion);
+        .savePerfilesPreInversionRepositoryDB(perfilesPreInversion);
   }
 }

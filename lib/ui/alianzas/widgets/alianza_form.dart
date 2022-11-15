@@ -19,11 +19,11 @@ class AlianzaForm extends StatelessWidget {
                 hintText: 'ID Alianza', labelText: 'ID Alianza')),
         const SizedBox(height: 20),
         TextFormField(
-            initialValue: alianza.perfilPreinversionId,
+            initialValue: alianza.perfilPreInversionId,
             enabled: false,
             decoration: CustomInputDecoration.inputDecoration(
-                hintText: 'ID Perfil Preinversion',
-                labelText: 'ID Perfil Preinversion')),
+                hintText: 'ID Perfil PreInversion',
+                labelText: 'ID Perfil PreInversion')),
         const SizedBox(height: 20),
         TextFormField(
             initialValue: alianza.nombre,

@@ -38,29 +38,23 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
         (data) => emit(EvaluacionRespuestaCleared()));
   }
 
-  void resetState() => emit(EvaluacionRespuestaInitial());
+  void initState() => emit(EvaluacionRespuestaInitial());
 
   void changeCriterio(String criterioId) {
-    final currentState = state;
-
-    final newEvaluacionRespuesta =
-        currentState.evaluacionRespuesta!.copyWith(criterioId: criterioId);
-    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+    final criterioChanged =
+        state.evaluacionRespuesta!.copyWith(criterioId: criterioId);
+    emit(EvaluacionRespuestaLoaded(criterioChanged));
   }
 
   void changeOpcion(String opcionId) {
-    final currentState = state;
-
-    final newEvaluacionRespuesta =
-        currentState.evaluacionRespuesta!.copyWith(opcionId: opcionId);
-    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+    final opcionChanged =
+        state.evaluacionRespuesta!.copyWith(opcionId: opcionId);
+    emit(EvaluacionRespuestaLoaded(opcionChanged));
   }
 
   void changeObservacion(String observacion) {
-    final currentState = state;
-
-    final newEvaluacionRespuesta =
-        currentState.evaluacionRespuesta!.copyWith(observacion: observacion);
-    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+    final observacionChanged =
+        state.evaluacionRespuesta!.copyWith(observacion: observacion);
+    emit(EvaluacionRespuestaLoaded(observacionChanged));
   }
 }

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -56,10 +55,8 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
       final respuesta =
           aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          aliadoDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          aliadoDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = aliadoDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,12 +67,16 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final aliadosRaw = decodedResp.entries.first.value['Table'];
-        final aliados =
-            List.from(aliadosRaw).map((e) => AliadoModel.fromJson(e)).toList();
 
-        return aliados;
+        if (aliadosRaw is List) {
+          return List.from(aliadosRaw)
+              .map((e) => AliadoModel.fromJson(e))
+              .toList();
+        } else {
+          return [AliadoModel.fromJson(aliadosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

@@ -80,11 +80,14 @@ class ActividadFinancieraRemoteDataSourceImpl
 
         final actividadesFinancierasRaw =
             decodedResp.entries.first.value['Table'];
-        final actividadesFinancieras = List.from(actividadesFinancierasRaw)
-            .map((e) => ActividadFinancieraModel.fromJson(e))
-            .toList();
 
-        return actividadesFinancieras;
+        if (actividadesFinancierasRaw is List) {
+          return List.from(actividadesFinancierasRaw)
+              .map((e) => ActividadFinancieraModel.fromJson(e))
+              .toList();
+        } else {
+          return [ActividadFinancieraModel.fromJson(actividadesFinancierasRaw)];
+        }
       } else {
         throw ServerFailure([mensaje]);
       }

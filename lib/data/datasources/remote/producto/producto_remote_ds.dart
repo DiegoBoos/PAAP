@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -57,10 +56,8 @@ class ProductoRemoteDataSourceImpl implements ProductoRemoteDataSource {
       final respuesta =
           productoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          productoDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          productoDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = productoDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -71,13 +68,16 @@ class ProductoRemoteDataSourceImpl implements ProductoRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final productosRaw = decodedResp.entries.first.value['Table'];
-        final productos = List.from(productosRaw)
-            .map((e) => ProductoModel.fromJson(e))
-            .toList();
 
-        return productos;
+        if (productosRaw is List) {
+          return List.from(productosRaw)
+              .map((e) => ProductoModel.fromJson(e))
+              .toList();
+        } else {
+          return [ProductoModel.fromJson(productosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

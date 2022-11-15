@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -24,7 +23,7 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final opcionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    final opcioneSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -49,7 +48,7 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
           "Content-Type": "text/xml; charset=utf-8",
           "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
         },
-        body: opcionSOAP);
+        body: opcioneSOAP);
 
     if (opcionResp.statusCode == 200) {
       final opcionDoc = xml.XmlDocument.parse(opcionResp.body);
@@ -57,10 +56,8 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
       final respuesta =
           opcionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          opcionDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          opcionDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = opcionDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,13 +67,17 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final opcionsRaw = decodedResp.entries.first.value['Table'];
-        final opcions =
-            List.from(opcionsRaw).map((e) => OpcionModel.fromJson(e)).toList();
+        final opcionesRaw = decodedResp.entries.first.value['Table'];
 
-        return opcions;
+        if (opcionesRaw is List) {
+          return List.from(opcionesRaw)
+              .map((e) => OpcionModel.fromJson(e))
+              .toList();
+        } else {
+          return [OpcionModel.fromJson(opcionesRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

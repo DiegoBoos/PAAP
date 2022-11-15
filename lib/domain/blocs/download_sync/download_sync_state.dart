@@ -1,44 +1,64 @@
 part of 'download_sync_bloc.dart';
 
-class ProgressModel {
+class DownloadProgressModel {
   final String title;
   final int counter;
   final int total;
+  final double percent;
 
-  ProgressModel({required this.title, required this.counter, this.total = 43});
+  DownloadProgressModel(
+      {required this.title,
+      required this.counter,
+      required this.percent,
+      this.total = 49});
 
-  ProgressModel copyWith({String? title, int? counter}) => ProgressModel(
-      title: title ?? this.title, counter: counter ?? this.counter);
+  DownloadProgressModel copyWith(
+          {String? title, int? counter, double? percent}) =>
+      DownloadProgressModel(
+          title: title ?? this.title,
+          counter: counter ?? this.counter,
+          percent: percent ?? this.percent);
 }
 
 abstract class DownloadSyncState extends Equatable {
-  final ProgressModel? progressModel;
-  const DownloadSyncState({this.progressModel});
+  final DownloadProgressModel? downloadProgressModel;
+  const DownloadSyncState({this.downloadProgressModel});
 
   @override
-  List<Object?> get props => [progressModel];
+  List<Object?> get props => [downloadProgressModel];
 }
 
 class DownloadSyncInitial extends DownloadSyncState {
   DownloadSyncInitial()
-      : super(progressModel: ProgressModel(title: '', counter: 0));
+      : super(
+            downloadProgressModel:
+                DownloadProgressModel(title: '', counter: 0, percent: 0.0));
 }
 
 class DownloadSyncInProgress extends DownloadSyncState {
-  final ProgressModel progress;
+  final DownloadProgressModel progress;
 
-  const DownloadSyncInProgress(this.progress) : super(progressModel: progress);
+  const DownloadSyncInProgress(this.progress)
+      : super(downloadProgressModel: progress);
 
   @override
-  List<Object> get props => [progress];
+  List<Object?> get props => [progress];
 }
 
-class DownloadSyncSuccess extends DownloadSyncState {}
+class DownloadSyncSuccess extends DownloadSyncState {
+  DownloadSyncSuccess()
+      : super(
+            downloadProgressModel:
+                DownloadProgressModel(title: '', counter: 0, percent: 0.0));
+}
 
 class DownloadSyncFailure extends DownloadSyncState {
   final String message;
 
-  const DownloadSyncFailure(this.message);
+  DownloadSyncFailure(this.message)
+      : super(
+            downloadProgressModel:
+                DownloadProgressModel(title: '', counter: 0, percent: 0.0));
 
   @override
   List<Object?> get props => [message];

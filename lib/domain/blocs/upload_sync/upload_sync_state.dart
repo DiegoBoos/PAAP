@@ -1,39 +1,56 @@
 part of 'upload_sync_bloc.dart';
 
-class ProgressModel {
+class UploadProgressModel {
   final String title;
   final int counter;
   final int total;
+  final double percent;
 
-  ProgressModel({required this.title, required this.counter, this.total = 43});
+  UploadProgressModel(
+      {required this.title,
+      required this.counter,
+      required this.percent,
+      this.total = 3});
 
-  ProgressModel copyWith({String? title, int? counter}) => ProgressModel(
-      title: title ?? this.title, counter: counter ?? this.counter);
+  UploadProgressModel copyWith(
+          {String? title, int? counter, double? percent}) =>
+      UploadProgressModel(
+          title: title ?? this.title,
+          counter: counter ?? this.counter,
+          percent: percent ?? this.percent);
 }
 
 abstract class UploadSyncState extends Equatable {
-  final ProgressModel? progressModel;
-  const UploadSyncState({this.progressModel});
+  final UploadProgressModel? uploadProgressModel;
+  const UploadSyncState({this.uploadProgressModel});
 
   @override
-  List<Object?> get props => [progressModel];
+  List<Object?> get props => [uploadProgressModel];
 }
 
 class UploadSyncInitial extends UploadSyncState {
   UploadSyncInitial()
-      : super(progressModel: ProgressModel(title: '', counter: 0));
+      : super(
+            uploadProgressModel:
+                UploadProgressModel(title: '', counter: 0, percent: 0.0));
 }
 
 class UploadSyncInProgress extends UploadSyncState {
-  final ProgressModel progress;
+  final UploadProgressModel progress;
 
-  const UploadSyncInProgress(this.progress) : super(progressModel: progress);
+  const UploadSyncInProgress(this.progress)
+      : super(uploadProgressModel: progress);
 
   @override
   List<Object> get props => [progress];
 }
 
-class UploadSyncSuccess extends UploadSyncState {}
+class UploadSyncSuccess extends UploadSyncState {
+  UploadSyncSuccess()
+      : super(
+            uploadProgressModel:
+                UploadProgressModel(title: '', counter: 0, percent: 0.0));
+}
 
 class UploadSyncFailure extends UploadSyncState {
   final String message;

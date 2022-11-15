@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -57,10 +56,8 @@ class UnidadRemoteDataSourceImpl implements UnidadRemoteDataSource {
       final respuesta =
           unidadDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          unidadDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          unidadDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = unidadDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,13 +67,17 @@ class UnidadRemoteDataSourceImpl implements UnidadRemoteDataSource {
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final unidadsRaw = decodedResp.entries.first.value['Table'];
-        final unidads =
-            List.from(unidadsRaw).map((e) => UnidadModel.fromJson(e)).toList();
+        final unidadesRaw = decodedResp.entries.first.value['Table'];
 
-        return unidads;
+        if (unidadesRaw is List) {
+          return List.from(unidadesRaw)
+              .map((e) => UnidadModel.fromJson(e))
+              .toList();
+        } else {
+          return [UnidadModel.fromJson(unidadesRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

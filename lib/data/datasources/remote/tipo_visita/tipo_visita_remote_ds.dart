@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -24,7 +23,7 @@ class TipoVisitaRemoteDataSourceImpl implements TipoVisitaRemoteDataSource {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final tipovisitaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    final tipoVisitaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -43,24 +42,22 @@ class TipoVisitaRemoteDataSourceImpl implements TipoVisitaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final tipovisitaResp = await client.post(uri,
+    final tipoVisitaResp = await client.post(uri,
         headers: {
           "Content-Type": "text/xml; charset=utf-8",
           "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
         },
-        body: tipovisitaSOAP);
+        body: tipoVisitaSOAP);
 
-    if (tipovisitaResp.statusCode == 200) {
-      final tipovisitaDoc = xml.XmlDocument.parse(tipovisitaResp.body);
+    if (tipoVisitaResp.statusCode == 200) {
+      final tipoVisitaDoc = xml.XmlDocument.parse(tipoVisitaResp.body);
 
       final respuesta =
-          tipovisitaDoc.findAllElements('respuesta').map((e) => e.text).first;
+          tipoVisitaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          tipovisitaDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
-        final xmlString = tipovisitaDoc
+      if (respuesta == 'true' &&
+          tipoVisitaDoc.findAllElements('NewDataSet').isNotEmpty) {
+        final xmlString = tipoVisitaDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
             .first;
@@ -69,17 +66,17 @@ class TipoVisitaRemoteDataSourceImpl implements TipoVisitaRemoteDataSource {
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final tipovisitasRaw = decodedResp.entries.first.value['Table'];
+        final tiposVisitasRaw = decodedResp.entries.first.value['Table'];
 
-        if (tipovisitasRaw is List) {
-          return List.from(tipovisitasRaw)
+        if (tiposVisitasRaw is List) {
+          return List.from(tiposVisitasRaw)
               .map((e) => TipoVisitaModel.fromJson(e))
               .toList();
         } else {
-          return [TipoVisitaModel.fromJson(tipovisitasRaw)];
+          return [TipoVisitaModel.fromJson(tiposVisitasRaw)];
         }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

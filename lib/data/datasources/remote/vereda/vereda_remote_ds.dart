@@ -84,9 +84,6 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
       final respuesta =
           veredaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          veredaDoc.findAllElements('mensaje').map((e) => e.text).first;
-
       if (respuesta == 'true' &&
           veredaDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = veredaDoc
@@ -99,12 +96,16 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final veredasRaw = decodedResp.entries.first.value['Table'];
-        final veredas =
-            List.from(veredasRaw).map((e) => VeredaModel.fromJson(e)).toList();
 
-        return veredas;
+        if (veredasRaw is List) {
+          return List.from(veredasRaw)
+              .map((e) => VeredaModel.fromJson(e))
+              .toList();
+        } else {
+          return [VeredaModel.fromJson(veredasRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();
@@ -149,10 +150,8 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
       final respuesta =
           municipioDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          municipioDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          municipioDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = municipioDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -163,13 +162,16 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final municipiosRaw = decodedResp.entries.first.value['Table'];
-        final municipios = List.from(municipiosRaw)
-            .map((e) => MunicipioModel.fromJson(e))
-            .toList();
 
-        return municipios;
+        if (municipiosRaw is List) {
+          return List.from(municipiosRaw)
+              .map((e) => MunicipioModel.fromJson(e))
+              .toList();
+        } else {
+          return [MunicipioModel.fromJson(municipiosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();
@@ -228,11 +230,14 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final departamentosRaw = decodedResp.entries.first.value['Table'];
-        final departamentos = List.from(departamentosRaw)
-            .map((e) => DepartamentoModel.fromJson(e))
-            .toList();
 
-        return departamentos;
+        if (departamentosRaw is List) {
+          return List.from(departamentosRaw)
+              .map((e) => DepartamentoModel.fromJson(e))
+              .toList();
+        } else {
+          return [DepartamentoModel.fromJson(departamentosRaw)];
+        }
       } else {
         throw ServerFailure([mensaje]);
       }

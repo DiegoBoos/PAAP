@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -24,7 +23,7 @@ class AgrupacionRemoteDataSourceImpl implements AgrupacionRemoteDataSource {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final agrupacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    final agrupacioneSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -49,7 +48,7 @@ class AgrupacionRemoteDataSourceImpl implements AgrupacionRemoteDataSource {
           "Content-Type": "text/xml; charset=utf-8",
           "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
         },
-        body: agrupacionSOAP);
+        body: agrupacioneSOAP);
 
     if (agrupacionResp.statusCode == 200) {
       final agrupacionDoc = xml.XmlDocument.parse(agrupacionResp.body);
@@ -57,10 +56,8 @@ class AgrupacionRemoteDataSourceImpl implements AgrupacionRemoteDataSource {
       final respuesta =
           agrupacionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          agrupacionDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          agrupacionDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = agrupacionDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,14 +67,17 @@ class AgrupacionRemoteDataSourceImpl implements AgrupacionRemoteDataSource {
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final agrupacionsRaw = decodedResp.entries.first.value['Table'];
-        final agrupacions = List.from(agrupacionsRaw)
-            .map((e) => AgrupacionModel.fromJson(e))
-            .toList();
+        final agrupacionesRaw = decodedResp.entries.first.value['Table'];
 
-        return agrupacions;
+        if (agrupacionesRaw is List) {
+          return List.from(agrupacionesRaw)
+              .map((e) => AgrupacionModel.fromJson(e))
+              .toList();
+        } else {
+          return [AgrupacionModel.fromJson(agrupacionesRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

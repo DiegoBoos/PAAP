@@ -17,5 +17,5 @@ class CriterioCubit extends Cubit<CriterioState> {
         (data) => emit(CriteriosLoaded(data)));
   }
 
-  void resetState() => emit(CriteriosInitial());
+  void initState() => emit(CriteriosInitial());
 }

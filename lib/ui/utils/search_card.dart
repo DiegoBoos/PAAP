@@ -93,11 +93,11 @@ class SearchCard extends StatelessWidget {
                             }
                             if (text == 'PreInversion') {
                               final perfilesPreinversionBloc =
-                                  BlocProvider.of<PerfilesPreinversionBloc>(
+                                  BlocProvider.of<PerfilesPreInversionBloc>(
                                       context);
 
                               perfilesPreinversionBloc.add(
-                                  GetPerfilesPreinversionFiltros(
+                                  GetPerfilesPreInversionFiltros(
                                       id: idCtrl.text, nombre: nameCtrl.text));
                             }
                             if (text == 'Alianza') {

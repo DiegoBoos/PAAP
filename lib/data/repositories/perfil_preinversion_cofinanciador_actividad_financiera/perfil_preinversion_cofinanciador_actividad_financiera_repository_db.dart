@@ -1,0 +1,71 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../domain/core/error/exception.dart';
+import '../../../domain/core/error/failure.dart';
+import '../../../domain/entities/perfil_preinversion_cofinanciador_actividad_financiera_entity.dart';
+import '../../../domain/repositories/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_repository_db.dart';
+import '../../datasources/local/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_local_ds.dart';
+
+class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
+    implements PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB {
+  final PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
+      perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource;
+
+  PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl(
+      {required this.perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource});
+
+  @override
+  Future<
+          Either<Failure,
+              List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
+      getPerfilPreInversionCofinanciadorActividadesFinancierasRepositoryDB() async {
+    try {
+      final perfilPreInversionCofinanciadorActividadesFinancierasDB =
+          await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
+              .getPerfilPreInversionCofinanciadorActividadesFinancierasDB();
+
+      return Right(perfilPreInversionCofinanciadorActividadesFinancierasDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<
+          Either<Failure,
+              PerfilPreInversionCofinanciadorActividadFinancieraEntity?>>
+      getPerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
+          String id) async {
+    try {
+      final perfilPreInversionCofinanciadorActividadFinancieraDB =
+          await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
+              .getPerfilPreInversionCofinanciadorActividadFinancieraDB(id);
+
+      return Right(perfilPreInversionCofinanciadorActividadFinancieraDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      savePerfilPreInversionCofinanciadorActividadesFinancierasRepositoryDB(
+          List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
+              perfilPreInversionCofinanciadorActividadFinancieraEntity) async {
+    try {
+      final result =
+          await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
+              .savePerfilPreInversionCofinanciadorActividadesFinancieras(
+                  perfilPreInversionCofinanciadorActividadFinancieraEntity);
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+}

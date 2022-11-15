@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -57,10 +56,8 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
       final respuesta =
           beneficiarioDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          beneficiarioDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          beneficiarioDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = beneficiarioDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -71,13 +68,16 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final beneficiariosRaw = decodedResp.entries.first.value['Table'];
-        final beneficiarios = List.from(beneficiariosRaw)
-            .map((e) => BeneficiarioModel.fromJson(e))
-            .toList();
 
-        return beneficiarios;
+        if (beneficiariosRaw is List) {
+          return List.from(beneficiariosRaw)
+              .map((e) => BeneficiarioModel.fromJson(e))
+              .toList();
+        } else {
+          return [BeneficiarioModel.fromJson(beneficiariosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

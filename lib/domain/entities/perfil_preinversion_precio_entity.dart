@@ -1,12 +1,10 @@
-class PerfilPreinversionPrecioEntity {
-  PerfilPreinversionPrecioEntity({
+class PerfilPreInversionPrecioEntity {
+  PerfilPreInversionPrecioEntity({
     required this.perfilPreInversionId,
     required this.productoId,
     required this.tipoCalidadId,
     required this.precio,
     required this.unidadId,
-    required this.producto,
-    required this.tipoCalidad,
   });
 
   String perfilPreInversionId;
@@ -14,18 +12,14 @@ class PerfilPreinversionPrecioEntity {
   String tipoCalidadId;
   String precio;
   String unidadId;
-  String producto;
-  String tipoCalidad;
 
-  factory PerfilPreinversionPrecioEntity.fromJson(Map<String, dynamic> json) =>
-      PerfilPreinversionPrecioEntity(
+  factory PerfilPreInversionPrecioEntity.fromJson(Map<String, dynamic> json) =>
+      PerfilPreInversionPrecioEntity(
         perfilPreInversionId: json["PerfilPreInversionId"],
         productoId: json["ProductoId"],
         tipoCalidadId: json["TipoCalidadId"],
         precio: json["Precio"],
         unidadId: json["UnidadId"],
-        producto: json["Producto"],
-        tipoCalidad: json["TipoCalidad"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -34,7 +28,5 @@ class PerfilPreinversionPrecioEntity {
         "TipoCalidadId": tipoCalidadId,
         "Precio": precio,
         "UnidadId": unidadId,
-        "Producto": producto,
-        "TipoCalidad": tipoCalidad,
       };
 }

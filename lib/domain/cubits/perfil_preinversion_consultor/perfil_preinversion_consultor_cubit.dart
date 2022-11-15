@@ -1,0 +1,25 @@
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+
+import '../../entities/perfil_preinversion_consultor_entity.dart';
+import '../../usecases/perfil_preinversion_consultor/perfil_preinversion_consultor_db_usecase.dart';
+
+part '../perfil_preinversion_consultor/perfil_preinversion_consultor_state.dart';
+
+class PerfilPreInversionConsultorCubit
+    extends Cubit<PerfilPreInversionConsultorState> {
+  final PerfilPreInversionConsultorUsecaseDB perfilPreInversionConsultorDB;
+
+  PerfilPreInversionConsultorCubit(
+      {required this.perfilPreInversionConsultorDB})
+      : super(PerfilPreInversionConsultorInitial());
+
+  void getPerfilPreInversionConsultorDB(String id) async {
+    final result = await perfilPreInversionConsultorDB
+        .getPerfilPreInversionConsultorUsecaseDB(id);
+    result.fold(
+        (failure) =>
+            emit(PerfilPreInversionConsultorError(failure.properties.first)),
+        (data) => emit(PerfilPreInversionConsultorLoaded(data)));
+  }
+}

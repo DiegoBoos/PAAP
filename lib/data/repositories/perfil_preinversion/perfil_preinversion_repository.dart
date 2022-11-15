@@ -8,20 +8,20 @@ import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/perfil_preinversion/perfil_preinversion_repository.dart';
 import '../../datasources/remote/perfil_preinversion/perfil_preinversion_remote_ds.dart';
 
-class PerfilPreinversionRepositoryImpl implements PerfilPreinversionRepository {
-  final PerfilPreinversionRemoteDataSource perfilPreinversionRemoteDataSource;
+class PerfilPreInversionRepositoryImpl implements PerfilPreInversionRepository {
+  final PerfilPreInversionRemoteDataSource perfilPreInversionRemoteDataSource;
 
-  PerfilPreinversionRepositoryImpl(
-      {required this.perfilPreinversionRemoteDataSource});
+  PerfilPreInversionRepositoryImpl(
+      {required this.perfilPreInversionRemoteDataSource});
 
   @override
-  Future<Either<Failure, List<PerfilPreinversionEntity>>>
-      getPerfilesPreinversionRepository(UsuarioEntity usuario) async {
+  Future<Either<Failure, List<PerfilPreInversionEntity>>>
+      getPerfilesPreInversionRepository(UsuarioEntity usuario) async {
     try {
-      final perfilesPreinversion = await perfilPreinversionRemoteDataSource
-          .getPerfilesPreinversion(usuario);
+      final perfilesPreInversion = await perfilPreInversionRemoteDataSource
+          .getPerfilesPreInversion(usuario);
 
-      return Right(perfilesPreinversion);
+      return Right(perfilesPreInversion);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

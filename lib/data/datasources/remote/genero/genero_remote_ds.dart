@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -56,10 +55,8 @@ class GeneroRemoteDataSourceImpl implements GeneroRemoteDataSource {
       final respuesta =
           generoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          generoDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          generoDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = generoDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,12 +67,16 @@ class GeneroRemoteDataSourceImpl implements GeneroRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final generosRaw = decodedResp.entries.first.value['Table'];
-        final generos =
-            List.from(generosRaw).map((e) => GeneroModel.fromJson(e)).toList();
 
-        return generos;
+        if (generosRaw is List) {
+          return List.from(generosRaw)
+              .map((e) => GeneroModel.fromJson(e))
+              .toList();
+        } else {
+          return [GeneroModel.fromJson(generosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

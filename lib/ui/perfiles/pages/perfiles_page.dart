@@ -69,14 +69,14 @@ class _PerfilesPageState extends State<PerfilesPage> {
                 return const CustomCircularProgress(
                     alignment: Alignment.center);
               } else if (state is PerfilesLoaded) {
-                List<VPerfilEntity> perfiles = state.perfilesLoaded!;
-                if (perfiles.isEmpty) {
+                List<VPerfilEntity> vPerfiles = state.perfilesLoaded!;
+                if (vPerfiles.isEmpty) {
                   return const SizedBox(
                       child:
                           Center(child: NoDataSvg(title: 'No hay resultados')));
                 }
                 return PerfilesRows(
-                    perfiles: perfiles, subtitleStyle: Styles.subtitleStyle);
+                    vPerfiles: vPerfiles, subtitleStyle: Styles.subtitleStyle);
               }
               return const SizedBox();
             },

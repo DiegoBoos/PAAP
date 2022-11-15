@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/domain/cubits/v_perfil/v_perfil_cubit.dart';
 
 import '../../../domain/entities/v_perfil_entity.dart';
 
 class PerfilesRows extends StatelessWidget {
   const PerfilesRows({
     Key? key,
-    required this.perfiles,
+    required this.vPerfiles,
     required this.subtitleStyle,
   }) : super(key: key);
 
-  final List<VPerfilEntity> perfiles;
+  final List<VPerfilEntity> vPerfiles;
   final TextStyle subtitleStyle;
 
   @override
@@ -41,15 +43,16 @@ class PerfilesRows extends StatelessWidget {
             ),
           ),
         ],
-        rows: List.generate(perfiles.length, (index) {
-          VPerfilEntity perfil = perfiles[index];
+        rows: List.generate(vPerfiles.length, (index) {
+          VPerfilEntity vPerfil = vPerfiles[index];
 
           return DataRow(cells: <DataCell>[
-            DataCell(Text(perfil.perfilId)),
-            DataCell(Text(perfil.nombre)),
+            DataCell(Text(vPerfil.perfilId)),
+            DataCell(Text(vPerfil.nombre)),
             DataCell(IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, 'VPerfil', arguments: perfil);
+                  BlocProvider.of<VPerfilCubit>(context).selectVPerfil(vPerfil);
+                  Navigator.pushNamed(context, 'VPerfil');
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

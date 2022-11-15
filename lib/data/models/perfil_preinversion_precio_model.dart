@@ -1,33 +1,27 @@
-import '../../domain/entities/perfil_preInversion_precio_entity.dart';
+import '../../domain/entities/perfil_preinversion_precio_entity.dart';
 
-class PerfilPreinversionPrecioModel extends PerfilPreinversionPrecioEntity {
-  PerfilPreinversionPrecioModel({
+class PerfilPreInversionPrecioModel extends PerfilPreInversionPrecioEntity {
+  PerfilPreInversionPrecioModel({
     required String perfilPreInversionId,
-    required String productoId,
-    required String tipoCalidadId,
-    required String precio,
-    required String unidadId,
-    required String producto,
-    required String tipoCalidad,
+    String? productoId,
+    String? tipoCalidadId,
+    String? precio,
+    String? unidadId,
   }) : super(
-            perfilPreInversionId: perfilPreInversionId,
-            productoId: productoId,
-            tipoCalidadId: tipoCalidadId,
-            precio: precio,
-            unidadId: unidadId,
-            producto: producto,
-            tipoCalidad: tipoCalidad);
+          perfilPreInversionId: perfilPreInversionId,
+          productoId: productoId ?? '',
+          tipoCalidadId: tipoCalidadId ?? '',
+          precio: precio ?? '',
+          unidadId: unidadId ?? '',
+        );
 
-  factory PerfilPreinversionPrecioModel.fromJson(Map<String, dynamic> json) =>
-      PerfilPreinversionPrecioModel(
-        perfilPreInversionId: json["PerfilPreInversionId"],
-        productoId: json["ProductoId"],
-        tipoCalidadId: json["TipoCalidadId"],
-        precio: json["Precio"],
-        unidadId: json["UnidadId"],
-        producto: json["Producto"],
-        tipoCalidad: json["TipoCalidad"],
-      );
+  factory PerfilPreInversionPrecioModel.fromJson(Map<String, dynamic> json) =>
+      PerfilPreInversionPrecioModel(
+          perfilPreInversionId: json["PerfilPreInversionId"],
+          productoId: json["ProductoId"],
+          tipoCalidadId: json["TipoCalidadId"],
+          precio: json["Precio"],
+          unidadId: json["UnidadId"]);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -36,7 +30,5 @@ class PerfilPreinversionPrecioModel extends PerfilPreinversionPrecioEntity {
         "TipoCalidadId": tipoCalidadId,
         "Precio": precio,
         "UnidadId": unidadId,
-        "Producto": producto,
-        "TipoCalidad": tipoCalidad,
       };
 }

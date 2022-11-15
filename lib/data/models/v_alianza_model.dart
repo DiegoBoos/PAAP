@@ -3,7 +3,7 @@ import 'package:paap/domain/entities/v_alianza_entity.dart';
 class VAlianzaModel extends VAlianzaEntity {
   VAlianzaModel(
       {required String alianzaId,
-      required String perfilPreinversionId,
+      required String perfilPreInversionId,
       required String convocatoriaId,
       String? nombre,
       String? abreviatura,
@@ -22,7 +22,7 @@ class VAlianzaModel extends VAlianzaEntity {
       String? legalizado})
       : super(
             alianzaId: alianzaId,
-            perfilPreinversionId: perfilPreinversionId,
+            perfilPreInversionId: perfilPreInversionId,
             convocatoriaId: convocatoriaId,
             nombre: nombre ?? '',
             abreviatura: abreviatura ?? '',
@@ -42,7 +42,7 @@ class VAlianzaModel extends VAlianzaEntity {
 
   factory VAlianzaModel.fromJson(Map<String, dynamic> json) => VAlianzaModel(
       alianzaId: json["alianzaId"],
-      perfilPreinversionId: json["perfilPreinversionId"],
+      perfilPreInversionId: json["perfilPreInversionId"],
       convocatoriaId: json["convocatoriaId"],
       nombre: json["nombre"],
       abreviatura: json["abreviatura"],
@@ -63,7 +63,7 @@ class VAlianzaModel extends VAlianzaEntity {
   @override
   Map<String, dynamic> toJson() => {
         "alianzaId": alianzaId,
-        "perfilPreinversionId": perfilPreinversionId,
+        "perfilPreInversionId": perfilPreInversionId,
         "convocatoriaId": convocatoriaId,
         "nombre": nombre,
         "abreviatura": abreviatura,

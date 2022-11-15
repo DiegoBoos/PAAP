@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -63,12 +62,8 @@ class TipoActividadProductivaRemoteDataSourceImpl
           .map((e) => e.text)
           .first;
 
-      final mensaje = tipoActividadProductivaDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          tipoActividadProductivaDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = tipoActividadProductivaDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -92,7 +87,7 @@ class TipoActividadProductivaRemoteDataSourceImpl
           ];
         }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

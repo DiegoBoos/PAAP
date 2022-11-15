@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -63,12 +62,8 @@ class TipoDiscapacidadRemoteDataSourceImpl
           .map((e) => e.text)
           .first;
 
-      final mensaje = tipoDiscapacidadDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          tipoDiscapacidadDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = tipoDiscapacidadDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -79,13 +74,16 @@ class TipoDiscapacidadRemoteDataSourceImpl
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final tiposDiscapacidadesRaw = decodedResp.entries.first.value['Table'];
-        final tiposDiscapacidades = List.from(tiposDiscapacidadesRaw)
-            .map((e) => TipoDiscapacidadModel.fromJson(e))
-            .toList();
 
-        return tiposDiscapacidades;
+        if (tiposDiscapacidadesRaw is List) {
+          return List.from(tiposDiscapacidadesRaw)
+              .map((e) => TipoDiscapacidadModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoDiscapacidadModel.fromJson(tiposDiscapacidadesRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

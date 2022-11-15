@@ -17,5 +17,5 @@ class AgrupacionCubit extends Cubit<AgrupacionState> {
         (data) => emit(AgrupacionesLoaded(data)));
   }
 
-  void resetState() => emit(AgrupacionesInitial());
+  void initState() => emit(AgrupacionesInitial());
 }

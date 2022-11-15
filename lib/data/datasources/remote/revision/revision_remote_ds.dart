@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -56,10 +55,8 @@ class RevisionRemoteDataSourceImpl implements RevisionRemoteDataSource {
       final respuesta =
           revisionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          revisionDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          revisionDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = revisionDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -70,13 +67,16 @@ class RevisionRemoteDataSourceImpl implements RevisionRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final revisionesRaw = decodedResp.entries.first.value['Table'];
-        final revisiones = List.from(revisionesRaw)
-            .map((e) => RevisionModel.fromJson(e))
-            .toList();
 
-        return revisiones;
+        if (revisionesRaw is List) {
+          return List.from(revisionesRaw)
+              .map((e) => RevisionModel.fromJson(e))
+              .toList();
+        } else {
+          return [RevisionModel.fromJson(revisionesRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

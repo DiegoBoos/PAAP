@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -57,10 +56,8 @@ class DesembolsoRemoteDataSourceImpl implements DesembolsoRemoteDataSource {
       final respuesta =
           desembolsoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          desembolsoDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          desembolsoDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = desembolsoDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -71,13 +68,16 @@ class DesembolsoRemoteDataSourceImpl implements DesembolsoRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final desembolsosRaw = decodedResp.entries.first.value['Table'];
-        final desembolsos = List.from(desembolsosRaw)
-            .map((e) => DesembolsoModel.fromJson(e))
-            .toList();
 
-        return desembolsos;
+        if (desembolsosRaw is List) {
+          return List.from(desembolsosRaw)
+              .map((e) => DesembolsoModel.fromJson(e))
+              .toList();
+        } else {
+          return [DesembolsoModel.fromJson(desembolsosRaw)];
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        return [];
       }
     } else {
       throw ServerException();

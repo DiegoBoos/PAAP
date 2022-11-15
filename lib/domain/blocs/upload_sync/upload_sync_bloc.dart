@@ -30,26 +30,33 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
     on<UploadStarted>((event, emit) async {
       final usuario = event.usuario;
 
-      emit(UploadSyncInProgress(state.progressModel!.copyWith(
+      add(UploadStatusChanged(state.uploadProgressModel!.copyWith(
           title: 'Sincronizando Visitas',
-          counter: state.progressModel!.counter + 1)));
+          counter: state.uploadProgressModel!.counter + 1,
+          percent: calculatePercent())));
       await uploadVisita(usuario, emit);
 
-      emit(UploadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Evaluaciones',
-          counter: state.progressModel!.counter + 1)));
       await uploadEvaluacion(usuario, emit);
 
-      emit(UploadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Evaluaciones Respuestas',
-          counter: state.progressModel!.counter + 1)));
       await uploadEvaluacionRespuesta(usuario, emit);
+    });
 
-      emit(UploadSyncSuccess());
+    on<UploadStatusChanged>((event, emit) {
+      event.progress.counter == 3
+          ? emit(UploadSyncSuccess())
+          : emit(UploadSyncInProgress(event.progress));
     });
 
     on<UploadSyncError>(
         (event, emit) => emit(UploadSyncFailure(event.message)));
+  }
+
+  double calculatePercent() {
+    final counter = state.uploadProgressModel!.counter;
+    final total = state.uploadProgressModel!.total;
+    final percent = ((counter / total) * 100) / 100;
+
+    return percent;
   }
 
   // Sync Visita
@@ -71,8 +78,13 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
   Future<void> updateVisitasProduccion(UsuarioEntity usuario,
       List<VisitaEntity> data, Emitter<UploadSyncState> emit) async {
     final result = await visitaDB.updateVisitasProduccionUsecaseDB(data);
-    result.fold(
-        (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
+    result.fold((failure) => add(UploadSyncError(failure.properties.first)),
+        (_) {
+      add(UploadStatusChanged(state.uploadProgressModel!.copyWith(
+          title: 'Sincronizando Evaluaciones',
+          counter: state.uploadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   // Sync Evaluacion
@@ -96,8 +108,13 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
       List<EvaluacionEntity> data, Emitter<UploadSyncState> emit) async {
     final result =
         await evaluacionDB.updateEvaluacionesProduccionUsecaseDB(data);
-    result.fold(
-        (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
+    result.fold((failure) => add(UploadSyncError(failure.properties.first)),
+        (_) {
+      add(UploadStatusChanged(state.uploadProgressModel!.copyWith(
+          title: 'Sincronizando Evaluaciones Respuestas',
+          counter: state.uploadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   // Sync Evaluacion Respuesta

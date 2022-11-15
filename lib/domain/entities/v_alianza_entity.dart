@@ -1,7 +1,7 @@
 class VAlianzaEntity {
   VAlianzaEntity(
       {required this.alianzaId,
-      required this.perfilPreinversionId,
+      required this.perfilPreInversionId,
       required this.convocatoriaId,
       required this.nombre,
       required this.abreviatura,
@@ -20,7 +20,7 @@ class VAlianzaEntity {
       required this.legalizado});
 
   final String alianzaId;
-  final String perfilPreinversionId;
+  final String perfilPreInversionId;
   final String convocatoriaId;
   final String nombre;
   final String abreviatura;
@@ -40,7 +40,7 @@ class VAlianzaEntity {
 
   factory VAlianzaEntity.fromJson(Map<String, dynamic> json) => VAlianzaEntity(
       alianzaId: json["alianzaId"],
-      perfilPreinversionId: json["perfilPreinversionId"],
+      perfilPreInversionId: json["perfilPreInversionId"],
       convocatoriaId: json["convocatoriaId"],
       nombre: json["nombre"],
       abreviatura: json["abreviatura"],
@@ -60,7 +60,7 @@ class VAlianzaEntity {
 
   Map<String, dynamic> toJson() => {
         "alianzaId": alianzaId,
-        "perfilPreinversionId": perfilPreinversionId,
+        "perfilPreInversionId": perfilPreInversionId,
         "convocatoriaId": convocatoriaId,
         "nombre": nombre,
         "abreviatura": abreviatura,

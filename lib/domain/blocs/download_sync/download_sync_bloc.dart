@@ -2,17 +2,18 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:paap/domain/usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
 
 import '../../entities/usuario_entity.dart';
 import '../../usecases/actividad_economica/actividad_economica_exports.dart';
 import '../../usecases/actividad_financiera/actividad_financiera_exports.dart';
 import '../../usecases/agrupacion/agrupacion_exports.dart';
 import '../../usecases/aliado/aliado_exports.dart';
+import '../../usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
+import '../../usecases/perfil_preinversion_aliado/perfil_preinversion_aliado_exports.dart';
 import '../../usecases/alianza/alianza_exports.dart';
 import '../../usecases/beneficiario/beneficiario_exports.dart';
 import '../../usecases/beneficiario_alianza/beneficiario_alianza_exports.dart';
-import '../../usecases/beneficiario_preinversion/beneficiario_preinversion_exports.dart';
+import '../../usecases/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_exports.dart';
 import '../../usecases/cofinanciador/cofinanciador_exports.dart';
 import '../../usecases/consultor/consultor_exports.dart';
 import '../../usecases/convocatoria/convocatoria_exports.dart';
@@ -31,6 +32,12 @@ import '../../usecases/nivel_escolar/nivel_escolar_exports.dart';
 import '../../usecases/opcion/opcion_exports.dart';
 import '../../usecases/perfil/perfil_exports.dart';
 import '../../usecases/perfil_preinversion/perfil_preinversion_exports.dart';
+import '../../usecases/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_exports.dart';
+import '../../usecases/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_exports.dart';
+import '../../usecases/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_exports.dart';
+import '../../usecases/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_exports.dart';
+import '../../usecases/perfil_preinversion_consultor/perfil_preinversion_consultor_exports.dart';
+import '../../usecases/perfil_preinversion_precio/perfil_preinversion_precio_exports.dart';
 import '../../usecases/producto/producto_exports.dart';
 import '../../usecases/residencia/residencia_exports.dart';
 import '../../usecases/revision/revision_exports.dart';
@@ -38,6 +45,7 @@ import '../../usecases/rubro/rubro_exports.dart';
 import '../../usecases/sitio_entrega/sitio_entrega_exports.dart';
 import '../../usecases/tipo_actividad_productiva/tipo_actividad_productiva_exports.dart';
 import '../../usecases/tipo_calidad/tipo_calidad_exports.dart';
+import '../../usecases/tipo_discapacidad/tipo_discapacidad_exports.dart';
 import '../../usecases/tipo_entidad/tipo_entidad_exports.dart';
 import '../../usecases/tipo_identificacion/tipo_identificacion_exports.dart';
 import '../../usecases/tipo_movimiento/tipo_movimiento_exports.dart';
@@ -52,446 +60,348 @@ part 'download_sync_event.dart';
 part 'download_sync_state.dart';
 
 class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
-  final MenuUsecase menu;
-  final MenuUsecaseDB menuDB;
-
-  final ConvocatoriaUsecase convocatoria;
-  final ConvocatoriaUsecaseDB convocatoriaDB;
-
-  final TipoProyectoUsecase tipoProyecto;
-  final TipoProyectoUsecaseDB tipoProyectoDB;
-
-  final UnidadUsecase unidad;
-  final UnidadUsecaseDB unidadDB;
-
-  final PerfilUsecase perfiles;
-  final PerfilUsecaseDB perfilesDB;
-
-  final PerfilPreinversionUsecase perfilesPreinversion;
-  final PerfilPreinversionUsecaseDB perfilesPreinversionDB;
-
-  final ProductoUsecase productos;
-  final ProductoUsecaseDB productosDB;
-
-  final GeneroUsecase generos;
-  final GeneroUsecaseDB generosDB;
-
-  final DepartamentoUsecase departamentos;
-  final DepartamentoUsecaseDB departamentosDB;
-
-  final MunicipioUsecase municipios;
-  final MunicipioUsecaseDB municipiosDB;
-
-  final TipoVisitaUsecase tipoVisita;
-  final TipoVisitaUsecaseDB tipoVisitaDB;
-
-  final EstadoVisitaUsecase estadoVisita;
-  final EstadoVisitaUsecaseDB estadoVisitaDB;
-
-  final AgrupacionUsecase agrupacion;
-  final AgrupacionUsecaseDB agrupacionDB;
-
-  final EstadoCivilUsecase estadoCivil;
-  final EstadoCivilUsecaseDB estadoCivilDB;
-
-  final ResidenciaUsecase residencia;
-  final ResidenciaUsecaseDB residenciaDB;
-
-  final TipoTenenciaUsecase tipoTenencia;
-  final TipoTenenciaUsecaseDB tipoTenenciaDB;
-
-  final NivelEscolarUsecase nivelEscolar;
-  final NivelEscolarUsecaseDB nivelEscolarDB;
-
-  final VeredaUsecase vereda;
-  final VeredaUsecaseDB veredaDB;
-
-  final AlianzaUsecase alianza;
-  final AlianzaUsecaseDB alianzaDB;
-
-  final AliadoUsecase aliado;
-  final AliadoUsecaseDB aliadoDB;
-
-  final FrecuenciaUsecase frecuencia;
-  final FrecuenciaUsecaseDB frecuenciaDB;
-
-  final BeneficiarioUsecase beneficiario;
-  final BeneficiarioUsecaseDB beneficiarioDB;
-
-  final GrupoEspecialUsecase grupoEspecial;
-  final GrupoEspecialUsecaseDB grupoEspecialDB;
-
-  final TipoIdentificacionUsecase tipoIdentificacion;
-  final TipoIdentificacionUsecaseDB tipoIdentificacionDB;
-
-  final RevisionUsecase revision;
-  final RevisionUsecaseDB revisionDB;
-
-  final ConsultorUsecase consultor;
-  final ConsultorUsecaseDB consultorDB;
-
-  final TipoEntidadUsecase tipoEntidad;
-  final TipoEntidadUsecaseDB tipoEntidadDB;
-
-  final CofinanciadorUsecase cofinanciador;
-  final CofinanciadorUsecaseDB cofinanciadorDB;
-
-  final DesembolsoUsecase desembolso;
-  final DesembolsoUsecaseDB desembolsoDB;
-
-  final RubroUsecase rubro;
-  final RubroUsecaseDB rubroDB;
-
-  final ActividadFinancieraUsecase actividadFinanciera;
-  final ActividadFinancieraUsecaseDB actividadFinancieraDB;
-
-  final TipoMovimientoUsecase tipoMovimiento;
-  final TipoMovimientoUsecaseDB tipoMovimientoDB;
-
-  final TipoCalidadUsecase tipoCalidad;
-  final TipoCalidadUsecaseDB tipoCalidadDB;
-
-  final TipoActividadProductivaUsecase tipoActividadProductiva;
-  final TipoActividadProductivaUsecaseDB tipoActividadProductivaDB;
-
   final ActividadEconomicaUsecase actividadEconomica;
   final ActividadEconomicaUsecaseDB actividadEconomicaDB;
-
-  final BeneficiarioPreinversionUsecase beneficiarioPreinversion;
-  final BeneficiarioPreinversionUsecaseDB beneficiarioPreinversionDB;
-
+  final ActividadFinancieraUsecase actividadFinanciera;
+  final ActividadFinancieraUsecaseDB actividadFinancieraDB;
+  final AgrupacionUsecase agrupacion;
+  final AgrupacionUsecaseDB agrupacionDB;
+  final PerfilPreInversionAliadoUsecase perfilPreInversionAliados;
+  final PerfilPreInversionAliadoUsecaseDB perfilPreInversionAliadosDB;
+  final AliadoUsecase aliado;
+  final AliadoUsecaseDB aliadoDB;
+  final AlianzaUsecase alianza;
+  final AlianzaUsecaseDB alianzaDB;
   final BeneficiarioAlianzaUsecase beneficiarioAlianza;
   final BeneficiarioAlianzaUsecaseDB beneficiarioAlianzaDB;
-
-  final OpcionUsecase opcion;
-  final OpcionUsecaseDB opcionDB;
-
+  final PerfilPreInversionBeneficiarioUsecase perfilPreInversionBeneficiario;
+  final PerfilPreInversionBeneficiarioUsecaseDB
+      perfilPreInversionBeneficiarioDB;
+  final BeneficiarioUsecase beneficiario;
+  final BeneficiarioUsecaseDB beneficiarioDB;
+  final CofinanciadorUsecase cofinanciador;
+  final CofinanciadorUsecaseDB cofinanciadorDB;
+  final ConsultorUsecase consultor;
+  final ConsultorUsecaseDB consultorDB;
+  final ConvocatoriaUsecase convocatoria;
+  final ConvocatoriaUsecaseDB convocatoriaDB;
   final CriterioUsecase criterio;
   final CriterioUsecaseDB criterioDB;
-
-  final VisitaUsecase visita;
-  final VisitaUsecaseDB visitaDB;
-
-  final SitioEntregaUsecase sitioEntrega;
-  final SitioEntregaUsecaseDB sitioEntregaDB;
-
-  final EvaluacionUsecase evaluacion;
-  final EvaluacionUsecaseDB evaluacionDB;
-
+  final DepartamentoUsecase departamentos;
+  final DepartamentoUsecaseDB departamentosDB;
+  final DesembolsoUsecase desembolso;
+  final DesembolsoUsecaseDB desembolsoDB;
+  final EstadoCivilUsecase estadoCivil;
+  final EstadoCivilUsecaseDB estadoCivilDB;
+  final EstadoVisitaUsecase estadoVisita;
+  final EstadoVisitaUsecaseDB estadoVisitaDB;
   final EvaluacionRespuestaUsecase evaluacionRespuesta;
   final EvaluacionRespuestaUsecaseDB evaluacionRespuestaDB;
+  final EvaluacionUsecase evaluacion;
+  final EvaluacionUsecaseDB evaluacionDB;
+  final FrecuenciaUsecase frecuencia;
+  final FrecuenciaUsecaseDB frecuenciaDB;
+  final GeneroUsecase generos;
+  final GeneroUsecaseDB generosDB;
+  final GrupoEspecialUsecase grupoEspecial;
+  final GrupoEspecialUsecaseDB grupoEspecialDB;
+  final MenuUsecase menu;
+  final MenuUsecaseDB menuDB;
+  final MunicipioUsecase municipios;
+  final MunicipioUsecaseDB municipiosDB;
+  final NivelEscolarUsecase nivelEscolar;
+  final NivelEscolarUsecaseDB nivelEscolarDB;
+  final OpcionUsecase opcion;
+  final OpcionUsecaseDB opcionDB;
+  final PerfilPreInversionUsecase perfilesPreInversion;
+  final PerfilPreInversionUsecaseDB perfilesPreInversionDB;
+  final PerfilUsecase perfiles;
+  final PerfilUsecaseDB perfilesDB;
+  final ProductoUsecase productos;
+  final ProductoUsecaseDB productosDB;
+  final ResidenciaUsecase residencia;
+  final ResidenciaUsecaseDB residenciaDB;
+  final RevisionUsecase revision;
+  final RevisionUsecaseDB revisionDB;
+  final RubroUsecase rubro;
+  final RubroUsecaseDB rubroDB;
+  final SitioEntregaUsecase sitioEntrega;
+  final SitioEntregaUsecaseDB sitioEntregaDB;
+  final TipoActividadProductivaUsecase tipoActividadProductiva;
+  final TipoActividadProductivaUsecaseDB tipoActividadProductivaDB;
+  final TipoCalidadUsecase tipoCalidad;
+  final TipoCalidadUsecaseDB tipoCalidadDB;
+  final TipoDiscapacidadUsecase tipoDiscapacidad;
+  final TipoDiscapacidadUsecaseDB tipoDiscapacidadDB;
+  final TipoEntidadUsecase tipoEntidad;
+  final TipoEntidadUsecaseDB tipoEntidadDB;
+  final TipoIdentificacionUsecase tipoIdentificacion;
+  final TipoIdentificacionUsecaseDB tipoIdentificacionDB;
+  final TipoMovimientoUsecase tipoMovimiento;
+  final TipoMovimientoUsecaseDB tipoMovimientoDB;
+  final TipoProyectoUsecase tipoProyecto;
+  final TipoProyectoUsecaseDB tipoProyectoDB;
+  final TipoTenenciaUsecase tipoTenencia;
+  final TipoTenenciaUsecaseDB tipoTenenciaDB;
+  final TipoVisitaUsecase tipoVisita;
+  final TipoVisitaUsecaseDB tipoVisitaDB;
+  final UnidadUsecase unidad;
+  final UnidadUsecaseDB unidadDB;
+  final VeredaUsecase vereda;
+  final VeredaUsecaseDB veredaDB;
+  final VisitaUsecase visita;
+  final VisitaUsecaseDB visitaDB;
+  final PerfilPreInversionCofinanciadorActividadFinancieraUsecase
+      perfilPreInversionCofinanciadorActividadFinanciera;
+  final PerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB
+      perfilPreInversionCofinanciadorActividadFinancieraDB;
+  final PerfilPreInversionCofinanciadorDesembolsoUsecase
+      perfilPreInversionCofinanciadorDesembolso;
+  final PerfilPreInversionCofinanciadorDesembolsoUsecaseDB
+      perfilPreInversionCofinanciadorDesembolsoDB;
+  final PerfilPreInversionCofinanciadorRubroUsecase
+      perfilPreInversionCofinanciadorRubro;
+  final PerfilPreInversionCofinanciadorRubroUsecaseDB
+      perfilPreInversionCofinanciadorRubroDB;
+  final PerfilPreInversionCofinanciadorUsecase perfilPreInversionCofinanciador;
+  final PerfilPreInversionCofinanciadorUsecaseDB
+      perfilPreInversionCofinanciadorDB;
+  final PerfilPreInversionConsultorUsecase perfilPreInversionConsultor;
+  final PerfilPreInversionConsultorUsecaseDB perfilPreInversionConsultorDB;
+  final PerfilPreInversionPrecioUsecase perfilPreInversionPrecio;
+  final PerfilPreInversionPrecioUsecaseDB perfilPreInversionPrecioDB;
 
-  DownloadSyncBloc({
-    required this.menu,
-    required this.menuDB,
-    required this.convocatoria,
-    required this.convocatoriaDB,
-    required this.tipoProyecto,
-    required this.tipoProyectoDB,
-    required this.unidad,
-    required this.unidadDB,
-    required this.perfiles,
-    required this.perfilesDB,
-    required this.perfilesPreinversion,
-    required this.perfilesPreinversionDB,
-    required this.productos,
-    required this.productosDB,
-    required this.generos,
-    required this.generosDB,
-    required this.departamentos,
-    required this.departamentosDB,
-    required this.municipios,
-    required this.municipiosDB,
-    required this.tipoVisita,
-    required this.tipoVisitaDB,
-    required this.estadoVisita,
-    required this.estadoVisitaDB,
-    required this.agrupacion,
-    required this.agrupacionDB,
-    required this.estadoCivil,
-    required this.estadoCivilDB,
-    required this.residencia,
-    required this.residenciaDB,
-    required this.tipoTenencia,
-    required this.tipoTenenciaDB,
-    required this.nivelEscolar,
-    required this.nivelEscolarDB,
-    required this.vereda,
-    required this.veredaDB,
-    required this.alianza,
-    required this.alianzaDB,
-    required this.aliado,
-    required this.aliadoDB,
-    required this.frecuencia,
-    required this.frecuenciaDB,
-    required this.beneficiario,
-    required this.beneficiarioDB,
-    required this.grupoEspecial,
-    required this.grupoEspecialDB,
-    required this.tipoIdentificacion,
-    required this.tipoIdentificacionDB,
-    required this.revision,
-    required this.revisionDB,
-    required this.consultor,
-    required this.consultorDB,
-    required this.tipoEntidad,
-    required this.tipoEntidadDB,
-    required this.cofinanciador,
-    required this.cofinanciadorDB,
-    required this.desembolso,
-    required this.desembolsoDB,
-    required this.rubro,
-    required this.rubroDB,
-    required this.actividadFinanciera,
-    required this.actividadFinancieraDB,
-    required this.tipoMovimiento,
-    required this.tipoMovimientoDB,
-    required this.tipoCalidad,
-    required this.tipoCalidadDB,
-    required this.tipoActividadProductiva,
-    required this.tipoActividadProductivaDB,
-    required this.actividadEconomica,
-    required this.actividadEconomicaDB,
-    required this.beneficiarioPreinversion,
-    required this.beneficiarioPreinversionDB,
-    required this.beneficiarioAlianza,
-    required this.beneficiarioAlianzaDB,
-    required this.opcion,
-    required this.opcionDB,
-    required this.criterio,
-    required this.criterioDB,
-    required this.visita,
-    required this.visitaDB,
-    required this.sitioEntrega,
-    required this.sitioEntregaDB,
-    required this.evaluacion,
-    required this.evaluacionDB,
-    required this.evaluacionRespuesta,
-    required this.evaluacionRespuestaDB,
-  }) : super(DownloadSyncInitial()) {
+  DownloadSyncBloc(
+      {required this.actividadEconomica,
+      required this.actividadEconomicaDB,
+      required this.actividadFinanciera,
+      required this.actividadFinancieraDB,
+      required this.agrupacion,
+      required this.agrupacionDB,
+      required this.aliado,
+      required this.aliadoDB,
+      required this.perfilPreInversionAliados,
+      required this.perfilPreInversionAliadosDB,
+      required this.alianza,
+      required this.alianzaDB,
+      required this.beneficiario,
+      required this.beneficiarioAlianza,
+      required this.beneficiarioAlianzaDB,
+      required this.beneficiarioDB,
+      required this.perfilPreInversionBeneficiario,
+      required this.perfilPreInversionBeneficiarioDB,
+      required this.cofinanciador,
+      required this.cofinanciadorDB,
+      required this.consultor,
+      required this.consultorDB,
+      required this.convocatoria,
+      required this.convocatoriaDB,
+      required this.criterio,
+      required this.criterioDB,
+      required this.departamentos,
+      required this.departamentosDB,
+      required this.desembolso,
+      required this.desembolsoDB,
+      required this.estadoCivil,
+      required this.estadoCivilDB,
+      required this.estadoVisita,
+      required this.estadoVisitaDB,
+      required this.evaluacion,
+      required this.evaluacionDB,
+      required this.evaluacionRespuesta,
+      required this.evaluacionRespuestaDB,
+      required this.frecuencia,
+      required this.frecuenciaDB,
+      required this.generos,
+      required this.generosDB,
+      required this.grupoEspecial,
+      required this.grupoEspecialDB,
+      required this.menu,
+      required this.menuDB,
+      required this.municipios,
+      required this.municipiosDB,
+      required this.nivelEscolar,
+      required this.nivelEscolarDB,
+      required this.opcion,
+      required this.opcionDB,
+      required this.perfiles,
+      required this.perfilesDB,
+      required this.perfilesPreInversion,
+      required this.perfilesPreInversionDB,
+      required this.productos,
+      required this.productosDB,
+      required this.residencia,
+      required this.residenciaDB,
+      required this.revision,
+      required this.revisionDB,
+      required this.rubro,
+      required this.rubroDB,
+      required this.sitioEntrega,
+      required this.sitioEntregaDB,
+      required this.tipoActividadProductiva,
+      required this.tipoActividadProductivaDB,
+      required this.tipoCalidad,
+      required this.tipoCalidadDB,
+      required this.tipoDiscapacidad,
+      required this.tipoDiscapacidadDB,
+      required this.tipoEntidad,
+      required this.tipoEntidadDB,
+      required this.tipoIdentificacion,
+      required this.tipoIdentificacionDB,
+      required this.tipoMovimiento,
+      required this.tipoMovimientoDB,
+      required this.tipoProyecto,
+      required this.tipoProyectoDB,
+      required this.tipoTenencia,
+      required this.tipoTenenciaDB,
+      required this.tipoVisita,
+      required this.tipoVisitaDB,
+      required this.unidad,
+      required this.unidadDB,
+      required this.vereda,
+      required this.veredaDB,
+      required this.visita,
+      required this.visitaDB,
+      required this.perfilPreInversionCofinanciadorActividadFinanciera,
+      required this.perfilPreInversionCofinanciadorActividadFinancieraDB,
+      required this.perfilPreInversionCofinanciadorDesembolso,
+      required this.perfilPreInversionCofinanciadorDesembolsoDB,
+      required this.perfilPreInversionCofinanciadorRubro,
+      required this.perfilPreInversionCofinanciadorRubroDB,
+      required this.perfilPreInversionCofinanciador,
+      required this.perfilPreInversionCofinanciadorDB,
+      required this.perfilPreInversionConsultor,
+      required this.perfilPreInversionConsultorDB,
+      required this.perfilPreInversionPrecio,
+      required this.perfilPreInversionPrecioDB})
+      : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
           title: 'Sincronizando Menús',
-          counter: state.progressModel!.counter + 1)));
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
       await downloadMenu(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Convocatorias',
-          counter: state.progressModel!.counter + 1)));
       await downloadConvocatorias(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Tipos Proyectos',
-          counter: state.progressModel!.counter + 1)));
       await downloadTiposProyectos(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Unidades',
-          counter: state.progressModel!.counter + 1)));
       await downloadUnidades(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Perfiles',
-          counter: state.progressModel!.counter + 1)));
       await downloadPerfiles(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Perfiles Preinversion',
-          counter: state.progressModel!.counter + 1)));
-      await downloadPerfilesPreinversion(usuario, emit);
+      await downloadPerfilesPreInversion(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Productos',
-          counter: state.progressModel!.counter + 1)));
       await downloadProductos(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Géneros',
-          counter: state.progressModel!.counter + 1)));
       await downloadGeneros(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Departamentos',
-          counter: state.progressModel!.counter + 1)));
       await downloadDepartamentos(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Municipios',
-          counter: state.progressModel!.counter + 1)));
       await downloadMunicipios(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Tipos Visita',
-          counter: state.progressModel!.counter + 1)));
       await downloadTiposVisitas(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Estados Visita',
-          counter: state.progressModel!.counter + 1)));
       await downloadEstadosVisitas(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Agrupaciones',
-          counter: state.progressModel!.counter + 1)));
       await downloadAgrupaciones(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Estados Civiles',
-          counter: state.progressModel!.counter + 1)));
       await downloadEstadosCiviles(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Residencias',
-          counter: state.progressModel!.counter + 1)));
       await downloadResidencias(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Tipos Tenencia',
-          counter: state.progressModel!.counter + 1)));
       await downloadTiposTenencias(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Niveles Escolares',
-          counter: state.progressModel!.counter + 1)));
       await downloadNivelesEscolares(usuario, emit);
 
-      /* emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Veredas',
-          counter: state.progressModel!.counter + 1)));
-      await downloadVeredas(usuario, emit); */
-
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Alianzas',
-          counter: state.progressModel!.counter + 1)));
       await downloadAlianzas(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Aliados',
-          counter: state.progressModel!.counter + 1)));
       await downloadAliados(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Frecuencias',
-          counter: state.progressModel!.counter + 1)));
       await downloadFrecuencias(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Beneficiarios',
-          counter: state.progressModel!.counter + 1)));
       await downloadBeneficiarios(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Grupos Especiales',
-          counter: state.progressModel!.counter + 1)));
       await downloadGruposEspeciales(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Tipos de Identificacion',
-          counter: state.progressModel!.counter + 1)));
       await downloadTipoIdentificacion(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Revisiones',
-          counter: state.progressModel!.counter + 1)));
       await downloadRevisiones(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Consultores',
-          counter: state.progressModel!.counter + 1)));
       await downloadConsultores(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Tipos Entidades',
-          counter: state.progressModel!.counter + 1)));
       await downloadTiposEntidades(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Cofinanciadores',
-          counter: state.progressModel!.counter + 1)));
       await downloadCofinanciadores(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Desembolsos',
-          counter: state.progressModel!.counter + 1)));
       await downloadDesembolsos(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Rubros',
-          counter: state.progressModel!.counter + 1)));
       await downloadRubros(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Actividades Financieras',
-          counter: state.progressModel!.counter + 1)));
       await downloadActividadesFinancieras(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Tipos Movimientos',
-          counter: state.progressModel!.counter + 1)));
       await downloadTiposMovimientos(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Tipos Calidades',
-          counter: state.progressModel!.counter + 1)));
       await downloadTiposCalidades(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Tipos Actividades Productivas',
-          counter: state.progressModel!.counter + 1)));
       await downloadTiposActividadesProductivas(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Actividades Económicas',
-          counter: state.progressModel!.counter + 1)));
       await downloadActividadesEconomicas(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Opciones',
-          counter: state.progressModel!.counter + 1)));
       await downloadOpciones(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Criterios',
-          counter: state.progressModel!.counter + 1)));
       await downloadCriterios(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Sitios de Entrega',
-          counter: state.progressModel!.counter + 1)));
-      await downloadSitiosEntregas(usuario, emit);
-
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Visitas',
-          counter: state.progressModel!.counter + 1)));
       await downloadVisitas(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Evaluaciones',
-          counter: state.progressModel!.counter + 1)));
+      await downloadSitiosEntregas(usuario, emit);
+
       await downloadEvaluaciones(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Evaluaciones Respuestas',
-          counter: state.progressModel!.counter + 1)));
       await downloadEvaluacionesRespuestas(usuario, emit);
 
-      /*   emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Beneficiarios Preinversion',
-          counter: state.progressModel!.counter + 1)));
-      await downloadBeneficiariosPreinversion(usuario, emit);
+      await downloadPerfilPreInversionBeneficiarios(usuario, emit);
 
-      emit(DownloadSyncInProgress(state.progressModel!.copyWith(
-          title: 'Sincronizando Beneficiarios Alianza',
-          counter: state.progressModel!.counter + 1)));
-      await downloadBeneficiariosAlianza(usuario, emit); */
+      await downloadBeneficiariosAlianza(usuario, emit);
 
-      emit(DownloadSyncSuccess());
+      await downloadPerfilPreInversionAliados(usuario, emit);
+
+      await downloadPerfilPreInversionCofinanciadorActividadesFinancieras(
+          usuario, emit);
+
+      await downloadPerfilPreInversionCofinanciadorDesembolsos(usuario, emit);
+
+      await downloadPerfilPreInversionCofinanciadorRubros(usuario, emit);
+
+      await downloadPerfilPreInversionCofinanciadores(usuario, emit);
+
+      await downloadPerfilPreInversionConsultores(usuario, emit);
+
+      await downloadPerfilPreInversionPrecios(usuario, emit);
+
+      await downloadTiposDiscapacidades(usuario, emit);
+
+      //await downloadVeredas(usuario, emit);
+    });
+
+    on<DownloadStatusChanged>((event, emit) {
+      event.progress.counter == 50
+          ? emit(DownloadSyncSuccess())
+          : emit(DownloadSyncInProgress(event.progress));
     });
 
     on<DownloadSyncError>(
         (event, emit) => emit(DownloadSyncFailure(event.message)));
+  }
+
+  double calculatePercent() {
+    final counter = state.downloadProgressModel!.counter;
+    final total = state.downloadProgressModel!.total;
+    final percent = ((counter / total) * 100) / 100;
+
+    return percent;
   }
 
   Future<void> downloadMenu(
@@ -505,7 +415,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<MenuEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await menuDB.saveMenuUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Convocatorias',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadConvocatorias(
@@ -520,7 +435,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<ConvocatoriaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await convocatoriaDB.saveConvocatoriaUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Tipos Proyectos',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadTiposProyectos(
@@ -535,7 +455,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<TipoProyectoEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await tipoProyectoDB.saveTiposProyectosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Unidades',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadUnidades(
@@ -550,7 +475,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<UnidadEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await unidadDB.saveUnidadesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Perfiles',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadPerfiles(
@@ -565,24 +495,34 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<PerfilEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await perfilesDB.savePerfilesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Perfiles PreInversion',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
-  Future<void> downloadPerfilesPreinversion(
+  Future<void> downloadPerfilesPreInversion(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result =
-        await perfilesPreinversion.getPerfilesPreinversionUsecase(usuario);
+        await perfilesPreInversion.getPerfilesPreInversionUsecase(usuario);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)),
-        (data) async => await savePerfilesPreinversion(data, emit));
+        (data) async => await savePerfilesPreInversion(data, emit));
   }
 
-  Future<void> savePerfilesPreinversion(List<PerfilPreinversionEntity> data,
+  Future<void> savePerfilesPreInversion(List<PerfilPreInversionEntity> data,
       Emitter<DownloadSyncState> emit) async {
     final result =
-        await perfilesPreinversionDB.savePerfilesPreinversionUsecaseDB(data);
+        await perfilesPreInversionDB.savePerfilesPreInversionUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Productos',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadProductos(
@@ -597,7 +537,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<ProductoEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await productosDB.saveProductoUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Géneros',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadGeneros(
@@ -612,7 +557,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<GeneroEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await generosDB.saveGenerosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Departamentos',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadDepartamentos(
@@ -627,7 +577,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<DepartamentoEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await departamentosDB.saveDepartamentosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Municipios',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadMunicipios(
@@ -642,7 +597,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<MunicipioEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await municipiosDB.saveMunicipiosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Tipos Visita',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadTiposVisitas(
@@ -657,7 +617,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<TipoVisitaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await tipoVisitaDB.saveTiposVisitasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Estados Visita',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadEstadosVisitas(
@@ -672,7 +637,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<EstadoVisitaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await estadoVisitaDB.saveEstadosVisitasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Agrupaciones',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadAgrupaciones(
@@ -687,7 +657,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<AgrupacionEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await agrupacionDB.saveAgrupacionesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Estados Civiles',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadEstadosCiviles(
@@ -702,7 +677,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<EstadoCivilEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await estadoCivilDB.saveEstadosCivilesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Residencias',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadResidencias(
@@ -717,7 +697,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<ResidenciaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await residenciaDB.saveResidenciasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Tipos Tenencia',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadTiposTenencias(
@@ -732,7 +717,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<TipoTenenciaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await tipoTenenciaDB.saveTiposTenenciasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Niveles Escolares',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadNivelesEscolares(
@@ -747,22 +737,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<NivelEscolarEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await nivelEscolarDB.saveNivelesEscolaresUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
-  }
-
-  Future<void> downloadVeredas(
-      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
-    final result = await vereda.getVeredasUsecase(usuario);
-    return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)),
-        (data) async => await saveVeredas(data, emit));
-  }
-
-  Future<void> saveVeredas(
-      List<VeredaEntity> data, Emitter<DownloadSyncState> emit) async {
-    final result = await veredaDB.saveVeredasUsecaseDB(data);
-    return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Alianzas',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadAlianzas(
@@ -777,7 +757,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<AlianzaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await alianzaDB.saveAlianzasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Aliados',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadAliados(
@@ -792,7 +777,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<AliadoEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await aliadoDB.saveAliadosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Frecuencias',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadFrecuencias(
@@ -807,7 +797,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<FrecuenciaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await frecuenciaDB.saveFrecuenciasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Beneficiarios',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadBeneficiarios(
@@ -822,7 +817,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<BeneficiarioEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await beneficiarioDB.saveBeneficiariosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Grupos Especiales',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadGruposEspeciales(
@@ -837,7 +837,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<GrupoEspecialEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await grupoEspecialDB.saveGrupoEspecialUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Tipos de Identificacion',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadTipoIdentificacion(
@@ -854,7 +859,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     final result =
         await tipoIdentificacionDB.saveTiposIdentificacionesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Revisiones',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadRevisiones(
@@ -869,7 +879,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<RevisionEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await revisionDB.saveRevisionesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Consultores',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadConsultores(
@@ -884,7 +899,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<ConsultorEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await consultorDB.saveConsultoresUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Tipos Entidades',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadTiposEntidades(
@@ -899,7 +919,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<TipoEntidadEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await tipoEntidadDB.saveTiposEntidadesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Cofinanciadores',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadCofinanciadores(
@@ -914,7 +939,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<CofinanciadorEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await cofinanciadorDB.saveCofinanciadoresUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Desembolsos',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadDesembolsos(
@@ -929,7 +959,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<DesembolsoEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await desembolsoDB.saveDesembolsosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Rubros',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadRubros(
@@ -944,7 +979,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<RubroEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await rubroDB.saveRubrosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Actividades Financieras',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadActividadesFinancieras(
@@ -961,7 +1001,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     final result =
         await actividadFinancieraDB.saveActividadesFinancierasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Tipos Movimientos',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadTiposMovimientos(
@@ -976,7 +1021,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<TipoMovimientoEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await tipoMovimientoDB.saveTiposMovimientosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Tipos Calidades',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadTiposCalidades(
@@ -991,7 +1041,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<TipoCalidadEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await tipoCalidadDB.saveTiposCalidadesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Tipos Actividades Productivas',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadTiposActividadesProductivas(
@@ -1009,7 +1064,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     final result = await tipoActividadProductivaDB
         .saveTiposActividadesProductivasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Actividades Económicas',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadActividadesEconomicas(
@@ -1026,42 +1086,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     final result =
         await actividadEconomicaDB.saveActividadesEconomicasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
-  }
-
-  Future<void> downloadBeneficiariosPreinversion(
-      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
-    final result = await beneficiarioPreinversion
-        .getBeneficiariosPreinversionUsecase(usuario);
-    return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)),
-        (data) async => await saveBeneficiariosPreinversion(data, emit));
-  }
-
-  Future<void> saveBeneficiariosPreinversion(
-      List<BeneficiarioPreinversionEntity> data,
-      Emitter<DownloadSyncState> emit) async {
-    final result = await beneficiarioPreinversionDB
-        .saveBeneficiariosPreinversionUsecaseDB(data);
-    return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
-  }
-
-  Future<void> downloadBeneficiariosAlianza(
-      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
-    final result =
-        await beneficiarioAlianza.getBeneficiariosAlianzaUsecase(usuario);
-    return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)),
-        (data) async => await saveBeneficiariosAlianza(data, emit));
-  }
-
-  Future<void> saveBeneficiariosAlianza(List<BeneficiarioAlianzaEntity> data,
-      Emitter<DownloadSyncState> emit) async {
-    final result =
-        await beneficiarioAlianzaDB.saveBeneficiariosAlianzaUsecaseDB(data);
-    return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Opciones',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadOpciones(
@@ -1076,7 +1106,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<OpcionEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await opcionDB.saveOpcionesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Criterios',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadCriterios(
@@ -1091,7 +1126,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<CriterioEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await criterioDB.saveCriteriosUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Visitas',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadVisitas(
@@ -1106,7 +1146,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<VisitaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await visitaDB.saveVisitasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Sitios de Entrega',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadSitiosEntregas(
@@ -1121,7 +1166,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<SitioEntregaEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await sitioEntregaDB.saveSitiosEntregasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Evaluaciones',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadEvaluaciones(
@@ -1136,7 +1186,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<EvaluacionEntity> data, Emitter<DownloadSyncState> emit) async {
     final result = await evaluacionDB.saveEvaluacionesUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Evaluaciones Respuestas',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 
   Future<void> downloadEvaluacionesRespuestas(
@@ -1153,6 +1208,265 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     final result =
         await evaluacionRespuestaDB.saveEvaluacionesRespuestasUsecaseDB(data);
     return result.fold(
-        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Beneficiarios PreInversion',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
+
+  Future<void> downloadPerfilPreInversionBeneficiarios(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionBeneficiario
+        .getPerfilPreInversionBeneficiariosUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await savePerfilPreInversionBeneficiarios(data, emit));
+  }
+
+  Future<void> savePerfilPreInversionBeneficiarios(
+      List<PerfilPreInversionBeneficiarioEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionBeneficiarioDB
+        .savePerfilPreInversionBeneficiariosUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Beneficiarios Alianza',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
+  }
+
+  Future<void> downloadBeneficiariosAlianza(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result =
+        await beneficiarioAlianza.getBeneficiariosAlianzaUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveBeneficiariosAlianza(data, emit));
+  }
+
+  Future<void> saveBeneficiariosAlianza(List<BeneficiarioAlianzaEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result =
+        await beneficiarioAlianzaDB.saveBeneficiariosAlianzaUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Perfiles PreInversion Aliados',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
+  }
+
+  Future<void> downloadPerfilPreInversionAliados(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionAliados
+        .getPerfilPreInversionAliadosUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await savePerfilPreInversionAliados(data, emit));
+  }
+
+  Future<void> savePerfilPreInversionAliados(
+      List<PerfilPreInversionAliadoEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionAliadosDB
+        .savePerfilPreInversionAliadosUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title:
+              'Sincronizando Perfiles PreInversion Cofinanciador Actividades Financieras',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
+  }
+
+  Future<void> downloadPerfilPreInversionCofinanciadorActividadesFinancieras(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionCofinanciadorActividadFinanciera
+        .getPerfilPreInversionCofinanciadorActividadesFinancierasUsecase(
+            usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async =>
+            await savePerfilPreInversionCofinanciadorActividadesFinancieras(
+                data, emit));
+  }
+
+  Future<void> savePerfilPreInversionCofinanciadorActividadesFinancieras(
+      List<PerfilPreInversionCofinanciadorActividadFinancieraEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
+        .getPerfilPreInversionCofinanciadorActividadesFinancierasUsecaseDB();
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title:
+              'Sincronizando Perfiles PreInversion Cofinanciador Desembolsos',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
+  }
+
+  Future<void> downloadPerfilPreInversionCofinanciadorDesembolsos(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionCofinanciadorDesembolso
+        .getPerfilPreInversionCofinanciadorDesembolsosUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async =>
+            await savePerfilPreInversionCofinanciadorDesembolsos(data, emit));
+  }
+
+  Future<void> savePerfilPreInversionCofinanciadorDesembolsos(
+      List<PerfilPreInversionCofinanciadorDesembolsoEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionCofinanciadorDesembolsoDB
+        .savePerfilPreInversionCofinanciadorDesembolsosUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Perfiles PreInversion Cofinanciador Rubros',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
+  }
+
+  Future<void> downloadPerfilPreInversionCofinanciadorRubros(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionCofinanciadorRubro
+        .getPerfilPreInversionCofinanciadorRubrosUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async =>
+            await savePerfilPreInversionCofinanciadorRubros(data, emit));
+  }
+
+  Future<void> savePerfilPreInversionCofinanciadorRubros(
+      List<PerfilPreInversionCofinanciadorRubroEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionCofinanciadorRubroDB
+        .savePerfilPreInversionCofinanciadorRubrosUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Perfiles PreInversion Cofinanciadores',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
+  }
+
+  Future<void> downloadPerfilPreInversionCofinanciadores(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionCofinanciador
+        .getPerfilPreInversionCofinanciadoresUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await savePerfilPreInversionCofinanciador(data, emit));
+  }
+
+  Future<void> savePerfilPreInversionCofinanciador(
+      List<PerfilPreInversionCofinanciadorEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionCofinanciadorDB
+        .savePerfilPreInversionCofinanciadoresUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Perfiles PreInversion Consultores',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
+  }
+
+  Future<void> downloadPerfilPreInversionConsultores(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionConsultor
+        .getPerfilPreInversionConsultoresUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await savePerfilPreInversionConsultor(data, emit));
+  }
+
+  Future<void> savePerfilPreInversionConsultor(
+      List<PerfilPreInversionConsultorEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionConsultorDB
+        .savePerfilPreInversionConsultoresUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Perfiles PreInversion Precios',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
+  }
+
+  Future<void> downloadPerfilPreInversionPrecios(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionPrecio
+        .getPerfilPreInversionPreciosUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await savePerfilPreInversionPrecios(data, emit));
+  }
+
+  Future<void> savePerfilPreInversionPrecios(
+      List<PerfilPreInversionPrecioEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionPrecioDB
+        .savePerfilPreInversionPreciosUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Tipos Discapacidades',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
+  }
+
+  Future<void> downloadTiposDiscapacidades(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result =
+        await tipoDiscapacidad.getTiposDiscapacidadesUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveTiposDiscapacidades(data, emit));
+  }
+
+  Future<void> saveTiposDiscapacidades(List<TipoDiscapacidadEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result =
+        await tipoDiscapacidadDB.saveTiposDiscapacidadesUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+      /* add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+            title: 'Sincronizando Veredas',
+            counter: state.downloadProgressModel!.counter + 1,
+            percent: calculatePercent())));
+         */
+    });
+  }
+
+  /* Future<void> downloadVeredas(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+   
+    final result = await vereda.getVeredasUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveVeredas(data, emit));
+  }
+
+  Future<void> saveVeredas(
+      List<VeredaEntity> data, Emitter<DownloadSyncState> emit) async {
+    final result = await veredaDB.saveVeredasUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {
+        
+        });
+  } */
 }

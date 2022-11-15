@@ -1,5 +1,5 @@
-class PerfilesPreinversionEntity {
-  PerfilesPreinversionEntity({
+class PerfilesPreInversionEntity {
+  PerfilesPreInversionEntity({
     required this.id,
     required this.nombre,
     required this.abreviatura,
@@ -17,8 +17,8 @@ class PerfilesPreinversionEntity {
   String ubicacion;
   String categorizacion;
 
-  factory PerfilesPreinversionEntity.fromJson(Map<String, dynamic> json) =>
-      PerfilesPreinversionEntity(
+  factory PerfilesPreInversionEntity.fromJson(Map<String, dynamic> json) =>
+      PerfilesPreInversionEntity(
         id: json["ID"],
         nombre: json["Nombre"],
         abreviatura: json["Abreviatura"],

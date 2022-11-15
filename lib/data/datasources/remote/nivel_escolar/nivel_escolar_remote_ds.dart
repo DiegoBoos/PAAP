@@ -62,7 +62,8 @@ class NivelEscolarRemoteDataSourceImpl implements NivelEscolarRemoteDataSource {
       final mensaje =
           nivelesEscolarDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-      if (respuesta == 'true') {
+      if (respuesta == 'true' &&
+          nivelesEscolarDoc.findAllElements('NewDataSet').isNotEmpty) {
         final xmlString = nivelesEscolarDoc
             .findAllElements('NewDataSet')
             .map((xmlElement) => xmlElement.toXmlString())
@@ -73,11 +74,14 @@ class NivelEscolarRemoteDataSourceImpl implements NivelEscolarRemoteDataSource {
         final Map<String, dynamic> decodedResp = json.decode(res);
 
         final nivelesEscolaresRaw = decodedResp.entries.first.value['Table'];
-        final nivelesEscolares = List.from(nivelesEscolaresRaw)
-            .map((e) => NivelEscolarModel.fromJson(e))
-            .toList();
 
-        return nivelesEscolares;
+        if (nivelesEscolaresRaw is List) {
+          return List.from(nivelesEscolaresRaw)
+              .map((e) => NivelEscolarModel.fromJson(e))
+              .toList();
+        } else {
+          return [NivelEscolarModel.fromJson(nivelesEscolaresRaw)];
+        }
       } else {
         throw ServerFailure([mensaje]);
       }
