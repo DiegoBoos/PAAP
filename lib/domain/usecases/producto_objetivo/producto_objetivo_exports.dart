@@ -1,0 +1,10 @@
+export 'package:paap/domain/usecases/producto_objetivo/producto_objetivo_usecase.dart';
+export 'package:paap/domain/usecases/producto_objetivo/producto_objetivo_db_usecase.dart';
+export 'package:paap/domain/repositories/producto_objetivo/producto_objetivo_repository.dart';
+export 'package:paap/domain/repositories/producto_objetivo/producto_objetivo_repository_db.dart';
+export 'package:paap/domain/entities/producto_objetivo_entity.dart';
+export 'package:paap/domain/cubits/producto_objetivo/producto_objetivo_cubit.dart';
+export 'package:paap/data/repositories/producto_objetivo/producto_objetivo_repository.dart';
+export 'package:paap/data/repositories/producto_objetivo/producto_objetivo_repository_db.dart';
+export 'package:paap/data/datasources/remote/producto_objetivo/producto_objetivo_remote_ds.dart';
+export 'package:paap/data/datasources/local/producto_objetivo/producto_objetivo_local_ds.dart';
