@@ -4,6 +4,7 @@ export 'package:paap/domain/repositories/perfil_preinversion_beneficiario/perfil
 export 'package:paap/domain/repositories/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_repository_db.dart';
 export 'package:paap/domain/entities/perfil_preinversion_beneficiario_entity.dart';
 export 'package:paap/domain/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
+export 'package:paap/domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 export 'package:paap/data/repositories/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_repository.dart';
 export 'package:paap/data/repositories/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_repository_db.dart';
 export 'package:paap/data/datasources/remote/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_remote_ds.dart';

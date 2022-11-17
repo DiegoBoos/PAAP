@@ -4,12 +4,13 @@ import 'package:paap/data/datasources/local/perfil_preinversion_aliado/perfil_pr
 import 'package:paap/data/datasources/local/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_local_ds.dart';
 import 'package:paap/data/datasources/local/tipo_actividad_productiva/tipo_actividad_productiva_local_ds.dart';
 import 'package:paap/domain/usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
+import 'package:paap/domain/usecases/experiencia_agricola/experiencia_agricola_exports.dart';
 import 'package:paap/domain/usecases/visita/visita_exports.dart';
-
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../data/datasources/local/actividad/actividad_local_ds.dart';
 import '../../data/datasources/local/actividad_economica/actividad_economica_local_ds.dart';
 import '../../data/datasources/local/actividad_financiera/actividad_financiera_local_ds.dart';
 import '../../data/datasources/local/agrupacion/agrupacion_local_ds.dart';
@@ -27,14 +28,19 @@ import '../../data/datasources/local/desembolso/desembolso_local_ds.dart';
 import '../../data/datasources/local/estado_civil/estado_civil_local_ds.dart';
 import '../../data/datasources/local/estado_visita/estado_visita_local_ds.dart';
 import '../../data/datasources/local/evaluacion/evaluacion_local_ds.dart';
+import '../../data/datasources/local/experiencia_pecuaria_local_ds.dart';
 import '../../data/datasources/local/frecuencia/frecuencia_local_ds.dart';
 import '../../data/datasources/local/genero/genero_local_ds.dart';
 import '../../data/datasources/local/grupo_especial/grupo_especial_local_ds.dart';
+import '../../data/datasources/local/indicador/indicador_local_ds.dart';
 import '../../data/datasources/local/menu/menu_local_ds.dart';
+import '../../data/datasources/local/meta_indicador/meta_indicador_local_ds.dart';
 import '../../data/datasources/local/municipio/municipio_local_ds.dart';
 import '../../data/datasources/local/nivel_escolar/nivel_escolar_local_ds.dart';
+import '../../data/datasources/local/objetivo/objetivo_local_ds.dart';
 import '../../data/datasources/local/opcion/opcion_local_ds.dart';
 import '../../data/datasources/local/perfil/perfil_local_ds.dart';
+import '../../data/datasources/local/perfil_beneficiario/perfil_beneficiario_local_ds.dart';
 import '../../data/datasources/local/perfil_preinversion/perfil_preinversion_local_ds.dart';
 import '../../data/datasources/local/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_local_ds.dart';
 import '../../data/datasources/local/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_local_ds.dart';
@@ -43,6 +49,8 @@ import '../../data/datasources/local/perfil_preinversion_cofinanciador_rubro/per
 import '../../data/datasources/local/perfil_preinversion_consultor/perfil_preinversion_consultor_local_ds.dart';
 import '../../data/datasources/local/perfil_preinversion_precio/perfil_preinversion_precio_local_ds.dart';
 import '../../data/datasources/local/producto/producto_local_ds.dart';
+import '../../data/datasources/local/producto_objetivo/producto_objetivo_local_ds.dart';
+import '../../data/datasources/local/proyecto/proyecto_local_ds.dart';
 import '../../data/datasources/local/residencia/residencia_local_ds.dart';
 import '../../data/datasources/local/revision/revision_local_ds.dart';
 import '../../data/datasources/local/rubro/rubro_local_ds.dart';
@@ -61,8 +69,6 @@ import '../usecases/sitio_entrega/sitio_entrega_exports.dart';
 class DBConfig {
   static Database? _database;
   static final DBConfig db = DBConfig._();
-
-  DBConfig._();
 
   static Future<Database> get database async {
     if (_database != null) return _database!;
@@ -142,10 +148,25 @@ class DBConfig {
           .createPerfilPreInversionConsultorTable(db);
       await PerfilPreInversionPrecioLocalDataSourceImpl
           .createPerfilPreInversionPrecioTable(db);
+      await PerfilBeneficiarioLocalDataSourceImpl.createPerfilBeneficiarioTable(
+          db);
+      await ExperienciaAgricolaLocalDataSourceImpl
+          .createExperienciaAgricolaTable(db);
+      await ExperienciaPecuariaLocalDataSourceImpl
+          .createExperienciaPecuariaTable(db);
+
+      await ActividadLocalDataSourceImpl.createActividadTable(db);
+      await IndicadorLocalDataSourceImpl.createIndicadorTable(db);
+      await MetaIndicadorLocalDataSourceImpl.createMetaIndicadorTable(db);
+      await ObjetivoLocalDataSourceImpl.createObjetivoTable(db);
+      await ProductoObjetivoLocalDataSourceImpl.createProductoObjetivoTable(db);
+      await ProyectoLocalDataSourceImpl.createProyectoTable(db);
     });
 
     return _database!;
   }
+
+  DBConfig._();
 
   void deleteDB() async {
     //Path donde se almacena la base de datos

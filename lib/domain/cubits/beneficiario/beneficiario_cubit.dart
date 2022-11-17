@@ -21,50 +21,66 @@ class BeneficiarioCubit extends Cubit<BeneficiarioState> {
   void initState() => emit(BeneficiarioInitial());
 
   void changeTipoDocumento(String value) {
-    state.beneficiario!.copyWith(tipoIdentificacionId: value);
+    final tipoIdentificacionChanged =
+        state.beneficiario!.copyWith(tipoIdentificacionId: value);
+    emit(BeneficiarioLoaded(tipoIdentificacionChanged));
+  }
+
+  void changeDocumento(String? newValue) {
+    final documentoChanged =
+        state.beneficiario!.copyWith(beneficiarioId: newValue);
+    emit(BeneficiarioLoaded(documentoChanged));
   }
 
   void changeFechaExpedicion(String value) {
-    state.beneficiario!.copyWith(fechaExpedicionDocumento: value);
+    final fechaExpedicionDocumentoChanged =
+        state.beneficiario!.copyWith(fechaExpedicionDocumento: value);
+    emit(BeneficiarioLoaded(fechaExpedicionDocumentoChanged));
   }
 
   void changeFechaNacimiento(String value) {
-    state.beneficiario!.copyWith(fechaNacimiento: value);
+    final fechaNacimientoChanged =
+        state.beneficiario!.copyWith(fechaNacimiento: value);
+    emit(BeneficiarioLoaded(fechaNacimientoChanged));
   }
 
-  void changePrimerNombre(String value) {
-    state.beneficiario!.copyWith(nombre1: value);
+  void changePrimerNombre(String? newValue) {
+    final primerNombreChanged = state.beneficiario!.copyWith(nombre1: newValue);
+    emit(BeneficiarioLoaded(primerNombreChanged));
   }
 
-  void changeSegundoNombre(String value) {
-    state.beneficiario!.copyWith(nombre2: value);
+  void changeSegundoNombre(String? newValue) {
+    final segundoNombreChanged =
+        state.beneficiario!.copyWith(nombre2: newValue);
+    emit(BeneficiarioLoaded(segundoNombreChanged));
   }
 
-  void changePrimerApellido(String value) {
-    state.beneficiario!.copyWith(apellido1: value);
+  void changePrimerApellido(String? newValue) {
+    final primerApellidoChanged =
+        state.beneficiario!.copyWith(apellido1: newValue);
+    emit(BeneficiarioLoaded(primerApellidoChanged));
   }
 
-  void changeSegundoApellido(String value) {
-    state.beneficiario!.copyWith(apellido2: value);
+  void changeSegundoApellido(String? newValue) {
+    final segundoApellidoChanged =
+        state.beneficiario!.copyWith(apellido2: newValue);
+    emit(BeneficiarioLoaded(segundoApellidoChanged));
   }
 
-  void changeGenero(String value) {
-    state.beneficiario!.copyWith(generoId: value);
+  void changeGenero(String? value) {
+    final generoChanged = state.beneficiario!.copyWith(generoId: value);
+    emit(BeneficiarioLoaded(generoChanged));
   }
-
-/*   void changeEstadoCivil(String value) {
-    state.beneficiario!.copyWith(: value);
-  } */
 
   void changeGrupoEspecial(String value) {
-    state.beneficiario!.copyWith(grupoEspecialId: value);
+    final grupoEspecialChanged =
+        state.beneficiario!.copyWith(grupoEspecialId: value);
+    emit(BeneficiarioLoaded(grupoEspecialChanged));
   }
 
-  /* void changeDiscapacidad(String value) {
-    state.beneficiario!.copyWith(: value);
-  } */
-
-  void changeTelefonoMovil(String value) {
-    state.beneficiario!.copyWith(telefonoMovil: value);
+  void changeTelefonoMovil(String? newValue) {
+    final telefonoMovilChanged =
+        state.beneficiario!.copyWith(telefonoMovil: newValue);
+    emit(BeneficiarioLoaded(telefonoMovilChanged));
   }
 }

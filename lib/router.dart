@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paap/ui/perfil_preinversion_aliados/pages/new_edit_perfil_preinversion_aliado_page.dart';
 
 import 'ui/alianzas/pages/alianza_detail_page.dart';
 import 'ui/alianzas/pages/beneficiarios_alianza_page.dart';
@@ -30,8 +31,11 @@ class AppRouter {
     'NewEditVBeneficiarioPreInversion': (BuildContext context) {
       return const NewEditPerfilPreInversionBeneficiarioPage();
     },
-    'VPerfilPreInversionAliado': (BuildContext context) {
+    'VAliadoPreInversion': (BuildContext context) {
       return const PerfilPreInversionAliadosPage();
+    },
+    'NewEditAliadoPreInversion': (BuildContext context) {
+      return const NewEditPerfilPreInversionAliadoPage();
     },
     'VCofinanciadorPreInversion': (BuildContext context) {
       return const PerfilPreInversionCofinanciadoresPage();

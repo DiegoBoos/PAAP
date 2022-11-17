@@ -15,14 +15,21 @@ class AliadosLocalDataSourceImpl implements AliadosLocalDataSource {
   static createAliadoTable(Database db) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS Aliado (
-	      AliadoId	TEXT NOT NULL,
-	      Nombre	TEXT,
-	      NombreContacto	TEXT,
-	      TelefonoMovil	TEXT,
-	      Correo	TEXT,
-	      Ciudad	TEXT,
-	      Años_x0020_Experiencia	TEXT,
-	      Estado	TEXT,
+        AliadoId TEXT NOT NULL,
+        Nombre TEXT,
+        FechaCreacion TEXT,
+        NombreContacto TEXT,
+        Direccion TEXT,
+        TelefonoFijo TEXT,
+        TelefonoMovil TEXT,
+        Correo TEXT,
+        MunicipioId TEXT NOT NULL,
+        Experiencia TEXT,
+        FechaActivacion TEXT,
+        FechaDesactivacion TEXT,
+        FechaCambio TEXT,
+        Activo TEXT,
+	      FOREIGN KEY(MunicipioId) REFERENCES Municipio(MunicipioId),
 	      PRIMARY KEY(AliadoId)
       )
     ''');

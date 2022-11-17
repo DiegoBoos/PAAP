@@ -304,4 +304,6 @@ class PerfilPreInversionBeneficiarioEntity {
         "Latitud": latitud,
         "CedulaCatastral": cedulaCatastral,
       };
+
+  void changeAccesoExplotacionTierra(bool value) {}
 }

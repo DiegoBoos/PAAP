@@ -2,42 +2,99 @@ class AliadoEntity {
   AliadoEntity({
     required this.aliadoId,
     required this.nombre,
+    required this.fechaCreacion,
     required this.nombreContacto,
+    required this.direccion,
+    required this.telefonoFijo,
     required this.telefonoMovil,
     required this.correo,
-    required this.ciudad,
-    required this.aniosExperiencia,
-    required this.estado,
+    required this.municipioId,
+    required this.experiencia,
+    required this.fechaActivacion,
+    required this.fechaDesactivacion,
+    required this.fechaCambio,
+    required this.activo,
   });
 
   String aliadoId;
   String nombre;
+  String fechaCreacion;
   String nombreContacto;
+  String direccion;
+  String telefonoFijo;
   String telefonoMovil;
   String correo;
-  String ciudad;
-  String aniosExperiencia;
-  String estado;
+  String municipioId;
+  String experiencia;
+  String fechaActivacion;
+  String fechaDesactivacion;
+  String fechaCambio;
+  String activo;
+
+  AliadoEntity copyWith({
+    String? aliadoId,
+    String? nombre,
+    String? fechaCreacion,
+    String? nombreContacto,
+    String? direccion,
+    String? telefonoFijo,
+    String? telefonoMovil,
+    String? correo,
+    String? municipioId,
+    String? experiencia,
+    String? fechaActivacion,
+    String? fechaDesactivacion,
+    String? fechaCambio,
+    String? activo,
+  }) =>
+      AliadoEntity(
+        aliadoId: aliadoId ?? this.aliadoId,
+        nombre: nombre ?? this.nombre,
+        fechaCreacion: fechaCreacion ?? this.fechaCreacion,
+        nombreContacto: nombreContacto ?? this.nombreContacto,
+        direccion: direccion ?? this.direccion,
+        telefonoFijo: telefonoFijo ?? this.telefonoFijo,
+        telefonoMovil: telefonoMovil ?? this.telefonoMovil,
+        correo: correo ?? this.correo,
+        municipioId: municipioId ?? this.municipioId,
+        experiencia: experiencia ?? this.experiencia,
+        fechaActivacion: fechaActivacion ?? this.fechaActivacion,
+        fechaDesactivacion: fechaDesactivacion ?? this.fechaDesactivacion,
+        fechaCambio: fechaCambio ?? this.fechaCambio,
+        activo: activo ?? this.activo,
+      );
 
   factory AliadoEntity.fromJson(Map<String, dynamic> json) => AliadoEntity(
         aliadoId: json["AliadoId"],
         nombre: json["Nombre"],
+        fechaCreacion: json["FechaCreacion"],
         nombreContacto: json["NombreContacto"],
+        direccion: json["Direccion"],
+        telefonoFijo: json["TelefonoFijo"],
         telefonoMovil: json["TelefonoMovil"],
         correo: json["Correo"],
-        ciudad: json["Ciudad"],
-        aniosExperiencia: json["Años_x0020_Experiencia"],
-        estado: json["Estado"],
+        municipioId: json["MunicipioId"],
+        experiencia: json["Experiencia"],
+        fechaActivacion: json["FechaActivacion"],
+        fechaDesactivacion: json["FechaDesactivacion"],
+        fechaCambio: json["FechaCambio"],
+        activo: json["Activo"],
       );
 
   Map<String, dynamic> toJson() => {
         "AliadoId": aliadoId,
         "Nombre": nombre,
+        "FechaCreacion": fechaCreacion,
         "NombreContacto": nombreContacto,
+        "Direccion": direccion,
+        "TelefonoFijo": telefonoFijo,
         "TelefonoMovil": telefonoMovil,
         "Correo": correo,
-        "Ciudad": ciudad,
-        "Años_x0020_Experiencia": aniosExperiencia,
-        "Estado": estado,
+        "MunicipioId": municipioId,
+        "Experiencia": experiencia,
+        "FechaActivacion": fechaActivacion,
+        "FechaDesactivacion": fechaDesactivacion,
+        "FechaCambio": fechaCambio,
+        "Activo": activo,
       };
 }

@@ -19,7 +19,7 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(20.0),
       child: DataTable(
         headingRowColor:
             MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
@@ -62,7 +62,7 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
                           perfilPreInversionBeneficiario.beneficiarioId);
                   Navigator.pushNamed(
                       context, 'NewEditVBeneficiarioPreInversion',
-                      arguments: perfilPreInversionBeneficiario);
+                      arguments: perfilPreInversionBeneficiario.beneficiarioId);
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

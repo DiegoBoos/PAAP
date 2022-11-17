@@ -14,8 +14,8 @@ class ProductoObjetivoUsecaseDB {
   }
 
   Future<Either<Failure, int>> saveProductosObjetivosUsecaseDB(
-      List<ProductoObjetivoEntity> producto_ObjetivoEntity) {
+      List<ProductoObjetivoEntity> productoObjetivoEntity) {
     return repositoryDB
-        .saveProductosObjetivosRepositoryDB(producto_ObjetivoEntity);
+        .saveProductosObjetivosRepositoryDB(productoObjetivoEntity);
   }
 }

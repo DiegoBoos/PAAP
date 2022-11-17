@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
 
 import '../../../models/aliado_model.dart';
+import '../../../models/aliados_model.dart';
 import '../../../utils.dart';
 
 abstract class AliadoRemoteDataSource {
@@ -68,15 +70,78 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
 
         final aliadosRaw = decodedResp.entries.first.value['Table'];
 
-        if (aliadosRaw is List) {
-          return List.from(aliadosRaw)
-              .map((e) => AliadoModel.fromJson(e))
-              .toList();
-        } else {
-          return [AliadoModel.fromJson(aliadosRaw)];
+        final aliados =
+            List.from(aliadosRaw).map((e) => AliadosModel.fromJson(e)).toList();
+
+        List<AliadoModel> listAliado = [];
+        for (var aliado in aliados) {
+          final dsAliado = await getAliadoTable(usuario, aliado.aliadoId);
+          listAliado.add(dsAliado);
         }
+        return listAliado;
       } else {
         return [];
+      }
+    } else {
+      throw ServerException();
+    }
+  }
+
+  Future<AliadoModel> getAliadoTable(
+      UsuarioEntity usuario, String aliadoId) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final aliadoesSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <ConsultarAliado xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+            </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <AliadoId>$aliadoId</AliadoId>
+          </objeto>
+        </ConsultarAliado>
+      </soap:Body>
+    </soap:Envelope>''';
+
+    final aliadoResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "${Constants.urlSOAP}/ConsultarAliado"
+        },
+        body: aliadoesSOAP);
+
+    if (aliadoResp.statusCode == 200) {
+      final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
+
+      final respuesta =
+          aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      final mensaje =
+          aliadoDoc.findAllElements('mensaje').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        final xmlString = aliadoDoc
+            .findAllElements('objeto')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final decodedResp = json.decode(res);
+
+        final aliado = AliadoModel.fromJson(decodedResp['objeto']);
+
+        return aliado;
+      } else {
+        throw ServerFailure([mensaje]);
       }
     } else {
       throw ServerException();

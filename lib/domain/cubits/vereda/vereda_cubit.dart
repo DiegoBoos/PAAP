@@ -9,13 +9,18 @@ part '../vereda/vereda_state.dart';
 class VeredaCubit extends Cubit<VeredaState> {
   final VeredaUsecaseDB veredaDB;
 
-  VeredaCubit({required this.veredaDB}) : super(VeredasInitial()) {
-    getVeredasDB();
-  }
+  VeredaCubit({required this.veredaDB}) : super(VeredasInitial());
 
-  void getVeredasDB() async {
+  void getVeredasByMunicipioDB(String municipioId) async {
     final result = await veredaDB.getVeredasUsecaseDB();
     result.fold((failure) => emit(VeredasError(failure.properties.first)),
-        (data) => emit(VeredasLoaded(data)));
+        (data) {
+      List<VeredaEntity> veredasByMunicipio = [];
+
+      veredasByMunicipio =
+          data!.where((m) => m.municipioId == municipioId).toList();
+
+      emit(VeredasLoaded(veredasByMunicipio));
+    });
   }
 }

@@ -10,7 +10,59 @@ abstract class PerfilPreInversionBeneficiarioState extends Equatable {
 }
 
 class PerfilPreInversionBeneficiarioInitial
-    extends PerfilPreInversionBeneficiarioState {}
+    extends PerfilPreInversionBeneficiarioState {
+  PerfilPreInversionBeneficiarioInitial()
+      : super(
+            perfilPreInversionBeneficiario:
+                PerfilPreInversionBeneficiarioEntity(
+                    perfilPreInversionId: '',
+                    beneficiarioId: '',
+                    municipioId: '',
+                    veredaId: '',
+                    areaFinca: '',
+                    areaProyecto: '',
+                    tipoTenenciaId: '',
+                    experiencia: '',
+                    asociado: '',
+                    conocePerfil: '',
+                    fueBeneficiado: '',
+                    cualBeneficio: '',
+                    activo: '',
+                    miembrosHogar: '',
+                    miembrosEcoActivos: '',
+                    residenciaId: '',
+                    accesoExplotacionTierra: '',
+                    gastosMensuales: '',
+                    mesesAsociado: '',
+                    nombreOrganizacion: '',
+                    activoInmobiliario: '',
+                    activoFinanciero: '',
+                    activoProductivo: '',
+                    activoCorriente: '',
+                    nota: '',
+                    nombreFinca: '',
+                    nivelEscolarId: '',
+                    cotizanteBeps: '',
+                    estadoCivilId: '',
+                    calificacionSisben: '',
+                    ingresosMensuales: '',
+                    tipoDiscapacidadId: '',
+                    conyugeTipoIdentificacionId: '',
+                    conyugeId: '',
+                    conyugeNombre: '',
+                    conyugeApellido: '',
+                    conyugeGeneroId: '',
+                    conyugeFechaExpedicionDocumento: '',
+                    conyugeGrupoEspecialId: '',
+                    conyugeFechaNacimiento: '',
+                    conyugeIngresosMensuales: '',
+                    actividadEconomicaId: '',
+                    ingresosDiarios: '',
+                    diasTrabajo: '',
+                    longitud: '',
+                    latitud: '',
+                    cedulaCatastral: ''));
+}
 
 class PerfilPreInversionBeneficiarioLoading
     extends PerfilPreInversionBeneficiarioState {}

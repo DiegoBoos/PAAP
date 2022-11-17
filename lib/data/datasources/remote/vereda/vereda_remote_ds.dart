@@ -4,7 +4,6 @@ import 'package:xml/xml.dart' as xml;
 
 import '../../../../domain/core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
-import '../../../../domain/entities/vereda_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
 

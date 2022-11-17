@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../../domain/db/db_config.dart';
 import '../../../../domain/entities/perfil_preinversion_entity.dart';
+import '../../../models/perfil_preinversion_model.dart';
 import '../../../models/v_perfil_preinversion_model.dart';
 
 abstract class PerfilPreInversionLocalDataSource {
@@ -10,6 +11,7 @@ abstract class PerfilPreInversionLocalDataSource {
       String id, String nombre);
   Future<int> savePerfilesPreInversionDB(
       List<PerfilPreInversionEntity> perfilesPreInversion);
+  Future<PerfilPreInversionModel?> getPerfilPreInversionDB(String id);
 }
 
 class PerfilPreInversionLocalDataSourceImpl
@@ -144,5 +146,23 @@ class PerfilPreInversionLocalDataSourceImpl
     final res = await batch.commit();
 
     return res.length;
+  }
+
+  @override
+  Future<PerfilPreInversionModel?> getPerfilPreInversionDB(String id) async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('PerfilPreInversion',
+        where: 'PerfilPreInversion = ?', whereArgs: [id]);
+
+    if (res.isEmpty) return null;
+    final perfilPreinversionMap = {
+      for (var e in res[0].entries) e.key: e.value
+    };
+
+    final perfilPreinversionModel =
+        PerfilPreInversionModel.fromJson(perfilPreinversionMap);
+
+    return perfilPreinversionModel;
   }
 }

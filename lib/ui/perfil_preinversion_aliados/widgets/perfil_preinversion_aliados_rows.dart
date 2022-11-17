@@ -47,8 +47,8 @@ class PerfilPreInversionAliadosRows extends StatelessWidget {
                 onPressed: () {
                   final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
                   aliadoCubit.selectAliado(perfilPreInversionAliado);
-                  Navigator.pushNamed(context, 'VPerfilPreInversionAliado',
-                      arguments: perfilPreInversionAliado);
+                  Navigator.pushNamed(context, 'NewEditAliadoPreInversion',
+                      arguments: perfilPreInversionAliado.aliadoId);
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

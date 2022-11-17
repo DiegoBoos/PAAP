@@ -9,13 +9,18 @@ part '../municipio/municipio_state.dart';
 class MunicipioCubit extends Cubit<MunicipioState> {
   final MunicipioUsecaseDB municipioDB;
 
-  MunicipioCubit({required this.municipioDB}) : super(MunicipiosInitial()) {
-    getMunicipiosDB();
-  }
+  MunicipioCubit({required this.municipioDB}) : super(MunicipiosInitial());
 
-  void getMunicipiosDB() async {
+  void getMunicipiosByDepartamentoDB(String departamentoId) async {
     final result = await municipioDB.getMunicipiosUsecaseDB();
     result.fold((failure) => emit(MunicipiosError(failure.properties.first)),
-        (data) => emit(MunicipiosLoaded(data)));
+        (data) {
+      List<MunicipioEntity> municipiosByDepartamento = [];
+
+      municipiosByDepartamento =
+          data!.where((m) => m.departamentoid == departamentoId).toList();
+
+      emit(MunicipiosLoaded(municipiosByDepartamento));
+    });
   }
 }

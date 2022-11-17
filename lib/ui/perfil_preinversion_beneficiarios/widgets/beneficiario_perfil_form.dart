@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/departamento/departamento_cubit.dart';
 import '../../../domain/cubits/municipio/municipio_cubit.dart';
+import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../../domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
+import '../../../domain/cubits/vereda/vereda_cubit.dart';
 import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/entities/municipio_entity.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
@@ -21,101 +23,226 @@ class BeneficiarioPerfilForm extends StatefulWidget {
 class _BeneficiarioPerfilFormState extends State<BeneficiarioPerfilForm> {
   @override
   Widget build(BuildContext context) {
-    final departamentoCubit = BlocProvider.of<DepartamentoCubit>(context);
+    final perfilBeneficiarioCubit =
+        BlocProvider.of<PerfilBeneficiarioCubit>(context);
+    final perfilPreInversionBeneficiarioCubit =
+        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
-    final tipoTenenciaCubit = BlocProvider.of<TipoTenenciaCubit>(context);
-    return BlocBuilder<PerfilPreInversionBeneficiarioCubit,
-        PerfilPreInversionBeneficiarioState>(
-      builder: (context, state) {
-        if (state is PerfilPreInversionBeneficiarioLoading) {
-          return const Center(
-              heightFactor: 2, child: CircularProgressIndicator());
-        }
-        if (state is PerfilPreInversionBeneficiarioLoaded) {
-          final perfilPreInversionBeneficiario =
-              state.perfilPreInversionBeneficiarioLoaded!;
+    final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-            child: Card(
-              child: Column(
-                children: [
-                  const Text(
-                    'Información del beneficiario con relación al perfil',
-                    style: Styles.titleStyle,
-                  ),
-                  const SizedBox(height: 20),
-                  DropdownButtonFormField(
-                      items: departamentoCubit.state.departamentos!
-                          .map<DropdownMenuItem<String>>(
-                              (DepartamentoEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.id,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      onChanged: (value) {},
-                      hint: const Text('Departamento')),
-                  DropdownButtonFormField(
-                      items: municipioCubit.state.municipios!
-                          .map<DropdownMenuItem<String>>(
-                              (MunicipioEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.id,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      onChanged: (value) {},
-                      hint: const Text('Municipio')),
-                  DropdownButtonFormField(
-                      items: tipoTenenciaCubit.state.tiposTenencias!
-                          .map<DropdownMenuItem<String>>(
-                              (TipoTenenciaEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.tipoTenenciaId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      onChanged: (value) {},
-                      hint: const Text('Tipo de tenencia')),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                      initialValue: perfilPreInversionBeneficiario.latitud,
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Ubicación - Latitud',
-                          labelText: 'Ubicación - Latitud')),
-                  TextFormField(
-                      initialValue: perfilPreInversionBeneficiario.longitud,
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Ubicación Longitud',
-                          labelText: 'Ubicación Longitud')),
-                  const SizedBox(height: 20),
-                  SwitchListTile(
-                      title: const Text('Cotiza BEPS'),
-                      value:
-                          perfilPreInversionBeneficiario.cotizanteBeps == 'true'
-                              ? true
-                              : false,
-                      onChanged: (value) {}),
-                  SwitchListTile(
-                      title: const Text('Es asociado'),
-                      value: perfilPreInversionBeneficiario.asociado == 'true'
-                          ? true
-                          : false,
-                      onChanged: (value) {}),
-                  SwitchListTile(
-                      title: const Text('Está activo en la alianza'),
-                      value: perfilPreInversionBeneficiario.activo == 'true'
-                          ? true
-                          : false,
-                      onChanged: (value) {})
-                ],
+    return BlocBuilder<PerfilBeneficiarioCubit, PerfilBeneficiarioState>(
+        builder: (context, state) {
+      final perfilBeneficiario = state.perfilBeneficiario;
+
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              const Text(
+                'Información del beneficiario con relación al perfil',
+                style: Styles.titleStyle,
               ),
-            ),
-          );
-        }
-        return const SizedBox();
-      },
-    );
+              const SizedBox(height: 20),
+              BlocBuilder<DepartamentoCubit, DepartamentoState>(
+                builder: (context, state) {
+                  if (state is DepartamentosLoaded) {
+                    return DropdownButtonFormField(
+                        isExpanded: true,
+                        items: state.departamentos!
+                            .map<DropdownMenuItem<String>>(
+                                (DepartamentoEntity value) {
+                          return DropdownMenuItem<String>(
+                            value: value.id,
+                            child: Text(value.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          municipioCubit.getMunicipiosByDepartamentoDB(value!);
+                        },
+                        hint: const Text('Departamento'));
+                  }
+                  return const SizedBox();
+                },
+              ),
+              BlocBuilder<MunicipioCubit, MunicipioState>(
+                builder: (context, state) {
+                  if (state is MunicipiosLoaded) {
+                    return DropdownButtonFormField(
+                        isExpanded: true,
+                        items: state.municipios!.map<DropdownMenuItem<String>>(
+                            (MunicipioEntity value) {
+                          return DropdownMenuItem<String>(
+                            value: value.id,
+                            child: Text(value.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          //veredaCubit.getVeredasByMunicipioDB(value!);
+                        },
+                        hint: const Text('Municipio'));
+                  }
+                  return const SizedBox();
+                },
+              ),
+              //TODO: Cargar veredas
+              /*  BlocBuilder<VeredaCubit, VeredaState>(
+                    builder: (context, state) {
+                      if (state is MunicipiosLoaded) {
+                        return DropdownButtonFormField(
+                      isExpanded: true,
+
+                            items: state.veredas!
+                                .map<DropdownMenuItem<String>>(
+                                    (VeredaEntity value) {
+                              return DropdownMenuItem<String>(
+                                value: value.veredaId,
+                                child: Text(value.nombre),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {},
+                            hint: const Text('Vereda'));
+                      }
+                      return const SizedBox();
+                    },
+                  ) */
+              BlocBuilder<TipoTenenciaCubit, TipoTenenciaState>(
+                builder: (context, state) {
+                  if (state is TiposTenenciasLoaded) {
+                    return DropdownButtonFormField(
+                        isExpanded: true,
+                        items: state.tiposTenencias!
+                            .map<DropdownMenuItem<String>>(
+                                (TipoTenenciaEntity value) {
+                          return DropdownMenuItem<String>(
+                            value: value.tipoTenenciaId,
+                            child: Text(value.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          perfilBeneficiarioCubit.changeTipoTenencia(value);
+                        },
+                        hint: const Text('Tipo de tenencia'));
+                  }
+                  return const SizedBox();
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                  initialValue: perfilBeneficiario?.areaFinca,
+                  decoration: CustomInputDecoration.inputDecoration(
+                      hintText: 'Área Finca', labelText: 'Área Finca'),
+                  onSaved: (String? newValue) {
+                    perfilBeneficiarioCubit.changeAreaFinca(newValue);
+                  }),
+              const SizedBox(height: 20),
+              TextFormField(
+                  initialValue: perfilBeneficiario?.areaProyecto,
+                  decoration: CustomInputDecoration.inputDecoration(
+                      hintText: 'Área Proyecto', labelText: 'Área Proyecto'),
+                  onSaved: (String? newValue) {
+                    perfilBeneficiarioCubit.changeAreaProyecto(newValue);
+                  }),
+              const SizedBox(height: 20),
+
+              BlocBuilder<PerfilPreInversionBeneficiarioCubit,
+                  PerfilPreInversionBeneficiarioState>(
+                builder: (context, state) {
+                  final perfilPreInversionBeneficiario =
+                      state.perfilPreInversionBeneficiario;
+
+                  return Column(
+                    children: [
+                      TextFormField(
+                          initialValue: perfilPreInversionBeneficiario?.latitud,
+                          decoration: CustomInputDecoration.inputDecoration(
+                              hintText: 'Ubicación - Latitud',
+                              labelText: 'Ubicación - Latitud'),
+                          onSaved: (String? newValue) {
+                            perfilPreInversionBeneficiarioCubit
+                                .changeLatitud(newValue);
+                          }),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                          initialValue:
+                              perfilPreInversionBeneficiario?.cedulaCatastral,
+                          decoration: CustomInputDecoration.inputDecoration(
+                              hintText: 'Cédula Catastral',
+                              labelText: 'Cédula Catastral'),
+                          onSaved: (String? newValue) {
+                            perfilPreInversionBeneficiarioCubit
+                                .changeExperiencia(newValue);
+                          }),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                          initialValue:
+                              perfilPreInversionBeneficiario?.longitud,
+                          decoration: CustomInputDecoration.inputDecoration(
+                              hintText: 'Ubicación Longitud',
+                              labelText: 'Ubicación Longitud'),
+                          onSaved: (String? newValue) {
+                            perfilPreInversionBeneficiarioCubit
+                                .changeLongitud(newValue);
+                          }),
+                      const SizedBox(height: 20),
+                      SwitchListTile(
+                          title: const Text('Cotiza BEPS'),
+                          value:
+                              perfilPreInversionBeneficiario?.cotizanteBeps ==
+                                      'true'
+                                  ? true
+                                  : false,
+                          onChanged: (bool? value) {
+                            perfilPreInversionBeneficiarioCubit
+                                .changeCotizanteBeps(value);
+                          }),
+                    ],
+                  );
+                },
+              ),
+
+              SwitchListTile(
+                  title: const Text('Es asociado'),
+                  value: perfilBeneficiario?.asociado == 'true' ? true : false,
+                  onChanged: (bool? value) {
+                    perfilBeneficiarioCubit.changeAsociado(value);
+                  }),
+
+              SwitchListTile(
+                  title: const Text('Está activo en la alianza'),
+                  value: perfilBeneficiario?.activo == 'true' ? true : false,
+                  onChanged: (bool? value) {
+                    perfilBeneficiarioCubit.changeActivo(value);
+                  }),
+              SwitchListTile(
+                  title: const Text('Fue beneficiado'),
+                  value: perfilBeneficiario?.fueBeneficiado == 'true'
+                      ? true
+                      : false,
+                  onChanged: (bool? value) {
+                    perfilBeneficiarioCubit.changeFueBeneficiado(value);
+                  }),
+              const SizedBox(height: 20),
+              TextFormField(
+                  initialValue: perfilBeneficiario?.cualBeneficio,
+                  decoration: CustomInputDecoration.inputDecoration(
+                      hintText: 'Cuál Beneficio', labelText: 'Cuál Beneficio'),
+                  onSaved: (String? newValue) {
+                    perfilBeneficiarioCubit.changeCualBeneficio(newValue);
+                  }),
+              const SizedBox(height: 20),
+              TextFormField(
+                  initialValue: perfilBeneficiario?.experiencia,
+                  decoration: CustomInputDecoration.inputDecoration(
+                      hintText: 'Experiencia producto',
+                      labelText: 'Experiencia producto'),
+                  onSaved: (String? newValue) {
+                    perfilBeneficiarioCubit.changeExperiencia(newValue);
+                  }),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

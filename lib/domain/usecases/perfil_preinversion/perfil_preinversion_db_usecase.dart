@@ -27,4 +27,9 @@ class PerfilPreInversionUsecaseDB {
     return repositoryDB
         .savePerfilesPreInversionRepositoryDB(perfilesPreInversion);
   }
+
+  Future<Either<Failure, PerfilPreInversionEntity?>>
+      getPerfilPreInversionUsecaseDB(String id) {
+    return repositoryDB.getPerfilPreInversionRepositoryDB(id);
+  }
 }

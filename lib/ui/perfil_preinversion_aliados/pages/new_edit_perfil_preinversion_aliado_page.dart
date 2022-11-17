@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/entities/v_perfil_preinversion_entity.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/perfil_preinversion_aliado_form.dart';
@@ -13,8 +12,8 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final perfilPreInversion =
-        ModalRoute.of(context)?.settings.arguments as VPerfilPreInversionEntity;
+    final perfilPreInversionAliadoId =
+        ModalRoute.of(context)?.settings.arguments as String;
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     return Scaffold(
         drawer: BlocBuilder<MenuCubit, MenuState>(
@@ -22,7 +21,6 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
             final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
             return PerfilPreInversionAliadoDrawer(
               menuHijo: menuHijo,
-              perfilPreInversion: perfilPreInversion,
             );
           },
         ),
@@ -48,7 +46,7 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Text(
-                  perfilPreInversion.perfilId == '0' ? 'Creación' : 'Editar',
+                  perfilPreInversionAliadoId == '0' ? 'Creación' : 'Editar',
                   style: Styles.subtitleStyle),
             ),
             const PerfilPreInversionAliadoForm()

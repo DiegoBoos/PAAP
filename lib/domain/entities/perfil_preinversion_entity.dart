@@ -37,6 +37,45 @@ class PerfilPreInversionEntity {
   final String valorTotalProyecto;
   final String incentivoModular;
 
+  PerfilPreInversionEntity copyWith({
+    String? perfilPreInversionId,
+    String? perfilId,
+    String? convocatoriaId,
+    String? nombre,
+    String? abreviatura,
+    String? nit,
+    String? municipioId,
+    String? direccion,
+    String? contacto,
+    String? telefonoFijo,
+    String? telefonoMovil,
+    String? correo,
+    String? tipoProyectoId,
+    String? productoId,
+    String? productoAsociadoId,
+    String? valorTotalProyecto,
+    String? incentivoModular,
+  }) =>
+      PerfilPreInversionEntity(
+        perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
+        perfilId: perfilId ?? this.perfilId,
+        convocatoriaId: convocatoriaId ?? this.convocatoriaId,
+        nombre: nombre ?? this.nombre,
+        abreviatura: abreviatura ?? this.abreviatura,
+        nit: nit ?? this.nit,
+        municipioId: municipioId ?? this.municipioId,
+        direccion: direccion ?? this.direccion,
+        contacto: contacto ?? this.contacto,
+        telefonoFijo: telefonoFijo ?? this.telefonoFijo,
+        telefonoMovil: telefonoMovil ?? this.telefonoMovil,
+        correo: correo ?? this.correo,
+        tipoProyectoId: tipoProyectoId ?? this.tipoProyectoId,
+        productoId: productoId ?? this.productoId,
+        productoAsociadoId: productoAsociadoId ?? this.productoAsociadoId,
+        valorTotalProyecto: valorTotalProyecto ?? this.valorTotalProyecto,
+        incentivoModular: incentivoModular ?? this.incentivoModular,
+      );
+
   factory PerfilPreInversionEntity.fromJson(Map<String, dynamic> json) =>
       PerfilPreInversionEntity(
         perfilPreInversionId: json["PerfilPreInversionId"],

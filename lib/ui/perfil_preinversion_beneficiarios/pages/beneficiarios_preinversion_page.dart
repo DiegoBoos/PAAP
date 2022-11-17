@@ -18,9 +18,7 @@ class PerfilPreInversionBeneficiariosPage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.save),
             onPressed: () => Navigator.pushNamed(
-                  context,
-                  'NewEditVBeneficiarioPreInversion',
-                )),
+                context, 'NewEditVBeneficiarioPreInversion', arguments: '0')),
         appBar: AppBar(
             title: const Text('Beneficiarios'),
             centerTitle: true,
