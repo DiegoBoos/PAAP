@@ -12,6 +12,7 @@ class BeneficiarioEntity {
     required this.telefonoMovil,
     required this.activo,
     required this.tipoIdentificacionId,
+    required this.recordStatus,
   });
 
   String beneficiarioId;
@@ -26,6 +27,7 @@ class BeneficiarioEntity {
   String telefonoMovil;
   String activo;
   String tipoIdentificacionId;
+  String recordStatus;
 
   BeneficiarioEntity copyWith({
     String? beneficiarioId,
@@ -40,6 +42,7 @@ class BeneficiarioEntity {
     String? telefonoMovil,
     String? activo,
     String? tipoIdentificacionId,
+    String? recordStatus,
   }) =>
       BeneficiarioEntity(
         beneficiarioId: beneficiarioId ?? this.beneficiarioId,
@@ -55,6 +58,7 @@ class BeneficiarioEntity {
         telefonoMovil: telefonoMovil ?? this.telefonoMovil,
         activo: activo ?? this.activo,
         tipoIdentificacionId: tipoIdentificacionId ?? this.tipoIdentificacionId,
+        recordStatus: recordStatus ?? this.recordStatus,
       );
 
   factory BeneficiarioEntity.fromJson(Map<String, dynamic> json) =>
@@ -71,6 +75,7 @@ class BeneficiarioEntity {
         telefonoMovil: json["TelefonoMovil"],
         activo: json["Activo"],
         tipoIdentificacionId: json["TipoIdentificacionId"],
+        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -86,5 +91,6 @@ class BeneficiarioEntity {
         "TelefonoMovil": telefonoMovil,
         "Activo": activo,
         "TipoIdentificacionId": tipoIdentificacionId,
+        "RecordStatus": recordStatus,
       };
 }

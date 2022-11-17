@@ -34,8 +34,10 @@ class PerfilPreInversionBeneficiarioEntity {
     required this.tipoDiscapacidadId,
     required this.conyugeTipoIdentificacionId,
     required this.conyugeId,
-    required this.conyugeNombre,
-    required this.conyugeApellido,
+    required this.conyugeNombre1,
+    required this.conyugeNombre2,
+    required this.conyugeApellido1,
+    required this.conyugeApellido2,
     required this.conyugeGeneroId,
     required this.conyugeFechaExpedicionDocumento,
     required this.conyugeGrupoEspecialId,
@@ -47,6 +49,7 @@ class PerfilPreInversionBeneficiarioEntity {
     required this.longitud,
     required this.latitud,
     required this.cedulaCatastral,
+    required this.recordStatus,
   });
 
   String perfilPreInversionId;
@@ -83,8 +86,10 @@ class PerfilPreInversionBeneficiarioEntity {
   String tipoDiscapacidadId;
   String conyugeTipoIdentificacionId;
   String conyugeId;
-  String conyugeNombre;
-  String conyugeApellido;
+  String conyugeNombre1;
+  String conyugeNombre2;
+  String conyugeApellido1;
+  String conyugeApellido2;
   String conyugeGeneroId;
   String conyugeFechaExpedicionDocumento;
   String conyugeGrupoEspecialId;
@@ -96,6 +101,7 @@ class PerfilPreInversionBeneficiarioEntity {
   String longitud;
   String latitud;
   String cedulaCatastral;
+  String recordStatus;
 
   PerfilPreInversionBeneficiarioEntity copyWith({
     String? perfilPreInversionId,
@@ -132,8 +138,10 @@ class PerfilPreInversionBeneficiarioEntity {
     String? tipoDiscapacidadId,
     String? conyugeTipoIdentificacionId,
     String? conyugeId,
-    String? conyugeNombre,
-    String? conyugeApellido,
+    String? conyugeNombre1,
+    String? conyugeNombre2,
+    String? conyugeApellido1,
+    String? conyugeApellido2,
     String? conyugeGeneroId,
     String? conyugeFechaExpedicionDocumento,
     String? conyugeGrupoEspecialId,
@@ -145,6 +153,7 @@ class PerfilPreInversionBeneficiarioEntity {
     String? longitud,
     String? latitud,
     String? cedulaCatastral,
+    String? recordStatus,
   }) =>
       PerfilPreInversionBeneficiarioEntity(
         perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
@@ -183,8 +192,10 @@ class PerfilPreInversionBeneficiarioEntity {
         conyugeTipoIdentificacionId:
             conyugeTipoIdentificacionId ?? this.conyugeTipoIdentificacionId,
         conyugeId: conyugeId ?? this.conyugeId,
-        conyugeNombre: conyugeNombre ?? this.conyugeNombre,
-        conyugeApellido: conyugeApellido ?? this.conyugeApellido,
+        conyugeNombre1: conyugeNombre1 ?? this.conyugeNombre1,
+        conyugeNombre2: conyugeNombre2 ?? this.conyugeNombre2,
+        conyugeApellido1: conyugeApellido1 ?? this.conyugeApellido1,
+        conyugeApellido2: conyugeApellido2 ?? this.conyugeApellido2,
         conyugeGeneroId: conyugeGeneroId ?? this.conyugeGeneroId,
         conyugeFechaExpedicionDocumento: conyugeFechaExpedicionDocumento ??
             this.conyugeFechaExpedicionDocumento,
@@ -200,6 +211,7 @@ class PerfilPreInversionBeneficiarioEntity {
         longitud: longitud ?? this.longitud,
         latitud: latitud ?? this.latitud,
         cedulaCatastral: cedulaCatastral ?? this.cedulaCatastral,
+        recordStatus: recordStatus ?? this.recordStatus,
       );
 
   factory PerfilPreInversionBeneficiarioEntity.fromJson(
@@ -239,8 +251,10 @@ class PerfilPreInversionBeneficiarioEntity {
         tipoDiscapacidadId: json["TipoDiscapacidadId"],
         conyugeTipoIdentificacionId: json["ConyugeTipoIdentificacionId"],
         conyugeId: json["ConyugeId"],
-        conyugeNombre: json["ConyugeNombre"],
-        conyugeApellido: json["ConyugeApellido"],
+        conyugeNombre1: json["ConyugeNombre1"],
+        conyugeNombre2: json["ConyugeNombre2"],
+        conyugeApellido1: json["ConyugeApellido1"],
+        conyugeApellido2: json["ConyugeApellido2"],
         conyugeGeneroId: json["ConyugeGeneroId"],
         conyugeFechaExpedicionDocumento:
             json["ConyugeFechaExpedicionDocumento"],
@@ -253,6 +267,7 @@ class PerfilPreInversionBeneficiarioEntity {
         longitud: json["Longitud"],
         latitud: json["Latitud"],
         cedulaCatastral: json["CedulaCatastral"],
+        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -290,8 +305,10 @@ class PerfilPreInversionBeneficiarioEntity {
         "TipoDiscapacidadId": tipoDiscapacidadId,
         "ConyugeTipoIdentificacionId": conyugeTipoIdentificacionId,
         "ConyugeId": conyugeId,
-        "ConyugeNombre": conyugeNombre,
-        "ConyugeApellido": conyugeApellido,
+        "ConyugeNombre1": conyugeNombre1,
+        "ConyugeNombre2": conyugeNombre2,
+        "ConyugeApellido1": conyugeApellido1,
+        "ConyugeApellido2": conyugeApellido2,
         "ConyugeGeneroId": conyugeGeneroId,
         "ConyugeFechaExpedicionDocumento": conyugeFechaExpedicionDocumento,
         "ConyugeGrupoEspecialId": conyugeGrupoEspecialId,
@@ -303,6 +320,7 @@ class PerfilPreInversionBeneficiarioEntity {
         "Longitud": longitud,
         "Latitud": latitud,
         "CedulaCatastral": cedulaCatastral,
+        "RecordStatus": recordStatus,
       };
 
   void changeAccesoExplotacionTierra(bool value) {}

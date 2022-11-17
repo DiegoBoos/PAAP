@@ -28,7 +28,7 @@ import '../../data/datasources/local/desembolso/desembolso_local_ds.dart';
 import '../../data/datasources/local/estado_civil/estado_civil_local_ds.dart';
 import '../../data/datasources/local/estado_visita/estado_visita_local_ds.dart';
 import '../../data/datasources/local/evaluacion/evaluacion_local_ds.dart';
-import '../../data/datasources/local/experiencia_pecuaria_local_ds.dart';
+import '../../data/datasources/local/experiencia_pecuaria/experiencia_pecuaria_local_ds.dart';
 import '../../data/datasources/local/frecuencia/frecuencia_local_ds.dart';
 import '../../data/datasources/local/genero/genero_local_ds.dart';
 import '../../data/datasources/local/grupo_especial/grupo_especial_local_ds.dart';

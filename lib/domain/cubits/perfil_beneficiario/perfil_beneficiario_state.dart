@@ -12,19 +12,21 @@ class PerfilBeneficiarioInitial extends PerfilBeneficiarioState {
   PerfilBeneficiarioInitial()
       : super(
             perfilBeneficiario: PerfilBeneficiarioEntity(
-                perfilId: '',
-                beneficiarioId: '',
-                municipioId: '',
-                veredaId: '',
-                areaFinca: '',
-                areaProyecto: '',
-                tipoTenenciaId: '',
-                experiencia: '',
-                asociado: '',
-                conocePerfil: '',
-                fueBeneficiado: '',
-                cualBeneficio: '',
-                activo: ''));
+          perfilId: '',
+          beneficiarioId: '',
+          municipioId: '',
+          veredaId: '',
+          areaFinca: '',
+          areaProyecto: '',
+          tipoTenenciaId: '',
+          experiencia: '',
+          asociado: '',
+          conocePerfil: '',
+          fueBeneficiado: '',
+          cualBeneficio: '',
+          activo: '',
+          recordStatus: '',
+        ));
 }
 
 class PerfilBeneficiarioLoading extends PerfilBeneficiarioState {}

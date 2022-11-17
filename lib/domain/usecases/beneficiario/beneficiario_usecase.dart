@@ -14,4 +14,9 @@ class BeneficiarioUsecase {
       UsuarioEntity usuario) {
     return repository.getBeneficiariosRepository(usuario);
   }
+
+  Future<Either<Failure, List<BeneficiarioEntity>>> saveBeneficiariosUsecase(
+      UsuarioEntity usuario, List<BeneficiarioEntity> beneficiarioEntity) {
+    return repository.saveBeneficiariosRepository(usuario, beneficiarioEntity);
+  }
 }

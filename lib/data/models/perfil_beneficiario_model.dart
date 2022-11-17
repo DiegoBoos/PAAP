@@ -15,20 +15,23 @@ class PerfilBeneficiarioModel extends PerfilBeneficiarioEntity {
     String? fueBeneficiado,
     String? cualBeneficio,
     String? activo,
+    String? recordStatus,
   }) : super(
-            perfilId: perfilId,
-            beneficiarioId: beneficiarioId,
-            municipioId: municipioId,
-            veredaId: veredaId,
-            areaFinca: areaFinca ?? '',
-            areaProyecto: areaProyecto ?? '',
-            tipoTenenciaId: tipoTenenciaId,
-            experiencia: experiencia ?? '',
-            asociado: asociado ?? '',
-            conocePerfil: conocePerfil ?? '',
-            fueBeneficiado: fueBeneficiado ?? '',
-            cualBeneficio: cualBeneficio ?? '',
-            activo: activo ?? '');
+          perfilId: perfilId,
+          beneficiarioId: beneficiarioId,
+          municipioId: municipioId,
+          veredaId: veredaId,
+          areaFinca: areaFinca ?? '',
+          areaProyecto: areaProyecto ?? '',
+          tipoTenenciaId: tipoTenenciaId,
+          experiencia: experiencia ?? '',
+          asociado: asociado ?? '',
+          conocePerfil: conocePerfil ?? '',
+          fueBeneficiado: fueBeneficiado ?? '',
+          cualBeneficio: cualBeneficio ?? '',
+          activo: activo ?? '',
+          recordStatus: recordStatus ?? '',
+        );
 
   factory PerfilBeneficiarioModel.fromJson(Map<String, dynamic> json) =>
       PerfilBeneficiarioModel(
@@ -45,6 +48,7 @@ class PerfilBeneficiarioModel extends PerfilBeneficiarioEntity {
         fueBeneficiado: json["FueBeneficiado"],
         cualBeneficio: json["CualBeneficio"],
         activo: json["Activo"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -62,5 +66,6 @@ class PerfilBeneficiarioModel extends PerfilBeneficiarioEntity {
         "FueBeneficiado": fueBeneficiado,
         "CualBeneficio": cualBeneficio,
         "Activo": activo,
+        "recordStatus": recordStatus,
       };
 }

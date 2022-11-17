@@ -5,6 +5,9 @@ import '../../entities/experiencia_pecuaria_entity.dart';
 
 abstract class ExperienciaPecuariaRepositoryDB {
   Future<Either<Failure, List<ExperienciaPecuariaEntity>>>
+      getExperienciasPecuariasProduccionRepositoryDB();
+
+  Future<Either<Failure, List<ExperienciaPecuariaEntity>>>
       getExperienciasPecuariasRepositoryDB();
 
   Future<Either<Failure, ExperienciaPecuariaEntity?>>
@@ -12,4 +15,11 @@ abstract class ExperienciaPecuariaRepositoryDB {
 
   Future<Either<Failure, int>> saveExperienciasPecuariasRepositoryDB(
       List<ExperienciaPecuariaEntity> experienciasPecuarias);
+
+  Future<Either<Failure, int>> saveExperienciaPecuariaRepositoryDB(
+      ExperienciaPecuariaEntity experienciaPecuariaEntity);
+
+  Future<Either<Failure, int>>
+      updateExperienciasPecuariasProduccionDBRepositoryDB(
+          List<ExperienciaPecuariaEntity> experienciasPecuariasEntity);
 }

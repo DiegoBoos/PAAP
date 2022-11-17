@@ -13,4 +13,11 @@ class ExperienciaAgricolaUsecase {
       getExperienciasAgricolasUsecase(UsuarioEntity usuario) {
     return repository.getExperienciasAgricolasRepository(usuario);
   }
+
+  Future<Either<Failure, List<ExperienciaAgricolaEntity>>>
+      saveExperienciasAgricolasUsecase(UsuarioEntity usuario,
+          List<ExperienciaAgricolaEntity> experienciaAgricolaEntity) {
+    return repository.saveExperienciasAgricolasRepository(
+        usuario, experienciaAgricolaEntity);
+  }
 }

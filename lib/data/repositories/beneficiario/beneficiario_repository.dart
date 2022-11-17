@@ -27,4 +27,20 @@ class BeneficiarioRepositoryImpl implements BeneficiarioRepository {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<BeneficiarioEntity>>> saveBeneficiariosRepository(
+      UsuarioEntity usuario,
+      List<BeneficiarioEntity> beneficiariosEntity) async {
+    try {
+      final result = await beneficiarioRemoteDataSource.saveBeneficiarios(
+          usuario, beneficiariosEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

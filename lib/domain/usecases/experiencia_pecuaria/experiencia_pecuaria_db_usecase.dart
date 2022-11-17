@@ -25,4 +25,21 @@ class ExperienciaPecuariaUsecaseDB {
     return repositoryDB
         .saveExperienciasPecuariasRepositoryDB(experienciaPecuarias);
   }
+
+  Future<Either<Failure, List<ExperienciaPecuariaEntity>>>
+      getExperienciasPecuariasProduccionUsecaseDB() {
+    return repositoryDB.getExperienciasPecuariasProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> saveExperienciaPecuariaUsecaseDB(
+      ExperienciaPecuariaEntity experienciaPecuariaEntity) {
+    return repositoryDB
+        .saveExperienciaPecuariaRepositoryDB(experienciaPecuariaEntity);
+  }
+
+  Future<Either<Failure, int>> updateExperienciasPecuariasProduccionUsecaseDB(
+      List<ExperienciaPecuariaEntity> experienciasPecuariasEntity) {
+    return repositoryDB.updateExperienciasPecuariasProduccionDBRepositoryDB(
+        experienciasPecuariasEntity);
+  }
 }

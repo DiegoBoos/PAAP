@@ -24,4 +24,26 @@ class PerfilPreInversionBeneficiarioUsecaseDB {
     return repositoryDB.savePerfilPreInversionBeneficiariosRepositoryDB(
         perfilPreInversionBeneficiariosEntity);
   }
+
+  Future<Either<Failure, List<PerfilPreInversionBeneficiarioEntity>>>
+      getPerfilesPreInversionesBeneficiariosProduccionUsecaseDB() {
+    return repositoryDB
+        .getPerfilesPreInversionesBeneficiariosProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> savePerfilPreInversionBeneficiarioUsecaseDB(
+      PerfilPreInversionBeneficiarioEntity
+          perfilPreInversionBeneficiarioEntity) {
+    return repositoryDB.savePerfilPreInversionBeneficiarioRepositoryDB(
+        perfilPreInversionBeneficiarioEntity);
+  }
+
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesBeneficiariosProduccionUsecaseDB(
+          List<PerfilPreInversionBeneficiarioEntity>
+              experienciasAgricolasEntity) {
+    return repositoryDB
+        .updatePerfilesPreInversionesBeneficiariosProduccionDBRepositoryDB(
+            experienciasAgricolasEntity);
+  }
 }

@@ -7,4 +7,7 @@ import '../../entities/usuario_entity.dart';
 abstract class ExperienciaAgricolaRepository {
   Future<Either<Failure, List<ExperienciaAgricolaEntity>>>
       getExperienciasAgricolasRepository(UsuarioEntity usuario);
+  Future<Either<Failure, List<ExperienciaAgricolaEntity>>>
+      saveExperienciasAgricolasRepository(UsuarioEntity usuario,
+          List<ExperienciaAgricolaEntity> experienciasAgricolasEntity);
 }

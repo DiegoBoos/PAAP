@@ -23,7 +23,8 @@ class BeneficiarioInitial extends BeneficiarioState {
                 grupoEspecialId: '',
                 telefonoMovil: '',
                 activo: '',
-                tipoIdentificacionId: ''));
+                tipoIdentificacionId: '',
+                recordStatus: ''));
 }
 
 class BeneficiarioLoading extends BeneficiarioState {}
@@ -34,6 +35,8 @@ class BeneficiarioLoaded extends BeneficiarioState {
   const BeneficiarioLoaded(this.beneficiarioLoaded)
       : super(beneficiario: beneficiarioLoaded);
 }
+
+class BeneficiarioSaved extends BeneficiarioState {}
 
 class BeneficiarioError extends BeneficiarioState {
   final String message;

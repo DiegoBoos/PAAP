@@ -17,22 +17,25 @@ class ExperienciaAgricolaModel extends ExperienciaAgricolaEntity {
     required String areaReservaConservacion,
     required String areaImplementacion,
     required String totalAreaPredio,
+    required String recordStatus,
   }) : super(
-            tipoActividadProductivaId: tipoActividadProductivaId ?? '',
-            beneficiarioId: beneficiarioId ?? '',
-            frecuenciaId: frecuenciaId ?? '',
-            areaCultivo: areaCultivo,
-            cantidadProducida: cantidadProducida,
-            cantidadVendida: cantidadVendida,
-            cantidadAutoconsumo: cantidadAutoconsumo,
-            costoImplementacion: costoImplementacion,
-            valorJornal: valorJornal,
-            totalIngresoNeto: totalIngresoNeto,
-            areaPasto: areaPasto,
-            areaSinUso: areaSinUso,
-            areaReservaConservacion: areaReservaConservacion,
-            areaImplementacion: areaImplementacion,
-            totalAreaPredio: totalAreaPredio);
+          tipoActividadProductivaId: tipoActividadProductivaId ?? '',
+          beneficiarioId: beneficiarioId ?? '',
+          frecuenciaId: frecuenciaId ?? '',
+          areaCultivo: areaCultivo,
+          cantidadProducida: cantidadProducida,
+          cantidadVendida: cantidadVendida,
+          cantidadAutoconsumo: cantidadAutoconsumo,
+          costoImplementacion: costoImplementacion,
+          valorJornal: valorJornal,
+          totalIngresoNeto: totalIngresoNeto,
+          areaPasto: areaPasto,
+          areaSinUso: areaSinUso,
+          areaReservaConservacion: areaReservaConservacion,
+          areaImplementacion: areaImplementacion,
+          totalAreaPredio: totalAreaPredio,
+          recordStatus: recordStatus,
+        );
 
   factory ExperienciaAgricolaModel.fromJson(Map<String, dynamic> json) =>
       ExperienciaAgricolaModel(
@@ -51,6 +54,7 @@ class ExperienciaAgricolaModel extends ExperienciaAgricolaEntity {
         areaReservaConservacion: json["AreaReservaConservacion"],
         areaImplementacion: json["AreaImplementacion"],
         totalAreaPredio: json["TotalAreaPredio"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -70,5 +74,6 @@ class ExperienciaAgricolaModel extends ExperienciaAgricolaEntity {
         "AreaReservaConservacion": areaReservaConservacion,
         "AreaImplementacion": areaImplementacion,
         "TotalAreaPredio": totalAreaPredio,
+        "RecordStatus": recordStatus,
       };
 }

@@ -4,8 +4,13 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../entities/usuario_entity.dart';
+import '../../usecases/beneficiario/beneficiario_exports.dart';
 import '../../usecases/evaluacion/evaluacion_exports.dart';
 import '../../usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
+import '../../usecases/experiencia_agricola/experiencia_agricola_exports.dart';
+import '../../usecases/experiencia_pecuaria/experiencia_pecuaria_exports.dart';
+import '../../usecases/perfil_beneficiario/perfil_beneficiario_exports.dart';
+import '../../usecases/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_exports.dart';
 import '../../usecases/visita/visita_exports.dart';
 
 part 'upload_sync_event.dart';
@@ -16,6 +21,17 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
   final VisitaUsecaseDB visitaDB;
   final EvaluacionUsecase evaluacion;
   final EvaluacionUsecaseDB evaluacionDB;
+  final BeneficiarioUsecase beneficiario;
+  final BeneficiarioUsecaseDB beneficiarioDB;
+  final ExperienciaAgricolaUsecase experienciaAgricola;
+  final ExperienciaAgricolaUsecaseDB experienciaAgricolaDB;
+  final ExperienciaPecuariaUsecase experienciaPecuaria;
+  final ExperienciaPecuariaUsecaseDB experienciaPecuariaDB;
+  final PerfilBeneficiarioUsecase perfilBeneficiario;
+  final PerfilBeneficiarioUsecaseDB perfilBeneficiarioDB;
+  final PerfilPreInversionBeneficiarioUsecase perfilPreInversionBeneficiario;
+  final PerfilPreInversionBeneficiarioUsecaseDB
+      perfilPreInversionBeneficiarioDB;
   final EvaluacionRespuestaUsecase evaluacionRespuesta;
   final EvaluacionRespuestaUsecaseDB evaluacionRespuestaDB;
 
@@ -26,6 +42,16 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
     required this.evaluacionDB,
     required this.evaluacionRespuesta,
     required this.evaluacionRespuestaDB,
+    required this.beneficiario,
+    required this.beneficiarioDB,
+    required this.experienciaAgricola,
+    required this.experienciaAgricolaDB,
+    required this.experienciaPecuaria,
+    required this.experienciaPecuariaDB,
+    required this.perfilBeneficiario,
+    required this.perfilBeneficiarioDB,
+    required this.perfilPreInversionBeneficiario,
+    required this.perfilPreInversionBeneficiarioDB,
   }) : super(UploadSyncInitial()) {
     on<UploadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -39,6 +65,12 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
       await uploadEvaluacion(usuario, emit);
 
       await uploadEvaluacionRespuesta(usuario, emit);
+
+      await uploadBeneficiario(usuario, emit);
+      await uploadExperienciaAgricola(usuario, emit);
+      await uploadExperienciaPecuaria(usuario, emit);
+      await uploadPerfilBeneficiario(usuario, emit);
+      await uploadPerfilPreInversionBeneficiario(usuario, emit);
     });
 
     on<UploadStatusChanged>((event, emit) {
@@ -144,6 +176,158 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
       Emitter<UploadSyncState> emit) async {
     final result = await evaluacionRespuestaDB
         .updateEvaluacionesRespuestasProduccionUsecaseDB(data);
+    result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
+  }
+
+  // Sync Beneficiario
+  Future<void> uploadBeneficiario(
+      UsuarioEntity usuario, Emitter<UploadSyncState> emit) async {
+    final result = await beneficiarioDB.getBeneficiariosProduccionUsecaseDB();
+    result.fold((failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async => await saveBeneficiarios(usuario, data, emit));
+  }
+
+  Future<void> saveBeneficiarios(UsuarioEntity usuario,
+      List<BeneficiarioEntity> data, Emitter<UploadSyncState> emit) async {
+    final result = await beneficiario.saveBeneficiariosUsecase(usuario, data);
+    return result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async =>
+            await updateBeneficiariosProduccion(usuario, data, emit));
+  }
+
+  Future<void> updateBeneficiariosProduccion(UsuarioEntity usuario,
+      List<BeneficiarioEntity> data, Emitter<UploadSyncState> emit) async {
+    final result =
+        await beneficiarioDB.updateBeneficiariosProduccionUsecaseDB(data);
+    result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
+  }
+
+  // Sync Experiencia Agricola
+  Future<void> uploadExperienciaAgricola(
+      UsuarioEntity usuario, Emitter<UploadSyncState> emit) async {
+    final result = await experienciaAgricolaDB
+        .getExperienciasAgricolasProduccionUsecaseDB();
+    result.fold((failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async => await saveExperienciasAgricolas(usuario, data, emit));
+  }
+
+  Future<void> saveExperienciasAgricolas(
+      UsuarioEntity usuario,
+      List<ExperienciaAgricolaEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await experienciaAgricola.saveExperienciasAgricolasUsecase(
+        usuario, data);
+    return result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async =>
+            await updateExperienciasAgricolasProduccion(usuario, data, emit));
+  }
+
+  Future<void> updateExperienciasAgricolasProduccion(
+      UsuarioEntity usuario,
+      List<ExperienciaAgricolaEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await experienciaAgricolaDB
+        .updateExperienciasAgricolasProduccionUsecaseDB(data);
+    result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
+  }
+
+  // Sync Experiencia Pecuaria
+  Future<void> uploadExperienciaPecuaria(
+      UsuarioEntity usuario, Emitter<UploadSyncState> emit) async {
+    final result = await experienciaPecuariaDB
+        .getExperienciasPecuariasProduccionUsecaseDB();
+    result.fold((failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async => await saveExperienciasPecuarias(usuario, data, emit));
+  }
+
+  Future<void> saveExperienciasPecuarias(
+      UsuarioEntity usuario,
+      List<ExperienciaPecuariaEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await experienciaPecuaria.saveExperienciasPecuariasUsecase(
+        usuario, data);
+    return result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async =>
+            await updateExperienciasPecuariasProduccion(usuario, data, emit));
+  }
+
+  Future<void> updateExperienciasPecuariasProduccion(
+      UsuarioEntity usuario,
+      List<ExperienciaPecuariaEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await experienciaPecuariaDB
+        .updateExperienciasPecuariasProduccionUsecaseDB(data);
+    result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
+  }
+
+  // Sync Perfil Beneficiario
+  Future<void> uploadPerfilBeneficiario(
+      UsuarioEntity usuario, Emitter<UploadSyncState> emit) async {
+    final result = await perfilBeneficiarioDB
+        .getPerfilesBeneficiariosProduccionUsecaseDB();
+    result.fold((failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async => await savePerfilesBeneficiarios(usuario, data, emit));
+  }
+
+  Future<void> savePerfilesBeneficiarios(
+      UsuarioEntity usuario,
+      List<PerfilBeneficiarioEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await perfilBeneficiario.savePerfilesBeneficiariosUsecase(
+        usuario, data);
+    return result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async =>
+            await updatePerfilesBeneficiariosProduccion(usuario, data, emit));
+  }
+
+  Future<void> updatePerfilesBeneficiariosProduccion(
+      UsuarioEntity usuario,
+      List<PerfilBeneficiarioEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await perfilBeneficiarioDB
+        .updatePerfilesBeneficiariosProduccionUsecaseDB(data);
+    result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
+  }
+
+  // Sync Perfil PreInversion Beneficiario
+  Future<void> uploadPerfilPreInversionBeneficiario(
+      UsuarioEntity usuario, Emitter<UploadSyncState> emit) async {
+    final result = await perfilPreInversionBeneficiarioDB
+        .getPerfilesPreInversionesBeneficiariosProduccionUsecaseDB();
+    result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async =>
+            await savePerfilesPreInversionesBeneficiarios(usuario, data, emit));
+  }
+
+  Future<void> savePerfilesPreInversionesBeneficiarios(
+      UsuarioEntity usuario,
+      List<PerfilPreInversionBeneficiarioEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await perfilPreInversionBeneficiario
+        .savePerfilesPreInversionesBeneficiariosUsecase(usuario, data);
+    return result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async =>
+            await updatePerfilesPreInversionesBeneficiariosProduccion(
+                usuario, data, emit));
+  }
+
+  Future<void> updatePerfilesPreInversionesBeneficiariosProduccion(
+      UsuarioEntity usuario,
+      List<PerfilPreInversionBeneficiarioEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await perfilPreInversionBeneficiarioDB
+        .updatePerfilesPreInversionesBeneficiariosProduccionUsecaseDB(data);
     result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
   }

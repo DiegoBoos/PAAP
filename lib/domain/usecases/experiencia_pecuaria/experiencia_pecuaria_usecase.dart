@@ -13,4 +13,11 @@ class ExperienciaPecuariaUsecase {
       getExperienciasPecuariasUsecase(UsuarioEntity usuario) {
     return repository.getExperienciasPecuariasRepository(usuario);
   }
+
+  Future<Either<Failure, List<ExperienciaPecuariaEntity>>>
+      saveExperienciasPecuariasUsecase(UsuarioEntity usuario,
+          List<ExperienciaPecuariaEntity> experienciaPecuariaEntity) {
+    return repository.saveExperienciasPecuariasRepository(
+        usuario, experienciaPecuariaEntity);
+  }
 }

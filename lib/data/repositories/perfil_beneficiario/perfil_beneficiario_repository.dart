@@ -28,4 +28,20 @@ class PerfilBeneficiarioRepositoryImpl implements PerfilBeneficiarioRepository {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<PerfilBeneficiarioEntity>>>
+      savePerfilesBeneficiariosRepository(UsuarioEntity usuario,
+          List<PerfilBeneficiarioEntity> perfilesBeneficiariosEntity) async {
+    try {
+      final result = await perfilBeneficiarioRemoteDataSource
+          .savePerfilesBeneficiarios(usuario, perfilesBeneficiariosEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

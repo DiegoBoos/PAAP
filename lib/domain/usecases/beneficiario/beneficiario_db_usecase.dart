@@ -22,4 +22,20 @@ class BeneficiarioUsecaseDB {
       List<BeneficiarioEntity> beneficiarioEntity) {
     return repositoryDB.saveBeneficiariosRepositoryDB(beneficiarioEntity);
   }
+
+  Future<Either<Failure, List<BeneficiarioEntity>>>
+      getBeneficiariosProduccionUsecaseDB() {
+    return repositoryDB.getBeneficiariosProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> saveBeneficiarioUsecaseDB(
+      BeneficiarioEntity beneficiarioEntity) {
+    return repositoryDB.saveBeneficiarioRepositoryDB(beneficiarioEntity);
+  }
+
+  Future<Either<Failure, int>> updateBeneficiariosProduccionUsecaseDB(
+      List<BeneficiarioEntity> beneficiariosEntity) {
+    return repositoryDB
+        .updateBeneficiariosProduccionDBRepositoryDB(beneficiariosEntity);
+  }
 }

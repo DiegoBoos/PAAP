@@ -14,6 +14,7 @@ class BeneficiarioModel extends BeneficiarioEntity {
     String? telefonoMovil,
     String? activo,
     required String tipoIdentificacionId,
+    String? recordStatus,
   }) : super(
             beneficiarioId: beneficiarioId,
             nombre1: nombre1 ?? '',
@@ -26,7 +27,8 @@ class BeneficiarioModel extends BeneficiarioEntity {
             grupoEspecialId: grupoEspecialId,
             telefonoMovil: telefonoMovil ?? '',
             activo: activo ?? '',
-            tipoIdentificacionId: tipoIdentificacionId);
+            tipoIdentificacionId: tipoIdentificacionId,
+            recordStatus: recordStatus ?? '');
 
   factory BeneficiarioModel.fromJson(Map<String, dynamic> json) =>
       BeneficiarioModel(
@@ -42,6 +44,7 @@ class BeneficiarioModel extends BeneficiarioEntity {
         telefonoMovil: json["TelefonoMovil"],
         activo: json["Activo"],
         tipoIdentificacionId: json["TipoIdentificacionId"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -58,5 +61,6 @@ class BeneficiarioModel extends BeneficiarioEntity {
         "TelefonoMovil": telefonoMovil,
         "Activo": activo,
         "TipoIdentificacionId": tipoIdentificacionId,
+        "RecordStatus": recordStatus,
       };
 }

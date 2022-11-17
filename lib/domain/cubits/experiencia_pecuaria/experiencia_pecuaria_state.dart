@@ -12,17 +12,19 @@ class ExperienciaPecuariaInitial extends ExperienciaPecuariaState {
   ExperienciaPecuariaInitial()
       : super(
             experienciaPecuaria: ExperienciaPecuariaEntity(
-                tipoActividadProductivaId: '',
-                beneficiarioId: '',
-                frecuenciaId: '',
-                cantidadAnimales: '',
-                cantidadCria: '',
-                cantidadLevante: '',
-                cantidadCeba: '',
-                cantidadLeche: '',
-                valorJornal: '',
-                costosInsumos: '',
-                ingresos: ''));
+          tipoActividadProductivaId: '',
+          beneficiarioId: '',
+          frecuenciaId: '',
+          cantidadAnimales: '',
+          cantidadCria: '',
+          cantidadLevante: '',
+          cantidadCeba: '',
+          cantidadLeche: '',
+          valorJornal: '',
+          costosInsumos: '',
+          ingresos: '',
+          recordStatus: '',
+        ));
 }
 
 class ExperienciaPecuariaLoading extends ExperienciaPecuariaState {}

@@ -13,6 +13,7 @@ class ExperienciaPecuariaModel extends ExperienciaPecuariaEntity {
     required String valorJornal,
     required String costosInsumos,
     required String ingresos,
+    required String recordStatus,
   }) : super(
           tipoActividadProductivaId: tipoActividadProductivaId ?? '',
           beneficiarioId: beneficiarioId ?? '',
@@ -25,6 +26,7 @@ class ExperienciaPecuariaModel extends ExperienciaPecuariaEntity {
           valorJornal: valorJornal,
           costosInsumos: costosInsumos,
           ingresos: ingresos,
+          recordStatus: recordStatus,
         );
 
   factory ExperienciaPecuariaModel.fromJson(Map<String, dynamic> json) =>
@@ -40,6 +42,7 @@ class ExperienciaPecuariaModel extends ExperienciaPecuariaEntity {
         valorJornal: json["ValorJornal"],
         costosInsumos: json["CostosInsumos"],
         ingresos: json["Ingresos"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -55,5 +58,6 @@ class ExperienciaPecuariaModel extends ExperienciaPecuariaEntity {
         "ValorJornal": valorJornal,
         "CostosInsumos": costosInsumos,
         "Ingresos": ingresos,
+        "RecordStatus": recordStatus,
       };
 }

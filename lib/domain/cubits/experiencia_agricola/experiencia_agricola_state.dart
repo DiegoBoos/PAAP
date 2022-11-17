@@ -12,21 +12,23 @@ class ExperienciaAgricolaInitial extends ExperienciaAgricolaState {
   ExperienciaAgricolaInitial()
       : super(
             experienciaAgricola: ExperienciaAgricolaEntity(
-                tipoActividadProductivaId: '',
-                beneficiarioId: '',
-                frecuenciaId: '',
-                areaCultivo: '',
-                cantidadProducida: '',
-                cantidadVendida: '',
-                cantidadAutoconsumo: '',
-                costoImplementacion: '',
-                valorJornal: '',
-                totalIngresoNeto: '',
-                areaPasto: '',
-                areaSinUso: '',
-                areaReservaConservacion: '',
-                areaImplementacion: '',
-                totalAreaPredio: ''));
+          tipoActividadProductivaId: '',
+          beneficiarioId: '',
+          frecuenciaId: '',
+          areaCultivo: '',
+          cantidadProducida: '',
+          cantidadVendida: '',
+          cantidadAutoconsumo: '',
+          costoImplementacion: '',
+          valorJornal: '',
+          totalIngresoNeto: '',
+          areaPasto: '',
+          areaSinUso: '',
+          areaReservaConservacion: '',
+          areaImplementacion: '',
+          totalAreaPredio: '',
+          recordStatus: '',
+        ));
 }
 
 class ExperienciaAgricolaLoading extends ExperienciaAgricolaState {}

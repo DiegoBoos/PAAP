@@ -14,4 +14,13 @@ class PerfilPreInversionBeneficiarioUsecase {
       getPerfilPreInversionBeneficiariosUsecase(UsuarioEntity usuario) {
     return repository.getPerfilPreInversionBeneficiariosRepository(usuario);
   }
+
+  Future<Either<Failure, List<PerfilPreInversionBeneficiarioEntity>>>
+      savePerfilesPreInversionesBeneficiariosUsecase(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionBeneficiarioEntity>
+              perfilPreInversionBeneficiarioEntity) {
+    return repository.savePerfilesPreInversionesBeneficiariosRepository(
+        usuario, perfilPreInversionBeneficiarioEntity);
+  }
 }

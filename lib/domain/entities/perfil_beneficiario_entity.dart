@@ -13,6 +13,7 @@ class PerfilBeneficiarioEntity {
     required this.fueBeneficiado,
     required this.cualBeneficio,
     required this.activo,
+    required this.recordStatus,
   });
 
   String perfilId;
@@ -28,6 +29,7 @@ class PerfilBeneficiarioEntity {
   String fueBeneficiado;
   String cualBeneficio;
   String activo;
+  String recordStatus;
 
   PerfilBeneficiarioEntity copyWith({
     String? perfilId,
@@ -43,6 +45,7 @@ class PerfilBeneficiarioEntity {
     String? fueBeneficiado,
     String? cualBeneficio,
     String? activo,
+    String? recordStatus,
   }) =>
       PerfilBeneficiarioEntity(
         perfilId: perfilId ?? this.perfilId,
@@ -58,6 +61,7 @@ class PerfilBeneficiarioEntity {
         fueBeneficiado: fueBeneficiado ?? this.fueBeneficiado,
         cualBeneficio: cualBeneficio ?? this.cualBeneficio,
         activo: activo ?? this.activo,
+        recordStatus: recordStatus ?? this.recordStatus,
       );
 
   factory PerfilBeneficiarioEntity.fromJson(Map<String, dynamic> json) =>
@@ -75,6 +79,7 @@ class PerfilBeneficiarioEntity {
         fueBeneficiado: json["FueBeneficiado"],
         cualBeneficio: json["CualBeneficio"],
         activo: json["Activo"],
+        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -91,5 +96,6 @@ class PerfilBeneficiarioEntity {
         "FueBeneficiado": fueBeneficiado,
         "CualBeneficio": cualBeneficio,
         "Activo": activo,
+        "RecordStatus": recordStatus,
       };
 }

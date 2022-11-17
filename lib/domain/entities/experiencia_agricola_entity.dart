@@ -15,6 +15,7 @@ class ExperienciaAgricolaEntity {
     required this.areaReservaConservacion,
     required this.areaImplementacion,
     required this.totalAreaPredio,
+    required this.recordStatus,
   });
 
   String tipoActividadProductivaId;
@@ -32,6 +33,7 @@ class ExperienciaAgricolaEntity {
   String areaReservaConservacion;
   String areaImplementacion;
   String totalAreaPredio;
+  String recordStatus;
 
   ExperienciaAgricolaEntity copyWith({
     String? tipoActividadProductivaId,
@@ -49,6 +51,7 @@ class ExperienciaAgricolaEntity {
     String? areaReservaConservacion,
     String? areaImplementacion,
     String? totalAreaPredio,
+    String? recordStatus,
   }) =>
       ExperienciaAgricolaEntity(
         tipoActividadProductivaId:
@@ -68,6 +71,7 @@ class ExperienciaAgricolaEntity {
             areaReservaConservacion ?? this.areaReservaConservacion,
         areaImplementacion: areaImplementacion ?? this.areaImplementacion,
         totalAreaPredio: totalAreaPredio ?? this.totalAreaPredio,
+        recordStatus: recordStatus ?? this.recordStatus,
       );
 
   factory ExperienciaAgricolaEntity.fromJson(Map<String, dynamic> json) =>
@@ -87,6 +91,7 @@ class ExperienciaAgricolaEntity {
         areaReservaConservacion: json["AreaReservaConservacion"],
         areaImplementacion: json["AreaImplementacion"],
         totalAreaPredio: json["TotalAreaPredio"],
+        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -105,5 +110,6 @@ class ExperienciaAgricolaEntity {
         "AreaReservaConservacion": areaReservaConservacion,
         "AreaImplementacion": areaImplementacion,
         "TotalAreaPredio": totalAreaPredio,
+        "RecordStatus": recordStatus,
       };
 }

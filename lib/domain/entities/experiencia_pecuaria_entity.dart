@@ -11,6 +11,7 @@ class ExperienciaPecuariaEntity {
     required this.valorJornal,
     required this.costosInsumos,
     required this.ingresos,
+    required this.recordStatus,
   });
 
   String tipoActividadProductivaId;
@@ -24,6 +25,7 @@ class ExperienciaPecuariaEntity {
   String valorJornal;
   String costosInsumos;
   String ingresos;
+  String recordStatus;
 
   ExperienciaPecuariaEntity copyWith({
     String? tipoActividadProductivaId,
@@ -37,6 +39,7 @@ class ExperienciaPecuariaEntity {
     String? valorJornal,
     String? costosInsumos,
     String? ingresos,
+    String? recordStatus,
   }) =>
       ExperienciaPecuariaEntity(
         tipoActividadProductivaId:
@@ -51,6 +54,7 @@ class ExperienciaPecuariaEntity {
         valorJornal: valorJornal ?? this.valorJornal,
         costosInsumos: costosInsumos ?? this.costosInsumos,
         ingresos: ingresos ?? this.ingresos,
+        recordStatus: recordStatus ?? this.recordStatus,
       );
 
   factory ExperienciaPecuariaEntity.fromJson(Map<String, dynamic> json) =>
@@ -66,6 +70,7 @@ class ExperienciaPecuariaEntity {
         valorJornal: json["ValorJornal"],
         costosInsumos: json["CostosInsumos"],
         ingresos: json["Ingresos"],
+        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -80,5 +85,6 @@ class ExperienciaPecuariaEntity {
         "ValorJornal": valorJornal,
         "CostosInsumos": costosInsumos,
         "Ingresos": ingresos,
+        "RecordStatus": recordStatus,
       };
 }

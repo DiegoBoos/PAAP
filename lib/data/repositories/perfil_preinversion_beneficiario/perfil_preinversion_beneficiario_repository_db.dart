@@ -16,6 +16,22 @@ class PerfilPreInversionBeneficiarioRepositoryDBImpl
 
   @override
   Future<Either<Failure, List<PerfilPreInversionBeneficiarioEntity>>>
+      getPerfilesPreInversionesBeneficiariosProduccionRepositoryDB() async {
+    try {
+      final perfilesPreInversionesBeneficiariosDB =
+          await perfilPreInversionBeneficiarioLocalDataSource
+              .getPerfilesPreInversionesBeneficiariosProduccionDB();
+
+      return Right(perfilesPreInversionesBeneficiariosDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionBeneficiarioEntity>>>
       getPerfilPreInversionBeneficiariosRepositoryDB() async {
     try {
       final perfilPreInversionBeneficiariosDB =
@@ -54,6 +70,41 @@ class PerfilPreInversionBeneficiarioRepositoryDBImpl
       final result = await perfilPreInversionBeneficiarioLocalDataSource
           .savePerfilPreInversionBeneficiarios(
               perfilPreInversionBeneficiarioEntity);
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> savePerfilPreInversionBeneficiarioRepositoryDB(
+      PerfilPreInversionBeneficiarioEntity
+          perfilPreInversionBeneficiarioEntity) async {
+    try {
+      final perfilPreInversionBeneficiarioDB =
+          await perfilPreInversionBeneficiarioLocalDataSource
+              .savePerfilPreInversionBeneficiarioDB(
+                  perfilPreInversionBeneficiarioEntity);
+      return Right(perfilPreInversionBeneficiarioDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesBeneficiariosProduccionDBRepositoryDB(
+          List<PerfilPreInversionBeneficiarioEntity>
+              perfilesPreInversionesBeneficiariosEntity) async {
+    try {
+      final result = await perfilPreInversionBeneficiarioLocalDataSource
+          .updatePerfilesPreInversionesBeneficiariosProduccionDB(
+              perfilesPreInversionesBeneficiariosEntity);
+
       return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));

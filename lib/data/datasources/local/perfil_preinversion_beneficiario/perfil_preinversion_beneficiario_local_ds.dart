@@ -7,11 +7,18 @@ import '../../../models/perfil_preinversion_beneficiario_model.dart';
 abstract class PerfilPreInversionBeneficiarioLocalDataSource {
   Future<List<PerfilPreInversionBeneficiarioModel>>
       getPerfilPreInversionBeneficiariosDB();
+  Future<List<PerfilPreInversionBeneficiarioModel>>
+      getPerfilesPreInversionesBeneficiariosProduccionDB();
   Future<PerfilPreInversionBeneficiarioModel?>
       getPerfilPreInversionBeneficiarioDB(String id);
   Future<int> savePerfilPreInversionBeneficiarios(
       List<PerfilPreInversionBeneficiarioEntity>
           perfilPreInversionBeneficiarioEntity);
+  Future<int> savePerfilPreInversionBeneficiarioDB(
+      PerfilPreInversionBeneficiarioEntity
+          perfilPreInversionBeneficiarioEntity);
+  Future<int> updatePerfilesPreInversionesBeneficiariosProduccionDB(
+      List<PerfilPreInversionBeneficiarioEntity> perfilesBeneficiariosEntity);
 }
 
 class PerfilPreInversionBeneficiarioLocalDataSourceImpl
@@ -68,6 +75,7 @@ class PerfilPreInversionBeneficiarioLocalDataSourceImpl
         Longitud	INTEGER,
         Latitud	INTEGER,
         CedulaCatastral	TEXT,
+        RecordStatus	TEXT,
         FOREIGN KEY(TipoDiscapacidadId) REFERENCES TipoDiscapacidad(TipoDiscapacidadId),
         FOREIGN KEY(VeredaId) REFERENCES Vereda(VeredaId),
         FOREIGN KEY(ConyugeTipoIdentificacionId) REFERENCES TipoIdentificacion(TipoIdentificacionId),
@@ -130,8 +138,86 @@ class PerfilPreInversionBeneficiarioLocalDataSourceImpl
 
     for (var perfilPreInversionBeneficiario
         in perfilPreInversionBeneficiarioEntity) {
+      perfilPreInversionBeneficiario.recordStatus = 'R';
       batch.insert('PerfilPreInversionBeneficiario',
           perfilPreInversionBeneficiario.toJson());
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<int> savePerfilPreInversionBeneficiarioDB(
+      PerfilPreInversionBeneficiarioEntity
+          perfilPreInversionBeneficiarioEntity) async {
+    final db = await DBConfig.database;
+    var batch = db.batch();
+
+    final resQuery = await db.query('PerfilPreInversionBeneficiario',
+        where: 'PerfilPreinversionId = ? AND BeneficiarioId = ?',
+        whereArgs: [
+          perfilPreInversionBeneficiarioEntity.perfilPreInversionId,
+          perfilPreInversionBeneficiarioEntity.beneficiarioId
+        ]);
+
+    if (resQuery.isEmpty) {
+      perfilPreInversionBeneficiarioEntity.recordStatus = 'N';
+      batch.insert('PerfilPreInversionBeneficiario',
+          perfilPreInversionBeneficiarioEntity.toJson());
+    } else {
+      perfilPreInversionBeneficiarioEntity.recordStatus = 'E';
+      batch.update('PerfilPreInversionBeneficiario',
+          perfilPreInversionBeneficiarioEntity.toJson(),
+          where: 'PerfilPreinversionId = ? AND BeneficiarioId = ?',
+          whereArgs: [
+            perfilPreInversionBeneficiarioEntity.perfilPreInversionId,
+            perfilPreInversionBeneficiarioEntity.beneficiarioId
+          ]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<List<PerfilPreInversionBeneficiarioModel>>
+      getPerfilesPreInversionesBeneficiariosProduccionDB() async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('PerfilPreInversionBeneficiario',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
+
+    if (res.isEmpty) return [];
+
+    final perfilesPreInversionesBeneficiariosModel =
+        List<PerfilPreInversionBeneficiarioModel>.from(
+                res.map((m) => PerfilPreInversionBeneficiarioModel.fromJson(m)))
+            .toList();
+
+    return perfilesPreInversionesBeneficiariosModel;
+  }
+
+  @override
+  Future<int> updatePerfilesPreInversionesBeneficiariosProduccionDB(
+      List<PerfilPreInversionBeneficiarioEntity>
+          perfilesPreInversionesBeneficiariosProduccionEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+
+    for (var perfilPreInversionBeneficiarioProduccion
+        in perfilesPreInversionesBeneficiariosProduccionEntity) {
+      perfilPreInversionBeneficiarioProduccion.recordStatus = 'R';
+      batch.update('PerfilPreInversionBeneficiario',
+          perfilPreInversionBeneficiarioProduccion.toJson(),
+          where: 'PerfilPreinversionId = ? AND BeneficiarioId = ?',
+          whereArgs: [
+            perfilPreInversionBeneficiarioProduccion.perfilPreInversionId,
+            perfilPreInversionBeneficiarioProduccion.beneficiarioId
+          ]);
     }
 
     final res = await batch.commit();

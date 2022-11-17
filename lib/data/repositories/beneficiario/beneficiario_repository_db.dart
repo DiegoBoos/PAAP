@@ -13,6 +13,21 @@ class BeneficiarioRepositoryDBImpl implements BeneficiarioRepositoryDB {
 
   @override
   Future<Either<Failure, List<BeneficiarioEntity>>>
+      getBeneficiariosProduccionRepositoryDB() async {
+    try {
+      final beneficiariosDB =
+          await beneficiarioLocalDataSource.getBeneficiariosProduccionDB();
+
+      return Right(beneficiariosDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BeneficiarioEntity>>>
       getBeneficiariosRepositoryDB() async {
     try {
       final beneficiariosDB =
@@ -48,6 +63,35 @@ class BeneficiarioRepositoryDBImpl implements BeneficiarioRepositoryDB {
       final beneficiarioDB = await beneficiarioLocalDataSource
           .saveBeneficiarios(beneficiarioEntity);
       return Right(beneficiarioDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> saveBeneficiarioRepositoryDB(
+      BeneficiarioEntity beneficiarioEntity) async {
+    try {
+      final beneficiarioDB = await beneficiarioLocalDataSource
+          .saveBeneficiarioDB(beneficiarioEntity);
+      return Right(beneficiarioDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> updateBeneficiariosProduccionDBRepositoryDB(
+      List<BeneficiarioEntity> beneficiariosEntity) async {
+    try {
+      final result = await beneficiarioLocalDataSource
+          .updateBeneficiariosProduccionDB(beneficiariosEntity);
+
+      return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

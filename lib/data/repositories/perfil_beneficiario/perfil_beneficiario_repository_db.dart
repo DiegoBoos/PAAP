@@ -15,6 +15,21 @@ class PerfilBeneficiarioRepositoryDBImpl
 
   @override
   Future<Either<Failure, List<PerfilBeneficiarioEntity>>>
+      getPerfilesBeneficiariosProduccionRepositoryDB() async {
+    try {
+      final perfilesBeneficiariosDB = await perfilBeneficiarioLocalDataSource
+          .getPerfilesBeneficiariosProduccionDB();
+
+      return Right(perfilesBeneficiariosDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PerfilBeneficiarioEntity>>>
       getPerfilBeneficiariosRepositoryDB() async {
     try {
       final perfilBeneficiariosDB =
@@ -50,6 +65,36 @@ class PerfilBeneficiarioRepositoryDBImpl
       final perfilBeneficiarioDB = await perfilBeneficiarioLocalDataSource
           .savePerfilBeneficiarios(perfilBeneficiarioEntity);
       return Right(perfilBeneficiarioDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> savePerfilBeneficiarioRepositoryDB(
+      PerfilBeneficiarioEntity perfilBeneficiarioEntity) async {
+    try {
+      final perfilBeneficiarioDB = await perfilBeneficiarioLocalDataSource
+          .savePerfilBeneficiarioDB(perfilBeneficiarioEntity);
+      return Right(perfilBeneficiarioDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      updatePerfilesBeneficiariosProduccionDBRepositoryDB(
+          List<PerfilBeneficiarioEntity> perfilesBeneficiariosEntity) async {
+    try {
+      final result = await perfilBeneficiarioLocalDataSource
+          .updatePerfilesBeneficiariosProduccionDB(perfilesBeneficiariosEntity);
+
+      return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

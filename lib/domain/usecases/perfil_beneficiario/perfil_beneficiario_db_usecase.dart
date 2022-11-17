@@ -25,4 +25,21 @@ class PerfilBeneficiarioUsecaseDB {
     return repositoryDB
         .savePerfilBeneficiariosRepositoryDB(perfilBeneficiarios);
   }
+
+  Future<Either<Failure, List<PerfilBeneficiarioEntity>>>
+      getPerfilesBeneficiariosProduccionUsecaseDB() {
+    return repositoryDB.getPerfilesBeneficiariosProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> savePerfilBeneficiarioUsecaseDB(
+      PerfilBeneficiarioEntity perfilBeneficiarioEntity) {
+    return repositoryDB
+        .savePerfilBeneficiarioRepositoryDB(perfilBeneficiarioEntity);
+  }
+
+  Future<Either<Failure, int>> updatePerfilesBeneficiariosProduccionUsecaseDB(
+      List<PerfilBeneficiarioEntity> perfilesBeneficiariosEntity) {
+    return repositoryDB.updatePerfilesBeneficiariosProduccionDBRepositoryDB(
+        perfilesBeneficiariosEntity);
+  }
 }

@@ -25,4 +25,21 @@ class ExperienciaAgricolaUsecaseDB {
     return repositoryDB
         .saveExperienciasAgricolasRepositoryDB(experienciaAgricolas);
   }
+
+  Future<Either<Failure, List<ExperienciaAgricolaEntity>>>
+      getExperienciasAgricolasProduccionUsecaseDB() {
+    return repositoryDB.getExperienciasAgricolasProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> saveExperienciaAgricolaUsecaseDB(
+      ExperienciaAgricolaEntity experienciaAgricolaEntity) {
+    return repositoryDB
+        .saveExperienciaAgricolaRepositoryDB(experienciaAgricolaEntity);
+  }
+
+  Future<Either<Failure, int>> updateExperienciasAgricolasProduccionUsecaseDB(
+      List<ExperienciaAgricolaEntity> experienciasAgricolasEntity) {
+    return repositoryDB.updateExperienciasAgricolasProduccionDBRepositoryDB(
+        experienciasAgricolasEntity);
+  }
 }

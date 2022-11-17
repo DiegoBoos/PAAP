@@ -5,6 +5,9 @@ import '../../entities/perfil_preinversion_beneficiario_entity.dart';
 
 abstract class PerfilPreInversionBeneficiarioRepositoryDB {
   Future<Either<Failure, List<PerfilPreInversionBeneficiarioEntity>>>
+      getPerfilesPreInversionesBeneficiariosProduccionRepositoryDB();
+
+  Future<Either<Failure, List<PerfilPreInversionBeneficiarioEntity>>>
       getPerfilPreInversionBeneficiariosRepositoryDB();
 
   Future<Either<Failure, PerfilPreInversionBeneficiarioEntity?>>
@@ -13,4 +16,12 @@ abstract class PerfilPreInversionBeneficiarioRepositoryDB {
   Future<Either<Failure, int>> savePerfilPreInversionBeneficiariosRepositoryDB(
       List<PerfilPreInversionBeneficiarioEntity>
           perfilPreInversionBeneficiarioEntity);
+  Future<Either<Failure, int>> savePerfilPreInversionBeneficiarioRepositoryDB(
+      PerfilPreInversionBeneficiarioEntity
+          perfilPreInversionBeneficiarioEntity);
+
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesBeneficiariosProduccionDBRepositoryDB(
+          List<PerfilPreInversionBeneficiarioEntity>
+              perfilesPreInversionesBeneficiariosEntity);
 }
