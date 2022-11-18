@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/perfil_preinversion_cofinanciadores/perfil_preinversion_cofinanciadores_bloc.dart';
-import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
+import '../../../domain/usecases/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_exports.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
@@ -30,26 +29,26 @@ class _PerfilPreInversionCofinanciadoresPageState
 
   @override
   Widget build(BuildContext context) {
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
     return Scaffold(
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.save),
-            onPressed: () => Navigator.pushNamed(
-                context, 'VPerfilPreInversionCofinanciador')),
-        appBar: AppBar(
-            title: const Text('PerfilPreInversionCofinanciadores'),
-            centerTitle: true,
-            leading: null,
-            actions: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: NetworkIcon(),
-              )
-            ]),
+            onPressed: () {
+              perfilPreInversionCofinanciadorCubit.initState();
+              Navigator.pushNamed(context, 'NewEditVCofinanciadorPreInversion');
+            }),
+        appBar: AppBar(centerTitle: true, leading: null, actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: NetworkIcon(),
+          )
+        ]),
         body: ListView(children: [
           const SizedBox(height: 30),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text('PerfilPreInversionCofinanciadores',
+            child: Text('COFINANCIADORES DEL PERFIL EN PREINVERSIÓN',
                 style: Styles.titleStyle),
           ),
           const SizedBox(height: 20),

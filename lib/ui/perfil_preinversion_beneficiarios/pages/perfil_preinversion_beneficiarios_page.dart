@@ -7,7 +7,7 @@ import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
-import '../widgets/beneficiarios_preinversion_rows.dart';
+import '../widgets/perfil_preinversion_beneficiarios_rows.dart';
 
 class PerfilPreInversionBeneficiariosPage extends StatelessWidget {
   const PerfilPreInversionBeneficiariosPage({super.key});
@@ -18,7 +18,7 @@ class PerfilPreInversionBeneficiariosPage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.save),
             onPressed: () => Navigator.pushNamed(
-                context, 'NewEditVBeneficiarioPreInversion', arguments: '0')),
+                context, 'NewEditVBeneficiarioPreInversion')),
         appBar: AppBar(
             title: const Text('Beneficiarios'),
             centerTitle: true,

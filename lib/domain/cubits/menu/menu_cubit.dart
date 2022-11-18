@@ -11,9 +11,18 @@ class MenuCubit extends Cubit<MenuState> {
   final MenuUsecase menu;
   final MenuUsecaseDB menuDB;
 
-  MenuCubit({required this.menu, required this.menuDB})
-      : super(MenusInitial()) {
-    getMenuDB();
+  MenuCubit({required this.menu, required this.menuDB}) : super(MenusInitial());
+
+  Future<String> verificacionDatosLocalesDB() async {
+    final result = await menuDB.verificacionDatosLocalesUsecaseDB();
+    return result.fold((failure) {
+      return failure.properties.first.toString();
+    }, (data) {
+      if (data == 0) {
+        return 'No existen datos. Inicie sesión con conexión a internet';
+      }
+      return '';
+    });
   }
 
   void getMenuDB() async {

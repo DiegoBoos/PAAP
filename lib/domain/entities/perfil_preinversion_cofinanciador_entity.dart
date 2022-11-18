@@ -11,6 +11,20 @@ class PerfilPreInversionCofinanciadorEntity {
   String monto;
   String participacion;
 
+  PerfilPreInversionCofinanciadorEntity copyWith({
+    String? perfilPreInversionId,
+    String? cofinanciadorId,
+    String? monto,
+    String? participacion,
+  }) {
+    return PerfilPreInversionCofinanciadorEntity(
+      perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
+      cofinanciadorId: cofinanciadorId ?? this.cofinanciadorId,
+      monto: monto ?? this.monto,
+      participacion: participacion ?? this.participacion,
+    );
+  }
+
   factory PerfilPreInversionCofinanciadorEntity.fromJson(
           Map<String, dynamic> json) =>
       PerfilPreInversionCofinanciadorEntity(

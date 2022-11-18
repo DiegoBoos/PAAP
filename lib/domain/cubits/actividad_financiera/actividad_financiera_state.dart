@@ -8,14 +8,14 @@ abstract class ActividadFinancieraState extends Equatable {
   List<Object?> get props => [actividadesFinancieras];
 }
 
-class ActividadFinancieraInitial extends ActividadFinancieraState {}
+class ActividadesFinancierasInitial extends ActividadFinancieraState {}
 
-class ActividadFinancieraLoading extends ActividadFinancieraState {}
+class ActividadesFinancierasLoading extends ActividadFinancieraState {}
 
-class ActividadFinancieraLoaded extends ActividadFinancieraState {
+class ActividadesFinancierasLoaded extends ActividadFinancieraState {
   final List<ActividadFinancieraEntity>? actividadesFinancierasLoaded;
 
-  const ActividadFinancieraLoaded(this.actividadesFinancierasLoaded)
+  const ActividadesFinancierasLoaded(this.actividadesFinancierasLoaded)
       : super(actividadesFinancieras: actividadesFinancierasLoaded);
 }
 

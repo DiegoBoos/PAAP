@@ -7,22 +7,35 @@ import '../../usecases/perfil_preinversion_cofinanciador_desembolso/perfil_prein
 part 'perfil_preinversion_cofinanciador_desembolso_state.dart';
 
 class PerfilPreInversionCofinanciadorDesembolsoCubit
-    extends Cubit<PerfilPreInversionCofinanciadorDesembolsoState> {
+    extends Cubit<PerfilPreInversionCofinanciadorDesembolsotate> {
   final PerfilPreInversionCofinanciadorDesembolsoUsecaseDB
       perfilPreInversionCofinanciadorDesembolsoDB;
 
   PerfilPreInversionCofinanciadorDesembolsoCubit(
       {required this.perfilPreInversionCofinanciadorDesembolsoDB})
-      : super(PerfilPreInversionCofinanciadorDesembolsosInitial());
+      : super(PerfilPreInversionCofinanciadorDesembolsoInitial());
 
-  void getPerfilPreInversionCofinanciadorDesembolsosDB() async {
+  void initState() => emit(PerfilPreInversionCofinanciadorDesembolsoInitial());
+
+  void selectPerfilPreInversionCofinanciadorDesembolso(
+      String cofinanciadorId) async {
     final result = await perfilPreInversionCofinanciadorDesembolsoDB
-        .getPerfilPreInversionCofinanciadorDesembolsosUsecaseDB();
+        .getPerfilPreInversionCofinanciadorDesembolsoUsecaseDB(cofinanciadorId);
     result.fold(
-        (failure) => emit(PerfilPreInversionCofinanciadorDesembolsosError(
+        (failure) => emit(PerfilPreInversionCofinanciadorDesembolsoError(
             failure.properties.first)),
-        (data) => emit(PerfilPreInversionCofinanciadorDesembolsosLoaded(data)));
+        (data) => emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(data)));
   }
 
-  void initState() => emit(PerfilPreInversionCofinanciadorDesembolsosInitial());
+  void changeDesembolso(String? value) {
+    final desembolsoChanged = state.perfilPreInversionCofinanciadorDesembolso
+        ?.copyWith(desembolsoId: value);
+    emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(desembolsoChanged));
+  }
+
+  void changeFecha(String text) {
+    final fechaChanged =
+        state.perfilPreInversionCofinanciadorDesembolso?.copyWith(fecha: text);
+    emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(fechaChanged));
+  }
 }

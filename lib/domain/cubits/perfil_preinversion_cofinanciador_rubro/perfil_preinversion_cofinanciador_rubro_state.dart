@@ -1,39 +1,39 @@
 part of 'perfil_preinversion_cofinanciador_rubro_cubit.dart';
 
 abstract class PerfilPreInversionCofinanciadorRubroState extends Equatable {
-  final List<PerfilPreInversionCofinanciadorRubroEntity>?
-      perfilPreInversionCofinanciadorRubros;
+  final PerfilPreInversionCofinanciadorRubroEntity?
+      perfilPreInversionCofinanciadorRubro;
 
   const PerfilPreInversionCofinanciadorRubroState(
-      {this.perfilPreInversionCofinanciadorRubros});
+      {this.perfilPreInversionCofinanciadorRubro});
 
   @override
-  List<Object?> get props => [perfilPreInversionCofinanciadorRubros];
+  List<Object?> get props => [perfilPreInversionCofinanciadorRubro];
 }
 
-class PerfilPreInversionCofinanciadorRubrosInitial
+class PerfilPreInversionCofinanciadorRubroInitial
     extends PerfilPreInversionCofinanciadorRubroState {}
 
-class PerfilPreInversionCofinanciadorRubrosLoading
+class PerfilPreInversionCofinanciadorRubroLoading
     extends PerfilPreInversionCofinanciadorRubroState {}
 
-class PerfilPreInversionCofinanciadorRubrosLoaded
+class PerfilPreInversionCofinanciadorRubroLoaded
     extends PerfilPreInversionCofinanciadorRubroState {
-  final List<PerfilPreInversionCofinanciadorRubroEntity>?
-      perfilPreInversionCofinanciadorRubrosLoaded;
+  final PerfilPreInversionCofinanciadorRubroEntity?
+      perfilPreInversionCofinanciadorRubroLoaded;
 
-  const PerfilPreInversionCofinanciadorRubrosLoaded(
-      this.perfilPreInversionCofinanciadorRubrosLoaded)
+  const PerfilPreInversionCofinanciadorRubroLoaded(
+      this.perfilPreInversionCofinanciadorRubroLoaded)
       : super(
-            perfilPreInversionCofinanciadorRubros:
-                perfilPreInversionCofinanciadorRubrosLoaded);
+            perfilPreInversionCofinanciadorRubro:
+                perfilPreInversionCofinanciadorRubroLoaded);
 }
 
-class PerfilPreInversionCofinanciadorRubrosError
+class PerfilPreInversionCofinanciadorRubroError
     extends PerfilPreInversionCofinanciadorRubroState {
   final String message;
 
-  const PerfilPreInversionCofinanciadorRubrosError(this.message);
+  const PerfilPreInversionCofinanciadorRubroError(this.message);
   @override
   List<Object?> get props => [message];
 }

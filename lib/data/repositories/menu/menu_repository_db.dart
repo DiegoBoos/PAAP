@@ -37,4 +37,17 @@ class MenuRepositoryDBImpl implements MenuRepositoryDB {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, int>> verificacionDatosLocalesRepositoryDB() async {
+    try {
+      final result = await menuLocalDataSource.verificacionDatosLocales();
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

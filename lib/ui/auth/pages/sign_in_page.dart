@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/domain/cubits/menu/menu_cubit.dart';
 import 'package:paap/ui/utils/custom_general_dialog.dart';
 import 'package:paap/ui/utils/custom_snack_bar.dart';
 
@@ -41,6 +42,7 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context, listen: true);
     final internetCubit = BlocProvider.of<InternetCubit>(context);
+    final menuCubit = BlocProvider.of<MenuCubit>(context);
     final downloadSyncBloc = BlocProvider.of<DownloadSyncBloc>(context);
 
     TextEditingController usuarioIdCtrl =
@@ -55,6 +57,7 @@ class _SignInPageState extends State<SignInPage> {
             if (internetCubit.state is InternetConnected) {
               final usuario = state.usuarioAutenticado!;
               authBloc.add(SaveUsuario(usuario: usuario));
+
               showDialog(
                   context: context,
                   builder: (_) => CustomGeneralDialog(
@@ -67,8 +70,16 @@ class _SignInPageState extends State<SignInPage> {
                         downloadSyncBloc.add(DownloadStarted(usuario));
                       },
                       onTapCancel: () {
-                        Navigator.pop(context);
-                        Navigator.pushReplacementNamed(context, 'tabs');
+                        menuCubit.verificacionDatosLocalesDB().then((value) {
+                          if (value != '') {
+                            Navigator.pop(context);
+                            CustomSnackBar.showSnackBar(
+                                context, value, Colors.red);
+                          } else {
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(context, 'tabs');
+                          }
+                        });
                       }));
             } else if (internetCubit.state is InternetDisconnected) {
               Navigator.pushReplacementNamed(context, 'tabs');

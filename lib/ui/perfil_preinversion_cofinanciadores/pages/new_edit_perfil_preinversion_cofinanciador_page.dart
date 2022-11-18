@@ -2,27 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/entities/v_perfil_preinversion_entity.dart';
+import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
+import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
+import '../../utils/floating_buttons.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
+import '../widgets/perfil_preinversion_cofinanciador_actividad_financiera_form.dart';
+import '../widgets/perfil_preinversion_cofinanciador_desembolso_form.dart';
 import '../widgets/perfil_preinversion_cofinanciador_form.dart';
-import '../widgets/perfil_preinversion_cofinanciador_drawer.dart';
+import '../widgets/perfil_preinversion_cofinanciador_rubro_form.dart';
 
 class NewEditPerfilPreInversionCofinanciadorPage extends StatelessWidget {
-  const NewEditPerfilPreInversionCofinanciadorPage({super.key});
+  final formKey = GlobalKey<FormState>();
+
+  NewEditPerfilPreInversionCofinanciadorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final perfilPreInversion =
-        ModalRoute.of(context)?.settings.arguments as VPerfilPreInversionEntity;
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     return Scaffold(
         drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
             final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
-            return PerfilPreInversionCofinanciadorDrawer(
+            return PerfilPreInversionDrawer(
               menuHijo: menuHijo,
-              perfilPreInversion: perfilPreInversion,
             );
           },
         ),
@@ -46,13 +49,41 @@ class NewEditPerfilPreInversionCofinanciadorPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Text(
-                  perfilPreInversion.perfilId == '0' ? 'Creación' : 'Editar',
-                  style: Styles.subtitleStyle),
+            Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: BlocBuilder<PerfilPreInversionCofinanciadorCubit,
+                    PerfilPreInversionCofinanciadorState>(
+                  builder: (context, state) {
+                    if (state is PerfilPreInversionCofinanciadorInitial) {
+                      return Column(
+                        children: [
+                          const Text('Creación', style: Styles.subtitleStyle),
+                          const PerfilPreInversionCofinanciadorForm(),
+                          const SizedBox(height: 20),
+                          SaveBackButtons(onSaved: () {})
+                        ],
+                      );
+                    }
+                    if (state is PerfilPreInversionCofinanciadorLoaded) {
+                      return Column(
+                        children: [
+                          const Text('Editar', style: Styles.subtitleStyle),
+                          const PerfilPreInversionCofinanciadorForm(),
+                          const PerfilPreInversionCofinanciadorDesembolsoForm(),
+                          const PerfilPreInversionCofinanciadorActividadFinancieraForm(),
+                          const PerfilPreInversionCofinanciadorRubroForm(),
+                          const SizedBox(height: 20),
+                          SaveBackButtons(onSaved: () {})
+                        ],
+                      );
+                    }
+                    return const SizedBox();
+                  },
+                ),
+              ),
             ),
-            const PerfilPreInversionCofinanciadorForm()
           ]),
         ));
   }

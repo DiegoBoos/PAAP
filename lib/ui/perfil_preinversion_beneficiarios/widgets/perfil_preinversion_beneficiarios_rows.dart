@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
+import '../../../domain/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
+import '../../../domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
+import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 
@@ -54,15 +58,37 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
             DataCell(Text(perfilPreInversionBeneficiario.nombreOrganizacion)),
             DataCell(IconButton(
                 onPressed: () {
-                  final perfilPreInversionBeneficiarioCubit =
+                  final perfilPreinversionBeneficiarioCubit =
                       BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(
                           context);
-                  perfilPreInversionBeneficiarioCubit
-                      .getPerfilPreInversionBeneficiarioDB(
-                          perfilPreInversionBeneficiario.beneficiarioId);
+
+                  perfilPreinversionBeneficiarioCubit
+                      .selectPerfilPreinversionBeneficiario(
+                          perfilPreInversionBeneficiario);
+
+                  final beneficiarioCubit =
+                      BlocProvider.of<BeneficiarioCubit>(context);
+
+                  beneficiarioCubit.selectBeneficiario(
+                      perfilPreInversionBeneficiario.beneficiarioId);
+
+                  final perfilBeneficiarioCubit =
+                      BlocProvider.of<PerfilBeneficiarioCubit>(context);
+                  perfilBeneficiarioCubit.selectPerfilBeneficiario(
+                      perfilPreInversionBeneficiario.beneficiarioId);
+
+                  final experienciaAgricolaCubit =
+                      BlocProvider.of<ExperienciaAgricolaCubit>(context);
+                  experienciaAgricolaCubit.selectExperienciaAgricola(
+                      perfilPreInversionBeneficiario.beneficiarioId);
+
+                  final experienciaPecuariaCubit =
+                      BlocProvider.of<ExperienciaPecuariaCubit>(context);
+                  experienciaPecuariaCubit.selectExperienciaPecuaria(
+                      perfilPreInversionBeneficiario.beneficiarioId);
+
                   Navigator.pushNamed(
-                      context, 'NewEditVBeneficiarioPreInversion',
-                      arguments: perfilPreInversionBeneficiario.beneficiarioId);
+                      context, 'NewEditVBeneficiarioPreInversion');
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

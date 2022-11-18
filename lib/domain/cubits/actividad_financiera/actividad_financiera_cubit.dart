@@ -10,7 +10,7 @@ class ActividadFinancieraCubit extends Cubit<ActividadFinancieraState> {
   final ActividadFinancieraUsecaseDB actividadFinancieraDB;
 
   ActividadFinancieraCubit({required this.actividadFinancieraDB})
-      : super(ActividadFinancieraInitial()) {
+      : super(ActividadesFinancierasInitial()) {
     getActividadesFinancierasDB();
   }
 
@@ -19,6 +19,6 @@ class ActividadFinancieraCubit extends Cubit<ActividadFinancieraState> {
         await actividadFinancieraDB.getActividadesFinancierasUsecaseDB();
     result.fold(
         (failure) => emit(ActividadFinancieraError(failure.properties.first)),
-        (data) => emit(ActividadFinancieraLoaded(data)));
+        (data) => emit(ActividadesFinancierasLoaded(data)));
   }
 }

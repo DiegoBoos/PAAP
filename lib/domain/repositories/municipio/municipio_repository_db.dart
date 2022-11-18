@@ -8,4 +8,7 @@ abstract class MunicipioRepositoryDB {
 
   Future<Either<Failure, int>> saveMunicipiosRepositoryDB(
       List<MunicipioEntity> municipioEntity);
+
+  Future<Either<Failure, List<MunicipioEntity>>>
+      getMunicipiosByDepartamentoRepositoryDB(String departamentoId);
 }

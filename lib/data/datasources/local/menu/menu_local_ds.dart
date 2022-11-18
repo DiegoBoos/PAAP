@@ -7,6 +7,7 @@ import '../../../models/menu_model.dart';
 abstract class MenuLocalDataSource {
   Future<List<MenuModel>> getMenuDB();
   Future<int> saveMenu(List<MenuEntity> menuEntity);
+  Future<int> verificacionDatosLocales();
 }
 
 class MenuLocalDataSourceImpl implements MenuLocalDataSource {
@@ -51,6 +52,14 @@ class MenuLocalDataSourceImpl implements MenuLocalDataSource {
 
     final res = await batch.commit();
 
+    return res.length;
+  }
+
+  @override
+  Future<int> verificacionDatosLocales() async {
+    final db = await DBConfig.database;
+    final res = await db.query('Menu');
+    if (res.isEmpty) return 0;
     return res.length;
   }
 }

@@ -220,7 +220,7 @@ agrupacionInit() {
 
 aliadoInit() {
   // cubit
-  locator.registerFactory(() => AliadoCubit());
+  locator.registerFactory(() => AliadoCubit(aliadoUsecaseDB: locator()));
   // remote usecase
   locator.registerLazySingleton(() => AliadoUsecase(locator()));
 
@@ -1627,6 +1627,12 @@ perfilPreInversionBeneficiarioInit() {
 }
 
 perfilPreInversionCofinanciadorActividadFinancieraInit() {
+  // bloc
+  locator.registerFactory(() =>
+      PerfilPreInversionCofinanciadorActividadesFinancierasBloc(
+          perfilPreInversionCofinanciadorActividadFinancieraUsecaseDB:
+              locator()));
+
   // cubit
   locator.registerFactory(() =>
       PerfilPreInversionCofinanciadorActividadFinancieraCubit(
@@ -1676,6 +1682,9 @@ perfilPreInversionCofinanciadorActividadFinancieraInit() {
 }
 
 perfilPreInversionCofinanciadorDesembolsoInit() {
+  // bloc
+  locator.registerFactory(() => PerfilPreInversionCofinanciadorDesembolsosBloc(
+      perfilPreInversionCofinanciadorDesembolsoUsecaseDB: locator()));
   // cubit
   locator.registerFactory(() => PerfilPreInversionCofinanciadorDesembolsoCubit(
       perfilPreInversionCofinanciadorDesembolsoDB: locator()));
@@ -1765,6 +1774,9 @@ perfilPreInversionCofinanciadoresInit() {
 }
 
 perfilPreInversionCofinanciadorRubroInit() {
+  // bloc
+  locator.registerFactory(() => PerfilPreInversionCofinanciadorRubrosBloc(
+      perfilPreInversionCofinanciadorRubroUsecaseDB: locator()));
   // cubit
   locator.registerFactory(() => PerfilPreInversionCofinanciadorRubroCubit(
       perfilPreInversionCofinanciadorRubroDB: locator()));
@@ -2564,7 +2576,17 @@ uploadSyncInit() {
       evaluacion: locator(),
       evaluacionDB: locator(),
       evaluacionRespuesta: locator(),
-      evaluacionRespuestaDB: locator()));
+      evaluacionRespuestaDB: locator(),
+      beneficiario: locator(),
+      beneficiarioDB: locator(),
+      experienciaAgricola: locator(),
+      experienciaAgricolaDB: locator(),
+      experienciaPecuaria: locator(),
+      experienciaPecuariaDB: locator(),
+      perfilBeneficiario: locator(),
+      perfilBeneficiarioDB: locator(),
+      perfilPreInversionBeneficiario: locator(),
+      perfilPreInversionBeneficiarioDB: locator()));
 }
 
 veredaInit() {

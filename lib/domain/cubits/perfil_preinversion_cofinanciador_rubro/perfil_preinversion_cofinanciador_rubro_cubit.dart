@@ -13,16 +13,37 @@ class PerfilPreInversionCofinanciadorRubroCubit
 
   PerfilPreInversionCofinanciadorRubroCubit(
       {required this.perfilPreInversionCofinanciadorRubroDB})
-      : super(PerfilPreInversionCofinanciadorRubrosInitial());
+      : super(PerfilPreInversionCofinanciadorRubroInitial());
 
-  void getPerfilPreInversionCofinanciadorRubrosDB() async {
+  void initState() => emit(PerfilPreInversionCofinanciadorRubroInitial());
+
+  void selectPerfilPreInversionCofinanciadorRubro(
+      String cofinanciadorId) async {
     final result = await perfilPreInversionCofinanciadorRubroDB
-        .getPerfilPreInversionCofinanciadorRubrosUsecaseDB();
+        .getPerfilPreInversionCofinanciadorRubroUsecaseDB(cofinanciadorId);
     result.fold(
-        (failure) => emit(PerfilPreInversionCofinanciadorRubrosError(
+        (failure) => emit(PerfilPreInversionCofinanciadorRubroError(
             failure.properties.first)),
-        (data) => emit(PerfilPreInversionCofinanciadorRubrosLoaded(data)));
+        (data) => emit(PerfilPreInversionCofinanciadorRubroLoaded(data)));
   }
 
-  void initState() => emit(PerfilPreInversionCofinanciadorRubrosInitial());
+  void changeRubro(String? value) {
+    final rubroChanged =
+        state.perfilPreInversionCofinanciadorRubro?.copyWith(rubroId: value);
+    emit(PerfilPreInversionCofinanciadorRubroLoaded(rubroChanged));
+  }
+
+  void changeValor(String? newValue) {
+    final valorChanged =
+        state.perfilPreInversionCofinanciadorRubro?.copyWith(valor: newValue);
+    emit(PerfilPreInversionCofinanciadorRubroLoaded(valorChanged));
+  }
+
+  void changeActividadFinanciera(String? value) {
+    final actividadFinancieraChanged = state
+        .perfilPreInversionCofinanciadorRubro
+        ?.copyWith(actividadFinancieraId: value);
+    emit(
+        PerfilPreInversionCofinanciadorRubroLoaded(actividadFinancieraChanged));
+  }
 }

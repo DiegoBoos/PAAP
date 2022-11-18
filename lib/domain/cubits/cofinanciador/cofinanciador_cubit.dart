@@ -10,11 +10,13 @@ class CofinanciadorCubit extends Cubit<CofinanciadorState> {
   final CofinanciadorUsecaseDB cofinanciadorDB;
 
   CofinanciadorCubit({required this.cofinanciadorDB})
-      : super(CofinanciadorInitial());
+      : super(CofinanciadoresInitial()) {
+    getCofinanciadores();
+  }
 
-  void getCofinanciadorDB(String id) async {
-    final result = await cofinanciadorDB.getCofinanciadorUsecaseDB(id);
+  void getCofinanciadores() async {
+    final result = await cofinanciadorDB.getCofinanciadoresUsecaseDB();
     result.fold((failure) => emit(CofinanciadorError(failure.properties.first)),
-        (data) => emit(CofinanciadorLoaded(data)));
+        (data) => emit(CofinanciadoresLoaded(data)));
   }
 }

@@ -21,6 +21,22 @@ class PerfilPreInversionBeneficiarioForm extends StatefulWidget {
 
 class _PerfilPreInversionBeneficiarioFormState
     extends State<PerfilPreInversionBeneficiarioForm> {
+  final ingresosDiariosCtrl = TextEditingController();
+  final diasTrabajoCtrl = TextEditingController();
+  final miembrosHogarCtrl = TextEditingController();
+  final miembrosEcoActivosCtrl = TextEditingController();
+  final ingresosMensualesCtrl = TextEditingController();
+  final gastosMensualesCtrl = TextEditingController();
+  final activoInmobiliarioCtrl = TextEditingController();
+  final activoFinancieroCtrl = TextEditingController();
+  final activoProductivoCtrl = TextEditingController();
+  final activoCorrienteCtrl = TextEditingController();
+  final activoCtrl = TextEditingController();
+  final nombreFincaCtrl = TextEditingController();
+  final nombreOrganizacionCtrl = TextEditingController();
+  final mesesAsociadoCtrl = TextEditingController();
+  final notaCtrl = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -32,9 +48,40 @@ class _PerfilPreInversionBeneficiarioFormState
     final perfilPreInversionBeneficiarioCubit =
         BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
 
-    return BlocBuilder<PerfilPreInversionBeneficiarioCubit,
+    return BlocListener<PerfilPreInversionBeneficiarioCubit,
+        PerfilPreInversionBeneficiarioState>(listener: (context, state) {
+      if (state is PerfilPreInversionBeneficiarioLoaded) {
+        final perfilPreInversionBeneficiarioLoaded =
+            state.perfilPreInversionBeneficiarioLoaded!;
+
+        ingresosDiariosCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.ingresosDiarios;
+        diasTrabajoCtrl.text = perfilPreInversionBeneficiarioLoaded.diasTrabajo;
+        miembrosHogarCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.miembrosHogar;
+        ingresosMensualesCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.ingresosMensuales;
+        gastosMensualesCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.gastosMensuales;
+        activoInmobiliarioCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.activoInmobiliario;
+        activoFinancieroCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.activoFinanciero;
+        activoProductivoCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.activoProductivo;
+        activoCorrienteCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.activoCorriente;
+        activoCtrl.text = perfilPreInversionBeneficiarioLoaded.activo;
+        nombreFincaCtrl.text = perfilPreInversionBeneficiarioLoaded.nombreFinca;
+        nombreOrganizacionCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.nombreOrganizacion;
+        mesesAsociadoCtrl.text =
+            perfilPreInversionBeneficiarioLoaded.mesesAsociado;
+        notaCtrl.text = perfilPreInversionBeneficiarioLoaded.nota;
+      }
+    }, child: BlocBuilder<PerfilPreInversionBeneficiarioCubit,
         PerfilPreInversionBeneficiarioState>(builder: (context, state) {
-      final perfilPreinversionBeneficiario =
+      final perfilPreInversionBeneficiario =
           state.perfilPreInversionBeneficiario;
 
       return Card(
@@ -51,6 +98,10 @@ class _PerfilPreInversionBeneficiarioFormState
                 builder: (context, state) {
                   if (state is ResidenciasLoaded) {
                     return DropdownButtonFormField(
+                        value:
+                            perfilPreInversionBeneficiario?.residenciaId != ''
+                                ? perfilPreInversionBeneficiario?.residenciaId
+                                : null,
                         items: state.residencias!.map<DropdownMenuItem<String>>(
                             (ResidenciaEntity value) {
                           return DropdownMenuItem<String>(
@@ -72,6 +123,10 @@ class _PerfilPreInversionBeneficiarioFormState
                 builder: (context, state) {
                   if (state is NivelesEscolaresLoaded) {
                     return DropdownButtonFormField(
+                        value:
+                            perfilPreInversionBeneficiario?.nivelEscolarId != ''
+                                ? perfilPreInversionBeneficiario?.nivelEscolarId
+                                : null,
                         items: state.nivelesEscolares!
                             .map<DropdownMenuItem<String>>(
                                 (NivelEscolarEntity value) {
@@ -93,6 +148,12 @@ class _PerfilPreInversionBeneficiarioFormState
                 builder: (context, state) {
                   if (state is ActividadesEconomicasLoaded) {
                     return DropdownButtonFormField(
+                        value: perfilPreInversionBeneficiario
+                                    ?.actividadEconomicaId !=
+                                ''
+                            ? perfilPreInversionBeneficiario
+                                ?.actividadEconomicaId
+                            : null,
                         items: state.actividadesEconomicas!
                             .map<DropdownMenuItem<String>>(
                                 (ActividadEconomicaEntity value) {
@@ -116,8 +177,7 @@ class _PerfilPreInversionBeneficiarioFormState
                 children: [
                   Expanded(
                     child: TextFormField(
-                        initialValue:
-                            perfilPreinversionBeneficiario?.ingresosDiarios,
+                        controller: ingresosDiariosCtrl,
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Ingresos Diarios',
                             labelText: 'Ingresos Diarios'),
@@ -129,8 +189,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   const SizedBox(width: 20),
                   Expanded(
                     child: TextFormField(
-                        initialValue:
-                            perfilPreinversionBeneficiario?.diasTrabajo,
+                        controller: diasTrabajoCtrl,
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Días Trabajados/mes',
                             labelText: 'Días Trabajados/mes'),
@@ -143,7 +202,7 @@ class _PerfilPreInversionBeneficiarioFormState
               ),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfilPreinversionBeneficiario?.miembrosHogar,
+                  controller: miembrosHogarCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Miembros del hogar',
                       labelText: 'Miembros del hogar'),
@@ -153,8 +212,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue:
-                      perfilPreinversionBeneficiario?.miembrosEcoActivos,
+                  controller: miembrosEcoActivosCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Miembros Economicamente Activos',
                       labelText: 'Miembros Economicamente Activos'),
@@ -164,8 +222,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue:
-                      perfilPreinversionBeneficiario?.ingresosMensuales,
+                  controller: ingresosMensualesCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Ingresos Mensuales',
                       labelText: 'Ingresos Mensuales'),
@@ -175,7 +232,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfilPreinversionBeneficiario?.gastosMensuales,
+                  controller: gastosMensualesCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Gastos Mensuales',
                       labelText: 'Gastos Mensuales'),
@@ -185,8 +242,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue:
-                      perfilPreinversionBeneficiario?.activoInmobiliario,
+                  controller: activoInmobiliarioCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Activo Inmobiliario',
                       labelText: 'Activo Inmobiliario'),
@@ -196,8 +252,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue:
-                      perfilPreinversionBeneficiario?.activoFinanciero,
+                  controller: activoFinancieroCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Activo Financiero',
                       labelText: 'Activo Financiero'),
@@ -207,8 +262,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue:
-                      perfilPreinversionBeneficiario?.activoProductivo,
+                  controller: activoProductivoCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Activo Productivo',
                       labelText: 'Activo Productivo'),
@@ -218,7 +272,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfilPreinversionBeneficiario?.activoCorriente,
+                  controller: activoCorrienteCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Activo Corriente',
                       labelText: 'Activo Corriente'),
@@ -228,7 +282,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfilPreinversionBeneficiario?.activo,
+                  controller: activoCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Total Activo', labelText: 'Total Activo'),
                   onSaved: (String? newValue) {
@@ -236,7 +290,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfilPreinversionBeneficiario?.nombreFinca,
+                  controller: nombreFincaCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Nombre Finca', labelText: 'Nombre Finca'),
                   onSaved: (String? newValue) {
@@ -245,8 +299,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue:
-                      perfilPreinversionBeneficiario?.nombreOrganizacion,
+                  controller: nombreOrganizacionCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Nombre de la Organizacion',
                       labelText: 'Nombre de la Organizacion'),
@@ -256,7 +309,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfilPreinversionBeneficiario?.mesesAsociado,
+                  controller: mesesAsociadoCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Meses en la Asociación',
                       labelText: 'Meses en la Asociación'),
@@ -266,7 +319,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  initialValue: perfilPreinversionBeneficiario?.nota,
+                  controller: notaCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Nota', labelText: 'Nota'),
                   onSaved: (String? newValue) {
@@ -275,15 +328,19 @@ class _PerfilPreInversionBeneficiarioFormState
               const SizedBox(height: 20),
               SwitchListTile(
                   title: const Text('Acceso Explotación Tierra'),
-                  value: false,
+                  value:
+                      perfilPreInversionBeneficiario?.accesoExplotacionTierra ==
+                              'true'
+                          ? true
+                          : false,
                   onChanged: (value) {
-                    perfilPreinversionBeneficiario
-                        ?.changeAccesoExplotacionTierra(value);
+                    perfilPreInversionBeneficiarioCubit
+                        .changeAccesoExplotacionTierra(value);
                   }),
             ],
           ),
         ),
       );
-    });
+    }));
   }
 }

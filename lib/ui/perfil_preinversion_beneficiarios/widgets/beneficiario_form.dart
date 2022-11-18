@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:paap/ui/utils/custom_snack_bar.dart';
 
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../domain/cubits/estado_civil/estado_civil_cubit.dart';
@@ -34,6 +35,12 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   final fechaExpedicionCtrl = TextEditingController();
   final fechaNacimientoCtrl = TextEditingController();
   final edadCtrl = TextEditingController();
+  final primerNombreCtrl = TextEditingController();
+  final primerApellidoCtrl = TextEditingController();
+  final segundoNombreCtrl = TextEditingController();
+  final segundoApellidoCtrl = TextEditingController();
+  final telefonoMovilCtrl = TextEditingController();
+  final calificacionSisbenCtrl = TextEditingController();
   final dateFormat = DateFormat('yyyy-MM-dd');
 
   @override
@@ -42,24 +49,51 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     final perfilPreInversionBeneficiarioCubit =
         BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
 
-    return BlocBuilder<PerfilPreInversionBeneficiarioCubit,
-        PerfilPreInversionBeneficiarioState>(
-      builder: (context, state) {
-        final perfilPreInversionBeneficiario =
-            state.perfilPreInversionBeneficiario;
+    return MultiBlocListener(
+        listeners: [
+          BlocListener<BeneficiarioCubit, BeneficiarioState>(
+            listener: (context, state) {
+              if (state is BeneficiarioError) {
+                CustomSnackBar.showSnackBar(context, state.message, Colors.red);
+              }
+              if (state is BeneficiarioLoaded) {
+                final beneficiarioLoaded = state.beneficiarioLoaded!;
 
-        return BlocBuilder<BeneficiarioCubit, BeneficiarioState>(
+                fechaExpedicionCtrl.text = dateFormat.format(DateTime.parse(
+                    beneficiarioLoaded.fechaExpedicionDocumento));
+
+                fechaNacimientoCtrl.text = dateFormat
+                    .format(DateTime.parse(beneficiarioLoaded.fechaNacimiento));
+
+                calcularEdad(fechaNacimientoCtrl.text);
+
+                primerNombreCtrl.text = beneficiarioLoaded.nombre1;
+                segundoNombreCtrl.text = beneficiarioLoaded.nombre2;
+                primerApellidoCtrl.text = beneficiarioLoaded.apellido1;
+                segundoApellidoCtrl.text = beneficiarioLoaded.apellido2;
+                telefonoMovilCtrl.text = beneficiarioLoaded.telefonoMovil;
+              }
+            },
+          ),
+          BlocListener<PerfilPreInversionBeneficiarioCubit,
+              PerfilPreInversionBeneficiarioState>(
+            listener: (context, state) {
+              if (state is PerfilPreInversionBeneficiarioError) {
+                CustomSnackBar.showSnackBar(context, state.message, Colors.red);
+              }
+              if (state is PerfilPreInversionBeneficiarioLoaded) {
+                final perfilPreInversionBeneficiarioLoaded =
+                    state.perfilPreInversionBeneficiarioLoaded!;
+
+                calificacionSisbenCtrl.text =
+                    perfilPreInversionBeneficiarioLoaded.calificacionSisben;
+              }
+            },
+          )
+        ],
+        child: BlocBuilder<BeneficiarioCubit, BeneficiarioState>(
             builder: (context, state) {
           final beneficiario = state.beneficiario;
-
-          fechaExpedicionCtrl.text =
-              beneficiario?.fechaExpedicionDocumento != null
-                  ? beneficiario!.fechaExpedicionDocumento
-                  : dateFormat.format(DateTime.now());
-
-          fechaNacimientoCtrl.text = beneficiario?.fechaNacimiento != null
-              ? beneficiario!.fechaNacimiento
-              : dateFormat.format(DateTime.now());
 
           return Card(
             child: Padding(
@@ -70,10 +104,22 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                   style: Styles.titleStyle,
                 ),
                 const SizedBox(height: 20),
+                TextFormField(
+                  decoration: CustomInputDecoration.inputDecoration(
+                      hintText: 'Documento de identificación',
+                      labelText: 'Documento de identificación'),
+                  onFieldSubmitted: (String value) {
+                    beneficiarioCubit.selectBeneficiario(value);
+                  },
+                ),
+                const SizedBox(height: 20),
                 BlocBuilder<TipoIdentificacionCubit, TipoIdentificacionState>(
                   builder: (context, state) {
                     if (state is TiposIdentificacionesLoaded) {
                       return DropdownButtonFormField(
+                          value: beneficiario?.tipoIdentificacionId != ''
+                              ? beneficiario?.tipoIdentificacionId
+                              : null,
                           items: state.tiposIdentificaciones!
                               .map<DropdownMenuItem<String>>(
                                   (TipoIdentificacionEntity value) {
@@ -94,16 +140,6 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  initialValue: beneficiario?.beneficiarioId,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Documento de identificación',
-                      labelText: 'Documento de identificación'),
-                  onSaved: (String? newValue) {
-                    beneficiarioCubit.changeDocumento(newValue);
-                  },
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
                   controller: fechaExpedicionCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Fecha de expedición',
@@ -112,7 +148,9 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                           onPressed: () async {
                             DateTime? newDate = await showDatePicker(
                                 context: context,
-                                initialDate: DateTime.now(),
+                                initialDate: fechaExpedicionCtrl.text != ''
+                                    ? DateTime.parse(fechaExpedicionCtrl.text)
+                                    : DateTime.now(),
                                 firstDate: DateTime(1000),
                                 lastDate: DateTime(3000));
 
@@ -136,7 +174,9 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                           onPressed: () async {
                             DateTime? newDate = await showDatePicker(
                                 context: context,
-                                initialDate: DateTime.now(),
+                                initialDate: fechaNacimientoCtrl.text != ''
+                                    ? DateTime.parse(fechaNacimientoCtrl.text)
+                                    : DateTime.now(),
                                 firstDate: DateTime(1000),
                                 lastDate: DateTime(3000));
 
@@ -144,15 +184,11 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
 
                             fechaNacimientoCtrl.text =
                                 dateFormat.format(newDate);
+
                             beneficiarioCubit.changeFechaNacimiento(
                                 fechaNacimientoCtrl.text);
 
-                            DateTime edadDt =
-                                DateTime.parse(fechaNacimientoCtrl.text);
-
-                            var currentYear = DateTime.now().year;
-                            var edad = currentYear - edadDt.year;
-                            edadCtrl.text = edad.toString();
+                            calcularEdad(fechaNacimientoCtrl.text);
                           },
                           icon: const Icon(Icons.calendar_today))),
                 ),
@@ -168,7 +204,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiario?.nombre1,
+                          controller: primerNombreCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Primer Nombre',
                               labelText: 'Primer Nombre'),
@@ -179,7 +215,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiario?.nombre2,
+                          controller: segundoNombreCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Segundo Nombre',
                               labelText: 'Segundo Nombre'),
@@ -195,7 +231,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiario?.apellido1,
+                          controller: primerApellidoCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Primer Apellido',
                               labelText: 'Primer Apellido'),
@@ -206,7 +242,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
-                          initialValue: beneficiario?.apellido2,
+                          controller: segundoApellidoCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Segundo Apellido',
                               labelText: 'Segundo Apellido'),
@@ -225,6 +261,9 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                         builder: (context, state) {
                           if (state is GenerosLoaded) {
                             return DropdownButtonFormField(
+                                value: beneficiario?.generoId != ''
+                                    ? beneficiario?.generoId
+                                    : null,
                                 items: state.generos!
                                     .map<DropdownMenuItem<String>>(
                                         (GeneroEntity value) {
@@ -276,8 +315,11 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                       child:
                           BlocBuilder<GrupoEspecialCubit, GrupoEspecialState>(
                         builder: (context, state) {
-                          if (state is EstadosCivilesLoaded) {
+                          if (state is GruposEspecialesLoaded) {
                             return DropdownButtonFormField(
+                                value: beneficiario?.grupoEspecialId != ''
+                                    ? beneficiario?.grupoEspecialId
+                                    : null,
                                 items: state.gruposEspeciales!
                                     .map<DropdownMenuItem<String>>(
                                         (GrupoEspecialEntity value) {
@@ -297,52 +339,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: BlocBuilder<TipoDiscapacidadCubit,
-                          TipoDiscapacidadState>(
-                        builder: (context, state) {
-                          if (state is EstadosCivilesLoaded) {
-                            return DropdownButtonFormField(
-                                items: state.tiposDiscapacidades!
-                                    .map<DropdownMenuItem<String>>(
-                                        (TipoDiscapacidadEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.tipoDiscapacidadId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                onChanged: (String? value) {
-                                  perfilPreInversionBeneficiarioCubit
-                                      .changeDiscapacidad(value);
-                                },
-                                hint: const Text('Discapacidad'));
-                          }
-                          return const SizedBox();
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
                       child: TextFormField(
-                          initialValue: perfilPreInversionBeneficiario
-                                  ?.calificacionSisben ??
-                              '',
-                          decoration: CustomInputDecoration.inputDecoration(
-                              hintText: 'Puntaje Sisben',
-                              labelText: 'Puntaje Sisben'),
-                          onSaved: (String? newValue) {
-                            perfilPreInversionBeneficiarioCubit
-                                .changeCalificacionSisben(newValue);
-                          }),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: beneficiario?.telefonoMovil,
+                        controller: telefonoMovilCtrl,
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Teléfono', labelText: 'Teléfono'),
                         onSaved: ((newValue) {
@@ -351,12 +349,72 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 20),
+                BlocBuilder<PerfilPreInversionBeneficiarioCubit,
+                    PerfilPreInversionBeneficiarioState>(
+                  builder: (context, state) {
+                    final perfilPreInversionBeneficiario =
+                        state.perfilPreInversionBeneficiario;
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: BlocBuilder<TipoDiscapacidadCubit,
+                              TipoDiscapacidadState>(
+                            builder: (context, state) {
+                              if (state is TiposDiscapacidadesLoaded) {
+                                return DropdownButtonFormField(
+                                    value: perfilPreInversionBeneficiario
+                                                ?.tipoDiscapacidadId !=
+                                            ''
+                                        ? perfilPreInversionBeneficiario!
+                                            .tipoDiscapacidadId
+                                        : null,
+                                    items: state.tiposDiscapacidades!
+                                        .map<DropdownMenuItem<String>>(
+                                            (TipoDiscapacidadEntity value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value.tipoDiscapacidadId,
+                                        child: Text(value.nombre),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? value) {
+                                      perfilPreInversionBeneficiarioCubit
+                                          .changeDiscapacidad(value);
+                                    },
+                                    hint: const Text('Discapacidad'));
+                              }
+                              return const SizedBox();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: TextFormField(
+                              controller: calificacionSisbenCtrl,
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Puntaje Sisben',
+                                  labelText: 'Puntaje Sisben'),
+                              onSaved: (String? newValue) {
+                                perfilPreInversionBeneficiarioCubit
+                                    .changeCalificacionSisben(newValue);
+                              }),
+                        ),
+                      ],
+                    );
+                  },
                 )
               ]),
             ),
           );
-        });
-      },
-    );
+        }));
+  }
+
+  void calcularEdad(String fechaNacimiento) {
+    DateTime edadDt = DateTime.parse(fechaNacimiento);
+    var currentYear = DateTime.now().year;
+    var edad = currentYear - edadDt.year;
+    edadCtrl.text = edad.toString();
   }
 }

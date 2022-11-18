@@ -2,41 +2,40 @@ part of 'perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 
 abstract class PerfilPreInversionCofinanciadorActividadFinancieraState
     extends Equatable {
-  final List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>?
-      perfilPreInversionCofinanciadorActividadesFinancieras;
+  final PerfilPreInversionCofinanciadorActividadFinancieraEntity?
+      perfilPreInversionCofinanciadorActividadFinanciera;
 
   const PerfilPreInversionCofinanciadorActividadFinancieraState(
-      {this.perfilPreInversionCofinanciadorActividadesFinancieras});
+      {this.perfilPreInversionCofinanciadorActividadFinanciera});
 
   @override
   List<Object?> get props =>
-      [perfilPreInversionCofinanciadorActividadesFinancieras];
+      [perfilPreInversionCofinanciadorActividadFinanciera];
 }
 
-class PerfilPreInversionCofinanciadorActividadesFinancierasInitial
+class PerfilPreInversionCofinanciadorActividadFinancieraInitial
     extends PerfilPreInversionCofinanciadorActividadFinancieraState {}
 
-class PerfilPreInversionCofinanciadorActividadesFinancierasLoading
+class PerfilPreInversionCofinanciadorActividadFinancieraLoading
     extends PerfilPreInversionCofinanciadorActividadFinancieraState {}
 
-class PerfilPreInversionCofinanciadorActividadesFinancierasLoaded
+class PerfilPreInversionCofinanciadorActividadFinancieraLoaded
     extends PerfilPreInversionCofinanciadorActividadFinancieraState {
-  final List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>?
-      perfilPreInversionCofinanciadorActividadesFinancierasLoaded;
+  final PerfilPreInversionCofinanciadorActividadFinancieraEntity?
+      perfilPreInversionCofinanciadorActividadFinancieraLoaded;
 
-  const PerfilPreInversionCofinanciadorActividadesFinancierasLoaded(
-      this.perfilPreInversionCofinanciadorActividadesFinancierasLoaded)
+  const PerfilPreInversionCofinanciadorActividadFinancieraLoaded(
+      this.perfilPreInversionCofinanciadorActividadFinancieraLoaded)
       : super(
-            perfilPreInversionCofinanciadorActividadesFinancieras:
-                perfilPreInversionCofinanciadorActividadesFinancierasLoaded);
+            perfilPreInversionCofinanciadorActividadFinanciera:
+                perfilPreInversionCofinanciadorActividadFinancieraLoaded);
 }
 
-class PerfilPreInversionCofinanciadorActividadesFinancierasError
+class PerfilPreInversionCofinanciadorActividadFinancieraError
     extends PerfilPreInversionCofinanciadorActividadFinancieraState {
   final String message;
 
-  const PerfilPreInversionCofinanciadorActividadesFinancierasError(
-      this.message);
+  const PerfilPreInversionCofinanciadorActividadFinancieraError(this.message);
   @override
   List<Object?> get props => [message];
 }

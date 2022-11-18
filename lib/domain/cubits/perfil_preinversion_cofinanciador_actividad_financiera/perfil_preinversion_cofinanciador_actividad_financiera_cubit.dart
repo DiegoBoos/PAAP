@@ -13,19 +13,37 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
 
   PerfilPreInversionCofinanciadorActividadFinancieraCubit(
       {required this.perfilPreInversionCofinanciadorActividadFinancieraDB})
-      : super(PerfilPreInversionCofinanciadorActividadesFinancierasInitial());
-
-  void getPerfilPreInversionCofinanciadorActividadesFinancierasDB() async {
-    final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
-        .getPerfilPreInversionCofinanciadorActividadesFinancierasUsecaseDB();
-    result.fold(
-        (failure) => emit(
-            PerfilPreInversionCofinanciadorActividadesFinancierasError(
-                failure.properties.first)),
-        (data) => emit(
-            PerfilPreInversionCofinanciadorActividadesFinancierasLoaded(data)));
-  }
+      : super(PerfilPreInversionCofinanciadorActividadFinancieraInitial());
 
   void initState() =>
-      emit(PerfilPreInversionCofinanciadorActividadesFinancierasInitial());
+      emit(PerfilPreInversionCofinanciadorActividadFinancieraInitial());
+
+  void selectPerfilPreInversionCofinanciadorActividadFinanciera(
+      String cofinanciadorId) async {
+    final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
+        .getPerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
+            cofinanciadorId);
+    result.fold(
+        (failure) => emit(
+            PerfilPreInversionCofinanciadorActividadFinancieraError(
+                failure.properties.first)),
+        (data) => emit(
+            PerfilPreInversionCofinanciadorActividadFinancieraLoaded(data)));
+  }
+
+  void changeActividadFinanciera(String? value) {
+    final actividadFinancieraChanged = state
+        .perfilPreInversionCofinanciadorActividadFinanciera
+        ?.copyWith(actividadFinancieraId: value);
+    emit(PerfilPreInversionCofinanciadorActividadFinancieraLoaded(
+        actividadFinancieraChanged));
+  }
+
+  void changeValor(String? text) {
+    final valorChanged = state
+        .perfilPreInversionCofinanciadorActividadFinanciera
+        ?.copyWith(valor: text);
+    emit(
+        PerfilPreInversionCofinanciadorActividadFinancieraLoaded(valorChanged));
+  }
 }

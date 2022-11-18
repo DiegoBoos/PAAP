@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 
 class PerfilPreInversionCofinanciadoresRows extends StatelessWidget {
@@ -15,6 +20,16 @@ class PerfilPreInversionCofinanciadoresRows extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
+    final perfilPreInversionCofinanciadorDesembolsoCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
+            context);
+    final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
+        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
+    final perfilPreInversionCofinanciadorRubroCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorRubroCubit>(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: DataTable(
@@ -45,9 +60,22 @@ class PerfilPreInversionCofinanciadoresRows extends StatelessWidget {
             DataCell(Text(perfilPreInversionCofinanciador.cofinanciadorId)),
             DataCell(IconButton(
                 onPressed: () {
+                  perfilPreInversionCofinanciadorCubit
+                      .selectPerfilPreInversionCofinanciador(
+                          perfilPreInversionCofinanciador);
+
+                  perfilPreInversionCofinanciadorDesembolsoCubit
+                      .selectPerfilPreInversionCofinanciadorDesembolso(
+                          perfilPreInversionCofinanciador.cofinanciadorId);
+                  perfilPreInversionCofinanciadorActividadFinancieraCubit
+                      .selectPerfilPreInversionCofinanciadorActividadFinanciera(
+                          perfilPreInversionCofinanciador.cofinanciadorId);
+                  perfilPreInversionCofinanciadorRubroCubit
+                      .selectPerfilPreInversionCofinanciadorRubro(
+                          perfilPreInversionCofinanciador.cofinanciadorId);
+
                   Navigator.pushNamed(
-                      context, 'VPerfilPreInversionCofinanciador',
-                      arguments: perfilPreInversionCofinanciador);
+                      context, 'NewEditVCofinanciadorPreInversion');
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

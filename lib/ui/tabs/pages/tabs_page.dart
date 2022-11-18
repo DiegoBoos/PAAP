@@ -36,6 +36,9 @@ class _TabsPageState extends State<TabsPage> {
     perfilesPreInversionBloc.add(GetPerfilesPreInversion());
     final alianzasBloc = BlocProvider.of<AlianzasBloc>(context);
     alianzasBloc.add(GetAlianzas());
+
+    final menuCubit = BlocProvider.of<MenuCubit>(context);
+    menuCubit.getMenuDB();
   }
 
   int _selectedIndex = 0;
@@ -106,13 +109,7 @@ class _TabsPageState extends State<TabsPage> {
               child: const Icon(Icons.cloud_upload),
             ),
             body: _widgetOptions.elementAt(_selectedIndex),
-            bottomNavigationBar: BlocConsumer<MenuCubit, MenuState>(
-              listener: (context, state) {
-                if (state is MenusError) {
-                  CustomSnackBar.showSnackBar(
-                      context, state.message, Colors.red);
-                }
-              },
+            bottomNavigationBar: BlocBuilder<MenuCubit, MenuState>(
               builder: (context, state) {
                 if (state is MenusLoading) {
                   return const Padding(

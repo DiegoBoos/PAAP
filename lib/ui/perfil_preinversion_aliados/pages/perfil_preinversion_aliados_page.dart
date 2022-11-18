@@ -32,8 +32,8 @@ class _PerfilPreInversionAliadosPageState
     return Scaffold(
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.save),
-            onPressed: () => Navigator.pushNamed(
-                context, 'NewEditAliadoPreInversion', arguments: '0')),
+            onPressed: () =>
+                Navigator.pushNamed(context, 'NewEditAliadoPreInversion')),
         appBar: AppBar(
             title: const Text('PerfilPreInversionAliados'),
             centerTitle: true,

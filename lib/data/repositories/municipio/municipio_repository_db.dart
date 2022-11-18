@@ -38,4 +38,19 @@ class MunicipioRepositoryDBImpl implements MunicipioRepositoryDB {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<MunicipioEntity>>>
+      getMunicipiosByDepartamentoRepositoryDB(String departamentoId) async {
+    try {
+      final municipiosByDepartamentoDB = await municipioLocalDataSource
+          .getMunicipiosByDepartamentoDB(departamentoId);
+
+      return Right(municipiosByDepartamentoDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

@@ -8,4 +8,6 @@ abstract class MenuRepositoryDB {
 
   Future<Either<Failure, int>> saveMenuRepositoryDB(
       List<MenuEntity> menuEntity);
+
+  Future<Either<Failure, int>> verificacionDatosLocalesRepositoryDB();
 }

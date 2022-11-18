@@ -16,4 +16,9 @@ class MunicipioUsecaseDB {
       List<MunicipioEntity> municipioEntity) {
     return repositoryDB.saveMunicipiosRepositoryDB(municipioEntity);
   }
+
+  Future<Either<Failure, List<MunicipioEntity>?>>
+      getMunicipiosByDepartamentoUsecaseDB(String departamentoId) {
+    return repositoryDB.getMunicipiosByDepartamentoRepositoryDB(departamentoId);
+  }
 }

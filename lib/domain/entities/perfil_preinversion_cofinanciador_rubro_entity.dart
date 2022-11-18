@@ -15,6 +15,23 @@ class PerfilPreInversionCofinanciadorRubroEntity {
   String rubroId;
   String valor;
 
+  PerfilPreInversionCofinanciadorRubroEntity copyWith(
+      {String? perfilPreInversionId,
+      String? cofinanciadorId,
+      String? desembolsoId,
+      String? actividadFinancieraId,
+      String? rubroId,
+      String? valor}) {
+    return PerfilPreInversionCofinanciadorRubroEntity(
+        perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
+        cofinanciadorId: cofinanciadorId ?? this.cofinanciadorId,
+        desembolsoId: desembolsoId ?? this.desembolsoId,
+        actividadFinancieraId:
+            actividadFinancieraId ?? this.actividadFinancieraId,
+        rubroId: rubroId ?? this.rubroId,
+        valor: valor ?? this.valor);
+  }
+
   factory PerfilPreInversionCofinanciadorRubroEntity.fromJson(
           Map<String, dynamic> json) =>
       PerfilPreInversionCofinanciadorRubroEntity(

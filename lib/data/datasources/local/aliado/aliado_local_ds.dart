@@ -52,7 +52,8 @@ class AliadosLocalDataSourceImpl implements AliadosLocalDataSource {
   Future<AliadoModel?> getAliadoDB(String id) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('Aliado', where: 'aliadoId', whereArgs: [id]);
+    final res =
+        await db.query('Aliado', where: 'AliadoId = ?', whereArgs: [id]);
 
     if (res.isEmpty) return null;
     final aliadoMap = {for (var e in res[0].entries) e.key: e.value};

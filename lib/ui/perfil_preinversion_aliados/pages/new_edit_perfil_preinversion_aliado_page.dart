@@ -2,24 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
+import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/perfil_preinversion_aliado_form.dart';
-import '../widgets/perfil_preinversion_aliado_drawer.dart';
 
-class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
+class NewEditPerfilPreInversionAliadoPage extends StatefulWidget {
   const NewEditPerfilPreInversionAliadoPage({super.key});
 
   @override
+  State<NewEditPerfilPreInversionAliadoPage> createState() =>
+      _NewEditPerfilPreInversionAliadoPageState();
+}
+
+class _NewEditPerfilPreInversionAliadoPageState
+    extends State<NewEditPerfilPreInversionAliadoPage> {
+  @override
   Widget build(BuildContext context) {
-    final perfilPreInversionAliadoId =
-        ModalRoute.of(context)?.settings.arguments as String;
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     return Scaffold(
         drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
             final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
-            return PerfilPreInversionAliadoDrawer(
+            return PerfilPreInversionDrawer(
               menuHijo: menuHijo,
             );
           },
@@ -45,9 +51,19 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Text(
-                  perfilPreInversionAliadoId == '0' ? 'Creación' : 'Editar',
-                  style: Styles.subtitleStyle),
+              child: BlocBuilder<PerfilPreInversionAliadoCubit,
+                  PerfilPreInversionAliadoState>(
+                builder: (context, state) {
+                  if (state is PerfilPreInversionAliadoLoaded) {
+                    return Text(
+                        state.perfilPreInversionAliado!.aliadoId == '0'
+                            ? 'Creación'
+                            : 'Editar',
+                        style: Styles.subtitleStyle);
+                  }
+                  return const SizedBox();
+                },
+              ),
             ),
             const PerfilPreInversionAliadoForm()
           ]),

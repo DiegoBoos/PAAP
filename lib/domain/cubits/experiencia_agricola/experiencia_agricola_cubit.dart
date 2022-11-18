@@ -12,15 +12,15 @@ class ExperienciaAgricolaCubit extends Cubit<ExperienciaAgricolaState> {
   ExperienciaAgricolaCubit({required this.experienciaAgricolaDB})
       : super(ExperienciaAgricolaInitial());
 
-  void getExperienciaAgricolaDB(String id) async {
-    final result =
-        await experienciaAgricolaDB.getExperienciaAgricolaUsecaseDB(id);
+  void initState() => emit(ExperienciaAgricolaInitial());
+
+  void selectExperienciaAgricola(String beneficiarioId) async {
+    final result = await experienciaAgricolaDB
+        .getExperienciaAgricolaUsecaseDB(beneficiarioId);
     result.fold(
         (failure) => emit(ExperienciaAgricolaError(failure.properties.first)),
         (data) => emit(ExperienciaAgricolaLoaded(data)));
   }
-
-  void initState() => emit(ExperienciaAgricolaInitial());
 
   void changeTipoActividadProductiva(String? value) {
     final tipoActividadProductivaId =

@@ -13,18 +13,41 @@ import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/beneficiario_experiencia_agricola_form.dart';
 import '../widgets/beneficiario_form.dart';
-import '../widgets/beneficiario_perfil_form.dart';
-import '../widgets/beneficiario_preinversion_form.dart';
+import '../widgets/perfil_beneficiario_form.dart';
+import '../widgets/perfil_preinversion_beneficiario_form.dart';
 import '../widgets/conyuge_form.dart';
 
-class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
+class NewEditPerfilPreInversionBeneficiarioPage extends StatefulWidget {
   const NewEditPerfilPreInversionBeneficiarioPage({super.key});
+
+  @override
+  State<NewEditPerfilPreInversionBeneficiarioPage> createState() =>
+      _NewEditPerfilPreInversionBeneficiarioPageState();
+}
+
+class _NewEditPerfilPreInversionBeneficiarioPageState
+    extends State<NewEditPerfilPreInversionBeneficiarioPage> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<BeneficiarioCubit>(context).initState();
+    BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context).initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    final beneficiarioId = ModalRoute.of(context)!.settings.arguments as String;
     final menuCubit = BlocProvider.of<MenuCubit>(context);
+    final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
+    final perfilPreInversionBeneficiarioCubit =
+        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
+    final perfilBeneficiarioCubit =
+        BlocProvider.of<PerfilBeneficiarioCubit>(context);
+    final experienciaAgricolaCubit =
+        BlocProvider.of<ExperienciaAgricolaCubit>(context);
+    final experienciaPecuariaCubit =
+        BlocProvider.of<ExperienciaPecuariaCubit>(context);
+
     return Scaffold(
         drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
@@ -49,8 +72,21 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
               child: Column(children: [
                 const Text('BENEFICIARIOS', style: Styles.titleStyle),
                 const SizedBox(height: 10),
-                Text(beneficiarioId == '' ? 'Creación' : 'Editar',
-                    style: Styles.subtitleStyle),
+                BlocBuilder<PerfilPreInversionBeneficiarioCubit,
+                    PerfilPreInversionBeneficiarioState>(
+                  builder: (context, state) {
+                    if (state is PerfilPreInversionBeneficiarioLoaded) {
+                      return Text(
+                          state.perfilPreInversionBeneficiarioLoaded!
+                                      .beneficiarioId ==
+                                  '0'
+                              ? 'Creación'
+                              : 'Editar',
+                          style: Styles.subtitleStyle);
+                    }
+                    return const SizedBox();
+                  },
+                ),
                 const SizedBox(height: 10),
                 const BeneficiarioForm(),
                 const ConyugeForm(),
@@ -67,35 +103,22 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
                   //TODO: Guardar en tabla beneficiario, perfil preinversion beneficiario,
                   //perfil beneficiario, experiencia agricola o experiencia pecuaria (deacuerdo al tipo de proyecto solo se usa una)
 
-                  final beneficiarioCubit =
-                      BlocProvider.of<BeneficiarioCubit>(context);
                   final beneficiario = beneficiarioCubit.state.beneficiario;
-
-                  final perfilPreInversionBeneficiarioCubit =
-                      BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(
-                          context);
 
                   final perfilPreInversionBeneficiario =
                       perfilPreInversionBeneficiarioCubit
                           .state.perfilPreInversionBeneficiario;
 
-                  final perfilBeneficiarioCubit =
-                      BlocProvider.of<PerfilBeneficiarioCubit>(context);
-
                   final perfilBeneficiario =
                       perfilBeneficiarioCubit.state.perfilBeneficiario;
-
-                  final experienciaAgricolaCubit =
-                      BlocProvider.of<ExperienciaAgricolaCubit>(context);
 
                   final experienciaAgricola =
                       experienciaAgricolaCubit.state.experienciaAgricola;
 
-                  final experienciaPecuariaCubit =
-                      BlocProvider.of<ExperienciaPecuariaCubit>(context);
-
                   final experienciaPecuaria =
                       experienciaPecuariaCubit.state.experienciaPecuaria;
+
+                  beneficiarioCubit.saveBeneficiarioDB(beneficiario!);
                 })
               ]),
             ),

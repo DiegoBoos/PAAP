@@ -15,4 +15,8 @@ class MenuUsecaseDB {
   Future<Either<Failure, int>> saveMenuUsecaseDB(List<MenuEntity> menu) {
     return repositoryDB.saveMenuRepositoryDB(menu);
   }
+
+  Future<Either<Failure, int>> verificacionDatosLocalesUsecaseDB() {
+    return repositoryDB.verificacionDatosLocalesRepositoryDB();
+  }
 }

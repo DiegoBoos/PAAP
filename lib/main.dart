@@ -6,6 +6,9 @@ import 'domain/blocs/auth/auth_bloc.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/blocs/perfil_preinversion_aliados/perfil_preinversion_aliados_bloc.dart';
 import 'domain/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
+import 'domain/blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
+import 'domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
+import 'domain/blocs/perfil_preinversion_cofinanciador_rubros/perfil_preinversion_cofinanciador_rubros_bloc.dart';
 import 'domain/blocs/perfil_preinversion_cofinanciadores/perfil_preinversion_cofinanciadores_bloc.dart';
 import 'domain/blocs/perfil_preinversion_consultores/perfil_preinversion_consultores_bloc.dart';
 import 'domain/blocs/perfiles/perfiles_bloc.dart';
@@ -86,6 +89,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (_) =>
+                di.locator<PerfilPreInversionCofinanciadorDesembolsoCubit>(),
+          ),
+          BlocProvider(
+            create: (_) =>
+                di.locator<PerfilPreInversionCofinanciadorDesembolsosBloc>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<
+                PerfilPreInversionCofinanciadorActividadFinancieraCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<
+                PerfilPreInversionCofinanciadorActividadesFinancierasBloc>(),
+          ),
+          BlocProvider(
+            create: (_) =>
+                di.locator<PerfilPreInversionCofinanciadorRubroCubit>(),
+          ),
+          BlocProvider(
+            create: (_) =>
+                di.locator<PerfilPreInversionCofinanciadorRubrosBloc>(),
+          ),
           BlocProvider(
             create: (_) => di.locator<ActividadCubit>(),
           ),

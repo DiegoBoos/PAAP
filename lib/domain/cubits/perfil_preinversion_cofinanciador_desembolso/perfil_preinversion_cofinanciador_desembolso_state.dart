@@ -1,40 +1,39 @@
 part of 'perfil_preinversion_cofinanciador_desembolso_cubit.dart';
 
-abstract class PerfilPreInversionCofinanciadorDesembolsoState
-    extends Equatable {
-  final List<PerfilPreInversionCofinanciadorDesembolsoEntity>?
-      perfilPreInversionCofinanciadorDesembolsos;
+abstract class PerfilPreInversionCofinanciadorDesembolsotate extends Equatable {
+  final PerfilPreInversionCofinanciadorDesembolsoEntity?
+      perfilPreInversionCofinanciadorDesembolso;
 
-  const PerfilPreInversionCofinanciadorDesembolsoState(
-      {this.perfilPreInversionCofinanciadorDesembolsos});
+  const PerfilPreInversionCofinanciadorDesembolsotate(
+      {this.perfilPreInversionCofinanciadorDesembolso});
 
   @override
-  List<Object?> get props => [perfilPreInversionCofinanciadorDesembolsos];
+  List<Object?> get props => [perfilPreInversionCofinanciadorDesembolso];
 }
 
-class PerfilPreInversionCofinanciadorDesembolsosInitial
-    extends PerfilPreInversionCofinanciadorDesembolsoState {}
+class PerfilPreInversionCofinanciadorDesembolsoInitial
+    extends PerfilPreInversionCofinanciadorDesembolsotate {}
 
-class PerfilPreInversionCofinanciadorDesembolsosLoading
-    extends PerfilPreInversionCofinanciadorDesembolsoState {}
+class PerfilPreInversionCofinanciadorDesembolsoLoading
+    extends PerfilPreInversionCofinanciadorDesembolsotate {}
 
-class PerfilPreInversionCofinanciadorDesembolsosLoaded
-    extends PerfilPreInversionCofinanciadorDesembolsoState {
-  final List<PerfilPreInversionCofinanciadorDesembolsoEntity>?
-      perfilPreInversionCofinanciadorDesembolsosLoaded;
+class PerfilPreInversionCofinanciadorDesembolsoLoaded
+    extends PerfilPreInversionCofinanciadorDesembolsotate {
+  final PerfilPreInversionCofinanciadorDesembolsoEntity?
+      perfilPreInversionCofinanciadorDesembolsoLoaded;
 
-  const PerfilPreInversionCofinanciadorDesembolsosLoaded(
-      this.perfilPreInversionCofinanciadorDesembolsosLoaded)
+  const PerfilPreInversionCofinanciadorDesembolsoLoaded(
+      this.perfilPreInversionCofinanciadorDesembolsoLoaded)
       : super(
-            perfilPreInversionCofinanciadorDesembolsos:
-                perfilPreInversionCofinanciadorDesembolsosLoaded);
+            perfilPreInversionCofinanciadorDesembolso:
+                perfilPreInversionCofinanciadorDesembolsoLoaded);
 }
 
-class PerfilPreInversionCofinanciadorDesembolsosError
-    extends PerfilPreInversionCofinanciadorDesembolsoState {
+class PerfilPreInversionCofinanciadorDesembolsoError
+    extends PerfilPreInversionCofinanciadorDesembolsotate {
   final String message;
 
-  const PerfilPreInversionCofinanciadorDesembolsosError(this.message);
+  const PerfilPreInversionCofinanciadorDesembolsoError(this.message);
   @override
   List<Object?> get props => [message];
 }

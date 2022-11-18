@@ -10,7 +10,16 @@ abstract class PerfilPreInversionCofinanciadorState extends Equatable {
 }
 
 class PerfilPreInversionCofinanciadorInitial
-    extends PerfilPreInversionCofinanciadorState {}
+    extends PerfilPreInversionCofinanciadorState {
+  PerfilPreInversionCofinanciadorInitial()
+      : super(
+            perfilPreInversionCofinanciador:
+                PerfilPreInversionCofinanciadorEntity(
+                    perfilPreInversionId: '0',
+                    cofinanciadorId: '',
+                    monto: '',
+                    participacion: ''));
+}
 
 class PerfilPreInversionCofinanciadorLoading
     extends PerfilPreInversionCofinanciadorState {}

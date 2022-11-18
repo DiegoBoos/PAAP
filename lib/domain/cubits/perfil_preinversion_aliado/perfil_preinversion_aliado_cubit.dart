@@ -9,6 +9,13 @@ class PerfilPreInversionAliadoCubit
     extends Cubit<PerfilPreInversionAliadoState> {
   PerfilPreInversionAliadoCubit() : super(PerfilPreInversionAliadoInitial());
 
+  void initState() => emit(PerfilPreInversionAliadoInitial());
+
+  void selectAliadoPreinversion(
+      PerfilPreInversionAliadoEntity perfilPreInversionAliado) {
+    emit(PerfilPreInversionAliadoLoaded(perfilPreInversionAliado));
+  }
+
   void changeProducto(String? value) {}
 
   void changeUnidad(String? value) {}
