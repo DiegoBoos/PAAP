@@ -14,4 +14,9 @@ class AliadoUsecase {
       UsuarioEntity usuario) {
     return repository.getAliadosRepository(usuario);
   }
+
+  Future<Either<Failure, List<AliadoEntity>>> saveAliadosUsecase(
+      UsuarioEntity usuario, List<AliadoEntity> aliadoEntity) {
+    return repository.saveAliadosRepository(usuario, aliadoEntity);
+  }
 }

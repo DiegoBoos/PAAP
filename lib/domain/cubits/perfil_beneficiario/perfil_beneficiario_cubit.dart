@@ -22,6 +22,15 @@ class PerfilBeneficiarioCubit extends Cubit<PerfilBeneficiarioState> {
         (data) => emit(PerfilBeneficiarioLoaded(data)));
   }
 
+  void savePerfilBeneficiarioDB(
+      PerfilBeneficiarioEntity perfilBeneficiarioEntity) async {
+    final result = await perfilBeneficiarioDB
+        .savePerfilBeneficiarioUsecaseDB(perfilBeneficiarioEntity);
+    result.fold(
+        (failure) => emit(PerfilBeneficiarioError(failure.properties.first)),
+        (data) => emit(PerfilBeneficiarioSaved()));
+  }
+
   void changeTipoTenencia(String? value) {
     final tipoTenenciaChanged =
         state.perfilBeneficiario?.copyWith(tipoTenenciaId: value);

@@ -7,4 +7,7 @@ import '../../entities/usuario_entity.dart';
 abstract class AliadoRepository {
   Future<Either<Failure, List<AliadoEntity>>> getAliadosRepository(
       UsuarioEntity usuario);
+
+  Future<Either<Failure, List<AliadoEntity>>> saveAliadosRepository(
+      UsuarioEntity usuario, List<AliadoEntity> aliadosEntity);
 }

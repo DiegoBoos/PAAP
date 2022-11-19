@@ -59,17 +59,42 @@ class PerfilBeneficiarioLocalDataSourceImpl
   }
 
   @override
-  Future<PerfilBeneficiarioModel?> getPerfilBeneficiarioDB(String id) async {
+  Future<PerfilBeneficiarioModel?> getPerfilBeneficiarioDB(
+      String beneficiarioId) async {
     final db = await DBConfig.database;
-
+//TODO;MANDAR COMO PARAMETRO PERFILID
     final res = await db.query('PerfilBeneficiario',
-        where: 'PerfilBeneficiarioId = ?', whereArgs: [id]);
+        where: 'BeneficiarioId = ?', whereArgs: [beneficiarioId]);
 
-    if (res.isEmpty) return null;
-    final beneficiarioMap = {for (var e in res[0].entries) e.key: e.value};
-    final beneficiarioModel = PerfilBeneficiarioModel.fromJson(beneficiarioMap);
+    if (res.isEmpty) {
+      PerfilBeneficiarioEntity perfilBeneficiarioEntity =
+          PerfilBeneficiarioEntity(
+              perfilId: '',
+              beneficiarioId: beneficiarioId,
+              municipioId: '',
+              veredaId: '',
+              areaFinca: '',
+              areaProyecto: '',
+              tipoTenenciaId: '',
+              experiencia: '',
+              asociado: '',
+              conocePerfil: '',
+              fueBeneficiado: '',
+              cualBeneficio: '',
+              activo: '',
+              recordStatus: '');
 
-    return beneficiarioModel;
+      return PerfilBeneficiarioModel.fromJson(
+          perfilBeneficiarioEntity.toJson());
+    }
+
+    final perfilBeneficiarioMap = {
+      for (var e in res[0].entries) e.key: e.value
+    };
+    final perfilBeneficiarioModel =
+        PerfilBeneficiarioModel.fromJson(perfilBeneficiarioMap);
+
+    return perfilBeneficiarioModel;
   }
 
   @override

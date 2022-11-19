@@ -83,6 +83,9 @@ class PerfilPreInversionBeneficiarioLoaded
                 perfilPreInversionBeneficiarioLoaded);
 }
 
+class PerfilPreInversionBeneficiarioSaved
+    extends PerfilPreInversionBeneficiarioState {}
+
 class PerfilPreInversionBeneficiarioError
     extends PerfilPreInversionBeneficiarioState {
   final String message;

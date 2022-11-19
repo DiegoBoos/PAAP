@@ -7,4 +7,10 @@ import '../../entities/usuario_entity.dart';
 abstract class PerfilPreInversionAliadoRepository {
   Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
       getPerfilPreInversionAliadosRepository(UsuarioEntity usuario);
+
+  Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
+      savePerfilesPreInversionesAliadosRepository(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionAliadoEntity>
+              perfilesPreInversionesAliadosEntity);
 }

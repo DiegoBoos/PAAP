@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../../../domain/entities/perfil_preinversion_aliado_entity.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -12,6 +13,11 @@ import '../../../utils.dart';
 abstract class PerfilPreInversionAliadoRemoteDataSource {
   Future<List<PerfilPreInversionAliadoModel>> getPerfilPreInversionAliados(
       UsuarioEntity usuario);
+  Future<List<PerfilPreInversionAliadoEntity>>
+      savePerfilesPreInversionesAliados(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionAliadoEntity>
+              perfilesPreInversionesAliadosEntity);
 }
 
 class PerfilPreInversionAliadoRemoteDataSourceImpl
@@ -91,6 +97,85 @@ class PerfilPreInversionAliadoRemoteDataSourceImpl
       }
     } else {
       throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<PerfilPreInversionAliadoEntity>>
+      savePerfilesPreInversionesAliados(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionAliadoEntity>
+              perfilesPreInversionesAliadosEntity) async {
+    List<PerfilPreInversionAliadoEntity> perfilesPreInversionesAliadosUpload =
+        [];
+    for (var perfilPreInversionAliado in perfilesPreInversionesAliadosEntity) {
+      final resp =
+          await savePerfilPreInversionAliado(usuario, perfilPreInversionAliado);
+      if (resp != null) {
+        perfilesPreInversionesAliadosUpload.add(resp);
+      }
+    }
+    return perfilesPreInversionesAliadosUpload;
+  }
+
+  Future<PerfilPreInversionAliadoEntity?> savePerfilPreInversionAliado(
+      UsuarioEntity usuario,
+      PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final perfilPreInversionAliadoSOAP =
+        '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <GuardarPerfilPreInversionAliado xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+          </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <PerfilPreInversionId>${perfilPreInversionAliadoEntity.perfilPreInversionId}</PerfilPreInversionId>
+            <AliadoId>${perfilPreInversionAliadoEntity.aliadoId}</AliadoId>
+            <ProductoId>${perfilPreInversionAliadoEntity.productoId}</ProductoId>
+            <VolumenCompra>${perfilPreInversionAliadoEntity.volumenCompra}</VolumenCompra>
+            <UnidadId>${perfilPreInversionAliadoEntity.unidadId}</UnidadId>
+            <FrecuenciaId>${perfilPreInversionAliadoEntity.frecuenciaId}</FrecuenciaId>
+            <PorcentajeCompra>${perfilPreInversionAliadoEntity.porcentajeCompra}</PorcentajeCompra>
+            <SitioEntregaId>${perfilPreInversionAliadoEntity.sitioEntregaId}</SitioEntregaId>
+            
+          </objeto>
+        </GuardarPerfilPreInversionAliado>
+      </soap:Body>
+    </soap:Envelope>
+    ''';
+
+    final perfilPreInversionAliadoResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "${Constants.urlSOAP}/GuardarPerfilPreInversionAliado"
+        },
+        body: perfilPreInversionAliadoSOAP);
+
+    if (perfilPreInversionAliadoResp.statusCode == 200) {
+      final perfilPreInversionAliadoDoc =
+          xml.XmlDocument.parse(perfilPreInversionAliadoResp.body);
+
+      final respuesta = perfilPreInversionAliadoDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionAliadoEntity;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
     }
   }
 }

@@ -2571,22 +2571,27 @@ unidadInit() {
 
 uploadSyncInit() {
   locator.registerFactory(() => UploadSyncBloc(
-      visita: locator(),
-      visitaDB: locator(),
-      evaluacion: locator(),
-      evaluacionDB: locator(),
-      evaluacionRespuesta: locator(),
-      evaluacionRespuestaDB: locator(),
-      beneficiario: locator(),
-      beneficiarioDB: locator(),
-      experienciaAgricola: locator(),
-      experienciaAgricolaDB: locator(),
-      experienciaPecuaria: locator(),
-      experienciaPecuariaDB: locator(),
-      perfilBeneficiario: locator(),
-      perfilBeneficiarioDB: locator(),
-      perfilPreInversionBeneficiario: locator(),
-      perfilPreInversionBeneficiarioDB: locator()));
+        visita: locator(),
+        visitaDB: locator(),
+        evaluacion: locator(),
+        evaluacionDB: locator(),
+        evaluacionRespuesta: locator(),
+        evaluacionRespuestaDB: locator(),
+        beneficiario: locator(),
+        beneficiarioDB: locator(),
+        experienciaAgricola: locator(),
+        experienciaAgricolaDB: locator(),
+        experienciaPecuaria: locator(),
+        experienciaPecuariaDB: locator(),
+        perfilBeneficiario: locator(),
+        perfilBeneficiarioDB: locator(),
+        perfilPreInversionBeneficiario: locator(),
+        perfilPreInversionBeneficiarioDB: locator(),
+        aliado: locator(),
+        aliadoDB: locator(),
+        perfilPreInversionAliado: locator(),
+        perfilPreInversionAliadoDB: locator(),
+      ));
 }
 
 veredaInit() {

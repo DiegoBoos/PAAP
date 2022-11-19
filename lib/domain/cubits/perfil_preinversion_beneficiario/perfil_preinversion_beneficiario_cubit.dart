@@ -24,6 +24,18 @@ class PerfilPreInversionBeneficiarioCubit
         (data) => emit(PerfilPreInversionBeneficiarioLoaded(data)));
   }
 
+  void savePerfilPreInversionBeneficiarioDB(
+      PerfilPreInversionBeneficiarioEntity
+          perfilPreInversionBeneficiarioEntity) async {
+    final result = await perfilPreInversionBeneficiarioDB
+        .savePerfilPreInversionBeneficiarioUsecaseDB(
+            perfilPreInversionBeneficiarioEntity);
+    result.fold(
+        (failure) =>
+            emit(PerfilPreInversionBeneficiarioError(failure.properties.first)),
+        (data) => emit(PerfilPreInversionBeneficiarioSaved()));
+  }
+
   void initState() => emit(PerfilPreInversionBeneficiarioInitial());
 
   void selectPerfilPreinversionBeneficiario(

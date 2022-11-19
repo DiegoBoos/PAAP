@@ -20,4 +20,17 @@ class AliadoUsecaseDB {
       List<AliadoEntity> aliadoEntity) {
     return repositoryDB.saveAliadosRepositoryDB(aliadoEntity);
   }
+
+  Future<Either<Failure, List<AliadoEntity>>> getAliadosProduccionUsecaseDB() {
+    return repositoryDB.getAliadosProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> saveAliadoUsecaseDB(AliadoEntity aliadoEntity) {
+    return repositoryDB.saveAliadoRepositoryDB(aliadoEntity);
+  }
+
+  Future<Either<Failure, int>> updateAliadosProduccionUsecaseDB(
+      List<AliadoEntity> aliadosEntity) {
+    return repositoryDB.updateAliadosProduccionDBRepositoryDB(aliadosEntity);
+  }
 }

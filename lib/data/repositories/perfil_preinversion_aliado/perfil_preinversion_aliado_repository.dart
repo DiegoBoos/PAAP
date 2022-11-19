@@ -31,4 +31,23 @@ class PerfilPreInversionAliadoRepositoryImpl
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
+      savePerfilesPreInversionesAliadosRepository(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionAliadoEntity>
+              perfilesPreInversionesAliadosEntity) async {
+    try {
+      final result = await perfilPreInversionAliadoRemoteDataSource
+          .savePerfilesPreInversionesAliados(
+              usuario, perfilesPreInversionesAliadosEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

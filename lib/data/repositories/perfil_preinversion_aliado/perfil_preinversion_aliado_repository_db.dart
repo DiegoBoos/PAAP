@@ -16,6 +16,22 @@ class PerfilPreInversionAliadoRepositoryDBImpl
 
   @override
   Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
+      getPerfilesPreInversionesAliadosProduccionRepositoryDB() async {
+    try {
+      final perfilesPreInversionesAliadosDB =
+          await perfilPreInversionAliadoLocalDataSource
+              .getPerfilesPreInversionesAliadosProduccionDB();
+
+      return Right(perfilesPreInversionesAliadosDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
       getPerfilPreInversionAliadosRepositoryDB() async {
     try {
       final perfilPreInversionAliadosDB =
@@ -53,6 +69,39 @@ class PerfilPreInversionAliadoRepositoryDBImpl
     try {
       final result = await perfilPreInversionAliadoLocalDataSource
           .savePerfilPreInversionAliados(perfilPreInversionAliadoEntity);
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> savePerfilPreInversionAliadoRepositoryDB(
+      PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity) async {
+    try {
+      final perfilPreInversionAliadoDB =
+          await perfilPreInversionAliadoLocalDataSource
+              .savePerfilPreInversionAliadoDB(perfilPreInversionAliadoEntity);
+      return Right(perfilPreInversionAliadoDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesAliadosProduccionDBRepositoryDB(
+          List<PerfilPreInversionAliadoEntity>
+              perfilesPreInversionesAliadosEntity) async {
+    try {
+      final result = await perfilPreInversionAliadoLocalDataSource
+          .updatePerfilesPreInversionesAliadosProduccionDB(
+              perfilesPreInversionesAliadosEntity);
+
       return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));

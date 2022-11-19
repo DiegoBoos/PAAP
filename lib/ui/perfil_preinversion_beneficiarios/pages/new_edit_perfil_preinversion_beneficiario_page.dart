@@ -105,12 +105,12 @@ class _NewEditPerfilPreInversionBeneficiarioPageState
 
                   final beneficiario = beneficiarioCubit.state.beneficiario;
 
+                  final perfilBeneficiario =
+                      perfilBeneficiarioCubit.state.perfilBeneficiario;
+
                   final perfilPreInversionBeneficiario =
                       perfilPreInversionBeneficiarioCubit
                           .state.perfilPreInversionBeneficiario;
-
-                  final perfilBeneficiario =
-                      perfilBeneficiarioCubit.state.perfilBeneficiario;
 
                   final experienciaAgricola =
                       experienciaAgricolaCubit.state.experienciaAgricola;
@@ -119,6 +119,17 @@ class _NewEditPerfilPreInversionBeneficiarioPageState
                       experienciaPecuariaCubit.state.experienciaPecuaria;
 
                   beneficiarioCubit.saveBeneficiarioDB(beneficiario!);
+                  perfilBeneficiarioCubit
+                      .savePerfilBeneficiarioDB(perfilBeneficiario!);
+                  perfilPreInversionBeneficiarioCubit
+                      .savePerfilPreInversionBeneficiarioDB(
+                          perfilPreInversionBeneficiario!);
+
+                  //TODO: Validar Tipo proyecto
+                  experienciaAgricolaCubit
+                      .saveExperienciaAgricolaDB(experienciaAgricola!);
+                  experienciaPecuariaCubit
+                      .saveExperienciaPecuariaDB(experienciaPecuaria!);
                 })
               ]),
             ),

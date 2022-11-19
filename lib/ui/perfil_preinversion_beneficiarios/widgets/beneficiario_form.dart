@@ -7,6 +7,7 @@ import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../domain/cubits/estado_civil/estado_civil_cubit.dart';
 import '../../../domain/cubits/genero/genero_cubit.dart';
 import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
+import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../../domain/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
 import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
@@ -46,6 +47,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   @override
   Widget build(BuildContext context) {
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
+    final perfilBeneficiarioCubit =
+        BlocProvider.of<PerfilBeneficiarioCubit>(context);
     final perfilPreInversionBeneficiarioCubit =
         BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
 
@@ -110,6 +113,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                       labelText: 'Documento de identificación'),
                   onFieldSubmitted: (String value) {
                     beneficiarioCubit.selectBeneficiario(value);
+                    perfilBeneficiarioCubit.selectPerfilBeneficiario(value);
                   },
                 ),
                 const SizedBox(height: 20),

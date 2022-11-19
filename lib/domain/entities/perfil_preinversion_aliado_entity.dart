@@ -8,6 +8,7 @@ class PerfilPreInversionAliadoEntity {
     required this.frecuenciaId,
     required this.porcentajeCompra,
     required this.sitioEntregaId,
+    required this.recordStatus,
   });
 
   String perfilPreInversionId;
@@ -18,6 +19,7 @@ class PerfilPreInversionAliadoEntity {
   String frecuenciaId;
   String porcentajeCompra;
   String sitioEntregaId;
+  String recordStatus;
 
   factory PerfilPreInversionAliadoEntity.fromJson(Map<String, dynamic> json) =>
       PerfilPreInversionAliadoEntity(
@@ -29,6 +31,7 @@ class PerfilPreInversionAliadoEntity {
         frecuenciaId: json["FrecuenciaId"],
         porcentajeCompra: json["PorcentajeCompra"],
         sitioEntregaId: json["SitioEntregaId"],
+        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -40,5 +43,6 @@ class PerfilPreInversionAliadoEntity {
         "FrecuenciaId": frecuenciaId,
         "PorcentajeCompra": porcentajeCompra,
         "SitioEntregaId": sitioEntregaId,
+        "RecordStatus": recordStatus,
       };
 }

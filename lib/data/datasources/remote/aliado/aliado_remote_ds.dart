@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
 import '../../../../domain/core/error/failure.dart';
+import '../../../../domain/entities/aliado_entity.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -13,6 +14,8 @@ import '../../../utils.dart';
 
 abstract class AliadoRemoteDataSource {
   Future<List<AliadoModel>> getAliados(UsuarioEntity usuario);
+  Future<List<AliadoEntity>> saveAliados(
+      UsuarioEntity usuario, List<AliadoEntity> aliadosEntity);
 }
 
 class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
@@ -145,6 +148,80 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
       }
     } else {
       throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<AliadoEntity>> saveAliados(
+      UsuarioEntity usuario, List<AliadoEntity> aliadosEntity) async {
+    List<AliadoEntity> aliadosUpload = [];
+    for (var aliado in aliadosEntity) {
+      final resp = await saveAliado(usuario, aliado);
+      if (resp != null) {
+        aliadosUpload.add(resp);
+      }
+    }
+    return aliadosUpload;
+  }
+
+  Future<AliadoEntity?> saveAliado(
+      UsuarioEntity usuario, AliadoEntity aliadoEntity) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final aliadoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <GuardarAliado xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+          </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <AliadoId>${aliadoEntity.aliadoId}</AliadoId>
+            <Nombre>${aliadoEntity.nombre}</Nombre>
+            <FechaCreacion>${aliadoEntity.fechaCreacion}</FechaCreacion>
+            <NombreContacto>${aliadoEntity.nombreContacto}</NombreContacto>
+            <Direccion>${aliadoEntity.direccion}</Direccion>
+            <TelefonoFijo>${aliadoEntity.telefonoFijo}</TelefonoFijo>
+            <TelefonoMovil>${aliadoEntity.telefonoMovil}</TelefonoMovil>
+            <Correo>${aliadoEntity.correo}</Correo>
+            <MunicipioId>${aliadoEntity.municipioId}</MunicipioId>
+            <Experiencia>${aliadoEntity.experiencia}</Experiencia>
+            <FechaActivacion>${aliadoEntity.fechaActivacion}</FechaActivacion>
+            <FechaDesactivacion>${aliadoEntity.fechaDesactivacion}</FechaDesactivacion>
+            <FechaCambio>${aliadoEntity.fechaCambio}</FechaCambio>
+            <Activo>${aliadoEntity.activo}</Activo>
+          </objeto>
+        </GuardarAliado>
+      </soap:Body>
+    </soap:Envelope>
+    ''';
+
+    final aliadoResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "${Constants.urlSOAP}/GuardarAliado"
+        },
+        body: aliadoSOAP);
+
+    if (aliadoResp.statusCode == 200) {
+      final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
+
+      final respuesta =
+          aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        return aliadoEntity;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
     }
   }
 }

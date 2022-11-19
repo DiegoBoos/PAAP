@@ -14,6 +14,7 @@ class AliadoEntity {
     required this.fechaDesactivacion,
     required this.fechaCambio,
     required this.activo,
+    required this.recordStatus,
   });
 
   String aliadoId;
@@ -30,6 +31,7 @@ class AliadoEntity {
   String fechaDesactivacion;
   String fechaCambio;
   String activo;
+  String recordStatus;
 
   AliadoEntity copyWith({
     String? aliadoId,
@@ -46,6 +48,7 @@ class AliadoEntity {
     String? fechaDesactivacion,
     String? fechaCambio,
     String? activo,
+    String? recordStatus,
   }) =>
       AliadoEntity(
         aliadoId: aliadoId ?? this.aliadoId,
@@ -62,6 +65,7 @@ class AliadoEntity {
         fechaDesactivacion: fechaDesactivacion ?? this.fechaDesactivacion,
         fechaCambio: fechaCambio ?? this.fechaCambio,
         activo: activo ?? this.activo,
+        recordStatus: recordStatus ?? this.recordStatus,
       );
 
   factory AliadoEntity.fromJson(Map<String, dynamic> json) => AliadoEntity(
@@ -79,6 +83,7 @@ class AliadoEntity {
         fechaDesactivacion: json["FechaDesactivacion"],
         fechaCambio: json["FechaCambio"],
         activo: json["Activo"],
+        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -96,5 +101,6 @@ class AliadoEntity {
         "FechaDesactivacion": fechaDesactivacion,
         "FechaCambio": fechaCambio,
         "Activo": activo,
+        "RecordStatus": recordStatus,
       };
 }

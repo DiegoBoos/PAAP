@@ -10,6 +10,13 @@ abstract class PerfilPreInversionAliadoLocalDataSource {
       String id);
   Future<int> savePerfilPreInversionAliados(
       List<PerfilPreInversionAliadoEntity> perfilPreInversionAliadoEntity);
+  Future<int> savePerfilPreInversionAliadoDB(
+      PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity);
+  Future<List<PerfilPreInversionAliadoModel>>
+      getPerfilesPreInversionesAliadosProduccionDB();
+  Future<int> updatePerfilesPreInversionesAliadosProduccionDB(
+      List<PerfilPreInversionAliadoEntity>
+          perfilesPreInversionesAliadosProduccionEntity);
 }
 
 class PerfilPreInversionAliadoLocalDataSourceImpl
@@ -25,6 +32,7 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
         FrecuenciaId	TEXT NOT NULL,
         PorcentajeCompra	TEXT,
         SitioEntregaId	TEXT,
+        RecordStatus	TEXT,
         FOREIGN KEY(ProductoId) REFERENCES Producto(ProductoId),
         FOREIGN KEY(UnidadId) REFERENCES Unidad(UnidadId),
         FOREIGN KEY(FrecuenciaId) REFERENCES Frecuencia(FrecuenciaId),
@@ -78,6 +86,72 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
     for (var perfilPreInversionAliado in perfilPreInversionAliadoEntity) {
       batch.insert(
           'PerfilPreInversionAliado', perfilPreInversionAliado.toJson());
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<int> savePerfilPreInversionAliadoDB(
+      PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity) async {
+    final db = await DBConfig.database;
+    var batch = db.batch();
+
+    final resQuery = await db.query('PerfilPreInversionAliado',
+        where: 'AliadoId = ?',
+        whereArgs: [perfilPreInversionAliadoEntity.aliadoId]);
+
+    if (resQuery.isEmpty) {
+      perfilPreInversionAliadoEntity.recordStatus = 'N';
+      batch.insert(
+          'PerfilPreInversionAliado', perfilPreInversionAliadoEntity.toJson());
+    } else {
+      perfilPreInversionAliadoEntity.recordStatus = 'E';
+      batch.update(
+          'PerfilPreInversionAliado', perfilPreInversionAliadoEntity.toJson(),
+          where: 'AliadoId = ?',
+          whereArgs: [perfilPreInversionAliadoEntity.aliadoId]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<List<PerfilPreInversionAliadoModel>>
+      getPerfilesPreInversionesAliadosProduccionDB() async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('PerfilPreInversionAliado',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
+
+    if (res.isEmpty) return [];
+
+    final perfilesPreInversionesAliadosModel =
+        List<PerfilPreInversionAliadoModel>.from(
+            res.map((m) => PerfilPreInversionAliadoModel.fromJson(m))).toList();
+
+    return perfilesPreInversionesAliadosModel;
+  }
+
+  @override
+  Future<int> updatePerfilesPreInversionesAliadosProduccionDB(
+      List<PerfilPreInversionAliadoEntity>
+          perfilesPreInversionesAliadosProduccionEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+
+    for (var perfilPreInversionAliadoProduccion
+        in perfilesPreInversionesAliadosProduccionEntity) {
+      perfilPreInversionAliadoProduccion.recordStatus = 'R';
+      batch.update('PerfilPreInversionAliado',
+          perfilPreInversionAliadoProduccion.toJson(),
+          where: 'PerfilPreInversionId = ?',
+          whereArgs: [perfilPreInversionAliadoProduccion.perfilPreInversionId]);
     }
 
     final res = await batch.commit();

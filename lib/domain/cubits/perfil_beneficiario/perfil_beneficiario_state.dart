@@ -38,6 +38,8 @@ class PerfilBeneficiarioLoaded extends PerfilBeneficiarioState {
       : super(perfilBeneficiario: perfilBeneficiarioLoaded);
 }
 
+class PerfilBeneficiarioSaved extends PerfilBeneficiarioState {}
+
 class PerfilBeneficiarioError extends PerfilBeneficiarioState {
   final String message;
 

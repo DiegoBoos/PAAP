@@ -23,4 +23,25 @@ class PerfilPreInversionAliadoUsecaseDB {
     return repositoryDB.savePerfilPreInversionAliadosRepositoryDB(
         perfilPreInversionAliadosEntity);
   }
+
+  Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
+      getPerfilesPreInversionesAliadosProduccionUsecaseDB() {
+    return repositoryDB
+        .getPerfilesPreInversionesAliadosProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> savePerfilPreInversionAliadoUsecaseDB(
+      PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity) {
+    return repositoryDB.savePerfilPreInversionAliadoRepositoryDB(
+        perfilPreInversionAliadoEntity);
+  }
+
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesAliadosProduccionUsecaseDB(
+          List<PerfilPreInversionAliadoEntity>
+              perfilesPreInversionesAliadosEntity) {
+    return repositoryDB
+        .updatePerfilesPreInversionesAliadosProduccionDBRepositoryDB(
+            perfilesPreInversionesAliadosEntity);
+  }
 }

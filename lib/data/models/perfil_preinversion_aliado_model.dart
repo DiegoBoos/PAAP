@@ -10,6 +10,7 @@ class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
     required String frecuenciaId,
     String? porcentajeCompra,
     required String sitioEntregaId,
+    required String recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
           aliadoId: aliadoId,
@@ -19,6 +20,7 @@ class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
           frecuenciaId: frecuenciaId,
           porcentajeCompra: porcentajeCompra ?? '',
           sitioEntregaId: sitioEntregaId,
+          recordStatus: recordStatus,
         );
 
   factory PerfilPreInversionAliadoModel.fromJson(Map<String, dynamic> json) =>
@@ -31,6 +33,7 @@ class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
         frecuenciaId: json["FrecuenciaId"],
         porcentajeCompra: json["PorcentajeCompra"],
         sitioEntregaId: json["SitioEntregaId"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -43,5 +46,6 @@ class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
         "FrecuenciaId": frecuenciaId,
         "PorcentajeCompra": porcentajeCompra,
         "SitioEntregaId": sitioEntregaId,
+        "RecordStatus": recordStatus,
       };
 }

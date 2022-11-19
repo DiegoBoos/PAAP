@@ -36,6 +36,8 @@ class ExperienciaPecuariaLoaded extends ExperienciaPecuariaState {
       : super(experienciaPecuaria: experienciaPecuariaLoaded);
 }
 
+class ExperienciaPecuariaSaved extends ExperienciaPecuariaState {}
+
 class ExperienciaPecuariaError extends ExperienciaPecuariaState {
   final String message;
 

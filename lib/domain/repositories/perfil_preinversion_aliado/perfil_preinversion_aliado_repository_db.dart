@@ -7,9 +7,20 @@ abstract class PerfilPreInversionAliadoRepositoryDB {
   Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
       getPerfilPreInversionAliadosRepositoryDB();
 
+  Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
+      getPerfilesPreInversionesAliadosProduccionRepositoryDB();
+
   Future<Either<Failure, PerfilPreInversionAliadoEntity?>>
       getPerfilPreInversionAliadoRepositoryDB(String id);
 
   Future<Either<Failure, int>> savePerfilPreInversionAliadosRepositoryDB(
       List<PerfilPreInversionAliadoEntity> perfilPreInversionAliadoEntity);
+
+  Future<Either<Failure, int>> savePerfilPreInversionAliadoRepositoryDB(
+      PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity);
+
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesAliadosProduccionDBRepositoryDB(
+          List<PerfilPreInversionAliadoEntity>
+              perfilesPreInversionesAliadosEntity);
 }

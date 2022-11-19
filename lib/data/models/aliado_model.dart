@@ -16,6 +16,7 @@ class AliadoModel extends AliadoEntity {
     String? fechaDesactivacion,
     String? fechaCambio,
     String? activo,
+    String? recordStatus,
   }) : super(
             aliadoId: aliadoId,
             nombre: nombre ?? '',
@@ -30,7 +31,8 @@ class AliadoModel extends AliadoEntity {
             fechaActivacion: fechaActivacion ?? '',
             fechaDesactivacion: fechaDesactivacion ?? '',
             fechaCambio: fechaCambio ?? '',
-            activo: activo ?? '');
+            activo: activo ?? '',
+            recordStatus: recordStatus ?? '');
   factory AliadoModel.fromJson(Map<String, dynamic> json) => AliadoModel(
         aliadoId: json["AliadoId"],
         nombre: json["Nombre"],
@@ -46,6 +48,7 @@ class AliadoModel extends AliadoEntity {
         fechaDesactivacion: json["FechaDesactivacion"],
         fechaCambio: json["FechaCambio"],
         activo: json["Activo"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -63,6 +66,7 @@ class AliadoModel extends AliadoEntity {
         "FechaActivacion": fechaActivacion,
         "FechaDesactivacion": fechaDesactivacion,
         "FechaCambio": fechaCambio,
-        "Activo": activo
+        "Activo": activo,
+        "RecordStatus": recordStatus,
       };
 }

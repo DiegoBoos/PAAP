@@ -40,6 +40,8 @@ class ExperienciaAgricolaLoaded extends ExperienciaAgricolaState {
       : super(experienciaAgricola: experienciaAgricolaLoaded);
 }
 
+class ExperienciaAgricolaSaved extends ExperienciaAgricolaState {}
+
 class ExperienciaAgricolaError extends ExperienciaAgricolaState {
   final String message;
 
