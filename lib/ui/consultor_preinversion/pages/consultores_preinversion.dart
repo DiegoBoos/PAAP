@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/ui/perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 
 import '../../../domain/blocs/consultores/consultores_bloc.dart';
+import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/entities/consultor_entity.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
@@ -9,16 +11,21 @@ import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 import '../widgets/consultores_rows.dart';
 
-class ConsultorPreInversionPage extends StatelessWidget {
-  const ConsultorPreInversionPage({super.key});
+class ConsultoresPreInversionPage extends StatelessWidget {
+  const ConsultoresPreInversionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final menuCubit = BlocProvider.of<MenuCubit>(context);
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.save),
-            onPressed: () =>
-                Navigator.pushNamed(context, 'VConsultorPreInversion')),
+        drawer: BlocBuilder<MenuCubit, MenuState>(
+          builder: (context, state) {
+            final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
+            return PerfilPreInversionDrawer(
+              menuHijo: menuHijo,
+            );
+          },
+        ),
         appBar: AppBar(
             title: const Text(' Consultor'),
             centerTitle: true,

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:paap/ui/perfil_preinversion_aliados/pages/new_edit_perfil_preinversion_aliado_page.dart';
-import 'package:paap/ui/perfil_preinversion_beneficiarios/pages/new_edit_perfil_preinversion_beneficiario_page.dart';
-import 'package:paap/ui/perfil_preinversion_beneficiarios/pages/perfil_preinversion_beneficiarios_page.dart';
 
 import 'ui/alianzas/pages/alianza_detail_page.dart';
 import 'ui/alianzas/pages/beneficiarios_alianza_page.dart';
+import 'ui/consultor_preinversion/pages/consultores_preinversion.dart';
+import 'ui/perfil_preinversion_aliados/pages/new_edit_perfil_preinversion_aliado_page.dart';
 import 'ui/perfil_preinversion_aliados/pages/perfil_preinversion_aliados_page.dart';
 import 'ui/auth/pages/sign_in_page.dart';
+import 'ui/perfil_preinversion_beneficiarios/pages/new_edit_perfil_preinversion_beneficiario_page.dart';
+import 'ui/perfil_preinversion_beneficiarios/pages/perfil_preinversion_beneficiarios_page.dart';
 import 'ui/perfil_preinversion_cofinanciadores/pages/new_edit_perfil_preinversion_cofinanciador_page.dart';
 import 'ui/perfil_preinversion_cofinanciadores/pages/perfil_preinversion_cofinanciadores_page.dart';
 import 'ui/perfiles/pages/perfil_detail_page.dart';
@@ -42,6 +43,9 @@ class AppRouter {
     },
     'NewEditVCofinanciadorPreInversion': (BuildContext context) {
       return NewEditPerfilPreInversionCofinanciadorPage();
+    },
+    'VAsignacionConsultorPreInversion': (BuildContext context) {
+      return const ConsultoresPreInversionPage();
     },
     'VAlianza': (BuildContext context) {
       return const AlianzaDetailPage();
