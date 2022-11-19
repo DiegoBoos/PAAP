@@ -22,12 +22,32 @@ class PerfilPreInversionCofinanciadorActividadesFinancierasBloc extends Bloc<
       await _getPerfilPreInversionCofinanciadorActividadesFinancieras(
           event, emit);
     });
+
+    on<GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador>(
+        (event, emit) async {
+      emit(PerfilPreInversionCofinanciadorActividadesFinancierasLoading());
+      await _getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
+          event, emit);
+    });
   }
 
   _getPerfilPreInversionCofinanciadorActividadesFinancieras(event, emit) async {
     final result =
         await perfilPreInversionCofinanciadorActividadFinancieraUsecaseDB
             .getPerfilPreInversionCofinanciadorActividadesFinancierasUsecaseDB();
+    result.fold(
+        (failure) => emit(
+            PerfilPreInversionCofinanciadorActividadesFinancierasError(
+                failure.properties.first)),
+        (data) => emit(
+            PerfilPreInversionCofinanciadorActividadesFinancierasLoaded(data)));
+  }
+
+  _getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
+      event, emit) async {
+    final result = await perfilPreInversionCofinanciadorActividadFinancieraUsecaseDB
+        .getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorUsecaseDB(
+            event.cofinanciadorId);
     result.fold(
         (failure) => emit(
             PerfilPreInversionCofinanciadorActividadesFinancierasError(

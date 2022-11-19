@@ -12,6 +12,10 @@ abstract class PerfilPreInversionCofinanciadorRubroLocalDataSource {
   Future<int> savePerfilPreInversionCofinanciadorRubros(
       List<PerfilPreInversionCofinanciadorRubroEntity>
           perfilPreInversionCofinanciadorRubroEntity);
+
+  Future<List<PerfilPreInversionCofinanciadorRubroModel>>
+      getPerfilPreInversionCofinanciadorRubrosByCofinanciadorDB(
+          String cofinanciadorId);
 }
 
 class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
@@ -86,5 +90,22 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
     final res = await batch.commit();
 
     return res.length;
+  }
+
+  @override
+  Future<List<PerfilPreInversionCofinanciadorRubroModel>>
+      getPerfilPreInversionCofinanciadorRubrosByCofinanciadorDB(
+          String cofinanciadorId) async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('PerfilPreInversionCofinanciadorRubro',
+        where: 'PerfilPreInversionId = ?', whereArgs: [cofinanciadorId]);
+
+    final perfilPreInversionCofinanciadorRubro =
+        List<PerfilPreInversionCofinanciadorRubroModel>.from(res.map(
+                (m) => PerfilPreInversionCofinanciadorRubroModel.fromJson(m)))
+            .toList();
+
+    return perfilPreInversionCofinanciadorRubro;
   }
 }

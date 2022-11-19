@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
+import '../../../domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
+import '../../../domain/blocs/perfil_preinversion_cofinanciador_rubros/perfil_preinversion_cofinanciador_rubros_bloc.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
@@ -20,6 +23,17 @@ class NewEditPerfilPreInversionCofinanciadorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
+    final perfilPreInversionCofinanciadorDesembolsosBloc =
+        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsosBloc>(
+            context);
+
+    final perfilPreInversionCofinanciadorActividadesFinancierasBloc =
+        BlocProvider.of<
+            PerfilPreInversionCofinanciadorActividadesFinancierasBloc>(context);
+
+    final perfilPreInversionCofinanciadorRubrosBloc =
+        BlocProvider.of<PerfilPreInversionCofinanciadorRubrosBloc>(context);
+
     return Scaffold(
         drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
@@ -67,6 +81,24 @@ class NewEditPerfilPreInversionCofinanciadorPage extends StatelessWidget {
                       );
                     }
                     if (state is PerfilPreInversionCofinanciadorLoaded) {
+                      final perfilPreInversionCofinanciadorLoaded =
+                          state.perfilPreInversionCofinanciadorLoaded!;
+
+                      final cofinanciadorId =
+                          perfilPreInversionCofinanciadorLoaded.cofinanciadorId;
+
+                      perfilPreInversionCofinanciadorDesembolsosBloc.add(
+                          GetPerfilPreInversionCofinanciadorDesembolsos(
+                              cofinanciadorId: cofinanciadorId));
+
+                      perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
+                          GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
+                              cofinanciadorId: cofinanciadorId));
+
+                      perfilPreInversionCofinanciadorRubrosBloc.add(
+                          GetPerfilPreInversionCofinanciadorRubros(
+                              cofinanciadorId: cofinanciadorId));
+
                       return Column(
                         children: [
                           const Text('Editar', style: Styles.subtitleStyle),

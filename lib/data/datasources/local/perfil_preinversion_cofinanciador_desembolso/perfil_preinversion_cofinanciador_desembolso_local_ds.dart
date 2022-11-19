@@ -12,6 +12,9 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoLocalDataSource {
   Future<int> savePerfilPreInversionCofinanciadorDesembolsos(
       List<PerfilPreInversionCofinanciadorDesembolsoEntity>
           perfilPreInversionCofinanciadorDesembolsoEntity);
+
+  getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorDB(
+      String cofinanciadorId) {}
 }
 
 class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
@@ -83,5 +86,21 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
     final res = await batch.commit();
 
     return res.length;
+  }
+
+  @override
+  getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorDB(
+      String cofinanciadorId) async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('PerfilPreInversionCofinanciadorDesembolso',
+        where: 'PerfilPreInversionId = ?', whereArgs: [cofinanciadorId]);
+
+    final perfilPreInversionCofinanciadorDesembolso =
+        List<PerfilPreInversionCofinanciadorDesembolsoModel>.from(res.map((m) =>
+                PerfilPreInversionCofinanciadorDesembolsoModel.fromJson(m)))
+            .toList();
+
+    return perfilPreInversionCofinanciadorDesembolso;
   }
 }

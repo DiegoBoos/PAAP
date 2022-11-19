@@ -24,17 +24,6 @@ class PerfilPreInversionCofinanciadorActividadFinancieraForm
 class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
     extends State<PerfilPreInversionCofinanciadorActividadFinancieraForm> {
   @override
-  void initState() {
-    super.initState();
-    final perfilPreInversionCofinanciadorActividadesFinancierasBloc =
-        BlocProvider.of<
-            PerfilPreInversionCofinanciadorActividadesFinancierasBloc>(context);
-
-    perfilPreInversionCofinanciadorActividadesFinancierasBloc
-        .add(GetPerfilPreInversionCofinanciadorActividadesFinancieras());
-  }
-
-  @override
   Widget build(BuildContext context) {
     final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
         .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
@@ -103,7 +92,13 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
               alignment: Alignment.centerRight,
               child: FloatingActionButton(
                   heroTag: 'actividadFinancieraBtn',
-                  onPressed: () {},
+                  onPressed: () {
+                    //TODO: GuardarPerfilPreInversionCofinanciadorActividadFinanciera
+                    final perfilPreInversionCofinanciadorActividadFinanciera =
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .state
+                            .perfilPreInversionCofinanciadorActividadFinanciera;
+                  },
                   child: const Icon(Icons.add))),
           const PerfilPreInversionCofinanciadorActividadesFinancierasRows()
         ]),

@@ -64,4 +64,23 @@ class PerfilPreInversionCofinanciadorDesembolsoRepositoryDBImpl
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<
+          Either<Failure,
+              List<PerfilPreInversionCofinanciadorDesembolsoEntity>?>>
+      getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorRepositoryDB(
+          String cofinanciadorId) async {
+    try {
+      final result =
+          await perfilPreInversionCofinanciadorDesembolsoLocalDataSource
+              .getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorDB(
+                  cofinanciadorId);
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

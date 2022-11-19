@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/ui/utils/loading_page.dart';
 
 import '../../../domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import '../../../domain/usecases/desembolso/desembolso_exports.dart';
 import '../../../domain/usecases/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_exports.dart';
 import '../../../domain/usecases/rubro/rubro_exports.dart';
 import '../../utils/input_decoration.dart';
+import '../../utils/loading_page.dart';
 import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorRubroForm extends StatefulWidget {
@@ -19,16 +19,6 @@ class PerfilPreInversionCofinanciadorRubroForm extends StatefulWidget {
 
 class _PerfilPreInversionCofinanciadorRubroFormState
     extends State<PerfilPreInversionCofinanciadorRubroForm> {
-  @override
-  void initState() {
-    super.initState();
-    final perfilPreInversionCofinanciadorDesembolsosBloc =
-        BlocProvider.of<PerfilPreInversionCofinanciadorRubrosBloc>(context);
-
-    perfilPreInversionCofinanciadorDesembolsosBloc
-        .add(GetPerfilPreInversionCofinanciadorRubros());
-  }
-
   @override
   Widget build(BuildContext context) {
     final perfilPreInversionCofinanciadorRubroCubit =
@@ -119,7 +109,12 @@ class _PerfilPreInversionCofinanciadorRubroFormState
               alignment: Alignment.centerRight,
               child: FloatingActionButton(
                   heroTag: 'rubroBtn',
-                  onPressed: () {},
+                  onPressed: () {
+                    //TODO: GuardarPerfilPreInversionCofinanciadorRubro
+                    final perfilPreInversionCofinanciadorRubro =
+                        perfilPreInversionCofinanciadorRubroCubit
+                            .state.perfilPreInversionCofinanciadorRubro;
+                  },
                   child: const Icon(Icons.add))),
           const PerfilPreInversionCofinanciadorRubrosRows()
         ]),

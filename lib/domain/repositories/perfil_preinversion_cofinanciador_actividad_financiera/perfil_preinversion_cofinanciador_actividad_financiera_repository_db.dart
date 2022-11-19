@@ -11,6 +11,12 @@ abstract class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB {
 
   Future<
           Either<Failure,
+              List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
+      getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorRepositoryDB(
+          String cofinanciadorId);
+
+  Future<
+          Either<Failure,
               PerfilPreInversionCofinanciadorActividadFinancieraEntity?>>
       getPerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
           String id);

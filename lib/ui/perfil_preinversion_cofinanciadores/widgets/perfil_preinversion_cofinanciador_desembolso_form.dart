@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:paap/ui/utils/loading_page.dart';
 
 import '../../../domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
 import '../../../domain/cubits/desembolso/desembolso_cubit.dart';
@@ -9,6 +8,7 @@ import '../../../domain/cubits/perfil_preinversion_cofinanciador_desembolso/perf
 import '../../../domain/entities/desembolso_entity.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../utils/input_decoration.dart';
+import '../../utils/loading_page.dart';
 import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorDesembolsoForm extends StatefulWidget {
@@ -23,17 +23,6 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
     extends State<PerfilPreInversionCofinanciadorDesembolsoForm> {
   var fechaCtrl = TextEditingController();
   final dateFormat = DateFormat('yyyy-MM-dd');
-
-  @override
-  void initState() {
-    super.initState();
-    final perfilPreInversionCofinanciadorDesembolsosBloc =
-        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsosBloc>(
-            context);
-
-    perfilPreInversionCofinanciadorDesembolsosBloc
-        .add(GetPerfilPreInversionCofinanciadorDesembolsos());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +85,12 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
               alignment: Alignment.centerRight,
               child: FloatingActionButton(
                   heroTag: 'desembolsoBtn',
-                  onPressed: () {},
+                  onPressed: () {
+                    //TODO: GuardarPerfilPreInversionCofinanciadorDesembolso
+                    final perfilPreInversionCofinanciadorDesembolso =
+                        perfilPreInversionCofinanciadorDesembolsoCubit
+                            .state.perfilPreInversionCofinanciadorDesembolso;
+                  },
                   child: const Icon(Icons.add))),
           const PerfilPreInversionCofinanciadorDesembolsosRows()
         ]),

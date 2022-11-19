@@ -14,4 +14,10 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoRepositoryDB {
       savePerfilPreInversionCofinanciadorDesembolsosRepositoryDB(
           List<PerfilPreInversionCofinanciadorDesembolsoEntity>
               perfilPreInversionCofinanciadorDesembolsoEntity);
+
+  Future<
+          Either<Failure,
+              List<PerfilPreInversionCofinanciadorDesembolsoEntity>?>>
+      getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorRepositoryDB(
+          String cofinanciadorId);
 }

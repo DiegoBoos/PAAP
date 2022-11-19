@@ -10,3 +10,11 @@ abstract class PerfilPreInversionCofinanciadorActividadesFinancierasEvent
 
 class GetPerfilPreInversionCofinanciadorActividadesFinancieras
     extends PerfilPreInversionCofinanciadorActividadesFinancierasEvent {}
+
+class GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador
+    extends PerfilPreInversionCofinanciadorActividadesFinancierasEvent {
+  final String cofinanciadorId;
+
+  const GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
+      {required this.cofinanciadorId});
+}

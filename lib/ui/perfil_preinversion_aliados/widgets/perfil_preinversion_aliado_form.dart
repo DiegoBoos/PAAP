@@ -48,8 +48,6 @@ class _PerfilPreInversionAliadoFormState
   void initState() {
     super.initState();
 
-    BlocProvider.of<MunicipioCubit>(context).initState();
-
     final perfilPreInversionAliadoCubit =
         BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
     final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
@@ -81,15 +79,13 @@ class _PerfilPreInversionAliadoFormState
       AliadoCubit aliadoCubit, AliadoEntity aliado) async {
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
 
-    await municipioCubit.getMunicipiosDB().whenComplete(() {
-      final municipioIdAliado = aliadoCubit.state.aliado!.municipioId;
+    final municipioIdAliado = aliadoCubit.state.aliado!.municipioId;
 
-      final municipio = municipioCubit.state.municipios!
-          .firstWhere((municipio) => municipio.id == municipioIdAliado);
-      setState(() {
-        departamentoId = municipio.departamentoid;
-        municipioId = aliado.municipioId != '' ? aliado.municipioId : null;
-      });
+    final municipio = municipioCubit.state.municipios!
+        .firstWhere((municipio) => municipio.id == municipioIdAliado);
+    setState(() {
+      departamentoId = municipio.departamentoid;
+      municipioId = aliado.municipioId != '' ? aliado.municipioId : null;
     });
   }
 
@@ -171,11 +167,11 @@ class _PerfilPreInversionAliadoFormState
                               );
                             }).toList(),
                             onChanged: (String? value) {
-                              municipioCubit
-                                  .getMunicipiosByDepartamentoDB(value!);
                               setState(() {
                                 municipioId = null;
                               });
+                              municipioCubit
+                                  .getMunicipiosByDepartamentoDB(value!);
                             },
                             hint: const Text('Departamento'));
                       }

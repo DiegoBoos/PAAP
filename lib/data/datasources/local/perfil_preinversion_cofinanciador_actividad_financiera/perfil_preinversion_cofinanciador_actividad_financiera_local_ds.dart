@@ -12,6 +12,9 @@ abstract class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
   Future<int> savePerfilPreInversionCofinanciadorActividadesFinancieras(
       List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
           perfilPreInversionCofinanciadorActividadFinancieraEntity);
+  Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
+      getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
+          String cofinanciadorId);
 }
 
 class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
@@ -89,5 +92,24 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
     final res = await batch.commit();
 
     return res.length;
+  }
+
+  @override
+  Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
+      getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
+          String cofinanciadorId) async {
+    final db = await DBConfig.database;
+
+    final res = await db.query(
+        'PerfilPreInversionCofinanciadorActividadFinanciera',
+        where: 'CofinanciadorId = ?',
+        whereArgs: [cofinanciadorId]);
+
+    final perfilPreInversionCofinanciadorActividadFinanciera =
+        List<PerfilPreInversionCofinanciadorActividadFinancieraModel>.from(res
+            .map((m) => PerfilPreInversionCofinanciadorActividadFinancieraModel
+                .fromJson(m))).toList();
+
+    return perfilPreInversionCofinanciadorActividadFinanciera;
   }
 }

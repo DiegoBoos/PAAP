@@ -20,11 +20,29 @@ class PerfilPreInversionCofinanciadorDesembolsosBloc extends Bloc<
       emit(PerfilPreInversionCofinanciadorDesembolsosLoading());
       await _getPerfilPreInversionCofinanciadorDesembolsos(event, emit);
     });
+
+    on<GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador>(
+        (event, emit) async {
+      emit(PerfilPreInversionCofinanciadorDesembolsosLoading());
+      await _getPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
+          event, emit);
+    });
   }
 
   _getPerfilPreInversionCofinanciadorDesembolsos(event, emit) async {
     final result = await perfilPreInversionCofinanciadorDesembolsoUsecaseDB
         .getPerfilPreInversionCofinanciadorDesembolsosUsecaseDB();
+    result.fold(
+        (failure) => emit(PerfilPreInversionCofinanciadorDesembolsosError(
+            failure.properties.first)),
+        (data) => emit(PerfilPreInversionCofinanciadorDesembolsosLoaded(data)));
+  }
+
+  _getPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
+      event, emit) async {
+    final result = await perfilPreInversionCofinanciadorDesembolsoUsecaseDB
+        .getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorUsecaseDB(
+            event.cofinanciadorId);
     result.fold(
         (failure) => emit(PerfilPreInversionCofinanciadorDesembolsosError(
             failure.properties.first)),
