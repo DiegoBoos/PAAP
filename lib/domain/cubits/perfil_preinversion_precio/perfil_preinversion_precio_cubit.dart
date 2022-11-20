@@ -18,8 +18,18 @@ class PerfilPreInversionPrecioCubit
         .getPerfilPreInversionPreciosUsecaseDB();
     result.fold(
         (failure) =>
-            emit(PerfilPreInversionPreciosError(failure.properties.first)),
+            emit(PerfilPreInversionPrecioError(failure.properties.first)),
         (data) => emit(PerfilPreInversionPreciosLoaded(data)));
+  }
+
+  void savePerfilPreInversionPrecioDB(
+      PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
+    final result = await perfilPreInversionPrecioDB
+        .savePerfilPreInversionPrecioUsecaseDB(perfilPreInversionPrecioEntity);
+    result.fold(
+        (failure) =>
+            emit(PerfilPreInversionPrecioError(failure.properties.first)),
+        (data) => emit(PerfilPreInversionPrecioSaved()));
   }
 
   void initState() => emit(PerfilPreInversionPreciosInitial());

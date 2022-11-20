@@ -23,6 +23,9 @@ class PerfilPreInversionConsultorLoaded
       : super(perfilPreInversionConsultor: perfilPreInversionConsultorLoaded);
 }
 
+class PerfilPreInversionConsultorSaved
+    extends PerfilPreInversionConsultorState {}
+
 class PerfilPreInversionConsultorError
     extends PerfilPreInversionConsultorState {
   final String message;

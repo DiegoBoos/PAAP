@@ -12,4 +12,15 @@ abstract class PerfilPreInversionPrecioRepositoryDB {
 
   Future<Either<Failure, int>> savePerfilPreInversionPreciosRepositoryDB(
       List<PerfilPreInversionPrecioEntity> perfilPreInversionPrecioEntity);
+
+  Future<Either<Failure, List<PerfilPreInversionPrecioEntity>>>
+      getPerfilesPreInversionesPreciosProduccionRepositoryDB();
+
+  Future<Either<Failure, int>> savePerfilPreInversionPrecioRepositoryDB(
+      PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity);
+
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesPreciosProduccionDBRepositoryDB(
+          List<PerfilPreInversionPrecioEntity>
+              perfilesPreInversionesPreciosEntity);
 }

@@ -7,11 +7,14 @@ class PerfilPreInversionConsultorModel
     required String consultorId,
     String? revisionId,
     String? fechaRevision,
+    String? recordStatus,
   }) : super(
-            perfilPreInversionId: perfilPreInversionId,
-            consultorId: consultorId,
-            revisionId: revisionId ?? '',
-            fechaRevision: fechaRevision ?? '');
+          perfilPreInversionId: perfilPreInversionId,
+          consultorId: consultorId,
+          revisionId: revisionId ?? '',
+          fechaRevision: fechaRevision ?? '',
+          recordStatus: recordStatus ?? '',
+        );
 
   factory PerfilPreInversionConsultorModel.fromJson(
           Map<String, dynamic> json) =>
@@ -20,6 +23,7 @@ class PerfilPreInversionConsultorModel
         consultorId: json["ConsultorId"],
         revisionId: json["RevisionId"],
         fechaRevision: json["FechaRevision"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -28,5 +32,6 @@ class PerfilPreInversionConsultorModel
         "ConsultorId": consultorId,
         "RevisionId": revisionId,
         "FechaRevision": fechaRevision,
+        "RecordStatus": recordStatus,
       };
 }

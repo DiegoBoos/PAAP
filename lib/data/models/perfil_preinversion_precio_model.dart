@@ -7,12 +7,14 @@ class PerfilPreInversionPrecioModel extends PerfilPreInversionPrecioEntity {
     String? tipoCalidadId,
     String? precio,
     String? unidadId,
+    String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
           productoId: productoId ?? '',
           tipoCalidadId: tipoCalidadId ?? '',
           precio: precio ?? '',
           unidadId: unidadId ?? '',
+          recordStatus: recordStatus ?? '',
         );
 
   factory PerfilPreInversionPrecioModel.fromJson(Map<String, dynamic> json) =>
@@ -21,7 +23,8 @@ class PerfilPreInversionPrecioModel extends PerfilPreInversionPrecioEntity {
           productoId: json["ProductoId"],
           tipoCalidadId: json["TipoCalidadId"],
           precio: json["Precio"],
-          unidadId: json["UnidadId"]);
+          unidadId: json["UnidadId"],
+          recordStatus: json["RecordStatus"]);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -30,5 +33,6 @@ class PerfilPreInversionPrecioModel extends PerfilPreInversionPrecioEntity {
         "TipoCalidadId": tipoCalidadId,
         "Precio": precio,
         "UnidadId": unidadId,
+        "RecordStatus": recordStatus,
       };
 }

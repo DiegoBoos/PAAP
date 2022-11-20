@@ -20,10 +20,12 @@ class PerfilPreInversionPreciosLoaded extends PerfilPreInversionPrecioState {
       : super(perfilPreInversionPrecios: perfilPreInversionPreciosLoaded);
 }
 
-class PerfilPreInversionPreciosError extends PerfilPreInversionPrecioState {
+class PerfilPreInversionPrecioSaved extends PerfilPreInversionPrecioState {}
+
+class PerfilPreInversionPrecioError extends PerfilPreInversionPrecioState {
   final String message;
 
-  const PerfilPreInversionPreciosError(this.message);
+  const PerfilPreInversionPrecioError(this.message);
   @override
   List<Object?> get props => [message];
 }

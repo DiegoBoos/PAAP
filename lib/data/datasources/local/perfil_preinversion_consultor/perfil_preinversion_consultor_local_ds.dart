@@ -12,6 +12,13 @@ abstract class PerfilPreInversionConsultorLocalDataSource {
   Future<int> savePerfilPreInversionConsultores(
       List<PerfilPreInversionConsultorEntity>
           perfilPreInversionConsultorEntity);
+  Future<int> savePerfilPreInversionConsultorDB(
+      PerfilPreInversionConsultorEntity perfilPreInversionConsultorEntity);
+  Future<List<PerfilPreInversionConsultorModel>>
+      getPerfilesPreInversionesConsultoresProduccionDB();
+  Future<int> updatePerfilesPreInversionesConsultoresProduccionDB(
+      List<PerfilPreInversionConsultorEntity>
+          perfilesPreInversionesConsultoresProduccionEntity);
 }
 
 class PerfilPreInversionConsultorLocalDataSourceImpl
@@ -23,6 +30,7 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
         ConsultorId	TEXT NOT NULL,
         RevisionId	TEXT,
         FechaRevision	TEXT,
+        RecordStatus	TEXT,
         FOREIGN KEY(PerfilPreInversionId) REFERENCES PerfilPreInversion(PerfilPreInversionId),
         FOREIGN KEY(ConsultorId) REFERENCES Consultor(ConsultorId)
         FOREIGN KEY(RevisionId) REFERENCES Revision(RevisionId)
@@ -76,6 +84,83 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
     for (var perfilPreInversionConsultor in perfilPreInversionConsultorEntity) {
       batch.insert(
           'PerfilPreInversionConsultor', perfilPreInversionConsultor.toJson());
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<int> savePerfilPreInversionConsultorDB(
+      PerfilPreInversionConsultorEntity
+          perfilPreInversionConsultorEntity) async {
+    final db = await DBConfig.database;
+    var batch = db.batch();
+
+    final resQuery = await db.query('PerfilPreInversionConsultor',
+        where: 'PerfilPreinversionId = ? AND ConsultorId = ?',
+        whereArgs: [
+          perfilPreInversionConsultorEntity.perfilPreInversionId,
+          perfilPreInversionConsultorEntity.consultorId
+        ]);
+
+    if (resQuery.isEmpty) {
+      perfilPreInversionConsultorEntity.recordStatus = 'N';
+      batch.insert('PerfilPreInversionConsultor',
+          perfilPreInversionConsultorEntity.toJson());
+    } else {
+      perfilPreInversionConsultorEntity.recordStatus = 'E';
+      batch.update('PerfilPreInversionConsultor',
+          perfilPreInversionConsultorEntity.toJson(),
+          where: 'PerfilPreinversionId = ? AND ConsultorId = ?',
+          whereArgs: [
+            perfilPreInversionConsultorEntity.perfilPreInversionId,
+            perfilPreInversionConsultorEntity.consultorId
+          ]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<List<PerfilPreInversionConsultorModel>>
+      getPerfilesPreInversionesConsultoresProduccionDB() async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('PerfilPreInversionConsultor',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
+
+    if (res.isEmpty) return [];
+
+    final perfilesPreInversionesConsultoresModel =
+        List<PerfilPreInversionConsultorModel>.from(
+                res.map((m) => PerfilPreInversionConsultorModel.fromJson(m)))
+            .toList();
+
+    return perfilesPreInversionesConsultoresModel;
+  }
+
+  @override
+  Future<int> updatePerfilesPreInversionesConsultoresProduccionDB(
+      List<PerfilPreInversionConsultorEntity>
+          perfilesPreInversionesConsultoresProduccionEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+
+    for (var perfilPreInversionConsultorProduccion
+        in perfilesPreInversionesConsultoresProduccionEntity) {
+      perfilPreInversionConsultorProduccion.recordStatus = 'R';
+      batch.update('PerfilPreInversionConsultor',
+          perfilPreInversionConsultorProduccion.toJson(),
+          where: 'PerfilPreinversionId = ? AND ConsultorId = ?',
+          whereArgs: [
+            perfilPreInversionConsultorProduccion.perfilPreInversionId,
+            perfilPreInversionConsultorProduccion.consultorId
+          ]);
     }
 
     final res = await batch.commit();

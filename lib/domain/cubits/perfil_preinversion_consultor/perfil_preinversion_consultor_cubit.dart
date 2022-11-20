@@ -22,4 +22,16 @@ class PerfilPreInversionConsultorCubit
             emit(PerfilPreInversionConsultorError(failure.properties.first)),
         (data) => emit(PerfilPreInversionConsultorLoaded(data)));
   }
+
+  void savePerfilPreInversionConsultorDB(
+      PerfilPreInversionConsultorEntity
+          perfilPreInversionConsultorEntity) async {
+    final result = await perfilPreInversionConsultorDB
+        .savePerfilPreInversionConsultorUsecaseDB(
+            perfilPreInversionConsultorEntity);
+    result.fold(
+        (failure) =>
+            emit(PerfilPreInversionConsultorError(failure.properties.first)),
+        (data) => emit(PerfilPreInversionConsultorSaved()));
+  }
 }

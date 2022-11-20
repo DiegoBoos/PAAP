@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../../../domain/entities/perfil_preinversion_consultor_entity.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -11,6 +12,11 @@ import '../../../utils.dart';
 abstract class PerfilPreInversionConsultorRemoteDataSource {
   Future<List<PerfilPreInversionConsultorModel>>
       getPerfilPreInversionConsultores(UsuarioEntity usuario);
+  Future<List<PerfilPreInversionConsultorEntity>>
+      savePerfilesPreInversionesConsultores(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionConsultorEntity>
+              perfilesPreInversionesConsultoresEntity);
 }
 
 class PerfilPreInversionConsultorRemoteDataSourceImpl
@@ -93,6 +99,84 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
       }
     } else {
       throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<PerfilPreInversionConsultorEntity>>
+      savePerfilesPreInversionesConsultores(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionConsultorEntity>
+              perfilesPreInversionesConsultoresEntity) async {
+    List<PerfilPreInversionConsultorEntity>
+        perfilesPreInversionesConsultoresUpload = [];
+    for (var perfilPreInversionConsultor
+        in perfilesPreInversionesConsultoresEntity) {
+      final resp = await savePerfilPreInversionConsultor(
+          usuario, perfilPreInversionConsultor);
+      if (resp != null) {
+        perfilesPreInversionesConsultoresUpload.add(resp);
+      }
+    }
+    return perfilesPreInversionesConsultoresUpload;
+  }
+
+  Future<PerfilPreInversionConsultorEntity?> savePerfilPreInversionConsultor(
+      UsuarioEntity usuario,
+      PerfilPreInversionConsultorEntity
+          perfilPreInversionConsultorEntity) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final perfilPreInversionConsultorSOAP =
+        '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <GuardarPerfilPreInversionConsultor xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+          </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <PerfilPreInversionId>${perfilPreInversionConsultorEntity.perfilPreInversionId}</PerfilPreInversionId>
+            <ConsultorId>${perfilPreInversionConsultorEntity.consultorId}</ConsultorId>
+            <RevisionId>${perfilPreInversionConsultorEntity.revisionId}</RevisionId>
+            <FechaRevision>${perfilPreInversionConsultorEntity.fechaRevision}</FechaRevision>
+            
+          </objeto>
+        </GuardarPerfilPreInversionConsultor>
+      </soap:Body>
+    </soap:Envelope>
+    ''';
+
+    final perfilPreInversionConsultorResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction":
+              "${Constants.urlSOAP}/GuardarPerfilPreInversionConsultor"
+        },
+        body: perfilPreInversionConsultorSOAP);
+
+    if (perfilPreInversionConsultorResp.statusCode == 200) {
+      final perfilPreInversionConsultorDoc =
+          xml.XmlDocument.parse(perfilPreInversionConsultorResp.body);
+
+      final respuesta = perfilPreInversionConsultorDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionConsultorEntity;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
     }
   }
 }

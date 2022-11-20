@@ -60,4 +60,55 @@ class PerfilPreInversionConsultorRepositoryDBImpl
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionConsultorEntity>>>
+      getPerfilesPreInversionesConsultoresProduccionRepositoryDB() async {
+    try {
+      final perfilPreInversionConsultoresDB =
+          await perfilPreInversionConsultorLocalDataSource
+              .getPerfilesPreInversionesConsultoresProduccionDB();
+
+      return Right(perfilPreInversionConsultoresDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> savePerfilPreInversionConsultorRepositoryDB(
+      PerfilPreInversionConsultorEntity
+          perfilPreInversionConsultorEntity) async {
+    try {
+      final perfilPreInversionConsultorDB =
+          await perfilPreInversionConsultorLocalDataSource
+              .savePerfilPreInversionConsultorDB(
+                  perfilPreInversionConsultorEntity);
+      return Right(perfilPreInversionConsultorDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesConsultoresProduccionDBRepositoryDB(
+          List<PerfilPreInversionConsultorEntity>
+              perfilesPreInversionesConsultoresEntity) async {
+    try {
+      final result = await perfilPreInversionConsultorLocalDataSource
+          .updatePerfilesPreInversionesConsultoresProduccionDB(
+              perfilesPreInversionesConsultoresEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

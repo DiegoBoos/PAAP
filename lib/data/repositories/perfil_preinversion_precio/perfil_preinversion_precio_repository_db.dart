@@ -60,4 +60,53 @@ class PerfilPreInversionPrecioRepositoryDBImpl
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionPrecioEntity>>>
+      getPerfilesPreInversionesPreciosProduccionRepositoryDB() async {
+    try {
+      final perfilPreInversionPreciosDB =
+          await perfilPreInversionPrecioLocalDataSource
+              .getPerfilesPreInversionesPreciosProduccionDB();
+
+      return Right(perfilPreInversionPreciosDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> savePerfilPreInversionPrecioRepositoryDB(
+      PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
+    try {
+      final perfilPreInversionPrecioDB =
+          await perfilPreInversionPrecioLocalDataSource
+              .savePerfilPreInversionPrecioDB(perfilPreInversionPrecioEntity);
+      return Right(perfilPreInversionPrecioDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesPreciosProduccionDBRepositoryDB(
+          List<PerfilPreInversionPrecioEntity>
+              perfilesPreInversionesPreciosEntity) async {
+    try {
+      final result = await perfilPreInversionPrecioLocalDataSource
+          .updatePerfilesPreInversionesPreciosProduccionDB(
+              perfilesPreInversionesPreciosEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

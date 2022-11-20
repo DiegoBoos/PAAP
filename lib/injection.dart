@@ -2599,6 +2599,10 @@ uploadSyncInit() {
         perfilPreInversionCofinanciadorDesembolsoDB: locator(),
         perfilPreInversionCofinanciadorRubro: locator(),
         perfilPreInversionCofinanciadorRubroDB: locator(),
+        perfilPreInversionConsultor: locator(),
+        perfilPreInversionConsultorDB: locator(),
+        perfilPreInversionPrecio: locator(),
+        perfilPreInversionPrecioDB: locator(),
       ));
 }
 
