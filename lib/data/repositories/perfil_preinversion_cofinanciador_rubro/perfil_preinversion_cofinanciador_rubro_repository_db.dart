@@ -78,4 +78,56 @@ class PerfilPreInversionCofinanciadorRubroRepositoryDBImpl
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>>>
+      getPerfilesPreInversionesCofinanciadoresRubrosProduccionRepositoryDB() async {
+    try {
+      final perfilPreInversionCofinanciadorRubrosDB =
+          await perfilPreInversionCofinanciadorRubroLocalDataSource
+              .getPerfilesPreInversionesCofinanciadoresRubrosProduccionDB();
+
+      return Right(perfilPreInversionCofinanciadorRubrosDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      savePerfilPreInversionCofinanciadorRubroRepositoryDB(
+          PerfilPreInversionCofinanciadorRubroEntity
+              perfilPreInversionCofinanciadorRubroEntity) async {
+    try {
+      final perfilPreInversionCofinanciadorRubroDB =
+          await perfilPreInversionCofinanciadorRubroLocalDataSource
+              .savePerfilPreInversionCofinanciadorRubroDB(
+                  perfilPreInversionCofinanciadorRubroEntity);
+      return Right(perfilPreInversionCofinanciadorRubroDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesCofinanciadoresRubrosProduccionDBRepositoryDB(
+          List<PerfilPreInversionCofinanciadorRubroEntity>
+              perfilesPreInversionesCofinanciadoresRubrosEntity) async {
+    try {
+      final result = await perfilPreInversionCofinanciadorRubroLocalDataSource
+          .updatePerfilesPreInversionesCofinanciadoresRubrosProduccionDB(
+              perfilesPreInversionesCofinanciadoresRubrosEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

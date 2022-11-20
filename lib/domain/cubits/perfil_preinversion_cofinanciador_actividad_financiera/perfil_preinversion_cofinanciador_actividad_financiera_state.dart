@@ -31,6 +31,9 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLoaded
                 perfilPreInversionCofinanciadorActividadFinancieraLoaded);
 }
 
+class PerfilPreInversionCofinanciadorActividadFinancieraSaved
+    extends PerfilPreInversionCofinanciadorActividadFinancieraState {}
+
 class PerfilPreInversionCofinanciadorActividadFinancieraError
     extends PerfilPreInversionCofinanciadorActividadFinancieraState {
   final String message;

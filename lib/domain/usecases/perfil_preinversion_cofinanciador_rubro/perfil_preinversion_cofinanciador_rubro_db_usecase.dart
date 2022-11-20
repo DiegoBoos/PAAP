@@ -33,4 +33,27 @@ class PerfilPreInversionCofinanciadorRubroUsecaseDB {
     return repositoryDB.savePerfilPreInversionCofinanciadorRubrosRepositoryDB(
         perfilPreInversionCofinanciadorRubrosEntity);
   }
+
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>>>
+      getPerfilesPreInversionesCofinanciadoresRubrosProduccionUsecaseDB() {
+    return repositoryDB
+        .getPerfilesPreInversionesCofinanciadoresRubrosProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>>
+      savePerfilPreInversionCofinanciadorRubroUsecaseDB(
+          PerfilPreInversionCofinanciadorRubroEntity
+              perfilPreInversionCofinanciadorRubroEntity) {
+    return repositoryDB.savePerfilPreInversionCofinanciadorRubroRepositoryDB(
+        perfilPreInversionCofinanciadorRubroEntity);
+  }
+
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesCofinanciadoresRubrosProduccionUsecaseDB(
+          List<PerfilPreInversionCofinanciadorRubroEntity>
+              experienciasAgricolasEntity) {
+    return repositoryDB
+        .updatePerfilesPreInversionesCofinanciadoresRubrosProduccionDBRepositoryDB(
+            experienciasAgricolasEntity);
+  }
 }

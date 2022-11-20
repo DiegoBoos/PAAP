@@ -6,6 +6,7 @@ class PerfilPreInversionCofinanciadorRubroEntity {
     required this.actividadFinancieraId,
     required this.rubroId,
     required this.valor,
+    required this.recordStatus,
   });
 
   String perfilPreInversionId;
@@ -14,22 +15,27 @@ class PerfilPreInversionCofinanciadorRubroEntity {
   String actividadFinancieraId;
   String rubroId;
   String valor;
+  String recordStatus;
 
-  PerfilPreInversionCofinanciadorRubroEntity copyWith(
-      {String? perfilPreInversionId,
-      String? cofinanciadorId,
-      String? desembolsoId,
-      String? actividadFinancieraId,
-      String? rubroId,
-      String? valor}) {
+  PerfilPreInversionCofinanciadorRubroEntity copyWith({
+    String? perfilPreInversionId,
+    String? cofinanciadorId,
+    String? desembolsoId,
+    String? actividadFinancieraId,
+    String? rubroId,
+    String? valor,
+    String? recordStatus,
+  }) {
     return PerfilPreInversionCofinanciadorRubroEntity(
-        perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
-        cofinanciadorId: cofinanciadorId ?? this.cofinanciadorId,
-        desembolsoId: desembolsoId ?? this.desembolsoId,
-        actividadFinancieraId:
-            actividadFinancieraId ?? this.actividadFinancieraId,
-        rubroId: rubroId ?? this.rubroId,
-        valor: valor ?? this.valor);
+      perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
+      cofinanciadorId: cofinanciadorId ?? this.cofinanciadorId,
+      desembolsoId: desembolsoId ?? this.desembolsoId,
+      actividadFinancieraId:
+          actividadFinancieraId ?? this.actividadFinancieraId,
+      rubroId: rubroId ?? this.rubroId,
+      valor: valor ?? this.valor,
+      recordStatus: recordStatus ?? this.recordStatus,
+    );
   }
 
   factory PerfilPreInversionCofinanciadorRubroEntity.fromJson(
@@ -41,6 +47,7 @@ class PerfilPreInversionCofinanciadorRubroEntity {
         actividadFinancieraId: json["ActividadFinancieraId"],
         rubroId: json["RubroId"],
         valor: json["Valor"],
+        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -50,5 +57,6 @@ class PerfilPreInversionCofinanciadorRubroEntity {
         "ActividadFinancieraId": actividadFinancieraId,
         "RubroId": rubroId,
         "Valor": valor,
+        "RecordStatus": recordStatus,
       };
 }

@@ -27,6 +27,18 @@ class PerfilPreInversionCofinanciadorRubroCubit
         (data) => emit(PerfilPreInversionCofinanciadorRubroLoaded(data)));
   }
 
+  void savePerfilPreInversionCofinanciadorRubroDB(
+      PerfilPreInversionCofinanciadorRubroEntity
+          perfilPreInversionCofinanciadorRubroEntity) async {
+    final result = await perfilPreInversionCofinanciadorRubroDB
+        .savePerfilPreInversionCofinanciadorRubroUsecaseDB(
+            perfilPreInversionCofinanciadorRubroEntity);
+    result.fold(
+        (failure) => emit(PerfilPreInversionCofinanciadorRubroError(
+            failure.properties.first)),
+        (data) => emit(PerfilPreInversionCofinanciadorRubroSaved()));
+  }
+
   void changeRubro(String? value) {
     final rubroChanged =
         state.perfilPreInversionCofinanciadorRubro?.copyWith(rubroId: value);

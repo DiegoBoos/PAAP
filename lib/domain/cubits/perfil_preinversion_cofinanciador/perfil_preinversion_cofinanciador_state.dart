@@ -15,10 +15,12 @@ class PerfilPreInversionCofinanciadorInitial
       : super(
             perfilPreInversionCofinanciador:
                 PerfilPreInversionCofinanciadorEntity(
-                    perfilPreInversionId: '0',
-                    cofinanciadorId: '',
-                    monto: '',
-                    participacion: ''));
+          perfilPreInversionId: '0',
+          cofinanciadorId: '',
+          monto: '',
+          participacion: '',
+          recordStatus: '',
+        ));
 }
 
 class PerfilPreInversionCofinanciadorLoading
@@ -35,6 +37,9 @@ class PerfilPreInversionCofinanciadorLoaded
             perfilPreInversionCofinanciador:
                 perfilPreInversionCofinanciadorLoaded);
 }
+
+class PerfilPreInversionCofinanciadorSaved
+    extends PerfilPreInversionCofinanciadorState {}
 
 class PerfilPreInversionCofinanciadorError
     extends PerfilPreInversionCofinanciadorState {

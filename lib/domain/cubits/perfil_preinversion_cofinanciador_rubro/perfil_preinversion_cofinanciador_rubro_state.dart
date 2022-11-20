@@ -29,6 +29,9 @@ class PerfilPreInversionCofinanciadorRubroLoaded
                 perfilPreInversionCofinanciadorRubroLoaded);
 }
 
+class PerfilPreInversionCofinanciadorRubroSaved
+    extends PerfilPreInversionCofinanciadorRubroState {}
+
 class PerfilPreInversionCofinanciadorRubroError
     extends PerfilPreInversionCofinanciadorRubroState {
   final String message;

@@ -7,7 +7,7 @@ import '../../usecases/perfil_preinversion_cofinanciador_desembolso/perfil_prein
 part 'perfil_preinversion_cofinanciador_desembolso_state.dart';
 
 class PerfilPreInversionCofinanciadorDesembolsoCubit
-    extends Cubit<PerfilPreInversionCofinanciadorDesembolsotate> {
+    extends Cubit<PerfilPreInversionCofinanciadorDesembolsoState> {
   final PerfilPreInversionCofinanciadorDesembolsoUsecaseDB
       perfilPreInversionCofinanciadorDesembolsoDB;
 
@@ -16,6 +16,18 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
       : super(PerfilPreInversionCofinanciadorDesembolsoInitial());
 
   void initState() => emit(PerfilPreInversionCofinanciadorDesembolsoInitial());
+
+  void savePerfilPreInversionCofinanciadorDesembolsoDB(
+      PerfilPreInversionCofinanciadorDesembolsoEntity
+          perfilPreInversionCofinanciadorDesembolsoEntity) async {
+    final result = await perfilPreInversionCofinanciadorDesembolsoDB
+        .savePerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
+            perfilPreInversionCofinanciadorDesembolsoEntity);
+    result.fold(
+        (failure) => emit(PerfilPreInversionCofinanciadorDesembolsoError(
+            failure.properties.first)),
+        (data) => emit(PerfilPreInversionCofinanciadorDesembolsoSaved()));
+  }
 
   void selectPerfilPreInversionCofinanciadorDesembolso(
       String cofinanciadorId) async {

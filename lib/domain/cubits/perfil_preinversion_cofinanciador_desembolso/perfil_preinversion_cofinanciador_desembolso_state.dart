@@ -1,10 +1,11 @@
 part of 'perfil_preinversion_cofinanciador_desembolso_cubit.dart';
 
-abstract class PerfilPreInversionCofinanciadorDesembolsotate extends Equatable {
+abstract class PerfilPreInversionCofinanciadorDesembolsoState
+    extends Equatable {
   final PerfilPreInversionCofinanciadorDesembolsoEntity?
       perfilPreInversionCofinanciadorDesembolso;
 
-  const PerfilPreInversionCofinanciadorDesembolsotate(
+  const PerfilPreInversionCofinanciadorDesembolsoState(
       {this.perfilPreInversionCofinanciadorDesembolso});
 
   @override
@@ -12,13 +13,13 @@ abstract class PerfilPreInversionCofinanciadorDesembolsotate extends Equatable {
 }
 
 class PerfilPreInversionCofinanciadorDesembolsoInitial
-    extends PerfilPreInversionCofinanciadorDesembolsotate {}
+    extends PerfilPreInversionCofinanciadorDesembolsoState {}
 
 class PerfilPreInversionCofinanciadorDesembolsoLoading
-    extends PerfilPreInversionCofinanciadorDesembolsotate {}
+    extends PerfilPreInversionCofinanciadorDesembolsoState {}
 
 class PerfilPreInversionCofinanciadorDesembolsoLoaded
-    extends PerfilPreInversionCofinanciadorDesembolsotate {
+    extends PerfilPreInversionCofinanciadorDesembolsoState {
   final PerfilPreInversionCofinanciadorDesembolsoEntity?
       perfilPreInversionCofinanciadorDesembolsoLoaded;
 
@@ -29,8 +30,11 @@ class PerfilPreInversionCofinanciadorDesembolsoLoaded
                 perfilPreInversionCofinanciadorDesembolsoLoaded);
 }
 
+class PerfilPreInversionCofinanciadorDesembolsoSaved
+    extends PerfilPreInversionCofinanciadorDesembolsoState {}
+
 class PerfilPreInversionCofinanciadorDesembolsoError
-    extends PerfilPreInversionCofinanciadorDesembolsotate {
+    extends PerfilPreInversionCofinanciadorDesembolsoState {
   final String message;
 
   const PerfilPreInversionCofinanciadorDesembolsoError(this.message);

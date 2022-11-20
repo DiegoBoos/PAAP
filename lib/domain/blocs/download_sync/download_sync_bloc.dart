@@ -1474,7 +1474,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       List<PerfilPreInversionCofinanciadorEntity> data,
       Emitter<DownloadSyncState> emit) async {
     final result = await perfilPreInversionCofinanciadorDB
-        .savePerfilPreInversionCofinanciadoresUsecaseDB(data);
+        .savePerfilesPreInversionesCofinanciadoresUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

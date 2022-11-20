@@ -18,6 +18,24 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
   Future<
           Either<Failure,
               List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
+      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionRepositoryDB() async {
+    try {
+      final perfilPreInversionCofinanciadorActividadFinancierasDB =
+          await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
+              .getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB();
+
+      return Right(perfilPreInversionCofinanciadorActividadFinancierasDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<
+          Either<Failure,
+              List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
       getPerfilPreInversionCofinanciadorActividadesFinancierasRepositoryDB() async {
     try {
       final perfilPreInversionCofinanciadorActividadesFinancierasDB =
@@ -80,6 +98,43 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
               .getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
                   cofinanciadorId);
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      savePerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
+          PerfilPreInversionCofinanciadorActividadFinancieraEntity
+              perfilPreInversionCofinanciadorActividadFinancieraEntity) async {
+    try {
+      final perfilPreInversionCofinanciadorActividadFinancieraDB =
+          await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
+              .savePerfilPreInversionCofinanciadorActividadFinancieraDB(
+                  perfilPreInversionCofinanciadorActividadFinancieraEntity);
+      return Right(perfilPreInversionCofinanciadorActividadFinancieraDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDBRepositoryDB(
+          List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
+              perfilesPreInversionesCofinanciadoresActividadesFinancierasEntity) async {
+    try {
+      final result =
+          await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
+              .updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB(
+                  perfilesPreInversionesCofinanciadoresActividadesFinancierasEntity);
+
       return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));

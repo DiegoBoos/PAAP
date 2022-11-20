@@ -45,4 +45,30 @@ class PerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB {
         .savePerfilPreInversionCofinanciadorActividadesFinancierasRepositoryDB(
             perfilPreInversionCofinanciadorActividadesFinancierasEntity);
   }
+
+  Future<
+          Either<Failure,
+              List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
+      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionUsecaseDB() {
+    return repositoryDB
+        .getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>>
+      savePerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
+          PerfilPreInversionCofinanciadorActividadFinancieraEntity
+              perfilPreInversionCofinanciadorActividadFinancieraEntity) {
+    return repositoryDB
+        .savePerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
+            perfilPreInversionCofinanciadorActividadFinancieraEntity);
+  }
+
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionUsecaseDB(
+          List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
+              experienciasAgricolasEntity) {
+    return repositoryDB
+        .updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDBRepositoryDB(
+            experienciasAgricolasEntity);
+  }
 }

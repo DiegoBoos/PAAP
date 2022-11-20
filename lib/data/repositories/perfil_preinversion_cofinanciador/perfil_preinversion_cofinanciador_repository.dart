@@ -23,9 +23,28 @@ class PerfilPreInversionCofinanciadorRepositoryImpl
     try {
       final perfilPreInversionCofinanciadores =
           await perfilPreInversionCofinanciadorRemoteDataSource
-              .getPerfilPreInversionCofinanciadores(usuario);
+              .getPerfilesPreInversionesCofinanciadores(usuario);
 
       return Right(perfilPreInversionCofinanciadores);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorEntity>>>
+      savePerfilesPreInversionesCofinanciadoresRepository(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionCofinanciadorEntity>
+              perfilesPreInversionesCofinanciadoresEntity) async {
+    try {
+      final result = await perfilPreInversionCofinanciadorRemoteDataSource
+          .savePerfilesPreInversionesCofinanciadores(
+              usuario, perfilesPreInversionesCofinanciadoresEntity);
+
+      return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

@@ -4,24 +4,28 @@ class PerfilPreInversionCofinanciadorEntity {
     required this.cofinanciadorId,
     required this.monto,
     required this.participacion,
+    required this.recordStatus,
   });
 
   String perfilPreInversionId;
   String cofinanciadorId;
   String monto;
   String participacion;
+  String recordStatus;
 
   PerfilPreInversionCofinanciadorEntity copyWith({
     String? perfilPreInversionId,
     String? cofinanciadorId,
     String? monto,
     String? participacion,
+    String? recordStatus,
   }) {
     return PerfilPreInversionCofinanciadorEntity(
       perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
       cofinanciadorId: cofinanciadorId ?? this.cofinanciadorId,
       monto: monto ?? this.monto,
       participacion: participacion ?? this.participacion,
+      recordStatus: recordStatus ?? this.recordStatus,
     );
   }
 
@@ -32,6 +36,7 @@ class PerfilPreInversionCofinanciadorEntity {
         cofinanciadorId: json["CofinanciadorId"],
         monto: json["Monto"],
         participacion: json["Participacion"],
+        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,5 +44,6 @@ class PerfilPreInversionCofinanciadorEntity {
         "CofinanciadorId": cofinanciadorId,
         "Monto": monto,
         "Participacion": participacion,
+        "RecordStatus": recordStatus,
       };
 }

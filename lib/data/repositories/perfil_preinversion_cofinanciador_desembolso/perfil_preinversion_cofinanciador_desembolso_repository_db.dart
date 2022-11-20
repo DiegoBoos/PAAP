@@ -83,4 +83,57 @@ class PerfilPreInversionCofinanciadorDesembolsoRepositoryDBImpl
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorDesembolsoEntity>>>
+      getPerfilesPreInversionesCofinanciadoresDesembolsosProduccionRepositoryDB() async {
+    try {
+      final perfilPreInversionCofinanciadorDesembolsosDB =
+          await perfilPreInversionCofinanciadorDesembolsoLocalDataSource
+              .getPerfilesPreInversionesCofinanciadoresDesembolsosProduccionDB();
+
+      return Right(perfilPreInversionCofinanciadorDesembolsosDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      savePerfilPreInversionCofinanciadorDesembolsoRepositoryDB(
+          PerfilPreInversionCofinanciadorDesembolsoEntity
+              perfilPreInversionCofinanciadorDesembolsoEntity) async {
+    try {
+      final perfilPreInversionCofinanciadorDesembolsoDB =
+          await perfilPreInversionCofinanciadorDesembolsoLocalDataSource
+              .savePerfilPreInversionCofinanciadorDesembolsoDB(
+                  perfilPreInversionCofinanciadorDesembolsoEntity);
+      return Right(perfilPreInversionCofinanciadorDesembolsoDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesCofinanciadoresDesembolsosProduccionDBRepositoryDB(
+          List<PerfilPreInversionCofinanciadorDesembolsoEntity>
+              perfilesPreInversionesCofinanciadoresDesembolsosEntity) async {
+    try {
+      final result =
+          await perfilPreInversionCofinanciadorDesembolsoLocalDataSource
+              .updatePerfilesPreInversionesCofinanciadoresDesembolsosProduccionDB(
+                  perfilesPreInversionesCofinanciadoresDesembolsosEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

@@ -2591,6 +2591,14 @@ uploadSyncInit() {
         aliadoDB: locator(),
         perfilPreInversionAliado: locator(),
         perfilPreInversionAliadoDB: locator(),
+        perfilPreInversionCofinanciador: locator(),
+        perfilPreInversionCofinanciadorDB: locator(),
+        perfilPreInversionCofinanciadorActividadFinanciera: locator(),
+        perfilPreInversionCofinanciadorActividadFinancieraDB: locator(),
+        perfilPreInversionCofinanciadorDesembolso: locator(),
+        perfilPreInversionCofinanciadorDesembolsoDB: locator(),
+        perfilPreInversionCofinanciadorRubro: locator(),
+        perfilPreInversionCofinanciadorRubroDB: locator(),
       ));
 }
 

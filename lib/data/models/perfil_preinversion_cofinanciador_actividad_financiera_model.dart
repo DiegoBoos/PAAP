@@ -8,12 +8,15 @@ class PerfilPreInversionCofinanciadorActividadFinancieraModel
     required String cofinanciadorId,
     required String desembolsoId,
     required String valor,
+    required String recordStatus,
   }) : super(
-            actividadFinancieraId: actividadFinancieraId,
-            perfilPreInversionId: perfilPreInversionId,
-            cofinanciadorId: cofinanciadorId,
-            desembolsoId: desembolsoId,
-            valor: valor);
+          actividadFinancieraId: actividadFinancieraId,
+          perfilPreInversionId: perfilPreInversionId,
+          cofinanciadorId: cofinanciadorId,
+          desembolsoId: desembolsoId,
+          valor: valor,
+          recordStatus: recordStatus,
+        );
 
   factory PerfilPreInversionCofinanciadorActividadFinancieraModel.fromJson(
           Map<String, dynamic> json) =>
@@ -23,6 +26,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraModel
         cofinanciadorId: json["CofinanciadorId"],
         desembolsoId: json["DesembolsoId"],
         valor: json["Valor"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -32,5 +36,6 @@ class PerfilPreInversionCofinanciadorActividadFinancieraModel
         "CofinanciadorId": cofinanciadorId,
         "DesembolsoId": desembolsoId,
         "Valor": valor,
+        "RecordStatus": recordStatus,
       };
 }

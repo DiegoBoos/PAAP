@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../../../domain/entities/perfil_preinversion_cofinanciador_rubro_entity.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -12,6 +13,11 @@ import '../../../utils.dart';
 abstract class PerfilPreInversionCofinanciadorRubroRemoteDataSource {
   Future<List<PerfilPreInversionCofinanciadorRubroModel>>
       getPerfilPreInversionCofinanciadorRubros(UsuarioEntity usuario);
+  Future<List<PerfilPreInversionCofinanciadorRubroEntity>>
+      savePerfilesPreInversionesCofinanciadoresRubros(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionCofinanciadorRubroEntity>
+              perfilesPreInversionesCofinanciadoresRubrosEntity);
 }
 
 class PerfilPreInversionCofinanciadorRubroRemoteDataSourceImpl
@@ -94,6 +100,87 @@ class PerfilPreInversionCofinanciadorRubroRemoteDataSourceImpl
       }
     } else {
       throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<PerfilPreInversionCofinanciadorRubroEntity>>
+      savePerfilesPreInversionesCofinanciadoresRubros(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionCofinanciadorRubroEntity>
+              perfilesPreInversionesCofinanciadoresRubrosEntity) async {
+    List<PerfilPreInversionCofinanciadorRubroEntity>
+        perfilesPreInversionesCofinanciadoresRubrosUpload = [];
+    for (var perfilPreInversionCofinanciadorRubro
+        in perfilesPreInversionesCofinanciadoresRubrosEntity) {
+      final resp = await savePerfilPreInversionCofinanciadorRubro(
+          usuario, perfilPreInversionCofinanciadorRubro);
+      if (resp != null) {
+        perfilesPreInversionesCofinanciadoresRubrosUpload.add(resp);
+      }
+    }
+    return perfilesPreInversionesCofinanciadoresRubrosUpload;
+  }
+
+  Future<PerfilPreInversionCofinanciadorRubroEntity?>
+      savePerfilPreInversionCofinanciadorRubro(
+          UsuarioEntity usuario,
+          PerfilPreInversionCofinanciadorRubroEntity
+              perfilPreInversionCofinanciadorRubroEntity) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final perfilPreInversionCofinanciadorRubroSOAP =
+        '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <GuardarPerfilPreInversionCofinanciadorRubro xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+          </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <PerfilPreInversionId>${perfilPreInversionCofinanciadorRubroEntity.perfilPreInversionId}</PerfilPreInversionId>
+            <CofinanciadorId>${perfilPreInversionCofinanciadorRubroEntity.cofinanciadorId}</CofinanciadorId>
+            <DesembolsoId>${perfilPreInversionCofinanciadorRubroEntity.desembolsoId}</DesembolsoId>
+            <ActividadFinancieraId>${perfilPreInversionCofinanciadorRubroEntity.actividadFinancieraId}</ActividadFinancieraId>
+            <RubroId>${perfilPreInversionCofinanciadorRubroEntity.rubroId}</RubroId>
+            <Valor>${perfilPreInversionCofinanciadorRubroEntity.valor}</Valor>
+            
+          </objeto>
+        </GuardarPerfilPreInversionCofinanciadorRubro>
+      </soap:Body>
+    </soap:Envelope>
+    ''';
+
+    final perfilPreInversionCofinanciadorRubroResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction":
+              "${Constants.urlSOAP}/GuardarPerfilPreInversionCofinanciadorRubro"
+        },
+        body: perfilPreInversionCofinanciadorRubroSOAP);
+
+    if (perfilPreInversionCofinanciadorRubroResp.statusCode == 200) {
+      final perfilPreInversionCofinanciadorRubroDoc =
+          xml.XmlDocument.parse(perfilPreInversionCofinanciadorRubroResp.body);
+
+      final respuesta = perfilPreInversionCofinanciadorRubroDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionCofinanciadorRubroEntity;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
     }
   }
 }

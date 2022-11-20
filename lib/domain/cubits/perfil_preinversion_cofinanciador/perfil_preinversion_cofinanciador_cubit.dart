@@ -21,6 +21,18 @@ class PerfilPreInversionCofinanciadorCubit
         PerfilPreInversionCofinanciadorLoaded(perfilPreInversionCofinanciador));
   }
 
+  void savePerfilPreInversionCofinanciadorDB(
+      PerfilPreInversionCofinanciadorEntity
+          perfilPreInversionCofinanciadorEntity) async {
+    final result = await perfilPreInversionCofinanciadorDB
+        .savePerfilPreInversionCofinanciadorUsecaseDB(
+            perfilPreInversionCofinanciadorEntity);
+    result.fold(
+        (failure) => emit(
+            PerfilPreInversionCofinanciadorError(failure.properties.first)),
+        (data) => emit(PerfilPreInversionCofinanciadorSaved()));
+  }
+
   void initState() => emit(PerfilPreInversionCofinanciadorInitial());
 
   void getPerfilPreInversionCofinanciadorDB(String id) async {

@@ -8,4 +8,9 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoRepository {
   Future<Either<Failure, List<PerfilPreInversionCofinanciadorDesembolsoEntity>>>
       getPerfilPreInversionCofinanciadorDesembolsosRepository(
           UsuarioEntity usuario);
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorDesembolsoEntity>>>
+      savePerfilesPreInversionesCofinanciadoresDesembolsosRepository(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionCofinanciadorDesembolsoEntity>
+              perfilesPreInversionesCofinanciadoresDesembolsosEntity);
 }

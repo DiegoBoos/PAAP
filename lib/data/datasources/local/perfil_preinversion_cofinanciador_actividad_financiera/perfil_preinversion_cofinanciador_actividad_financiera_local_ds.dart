@@ -15,6 +15,15 @@ abstract class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
       getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
           String cofinanciadorId);
+  Future<int> savePerfilPreInversionCofinanciadorActividadFinancieraDB(
+      PerfilPreInversionCofinanciadorActividadFinancieraEntity
+          perfilPreInversionCofinanciadorActividadFinancieraEntity);
+  Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
+      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB();
+  Future<int>
+      updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB(
+          List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
+              perfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionEntity);
 }
 
 class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
@@ -29,6 +38,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
         CofinanciadorId	TEXT NOT NULL,
         DesembolsoId	TEXT NOT NULL,
         Valor	TEXT,
+        RecordStatus	TEXT,
         FOREIGN KEY(ActividadFinancieraId) REFERENCES ActividadFinanciera(ActividadFinancieraId),
         FOREIGN KEY(PerfilPreInversionId) REFERENCES PerfilPreInversion(PerfilPreInversionId),
         FOREIGN KEY(CofinanciadorId) REFERENCES Cofinanciador(CofinanciadorId),
@@ -111,5 +121,95 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
                 .fromJson(m))).toList();
 
     return perfilPreInversionCofinanciadorActividadFinanciera;
+  }
+
+  @override
+  Future<int> savePerfilPreInversionCofinanciadorActividadFinancieraDB(
+      PerfilPreInversionCofinanciadorActividadFinancieraEntity
+          perfilPreInversionCofinanciadorActividadFinancieraEntity) async {
+    final db = await DBConfig.database;
+    var batch = db.batch();
+
+    final resQuery = await db.query(
+        'PerfilPreInversionCofinanciadorActividadFinanciera',
+        where: 'ActividadFinancieraId = ? AND PerfilPreInversionId = ?',
+        whereArgs: [
+          perfilPreInversionCofinanciadorActividadFinancieraEntity
+              .actividadFinancieraId,
+          perfilPreInversionCofinanciadorActividadFinancieraEntity
+              .perfilPreInversionId
+        ]);
+
+    if (resQuery.isEmpty) {
+      perfilPreInversionCofinanciadorActividadFinancieraEntity.recordStatus =
+          'N';
+      batch.insert('PerfilPreInversionCofinanciadorActividadFinanciera',
+          perfilPreInversionCofinanciadorActividadFinancieraEntity.toJson());
+    } else {
+      perfilPreInversionCofinanciadorActividadFinancieraEntity.recordStatus =
+          'E';
+      batch.update('PerfilPreInversionCofinanciadorActividadFinanciera',
+          perfilPreInversionCofinanciadorActividadFinancieraEntity.toJson(),
+          where: 'ActividadFinancieraId = ? AND PerfilPreInversionId = ?',
+          whereArgs: [
+            perfilPreInversionCofinanciadorActividadFinancieraEntity
+                .actividadFinancieraId,
+            perfilPreInversionCofinanciadorActividadFinancieraEntity
+                .perfilPreInversionId
+          ]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
+      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB() async {
+    final db = await DBConfig.database;
+
+    final res = await db.query(
+        'PerfilPreInversionCofinanciadorActividadFinanciera',
+        where: 'RecordStatus <> ?',
+        whereArgs: ['R']);
+
+    if (res.isEmpty) return [];
+
+    final perfilesPreInversionesCofinanciadoresActividadesFinancierasModel =
+        List<PerfilPreInversionCofinanciadorActividadFinancieraModel>.from(res
+            .map((m) => PerfilPreInversionCofinanciadorActividadFinancieraModel
+                .fromJson(m))).toList();
+
+    return perfilesPreInversionesCofinanciadoresActividadesFinancierasModel;
+  }
+
+  @override
+  Future<int>
+      updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB(
+          List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
+              perfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+
+    for (var perfilPreInversionCofinanciadorActividadFinancieraProduccion
+        in perfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionEntity) {
+      perfilPreInversionCofinanciadorActividadFinancieraProduccion
+          .recordStatus = 'R';
+      batch.update('PerfilPreInversionCofinanciadorActividadFinanciera',
+          perfilPreInversionCofinanciadorActividadFinancieraProduccion.toJson(),
+          where: 'ActividadFinancieraId = ? AND PerfilPreInversionId = ?',
+          whereArgs: [
+            perfilPreInversionCofinanciadorActividadFinancieraProduccion
+                .actividadFinancieraId,
+            perfilPreInversionCofinanciadorActividadFinancieraProduccion
+                .perfilPreInversionId
+          ]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
   }
 }

@@ -18,6 +18,20 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
   void initState() =>
       emit(PerfilPreInversionCofinanciadorActividadFinancieraInitial());
 
+  void savePerfilPreInversionCofinanciadorActividadFinancieraDB(
+      PerfilPreInversionCofinanciadorActividadFinancieraEntity
+          perfilPreInversionCofinanciadorActividadFinancieraEntity) async {
+    final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
+        .savePerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
+            perfilPreInversionCofinanciadorActividadFinancieraEntity);
+    result.fold(
+        (failure) => emit(
+            PerfilPreInversionCofinanciadorActividadFinancieraError(
+                failure.properties.first)),
+        (data) =>
+            emit(PerfilPreInversionCofinanciadorActividadFinancieraSaved()));
+  }
+
   void selectPerfilPreInversionCofinanciadorActividadFinanciera(
       String cofinanciadorId) async {
     final result = await perfilPreInversionCofinanciadorActividadFinancieraDB

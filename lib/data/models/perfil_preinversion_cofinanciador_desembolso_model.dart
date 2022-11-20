@@ -7,11 +7,14 @@ class PerfilPreInversionCofinanciadorDesembolsoModel
     required String cofinanciadorId,
     required String desembolsoId,
     required String fecha,
+    required String recordStatus,
   }) : super(
-            perfilPreInversionId: perfilPreInversionId,
-            cofinanciadorId: cofinanciadorId,
-            desembolsoId: desembolsoId,
-            fecha: fecha);
+          perfilPreInversionId: perfilPreInversionId,
+          cofinanciadorId: cofinanciadorId,
+          desembolsoId: desembolsoId,
+          fecha: fecha,
+          recordStatus: recordStatus,
+        );
 
   factory PerfilPreInversionCofinanciadorDesembolsoModel.fromJson(
           Map<String, dynamic> json) =>
@@ -20,6 +23,7 @@ class PerfilPreInversionCofinanciadorDesembolsoModel
         cofinanciadorId: json["CofinanciadorId"],
         desembolsoId: json["DesembolsoId"],
         fecha: json["Fecha"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -28,5 +32,6 @@ class PerfilPreInversionCofinanciadorDesembolsoModel
         "CofinanciadorId": cofinanciadorId,
         "DesembolsoId": desembolsoId,
         "Fecha": fecha,
+        "RecordStatus": recordStatus,
       };
 }

@@ -7,11 +7,14 @@ class PerfilPreInversionCofinanciadorModel
     required String cofinanciadorId,
     String? monto,
     String? participacion,
+    String? recordStatus,
   }) : super(
-            perfilPreInversionId: perfilPreInversionId,
-            cofinanciadorId: cofinanciadorId,
-            monto: monto ?? '',
-            participacion: participacion ?? '');
+          perfilPreInversionId: perfilPreInversionId,
+          cofinanciadorId: cofinanciadorId,
+          monto: monto ?? '',
+          participacion: participacion ?? '',
+          recordStatus: recordStatus ?? '',
+        );
 
   factory PerfilPreInversionCofinanciadorModel.fromJson(
           Map<String, dynamic> json) =>
@@ -20,6 +23,7 @@ class PerfilPreInversionCofinanciadorModel
         cofinanciadorId: json["CofinanciadorId"],
         monto: json["Monto"],
         participacion: json["Participacion"],
+        recordStatus: json["RecordStatus"],
       );
 
   @override
@@ -28,5 +32,6 @@ class PerfilPreInversionCofinanciadorModel
         "CofinanciadorId": cofinanciadorId,
         "Monto": monto,
         "Participacion": participacion,
+        "RecordStatus": recordStatus,
       };
 }

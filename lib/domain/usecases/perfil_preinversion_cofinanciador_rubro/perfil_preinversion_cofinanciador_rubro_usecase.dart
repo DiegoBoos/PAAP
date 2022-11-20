@@ -15,4 +15,13 @@ class PerfilPreInversionCofinanciadorRubroUsecase {
     return repository
         .getPerfilPreInversionCofinanciadorRubrosRepository(usuario);
   }
+
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>>>
+      savePerfilesPreInversionesCofinanciadoresRubrosUsecase(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionCofinanciadorRubroEntity>
+              perfilPreInversionCofinanciadorRubroEntity) {
+    return repository.savePerfilesPreInversionesCofinanciadoresRubrosRepository(
+        usuario, perfilPreInversionCofinanciadorRubroEntity);
+  }
 }

@@ -10,4 +10,12 @@ abstract class PerfilPreInversionCofinanciadorActividadFinancieraRepository {
               List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
       getPerfilPreInversionCofinanciadorActividadesFinancierasRepository(
           UsuarioEntity usuario);
+
+  Future<
+          Either<Failure,
+              List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
+      savePerfilesPreInversionesCofinanciadoresActividadesFinancierasRepository(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
+              perfilesPreInversionesCofinanciadoresActividadesFinancierasEntity);
 }

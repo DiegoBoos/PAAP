@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../../constants.dart';
 import '../../../../domain/core/error/exception.dart';
@@ -12,6 +13,11 @@ import '../../../utils.dart';
 abstract class PerfilPreInversionCofinanciadorDesembolsoRemoteDataSource {
   Future<List<PerfilPreInversionCofinanciadorDesembolsoModel>>
       getPerfilPreInversionCofinanciadorDesembolsos(UsuarioEntity usuario);
+  Future<List<PerfilPreInversionCofinanciadorDesembolsoEntity>>
+      savePerfilesPreInversionesCofinanciadoresDesembolsos(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionCofinanciadorDesembolsoEntity>
+              perfilesPreInversionesCofinanciadoresDesembolsosEntity);
 }
 
 class PerfilPreInversionCofinanciadorDesembolsoRemoteDataSourceImpl
@@ -97,6 +103,87 @@ class PerfilPreInversionCofinanciadorDesembolsoRemoteDataSourceImpl
       }
     } else {
       throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<PerfilPreInversionCofinanciadorDesembolsoEntity>>
+      savePerfilesPreInversionesCofinanciadoresDesembolsos(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionCofinanciadorDesembolsoEntity>
+              perfilesPreInversionesCofinanciadoresDesembolsosEntity) async {
+    List<PerfilPreInversionCofinanciadorDesembolsoEntity>
+        perfilesPreInversionesCofinanciadoresDesembolsosUpload = [];
+    for (var perfilPreInversionCofinanciadorDesembolso
+        in perfilesPreInversionesCofinanciadoresDesembolsosEntity) {
+      final resp = await savePerfilPreInversionCofinanciadorDesembolso(
+          usuario, perfilPreInversionCofinanciadorDesembolso);
+      if (resp != null) {
+        perfilesPreInversionesCofinanciadoresDesembolsosUpload.add(resp);
+      }
+    }
+    return perfilesPreInversionesCofinanciadoresDesembolsosUpload;
+  }
+
+  Future<PerfilPreInversionCofinanciadorDesembolsoEntity?>
+      savePerfilPreInversionCofinanciadorDesembolso(
+          UsuarioEntity usuario,
+          PerfilPreInversionCofinanciadorDesembolsoEntity
+              perfilPreInversionCofinanciadorDesembolsoEntity) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final perfilPreInversionCofinanciadorDesembolsoSOAP =
+        '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <GuardarPerfilPreInversionCofinanciadorDesembolso xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+          </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <DesembolsoId>${perfilPreInversionCofinanciadorDesembolsoEntity.desembolsoId}</DesembolsoId>
+            <PerfilPreInversionId>${perfilPreInversionCofinanciadorDesembolsoEntity.perfilPreInversionId}</PerfilPreInversionId>
+            <CofinanciadorId>${perfilPreInversionCofinanciadorDesembolsoEntity.cofinanciadorId}</CofinanciadorId>
+            <DesembolsoId>${perfilPreInversionCofinanciadorDesembolsoEntity.desembolsoId}</DesembolsoId>
+            <Fecha>${perfilPreInversionCofinanciadorDesembolsoEntity.fecha}</Fecha>
+            
+          </objeto>
+        </GuardarPerfilPreInversionCofinanciadorDesembolso>
+      </soap:Body>
+    </soap:Envelope>
+    ''';
+
+    final perfilPreInversionCofinanciadorDesembolsoResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction":
+              "${Constants.urlSOAP}/GuardarPerfilPreInversionCofinanciadorDesembolso"
+        },
+        body: perfilPreInversionCofinanciadorDesembolsoSOAP);
+
+    if (perfilPreInversionCofinanciadorDesembolsoResp.statusCode == 200) {
+      final perfilPreInversionCofinanciadorDesembolsoDoc =
+          xml.XmlDocument.parse(
+              perfilPreInversionCofinanciadorDesembolsoResp.body);
+
+      final respuesta = perfilPreInversionCofinanciadorDesembolsoDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionCofinanciadorDesembolsoEntity;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
     }
   }
 }

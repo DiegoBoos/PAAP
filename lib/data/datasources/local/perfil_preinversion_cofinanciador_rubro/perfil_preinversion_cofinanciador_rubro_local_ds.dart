@@ -16,6 +16,14 @@ abstract class PerfilPreInversionCofinanciadorRubroLocalDataSource {
   Future<List<PerfilPreInversionCofinanciadorRubroModel>>
       getPerfilPreInversionCofinanciadorRubrosByCofinanciadorDB(
           String cofinanciadorId);
+  Future<int> savePerfilPreInversionCofinanciadorRubroDB(
+      PerfilPreInversionCofinanciadorRubroEntity
+          perfilPreInversionCofinanciadorRubroEntity);
+  Future<List<PerfilPreInversionCofinanciadorRubroModel>>
+      getPerfilesPreInversionesCofinanciadoresRubrosProduccionDB();
+  Future<int> updatePerfilesPreInversionesCofinanciadoresRubrosProduccionDB(
+      List<PerfilPreInversionCofinanciadorRubroEntity>
+          perfilesPreInversionesCofinanciadoresRubrosProduccionEntity);
 }
 
 class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
@@ -25,14 +33,14 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
       CREATE TABLE PerfilPreInversionCofinanciadorRubro (
         PerfilPreInversionId	TEXT NOT NULL,
         CofinanciadorId	TEXT NOT NULL,
-        DesembolsoId	TEXT NOT NULL,
+        RubroId	TEXT NOT NULL,
         ActividadFinancieraId	TEXT NOT NULL,
         RubroId	TEXT NOT NULL,
         Valor	TEXT,
         FOREIGN KEY(CofinanciadorId) REFERENCES Cofinanciador(CofinanciadorId),
         FOREIGN KEY(PerfilPreInversionId) REFERENCES PerfilPreInversion(PerfilPreInversionId),
         FOREIGN KEY(ActividadFinancieraId) REFERENCES ActividadFinanciera(ActividadFinancieraId),
-        FOREIGN KEY(DesembolsoId) REFERENCES Desembolso(DesembolsoId),
+        FOREIGN KEY(RubroId) REFERENCES Rubro(RubroId),
         FOREIGN KEY(RubroId) REFERENCES Rubro(RubroId)
       )
     ''');
@@ -107,5 +115,82 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
             .toList();
 
     return perfilPreInversionCofinanciadorRubro;
+  }
+
+  @override
+  Future<int> savePerfilPreInversionCofinanciadorRubroDB(
+      PerfilPreInversionCofinanciadorRubroEntity
+          perfilPreInversionCofinanciadorRubroEntity) async {
+    final db = await DBConfig.database;
+    var batch = db.batch();
+
+    final resQuery = await db.query('PerfilPreInversionCofinanciadorRubro',
+        where: 'RubroId = ? AND PerfilPreInversionId = ?',
+        whereArgs: [
+          perfilPreInversionCofinanciadorRubroEntity.rubroId,
+          perfilPreInversionCofinanciadorRubroEntity.perfilPreInversionId
+        ]);
+
+    if (resQuery.isEmpty) {
+      perfilPreInversionCofinanciadorRubroEntity.recordStatus = 'N';
+      batch.insert('PerfilPreInversionCofinanciadorRubro',
+          perfilPreInversionCofinanciadorRubroEntity.toJson());
+    } else {
+      perfilPreInversionCofinanciadorRubroEntity.recordStatus = 'E';
+      batch.update('PerfilPreInversionCofinanciadorRubro',
+          perfilPreInversionCofinanciadorRubroEntity.toJson(),
+          where: 'RubroId = ? AND PerfilPreInversionId = ?',
+          whereArgs: [
+            perfilPreInversionCofinanciadorRubroEntity.rubroId,
+            perfilPreInversionCofinanciadorRubroEntity.perfilPreInversionId
+          ]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<List<PerfilPreInversionCofinanciadorRubroModel>>
+      getPerfilesPreInversionesCofinanciadoresRubrosProduccionDB() async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('PerfilPreInversionCofinanciadorRubro',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
+
+    if (res.isEmpty) return [];
+
+    final perfilesPreInversionesCofinanciadoresRubrosModel =
+        List<PerfilPreInversionCofinanciadorRubroModel>.from(res.map(
+                (m) => PerfilPreInversionCofinanciadorRubroModel.fromJson(m)))
+            .toList();
+
+    return perfilesPreInversionesCofinanciadoresRubrosModel;
+  }
+
+  @override
+  Future<int> updatePerfilesPreInversionesCofinanciadoresRubrosProduccionDB(
+      List<PerfilPreInversionCofinanciadorRubroEntity>
+          perfilesPreInversionesCofinanciadoresRubrosProduccionEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+
+    for (var perfilPreInversionCofinanciadorRubroProduccion
+        in perfilesPreInversionesCofinanciadoresRubrosProduccionEntity) {
+      perfilPreInversionCofinanciadorRubroProduccion.recordStatus = 'R';
+      batch.update('PerfilPreInversionCofinanciadorRubro',
+          perfilPreInversionCofinanciadorRubroProduccion.toJson(),
+          where: 'RubroId = ? AND PerfilPreInversionId = ?',
+          whereArgs: [
+            perfilPreInversionCofinanciadorRubroProduccion.rubroId,
+            perfilPreInversionCofinanciadorRubroProduccion.perfilPreInversionId
+          ]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
   }
 }

@@ -12,7 +12,15 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoLocalDataSource {
   Future<int> savePerfilPreInversionCofinanciadorDesembolsos(
       List<PerfilPreInversionCofinanciadorDesembolsoEntity>
           perfilPreInversionCofinanciadorDesembolsoEntity);
-
+  Future<int> savePerfilPreInversionCofinanciadorDesembolsoDB(
+      PerfilPreInversionCofinanciadorDesembolsoEntity
+          perfilPreInversionCofinanciadorDesembolsoEntity);
+  Future<List<PerfilPreInversionCofinanciadorDesembolsoModel>>
+      getPerfilesPreInversionesCofinanciadoresDesembolsosProduccionDB();
+  Future<int>
+      updatePerfilesPreInversionesCofinanciadoresDesembolsosProduccionDB(
+          List<PerfilPreInversionCofinanciadorDesembolsoEntity>
+              perfilesPreInversionesCofinanciadoresDesembolsosProduccionEntity);
   getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorDB(
       String cofinanciadorId) {}
 }
@@ -102,5 +110,83 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
             .toList();
 
     return perfilPreInversionCofinanciadorDesembolso;
+  }
+
+  @override
+  Future<int> savePerfilPreInversionCofinanciadorDesembolsoDB(
+      PerfilPreInversionCofinanciadorDesembolsoEntity
+          perfilPreInversionCofinanciadorDesembolsoEntity) async {
+    final db = await DBConfig.database;
+    var batch = db.batch();
+
+    final resQuery = await db.query('PerfilPreInversionCofinanciadorDesembolso',
+        where: 'DesembolsoId = ? AND PerfilPreInversionId = ?',
+        whereArgs: [
+          perfilPreInversionCofinanciadorDesembolsoEntity.desembolsoId,
+          perfilPreInversionCofinanciadorDesembolsoEntity.perfilPreInversionId
+        ]);
+
+    if (resQuery.isEmpty) {
+      perfilPreInversionCofinanciadorDesembolsoEntity.recordStatus = 'N';
+      batch.insert('PerfilPreInversionCofinanciadorDesembolso',
+          perfilPreInversionCofinanciadorDesembolsoEntity.toJson());
+    } else {
+      perfilPreInversionCofinanciadorDesembolsoEntity.recordStatus = 'E';
+      batch.update('PerfilPreInversionCofinanciadorDesembolso',
+          perfilPreInversionCofinanciadorDesembolsoEntity.toJson(),
+          where: 'DesembolsoId = ? AND PerfilPreInversionId = ?',
+          whereArgs: [
+            perfilPreInversionCofinanciadorDesembolsoEntity.desembolsoId,
+            perfilPreInversionCofinanciadorDesembolsoEntity.perfilPreInversionId
+          ]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
+  }
+
+  @override
+  Future<List<PerfilPreInversionCofinanciadorDesembolsoModel>>
+      getPerfilesPreInversionesCofinanciadoresDesembolsosProduccionDB() async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('PerfilPreInversionCofinanciadorDesembolso',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
+
+    if (res.isEmpty) return [];
+
+    final perfilesPreInversionesCofinanciadoresDesembolsosModel =
+        List<PerfilPreInversionCofinanciadorDesembolsoModel>.from(res.map((m) =>
+                PerfilPreInversionCofinanciadorDesembolsoModel.fromJson(m)))
+            .toList();
+
+    return perfilesPreInversionesCofinanciadoresDesembolsosModel;
+  }
+
+  @override
+  Future<int> updatePerfilesPreInversionesCofinanciadoresDesembolsosProduccionDB(
+      List<PerfilPreInversionCofinanciadorDesembolsoEntity>
+          perfilesPreInversionesCofinanciadoresDesembolsosProduccionEntity) async {
+    final db = await DBConfig.database;
+
+    var batch = db.batch();
+
+    for (var perfilPreInversionCofinanciadorDesembolsoProduccion
+        in perfilesPreInversionesCofinanciadoresDesembolsosProduccionEntity) {
+      perfilPreInversionCofinanciadorDesembolsoProduccion.recordStatus = 'R';
+      batch.update('PerfilPreInversionCofinanciadorDesembolso',
+          perfilPreInversionCofinanciadorDesembolsoProduccion.toJson(),
+          where: 'DesembolsoId = ? AND PerfilPreInversionId = ?',
+          whereArgs: [
+            perfilPreInversionCofinanciadorDesembolsoProduccion.desembolsoId,
+            perfilPreInversionCofinanciadorDesembolsoProduccion
+                .perfilPreInversionId
+          ]);
+    }
+
+    final res = await batch.commit();
+
+    return res.length;
   }
 }

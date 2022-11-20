@@ -18,10 +18,33 @@ class PerfilPreInversionCofinanciadorUsecaseDB {
     return repositoryDB.getPerfilPreInversionCofinanciadorRepositoryDB(id);
   }
 
-  Future<Either<Failure, int>> savePerfilPreInversionCofinanciadoresUsecaseDB(
-      List<PerfilPreInversionCofinanciadorEntity>
-          perfilPreInversionCofinanciadoresEntity) {
-    return repositoryDB.savePerfilPreInversionCofinanciadoresRepositoryDB(
+  Future<Either<Failure, int>>
+      savePerfilesPreInversionesCofinanciadoresUsecaseDB(
+          List<PerfilPreInversionCofinanciadorEntity>
+              perfilPreInversionCofinanciadoresEntity) {
+    return repositoryDB.savePerfilesPreInversionesCofinanciadoresRepositoryDB(
         perfilPreInversionCofinanciadoresEntity);
+  }
+
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorEntity>>>
+      getPerfilesPreInversionesCofinanciadoresProduccionUsecaseDB() {
+    return repositoryDB
+        .getPerfilesPreInversionesCofinanciadoresProduccionRepositoryDB();
+  }
+
+  Future<Either<Failure, int>> savePerfilPreInversionCofinanciadorUsecaseDB(
+      PerfilPreInversionCofinanciadorEntity
+          perfilPreInversionCofinanciadorEntity) {
+    return repositoryDB.savePerfilPreInversionCofinanciadorRepositoryDB(
+        perfilPreInversionCofinanciadorEntity);
+  }
+
+  Future<Either<Failure, int>>
+      updatePerfilesPreInversionesCofinanciadoresProduccionUsecaseDB(
+          List<PerfilPreInversionCofinanciadorEntity>
+              experienciasAgricolasEntity) {
+    return repositoryDB
+        .updatePerfilesPreInversionesCofinanciadoresProduccionDBRepositoryDB(
+            experienciasAgricolasEntity);
   }
 }
