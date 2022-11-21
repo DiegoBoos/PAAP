@@ -47,6 +47,7 @@ import '../../data/datasources/local/perfil_preinversion_cofinanciador_actividad
 import '../../data/datasources/local/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_local_ds.dart';
 import '../../data/datasources/local/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_local_ds.dart';
 import '../../data/datasources/local/perfil_preinversion_consultor/perfil_preinversion_consultor_local_ds.dart';
+import '../../data/datasources/local/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_local_ds.dart';
 import '../../data/datasources/local/perfil_preinversion_precio/perfil_preinversion_precio_local_ds.dart';
 import '../../data/datasources/local/producto/producto_local_ds.dart';
 import '../../data/datasources/local/producto_objetivo/producto_objetivo_local_ds.dart';
@@ -148,6 +149,8 @@ class DBConfig {
           .createPerfilPreInversionConsultorTable(db);
       await PerfilPreInversionPrecioLocalDataSourceImpl
           .createPerfilPreInversionPrecioTable(db);
+      await PerfilPreInversionPlanNegocioLocalDataSourceImpl
+          .createPerfilPreInversionPlanNegocioTable(db);
       await PerfilBeneficiarioLocalDataSourceImpl.createPerfilBeneficiarioTable(
           db);
       await ExperienciaAgricolaLocalDataSourceImpl

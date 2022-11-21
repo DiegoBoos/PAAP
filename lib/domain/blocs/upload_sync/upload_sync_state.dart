@@ -10,7 +10,7 @@ class UploadProgressModel {
       {required this.title,
       required this.counter,
       required this.percent,
-      this.total = 17});
+      this.total = 18});
 
   UploadProgressModel copyWith(
           {String? title, int? counter, double? percent}) =>

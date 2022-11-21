@@ -44,6 +44,7 @@ import '../../usecases/perfil_preinversion_cofinanciador_actividad_financiera/pe
 import '../../usecases/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_exports.dart';
 import '../../usecases/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_exports.dart';
 import '../../usecases/perfil_preinversion_consultor/perfil_preinversion_consultor_exports.dart';
+import '../../usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 import '../../usecases/perfil_preinversion_precio/perfil_preinversion_precio_exports.dart';
 import '../../usecases/producto/producto_exports.dart';
 import '../../usecases/producto_objetivo/producto_objetivo_exports.dart';
@@ -155,6 +156,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final PerfilPreInversionConsultorUsecaseDB perfilPreInversionConsultorDB;
   final PerfilPreInversionPrecioUsecase perfilPreInversionPrecio;
   final PerfilPreInversionPrecioUsecaseDB perfilPreInversionPrecioDB;
+  final PerfilPreInversionPlanNegocioUsecase perfilPreInversionPlanNegocio;
+  final PerfilPreInversionPlanNegocioUsecaseDB perfilPreInversionPlanNegocioDB;
   final PerfilPreInversionUsecase perfilesPreInversion;
   final PerfilPreInversionUsecaseDB perfilesPreInversionDB;
   final PerfilUsecase perfiles;
@@ -319,6 +322,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.veredaDB,
     required this.visita,
     required this.visitaDB,
+    required this.perfilPreInversionPlanNegocio,
+    required this.perfilPreInversionPlanNegocioDB,
   }) : super(DownloadSyncInitial()) {
     on<DownloadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -573,6 +578,12 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       await downloadPerfilPreInversionPrecios(usuario, emit);
 
       add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Perfiles PreInversion Plan Negocios',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+      await downloadPerfilPreInversionPlanNegocios(usuario, emit);
+
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
           title: 'Sincronizando Productos',
           counter: state.downloadProgressModel!.counter + 1,
           percent: calculatePercent())));
@@ -693,7 +704,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     });
 
     on<DownloadStatusChanged>((event, emit) {
-      event.progress.counter == 54
+      event.progress.counter == 61
           ? emit(DownloadSyncSuccess())
           : emit(DownloadSyncInProgress(event.progress));
     });
@@ -1056,6 +1067,15 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)),
         (data) async => await savePerfilPreInversionPrecios(data, emit));
+  }
+
+  Future<void> downloadPerfilPreInversionPlanNegocios(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionPlanNegocio
+        .getPerfilPreInversionPlanNegociosUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await savePerfilPreInversionPlanNegocios(data, emit));
   }
 
   Future<void> downloadProductos(
@@ -1520,6 +1540,15 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       Emitter<DownloadSyncState> emit) async {
     final result = await perfilPreInversionPrecioDB
         .savePerfilPreInversionPreciosUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> savePerfilPreInversionPlanNegocios(
+      List<PerfilPreInversionPlanNegocioEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await perfilPreInversionPlanNegocioDB
+        .savePerfilPreInversionPlanNegociosUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

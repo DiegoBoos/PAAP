@@ -95,6 +95,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
 
     for (var perfilPreInversionCofinanciadorActividadFinanciera
         in perfilPreInversionCofinanciadorActividadFinancieraEntity) {
+      perfilPreInversionCofinanciadorActividadFinanciera.recordStatus = 'R';
       batch.insert('PerfilPreInversionCofinanciadorActividadFinanciera',
           perfilPreInversionCofinanciadorActividadFinanciera.toJson());
     }

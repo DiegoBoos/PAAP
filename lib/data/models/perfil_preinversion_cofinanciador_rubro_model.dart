@@ -9,7 +9,7 @@ class PerfilPreInversionCofinanciadorRubroModel
     required String actividadFinancieraId,
     required String rubroId,
     required String valor,
-    required String recordStatus,
+    String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
           cofinanciadorId: cofinanciadorId,
@@ -17,7 +17,7 @@ class PerfilPreInversionCofinanciadorRubroModel
           actividadFinancieraId: actividadFinancieraId,
           rubroId: rubroId,
           valor: valor,
-          recordStatus: recordStatus,
+          recordStatus: recordStatus ?? '',
         );
 
   factory PerfilPreInversionCofinanciadorRubroModel.fromJson(

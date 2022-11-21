@@ -73,6 +73,7 @@ import 'domain/cubits/v_perfil/v_perfil_cubit.dart';
 import 'domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import 'domain/cubits/vereda/vereda_cubit.dart';
 import 'domain/cubits/visita/visita_cubit.dart';
+import 'domain/usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 import 'injection.dart' as di;
 import 'router.dart';
 import 'ui/utils/styles.dart';
@@ -328,6 +329,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<PerfilPreInversionPrecioCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<PerfilPreInversionPlanNegocioCubit>(),
           ),
         ],
         child: MaterialApp(

@@ -33,14 +33,14 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
       CREATE TABLE PerfilPreInversionCofinanciadorRubro (
         PerfilPreInversionId	TEXT NOT NULL,
         CofinanciadorId	TEXT NOT NULL,
-        RubroId	TEXT NOT NULL,
+        DesembolsoId	TEXT NOT NULL,
         ActividadFinancieraId	TEXT NOT NULL,
         RubroId	TEXT NOT NULL,
         Valor	TEXT,
+        RecordStatus	TEXT,
         FOREIGN KEY(CofinanciadorId) REFERENCES Cofinanciador(CofinanciadorId),
         FOREIGN KEY(PerfilPreInversionId) REFERENCES PerfilPreInversion(PerfilPreInversionId),
         FOREIGN KEY(ActividadFinancieraId) REFERENCES ActividadFinanciera(ActividadFinancieraId),
-        FOREIGN KEY(RubroId) REFERENCES Rubro(RubroId),
         FOREIGN KEY(RubroId) REFERENCES Rubro(RubroId)
       )
     ''');
@@ -91,6 +91,7 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
 
     for (var perfilPreInversionCofinanciadorRubro
         in perfilPreInversionCofinanciadorRubroEntity) {
+      perfilPreInversionCofinanciadorRubro.recordStatus = 'R';
       batch.insert('PerfilPreInversionCofinanciadorRubro',
           perfilPreInversionCofinanciadorRubro.toJson());
     }

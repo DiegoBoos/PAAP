@@ -79,6 +79,7 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
     batch.delete('PerfilPreInversionPrecio');
 
     for (var perfilPreInversionPrecio in perfilPreInversionPrecioEntity) {
+      perfilPreInversionPrecio.recordStatus = 'R';
       batch.insert(
           'PerfilPreInversionPrecio', perfilPreInversionPrecio.toJson());
     }

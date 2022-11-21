@@ -35,6 +35,7 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
         CofinanciadorId	TEXT NOT NULL,
         DesembolsoId	TEXT NOT NULL,
         Fecha	TEXT,
+        RecordStatus	TEXT,
         FOREIGN KEY(PerfilPreInversionId) REFERENCES PerfilPreInversion(PerfilPreInversionId),
         FOREIGN KEY(CofinanciadorId) REFERENCES Cofinanciador(CofinanciadorId),
         FOREIGN KEY(DesembolsoId) REFERENCES Desembolso(DesembolsoId)

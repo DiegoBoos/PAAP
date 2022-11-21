@@ -46,6 +46,7 @@ import 'domain/usecases/perfil_preinversion_cofinanciador_actividad_financiera/p
 import 'domain/usecases/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_exports.dart';
 import 'domain/usecases/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_exports.dart';
 import 'domain/usecases/perfil_preinversion_consultor/perfil_preinversion_consultor_exports.dart';
+import 'domain/usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 import 'domain/usecases/perfil_preinversion_precio/perfil_preinversion_precio_exports.dart';
 import 'domain/usecases/producto/producto_exports.dart';
 import 'domain/usecases/producto_objetivo/producto_objetivo_exports.dart';
@@ -748,6 +749,8 @@ downloadSyncInit() {
         veredaDB: locator(),
         visita: locator(),
         visitaDB: locator(),
+        perfilPreInversionPlanNegocio: locator(),
+        perfilPreInversionPlanNegocioDB: locator(),
       ));
 }
 
@@ -1184,6 +1187,7 @@ void init() {
   perfilPreInversionPreciosInit();
   experienciaAgricolaInit();
   experienciaPecuariaInit();
+  perfilPreInversionPlanNegociosInit();
 
   downloadSyncInit();
   uploadSyncInit();
@@ -1903,6 +1907,46 @@ perfilPreInversionPreciosInit() {
   );
 }
 
+perfilPreInversionPlanNegociosInit() {
+  // cubit
+  locator.registerFactory(() => PerfilPreInversionPlanNegocioCubit(
+      perfilPreInversionPlanNegocioDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(
+      () => PerfilPreInversionPlanNegocioUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(
+      () => PerfilPreInversionPlanNegocioUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<PerfilPreInversionPlanNegocioRepository>(
+    () => PerfilPreInversionPlanNegocioRepositoryImpl(
+      perfilPreInversionPlanNegocioRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<PerfilPreInversionPlanNegocioRepositoryDB>(
+    () => PerfilPreInversionPlanNegocioRepositoryDBImpl(
+      perfilPreInversionPlanNegocioLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<PerfilPreInversionPlanNegocioRemoteDataSource>(
+    () => PerfilPreInversionPlanNegocioRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<PerfilPreInversionPlanNegocioLocalDataSource>(
+    () => PerfilPreInversionPlanNegocioLocalDataSourceImpl(),
+  );
+}
+
 productoObjetivoInit() {
   // cubit
   locator.registerFactory(
@@ -2603,6 +2647,8 @@ uploadSyncInit() {
         perfilPreInversionConsultorDB: locator(),
         perfilPreInversionPrecio: locator(),
         perfilPreInversionPrecioDB: locator(),
+        perfilPreInversionPlanNegocio: locator(),
+        perfilPreInversionPlanNegocioDB: locator(),
       ));
 }
 

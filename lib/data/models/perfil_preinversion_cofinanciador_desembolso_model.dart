@@ -7,13 +7,13 @@ class PerfilPreInversionCofinanciadorDesembolsoModel
     required String cofinanciadorId,
     required String desembolsoId,
     required String fecha,
-    required String recordStatus,
+    String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
           cofinanciadorId: cofinanciadorId,
           desembolsoId: desembolsoId,
           fecha: fecha,
-          recordStatus: recordStatus,
+          recordStatus: recordStatus ?? '',
         );
 
   factory PerfilPreInversionCofinanciadorDesembolsoModel.fromJson(

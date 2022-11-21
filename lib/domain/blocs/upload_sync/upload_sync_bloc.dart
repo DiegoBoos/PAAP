@@ -18,6 +18,7 @@ import '../../usecases/perfil_preinversion_cofinanciador/perfil_preinversion_cof
 import '../../usecases/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_exports.dart';
 import '../../usecases/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_exports.dart';
 import '../../usecases/perfil_preinversion_consultor/perfil_preinversion_consultor_exports.dart';
+import '../../usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 import '../../usecases/perfil_preinversion_precio/perfil_preinversion_precio_exports.dart';
 import '../../usecases/visita/visita_exports.dart';
 
@@ -69,6 +70,9 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
   final PerfilPreInversionPrecioUsecase perfilPreInversionPrecio;
   final PerfilPreInversionPrecioUsecaseDB perfilPreInversionPrecioDB;
 
+  final PerfilPreInversionPlanNegocioUsecase perfilPreInversionPlanNegocio;
+  final PerfilPreInversionPlanNegocioUsecaseDB perfilPreInversionPlanNegocioDB;
+
   UploadSyncBloc({
     required this.visita,
     required this.visitaDB,
@@ -102,6 +106,8 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
     required this.perfilPreInversionConsultorDB,
     required this.perfilPreInversionPrecio,
     required this.perfilPreInversionPrecioDB,
+    required this.perfilPreInversionPlanNegocio,
+    required this.perfilPreInversionPlanNegocioDB,
   }) : super(UploadSyncInitial()) {
     on<UploadStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -204,13 +210,19 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
       await uploadPerfilPreInversionPrecio(usuario, emit);
 
       add(UploadStatusChanged(state.uploadProgressModel!.copyWith(
+          title: 'Sincronizando Perfil PreInversión Plan Negocio',
+          counter: state.uploadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+      await uploadPerfilPreInversionPlanNegocio(usuario, emit);
+
+      add(UploadStatusChanged(state.uploadProgressModel!.copyWith(
           title: 'Sincronización Completada',
           counter: state.uploadProgressModel!.counter + 1,
           percent: calculatePercent())));
     });
 
     on<UploadStatusChanged>((event, emit) {
-      event.progress.counter == 17
+      event.progress.counter == 18
           ? emit(UploadSyncSuccess())
           : emit(UploadSyncInProgress(event.progress));
     });
@@ -412,6 +424,19 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
             usuario, data, emit));
   }
 
+  Future<void> savePerfilesPreInversionesPlanNegocios(
+      UsuarioEntity usuario,
+      List<PerfilPreInversionPlanNegocioEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await perfilPreInversionPlanNegocio
+        .savePerfilesPreInversionesPlanNegociosUsecase(usuario, data);
+    return result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async =>
+            await updatePerfilesPreInversionesPlanNegociosProduccion(
+                usuario, data, emit));
+  }
+
   Future<void> updateAliadosProduccion(UsuarioEntity usuario,
       List<AliadoEntity> data, Emitter<UploadSyncState> emit) async {
     final result = await aliadoDB.updateAliadosProduccionUsecaseDB(data);
@@ -555,6 +580,16 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
       Emitter<UploadSyncState> emit) async {
     final result = await perfilPreInversionPrecioDB
         .updatePerfilesPreInversionesPreciosProduccionUsecaseDB(data);
+    result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> updatePerfilesPreInversionesPlanNegociosProduccion(
+      UsuarioEntity usuario,
+      List<PerfilPreInversionPlanNegocioEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await perfilPreInversionPlanNegocioDB
+        .updatePerfilesPreInversionesPlanNegociosProduccionUsecaseDB(data);
     result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
   }
@@ -722,5 +757,16 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         (failure) => add(UploadSyncError(failure.properties.first)),
         (data) async =>
             await savePerfilesPreInversionesPrecios(usuario, data, emit));
+  }
+
+  // Sync Perfil PreInversion Cofinanciador Rubro
+  Future<void> uploadPerfilPreInversionPlanNegocio(
+      UsuarioEntity usuario, Emitter<UploadSyncState> emit) async {
+    final result = await perfilPreInversionPlanNegocioDB
+        .getPerfilesPreInversionesPlanNegociosProduccionUsecaseDB();
+    result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async =>
+            await savePerfilesPreInversionesPlanNegocios(usuario, data, emit));
   }
 }
