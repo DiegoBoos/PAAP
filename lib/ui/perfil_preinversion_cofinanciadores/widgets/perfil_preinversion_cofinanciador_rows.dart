@@ -84,15 +84,35 @@ class PerfilPreInversionCofinanciadoresRows extends StatelessWidget {
                 perfilPreInversionCofinanciadorDesembolsoCubit
                     .selectPerfilPreInversionCofinanciadorDesembolso(
                         perfilPreInversionId,
-                        perfilPreInversionCofinanciador.cofinanciadorId);
+                        perfilPreInversionCofinanciador.cofinanciadorId,
+                        perfilPreInversionCofinanciadorDesembolsoCubit
+                            .state
+                            .perfilPreInversionCofinanciadorDesembolso
+                            .desembolsoId);
                 perfilPreInversionCofinanciadorActividadFinancieraCubit
                     .selectPerfilPreInversionCofinanciadorActividadFinanciera(
                         perfilPreInversionId,
-                        perfilPreInversionCofinanciador.cofinanciadorId);
+                        perfilPreInversionCofinanciador.cofinanciadorId,
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .state
+                            .perfilPreInversionCofinanciadorActividadFinanciera
+                            .actividadFinancieraId,
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .state
+                            .perfilPreInversionCofinanciadorActividadFinanciera
+                            .desembolsoId);
                 perfilPreInversionCofinanciadorRubroCubit
                     .selectPerfilPreInversionCofinanciadorRubro(
                         perfilPreInversionId,
-                        perfilPreInversionCofinanciador.cofinanciadorId);
+                        perfilPreInversionCofinanciador.cofinanciadorId,
+                        perfilPreInversionCofinanciadorRubroCubit
+                            .state.perfilPreInversionCofinanciadorRubro.desembolsoId,
+                        perfilPreInversionCofinanciadorRubroCubit
+                            .state
+                            .perfilPreInversionCofinanciadorRubro
+                            .actividadFinancieraId,
+                        perfilPreInversionCofinanciadorRubroCubit.state
+                            .perfilPreInversionCofinanciadorRubro.rubroId);
 
                 perfilPreInversionCofinanciadorDesembolsosBloc.add(
                     GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(

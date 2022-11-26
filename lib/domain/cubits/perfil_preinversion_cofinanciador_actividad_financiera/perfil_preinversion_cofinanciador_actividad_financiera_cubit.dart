@@ -33,10 +33,16 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
   }
 
   void selectPerfilPreInversionCofinanciadorActividadFinanciera(
-      String perfilPreInversionId, String cofinanciadorId) async {
+      String perfilPreInversionId,
+      String cofinanciadorId,
+      String actividadFinancieraId,
+      String desembolsoId) async {
     final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
         .getPerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
-            perfilPreInversionId, cofinanciadorId);
+            perfilPreInversionId,
+            cofinanciadorId,
+            actividadFinancieraId,
+            desembolsoId);
     result.fold(
         (failure) => emit(
             PerfilPreInversionCofinanciadorActividadFinancieraError(

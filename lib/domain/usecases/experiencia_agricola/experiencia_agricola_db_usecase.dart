@@ -16,8 +16,10 @@ class ExperienciaAgricolaUsecaseDB {
   }
 
   Future<Either<Failure, ExperienciaAgricolaEntity?>>
-      getExperienciaAgricolaUsecaseDB(String id) {
-    return repositoryDB.getExperienciaAgricolaRepositoryDB(id);
+      getExperienciaAgricolaUsecaseDB(
+          String tipoActividadProductivaId, String beneficiarioId) {
+    return repositoryDB.getExperienciaAgricolaRepositoryDB(
+        tipoActividadProductivaId, beneficiarioId);
   }
 
   Future<Either<Failure, int>> saveExperienciasAgricolasUsecaseDB(

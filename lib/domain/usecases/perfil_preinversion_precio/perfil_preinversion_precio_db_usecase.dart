@@ -14,8 +14,10 @@ class PerfilPreInversionPrecioUsecaseDB {
   }
 
   Future<Either<Failure, PerfilPreInversionPrecioEntity?>>
-      getPerfilPreInversionPrecioUsecaseDB(String id) {
-    return repositoryDB.getPerfilPreInversionPrecioRepositoryDB(id);
+      getPerfilPreInversionPrecioUsecaseDB(String perfilPreInversionId,
+          String productoId, String tipoCalidadId) {
+    return repositoryDB.getPerfilPreInversionPrecioRepositoryDB(
+        perfilPreInversionId, productoId, tipoCalidadId);
   }
 
   Future<Either<Failure, int>> savePerfilPreInversionPreciosUsecaseDB(

@@ -47,7 +47,10 @@ class PerfilPreInversionCofinanciadorActividadesFinancierasBloc extends Bloc<
       event, emit) async {
     final result = await perfilPreInversionCofinanciadorActividadFinancieraUsecaseDB
         .getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorUsecaseDB(
-            event.perfilPreInversionId, event.cofinanciadorId);
+            event.perfilPreInversionId,
+            event.cofinanciadorId,
+            event.actividadFinancieraId,
+            event.desembolsoId);
     result.fold(
         (failure) => emit(
             PerfilPreInversionCofinanciadorActividadesFinancierasError(

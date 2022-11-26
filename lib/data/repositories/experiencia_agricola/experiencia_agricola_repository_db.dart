@@ -45,10 +45,11 @@ class ExperienciaAgricolaRepositoryDBImpl
 
   @override
   Future<Either<Failure, ExperienciaAgricolaEntity?>>
-      getExperienciaAgricolaRepositoryDB(String id) async {
+      getExperienciaAgricolaRepositoryDB(
+          String tipoActividadProductivaId, String beneficiarioId) async {
     try {
-      final experienciaAgricolaDB =
-          await experienciaAgricolaLocalDataSource.getExperienciaAgricolaDB(id);
+      final experienciaAgricolaDB = await experienciaAgricolaLocalDataSource
+          .getExperienciaAgricolaDB(tipoActividadProductivaId, beneficiarioId);
 
       return Right(experienciaAgricolaDB);
     } on ServerFailure catch (e) {

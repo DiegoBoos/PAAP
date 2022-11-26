@@ -76,6 +76,12 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
 
                   final beneficiarioId =
                       perfilPreInversionBeneficiario.beneficiarioId;
+                  final tipoActividadProductivaAgricolaId =
+                      experienciaAgricolaCubit
+                          .state.experienciaAgricola.tipoActividadProductivaId;
+                  final tipoActividadProductivaPecuariaId =
+                      experienciaPecuariaCubit
+                          .state.experienciaPecuaria.tipoActividadProductivaId;
 
                   perfilPreinversionBeneficiarioCubit
                       .selectPerfilPreinversionBeneficiario(
@@ -86,11 +92,11 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
                   perfilBeneficiarioCubit.selectPerfilBeneficiario(
                       perfilId, beneficiarioId);
 
-                  experienciaAgricolaCubit
-                      .selectExperienciaAgricola(beneficiarioId);
+                  experienciaAgricolaCubit.selectExperienciaAgricola(
+                      tipoActividadProductivaAgricolaId, beneficiarioId);
 
-                  experienciaPecuariaCubit
-                      .selectExperienciaPecuaria(beneficiarioId);
+                  experienciaPecuariaCubit.selectExperienciaPecuaria(
+                      tipoActividadProductivaPecuariaId, beneficiarioId);
 
                   Navigator.pushNamed(
                       context, 'NewEditVBeneficiarioPreInversion');

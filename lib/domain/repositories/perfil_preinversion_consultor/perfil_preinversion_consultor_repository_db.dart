@@ -8,7 +8,8 @@ abstract class PerfilPreInversionConsultorRepositoryDB {
       getPerfilPreInversionConsultoresRepositoryDB();
 
   Future<Either<Failure, PerfilPreInversionConsultorEntity?>>
-      getPerfilPreInversionConsultorRepositoryDB(String id);
+      getPerfilPreInversionConsultorRepositoryDB(
+          String perfilPreInversionId, String consultorId, String revisionId);
 
   Future<Either<Failure, int>> savePerfilPreInversionConsultoresRepositoryDB(
       List<PerfilPreInversionConsultorEntity>

@@ -11,7 +11,8 @@ abstract class ExperienciaPecuariaRepositoryDB {
       getExperienciasPecuariasRepositoryDB();
 
   Future<Either<Failure, ExperienciaPecuariaEntity?>>
-      getExperienciaPecuariaRepositoryDB(String id);
+      getExperienciaPecuariaRepositoryDB(
+          String tipoActividadProductivaId, String beneficiarioId);
 
   Future<Either<Failure, int>> saveExperienciasPecuariasRepositoryDB(
       List<ExperienciaPecuariaEntity> experienciasPecuarias);

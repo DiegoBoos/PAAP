@@ -14,9 +14,11 @@ class PerfilPreInversionConsultorCubit
       {required this.perfilPreInversionConsultorDB})
       : super(PerfilPreInversionConsultorInitial());
 
-  void getPerfilPreInversionConsultorDB(String id) async {
+  void getPerfilPreInversionConsultorDB(String perfilPreInversionId,
+      String consultorId, String revisionId) async {
     final result = await perfilPreInversionConsultorDB
-        .getPerfilPreInversionConsultorUsecaseDB(id);
+        .getPerfilPreInversionConsultorUsecaseDB(
+            perfilPreInversionId, consultorId, revisionId);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionConsultorError(failure.properties.first)),

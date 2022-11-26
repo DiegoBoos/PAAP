@@ -9,7 +9,9 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoLocalDataSource {
       getPerfilPreInversionCofinanciadorDesembolsosDB();
   Future<PerfilPreInversionCofinanciadorDesembolsoModel?>
       getPerfilPreInversionCofinanciadorDesembolsoDB(
-          String perfilPreInversionId, String cofinanciadorId);
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String desembolsoId);
   Future<int> savePerfilPreInversionCofinanciadorDesembolsos(
       List<PerfilPreInversionCofinanciadorDesembolsoEntity>
           perfilPreInversionCofinanciadorDesembolsoEntity);
@@ -23,7 +25,7 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoLocalDataSource {
           List<PerfilPreInversionCofinanciadorDesembolsoEntity>
               perfilesPreInversionesCofinanciadoresDesembolsosProduccionEntity);
   getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorDB(
-      String perfilPreInversionId, String cofinanciadorId);
+      String perfilPreInversionId, String cofinanciadorId, String desembolsoId);
 }
 
 class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
@@ -62,12 +64,15 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
   @override
   Future<PerfilPreInversionCofinanciadorDesembolsoModel?>
       getPerfilPreInversionCofinanciadorDesembolsoDB(
-          String perfilPreInversionId, String cofinanciadorId) async {
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String desembolsoId) async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionCofinanciadorDesembolso',
-        where: 'PerfilPreInversionId = ? AND CofinanciadorId = ?',
-        whereArgs: [perfilPreInversionId, cofinanciadorId]);
+        where:
+            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
+        whereArgs: [perfilPreInversionId, cofinanciadorId, desembolsoId]);
 
     if (res.isEmpty) return null;
     final perfilPreInversionCofinanciadorDesembolsoMap = {
@@ -103,12 +108,15 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
 
   @override
   getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorDB(
-      String perfilPreInversionId, String cofinanciadorId) async {
+      String perfilPreInversionId,
+      String cofinanciadorId,
+      String desembolsoId) async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionCofinanciadorDesembolso',
-        where: 'PerfilPreInversionId = ? AND CofinanciadorId = ?',
-        whereArgs: [perfilPreInversionId, cofinanciadorId]);
+        where:
+            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
+        whereArgs: [perfilPreInversionId, cofinanciadorId, desembolsoId]);
 
     final perfilPreInversionCofinanciadorDesembolso =
         List<PerfilPreInversionCofinanciadorDesembolsoModel>.from(res.map((m) =>
@@ -126,10 +134,12 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
     var batch = db.batch();
 
     final resQuery = await db.query('PerfilPreInversionCofinanciadorDesembolso',
-        where: 'DesembolsoId = ? AND PerfilPreInversionId = ?',
+        where:
+            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
         whereArgs: [
+          perfilPreInversionCofinanciadorDesembolsoEntity.perfilPreInversionId,
+          perfilPreInversionCofinanciadorDesembolsoEntity.cofinanciadorId,
           perfilPreInversionCofinanciadorDesembolsoEntity.desembolsoId,
-          perfilPreInversionCofinanciadorDesembolsoEntity.perfilPreInversionId
         ]);
 
     if (resQuery.isEmpty) {
@@ -140,10 +150,13 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
       perfilPreInversionCofinanciadorDesembolsoEntity.recordStatus = 'E';
       batch.update('PerfilPreInversionCofinanciadorDesembolso',
           perfilPreInversionCofinanciadorDesembolsoEntity.toJson(),
-          where: 'DesembolsoId = ? AND PerfilPreInversionId = ?',
+          where:
+              'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
           whereArgs: [
+            perfilPreInversionCofinanciadorDesembolsoEntity
+                .perfilPreInversionId,
+            perfilPreInversionCofinanciadorDesembolsoEntity.cofinanciadorId,
             perfilPreInversionCofinanciadorDesembolsoEntity.desembolsoId,
-            perfilPreInversionCofinanciadorDesembolsoEntity.perfilPreInversionId
           ]);
     }
 
@@ -183,11 +196,13 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
       perfilPreInversionCofinanciadorDesembolsoProduccion.recordStatus = 'R';
       batch.update('PerfilPreInversionCofinanciadorDesembolso',
           perfilPreInversionCofinanciadorDesembolsoProduccion.toJson(),
-          where: 'DesembolsoId = ? AND PerfilPreInversionId = ?',
+          where:
+              'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
           whereArgs: [
-            perfilPreInversionCofinanciadorDesembolsoProduccion.desembolsoId,
             perfilPreInversionCofinanciadorDesembolsoProduccion
-                .perfilPreInversionId
+                .perfilPreInversionId,
+            perfilPreInversionCofinanciadorDesembolsoProduccion.cofinanciadorId,
+            perfilPreInversionCofinanciadorDesembolsoProduccion.desembolsoId
           ]);
     }
 

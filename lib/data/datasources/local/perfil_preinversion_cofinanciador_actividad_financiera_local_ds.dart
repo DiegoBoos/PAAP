@@ -9,13 +9,19 @@ abstract class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
       getPerfilPreInversionCofinanciadorActividadesFinancierasDB();
   Future<PerfilPreInversionCofinanciadorActividadFinancieraModel?>
       getPerfilPreInversionCofinanciadorActividadFinancieraDB(
-          String perfilPreInversionId, String cofinanciadorId);
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String actividadFinancieraId,
+          String desembolsoId);
   Future<int> savePerfilPreInversionCofinanciadorActividadesFinancieras(
       List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
           perfilPreInversionCofinanciadorActividadFinancieraEntity);
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
       getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
-          String perfilPreInversionId, String cofinanciadorId);
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String actividadFinancieraId,
+          String desembolsoId);
   Future<int> savePerfilPreInversionCofinanciadorActividadFinancieraDB(
       PerfilPreInversionCofinanciadorActividadFinancieraEntity
           perfilPreInversionCofinanciadorActividadFinancieraEntity);
@@ -67,13 +73,22 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
   @override
   Future<PerfilPreInversionCofinanciadorActividadFinancieraModel?>
       getPerfilPreInversionCofinanciadorActividadFinancieraDB(
-          String perfilPreInversionId, String cofinanciadorId) async {
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String actividadFinancieraId,
+          String desembolsoId) async {
     final db = await DBConfig.database;
 
     final res = await db.query(
         'PerfilPreInversionCofinanciadorActividadFinanciera',
-        where: 'PerfilPreInversionId = ? AND CofinanciadorId = ?',
-        whereArgs: [perfilPreInversionId, cofinanciadorId]);
+        where:
+            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND ActividadFinancieraId = ? AND DesembolsoId = ?',
+        whereArgs: [
+          perfilPreInversionId,
+          cofinanciadorId,
+          actividadFinancieraId,
+          desembolsoId
+        ]);
 
     if (res.isEmpty) return null;
     final perfilPreInversionCofinanciadorActividadFinancieraMap = {
@@ -110,13 +125,22 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
   @override
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
       getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
-          String perfilPreInversionId, String cofinanciadorId) async {
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String actividadFinancieraId,
+          String desembolsoId) async {
     final db = await DBConfig.database;
 
     final res = await db.query(
         'PerfilPreInversionCofinanciadorActividadFinanciera',
-        where: 'PerfilPreInversionId = ? AND CofinanciadorId = ?',
-        whereArgs: [perfilPreInversionId, cofinanciadorId]);
+        where:
+            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND ActividadFinancieraId = ? AND DesembolsoId = ?',
+        whereArgs: [
+          perfilPreInversionId,
+          cofinanciadorId,
+          actividadFinancieraId,
+          desembolsoId
+        ]);
 
     final perfilPreInversionCofinanciadorActividadFinanciera =
         List<PerfilPreInversionCofinanciadorActividadFinancieraModel>.from(res
@@ -135,12 +159,16 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
 
     final resQuery = await db.query(
         'PerfilPreInversionCofinanciadorActividadFinanciera',
-        where: 'ActividadFinancieraId = ? AND PerfilPreInversionId = ?',
+        where:
+            'ActividadFinancieraId = ? AND PerfilPreInversionId = ? AND ActividadFinancieraId = ? AND DesembolsoId = ?',
         whereArgs: [
           perfilPreInversionCofinanciadorActividadFinancieraEntity
               .actividadFinancieraId,
           perfilPreInversionCofinanciadorActividadFinancieraEntity
-              .perfilPreInversionId
+              .perfilPreInversionId,
+          perfilPreInversionCofinanciadorActividadFinancieraEntity
+              .actividadFinancieraId,
+          perfilPreInversionCofinanciadorActividadFinancieraEntity.desembolsoId
         ]);
 
     if (resQuery.isEmpty) {
@@ -153,12 +181,17 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
           'E';
       batch.update('PerfilPreInversionCofinanciadorActividadFinanciera',
           perfilPreInversionCofinanciadorActividadFinancieraEntity.toJson(),
-          where: 'ActividadFinancieraId = ? AND PerfilPreInversionId = ?',
+          where:
+              'ActividadFinancieraId = ? AND PerfilPreInversionId = ? AND ActividadFinancieraId = ? AND DesembolsoId = ?',
           whereArgs: [
             perfilPreInversionCofinanciadorActividadFinancieraEntity
                 .actividadFinancieraId,
             perfilPreInversionCofinanciadorActividadFinancieraEntity
-                .perfilPreInversionId
+                .perfilPreInversionId,
+            perfilPreInversionCofinanciadorActividadFinancieraEntity
+                .actividadFinancieraId,
+            perfilPreInversionCofinanciadorActividadFinancieraEntity
+                .desembolsoId
           ]);
     }
 
@@ -202,12 +235,17 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
           .recordStatus = 'R';
       batch.update('PerfilPreInversionCofinanciadorActividadFinanciera',
           perfilPreInversionCofinanciadorActividadFinancieraProduccion.toJson(),
-          where: 'ActividadFinancieraId = ? AND PerfilPreInversionId = ?',
+          where:
+              'ActividadFinancieraId = ? AND PerfilPreInversionId = ? AND ActividadFinancieraId = ? AND DesembolsoId = ?',
           whereArgs: [
             perfilPreInversionCofinanciadorActividadFinancieraProduccion
                 .actividadFinancieraId,
             perfilPreInversionCofinanciadorActividadFinancieraProduccion
-                .perfilPreInversionId
+                .perfilPreInversionId,
+            perfilPreInversionCofinanciadorActividadFinancieraProduccion
+                .actividadFinancieraId,
+            perfilPreInversionCofinanciadorActividadFinancieraProduccion
+                .desembolsoId
           ]);
     }
 

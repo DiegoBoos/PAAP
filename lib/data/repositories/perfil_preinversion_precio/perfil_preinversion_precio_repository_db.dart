@@ -32,11 +32,13 @@ class PerfilPreInversionPrecioRepositoryDBImpl
 
   @override
   Future<Either<Failure, PerfilPreInversionPrecioEntity?>>
-      getPerfilPreInversionPrecioRepositoryDB(String id) async {
+      getPerfilPreInversionPrecioRepositoryDB(String perfilPreInversionId,
+          String productoId, String tipoCalidadId) async {
     try {
       final perfilPreInversionPrecioDB =
           await perfilPreInversionPrecioLocalDataSource
-              .getPerfilPreInversionPrecioDB(id);
+              .getPerfilPreInversionPrecioDB(
+                  perfilPreInversionId, productoId, tipoCalidadId);
 
       return Right(perfilPreInversionPrecioDB);
     } on ServerFailure catch (e) {

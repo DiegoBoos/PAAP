@@ -45,10 +45,11 @@ class ExperienciaPecuariaRepositoryDBImpl
 
   @override
   Future<Either<Failure, ExperienciaPecuariaEntity?>>
-      getExperienciaPecuariaRepositoryDB(String id) async {
+      getExperienciaPecuariaRepositoryDB(
+          String tipoActividadProductivaId, String beneficiarioId) async {
     try {
-      final experienciaPecuariaDB =
-          await experienciaPecuariaLocalDataSource.getExperienciaPecuariaDB(id);
+      final experienciaPecuariaDB = await experienciaPecuariaLocalDataSource
+          .getExperienciaPecuariaDB(tipoActividadProductivaId, beneficiarioId);
 
       return Right(experienciaPecuariaDB);
     } on ServerFailure catch (e) {

@@ -6,7 +6,8 @@ import '../../models/experiencia_agricola_model.dart';
 
 abstract class ExperienciaAgricolaLocalDataSource {
   Future<List<ExperienciaAgricolaModel>> getExperienciasAgricolasDB();
-  Future<ExperienciaAgricolaModel?> getExperienciaAgricolaDB(String id);
+  Future<ExperienciaAgricolaModel?> getExperienciaAgricolaDB(
+      String tipoActividadProductivaId, String beneficiarioId);
   Future<List<ExperienciaAgricolaModel>> getExperienciasAgricolasProduccionDB();
   Future<int> saveExperienciasAgricolasDB(
       List<ExperienciaAgricolaEntity> experienciasAgricolasEntity);
@@ -57,11 +58,13 @@ class ExperienciaAgricolaLocalDataSourceImpl
   }
 
   @override
-  Future<ExperienciaAgricolaModel?> getExperienciaAgricolaDB(String id) async {
+  Future<ExperienciaAgricolaModel?> getExperienciaAgricolaDB(
+      String tipoActividadProductivaId, String beneficiarioId) async {
     final db = await DBConfig.database;
 
     final res = await db.query('ExperienciaAgricola',
-        where: 'ExperienciaAgricolaId = ?', whereArgs: [id]);
+        where: 'TipoActividadProductivaId = ? AND BeneficiarioId = ?',
+        whereArgs: [tipoActividadProductivaId, beneficiarioId]);
 
     if (res.isEmpty) return null;
     final experienciaAgricolaMap = {

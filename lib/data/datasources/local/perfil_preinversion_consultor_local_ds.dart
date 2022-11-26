@@ -8,7 +8,7 @@ abstract class PerfilPreInversionConsultorLocalDataSource {
   Future<List<PerfilPreInversionConsultorModel>>
       getPerfilPreInversionConsultoresDB();
   Future<PerfilPreInversionConsultorModel?> getPerfilPreInversionConsultorDB(
-      String id);
+      String perfilPreInversionId, String consultorId, String revisionId);
   Future<int> savePerfilPreInversionConsultores(
       List<PerfilPreInversionConsultorEntity>
           perfilPreInversionConsultorEntity);
@@ -55,11 +55,15 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
 
   @override
   Future<PerfilPreInversionConsultorModel?> getPerfilPreInversionConsultorDB(
-      String id) async {
+      String perfilPreInversionId,
+      String consultorId,
+      String revisionId) async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionConsultor',
-        where: 'PerfilPreInversionId = ?', whereArgs: [id]);
+        where:
+            'PerfilPreInversionId = ? AND ConsultorId = ? AND RevisionId = ?',
+        whereArgs: [perfilPreInversionId, consultorId, revisionId]);
 
     if (res.isEmpty) return null;
     final perfilPreInversionConsultorMap = {
@@ -104,10 +108,12 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
         DateTime.now().toIso8601String();
 
     final resQuery = await db.query('PerfilPreInversionConsultor',
-        where: 'PerfilPreinversionId = ? AND ConsultorId = ?',
+        where:
+            'PerfilPreinversionId = ? AND ConsultorId = ? AND RevisionId = ?',
         whereArgs: [
           perfilPreInversionConsultorEntity.perfilPreInversionId,
-          perfilPreInversionConsultorEntity.consultorId
+          perfilPreInversionConsultorEntity.consultorId,
+          perfilPreInversionConsultorEntity.revisionId
         ]);
 
     if (resQuery.isEmpty) {

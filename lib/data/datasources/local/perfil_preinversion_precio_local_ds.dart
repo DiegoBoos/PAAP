@@ -7,7 +7,7 @@ import '../../models/perfil_preinversion_precio_model.dart';
 abstract class PerfilPreInversionPrecioLocalDataSource {
   Future<List<PerfilPreInversionPrecioModel>> getPerfilPreInversionPreciosDB();
   Future<PerfilPreInversionPrecioModel?> getPerfilPreInversionPrecioDB(
-      String id);
+      String perfilPreInversionId, String productoId, String tipoCalidadId);
   Future<int> savePerfilPreInversionPrecios(
       List<PerfilPreInversionPrecioEntity> perfilPreInversionPrecioEntity);
   Future<int> savePerfilPreInversionPrecioDB(
@@ -53,11 +53,15 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
 
   @override
   Future<PerfilPreInversionPrecioModel?> getPerfilPreInversionPrecioDB(
-      String id) async {
+      String perfilPreInversionId,
+      String productoId,
+      String tipoCalidadId) async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionPrecio',
-        where: 'PerfilPreInversionId = ?', whereArgs: [id]);
+        where:
+            'PerfilPreInversionId = ? AND ProductoId = ? AND TipoCalidadId = ?',
+        whereArgs: [perfilPreInversionId, productoId, tipoCalidadId]);
 
     if (res.isEmpty) return null;
     final perfilPreInversionPrecioMap = {
@@ -96,10 +100,12 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
     var batch = db.batch();
 
     final resQuery = await db.query('PerfilPreInversionPrecio',
-        where: 'PerfilPreinversionId = ? AND ProductoId = ?',
+        where:
+            'PerfilPreinversionId = ? AND ProductoId = ? AND TipoCalidadId = ?',
         whereArgs: [
           perfilPreInversionPrecioEntity.perfilPreInversionId,
-          perfilPreInversionPrecioEntity.productoId
+          perfilPreInversionPrecioEntity.productoId,
+          perfilPreInversionPrecioEntity.tipoCalidadId,
         ]);
 
     if (resQuery.isEmpty) {
@@ -110,10 +116,12 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
       perfilPreInversionPrecioEntity.recordStatus = 'E';
       batch.update(
           'PerfilPreInversionPrecio', perfilPreInversionPrecioEntity.toJson(),
-          where: 'PerfilPreinversionId = ? AND ProductoId = ?',
+          where:
+              'PerfilPreinversionId = ? AND ProductoId = ? AND TipoCalidadId = ?',
           whereArgs: [
             perfilPreInversionPrecioEntity.perfilPreInversionId,
-            perfilPreInversionPrecioEntity.productoId
+            perfilPreInversionPrecioEntity.productoId,
+            perfilPreInversionPrecioEntity.tipoCalidadId,
           ]);
     }
 
@@ -152,10 +160,12 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
       perfilPreInversionPrecioProduccion.recordStatus = 'R';
       batch.update('PerfilPreInversionPrecio',
           perfilPreInversionPrecioProduccion.toJson(),
-          where: 'PerfilPreinversionId = ? AND ProductoId = ?',
+          where:
+              'PerfilPreinversionId = ? AND ProductoId = ? AND TipoCalidadId = ?',
           whereArgs: [
             perfilPreInversionPrecioProduccion.perfilPreInversionId,
-            perfilPreInversionPrecioProduccion.productoId
+            perfilPreInversionPrecioProduccion.productoId,
+            perfilPreInversionPrecioProduccion.tipoCalidadId,
           ]);
     }
 

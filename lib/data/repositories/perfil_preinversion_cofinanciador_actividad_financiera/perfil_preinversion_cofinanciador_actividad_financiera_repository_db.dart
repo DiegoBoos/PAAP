@@ -55,12 +55,18 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
           Either<Failure,
               PerfilPreInversionCofinanciadorActividadFinancieraEntity?>>
       getPerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
-          String perfilPreInversionId, String cofinanciadorId) async {
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String actividadFinancieraId,
+          String desembolsoId) async {
     try {
       final perfilPreInversionCofinanciadorActividadFinancieraDB =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
               .getPerfilPreInversionCofinanciadorActividadFinancieraDB(
-                  perfilPreInversionId, cofinanciadorId);
+                  perfilPreInversionId,
+                  cofinanciadorId,
+                  actividadFinancieraId,
+                  desembolsoId);
 
       return Right(perfilPreInversionCofinanciadorActividadFinancieraDB);
     } on ServerFailure catch (e) {
@@ -93,12 +99,18 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
           Either<Failure,
               List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
       getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorRepositoryDB(
-          String perfilPreInversionId, String cofinanciadorId) async {
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String actividadFinancieraId,
+          String desembolsoId) async {
     try {
       final result =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
               .getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
-                  perfilPreInversionId, cofinanciadorId);
+                  perfilPreInversionId,
+                  cofinanciadorId,
+                  actividadFinancieraId,
+                  desembolsoId);
       return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
