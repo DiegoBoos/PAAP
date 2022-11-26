@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/producto_objetivo_entity.dart';
 import '../../../domain/repositories/producto_objetivo/producto_objetivo_repository_db.dart';
-import '../../datasources/local/producto_objetivo/producto_objetivo_local_ds.dart';
+import '../../datasources/local/producto_objetivo_local_ds.dart';
 
 class ProductoObjetivoRepositoryDBImpl implements ProductoObjetivoRepositoryDB {
   final ProductoObjetivoLocalDataSource productoObjetivoLocalDataSource;

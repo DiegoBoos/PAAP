@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/genero/genero_repository.dart';
-import '../../datasources/remote/genero/genero_remote_ds.dart';
+import '../../datasources/remote/genero_remote_ds.dart';
 
 class GeneroRepositoryImpl implements GeneroRepository {
   final GeneroRemoteDataSource generoRemoteDataSource;

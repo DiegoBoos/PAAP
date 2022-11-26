@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/sitio_entrega_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/sitio_entrega/sitio_entrega_repository.dart';
-import '../../datasources/remote/sitio_entrega/sitio_entrega_remote_ds.dart';
+import '../../datasources/remote/sitio_entrega_remote_ds.dart';
 
 class SitioEntregaRepositoryImpl implements SitioEntregaRepository {
   final SitioEntregaRemoteDataSource sitioEntregaRemoteDataSource;

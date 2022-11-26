@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/aliado_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/aliado/aliado_repository.dart';
-import '../../datasources/remote/aliado/aliado_remote_ds.dart';
+import '../../datasources/remote/aliado_remote_ds.dart';
 
 class AliadoRepositoryImpl implements AliadoRepository {
   final AliadoRemoteDataSource aliadoRemoteDataSource;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../utils/floating_buttons.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/perfil_form.dart';
@@ -29,24 +30,17 @@ class PerfilDetailPage extends StatelessWidget {
             child: NetworkIcon(),
           )
         ]),
-        body: SingleChildScrollView(
-          child: Column(children: [
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text('PERFIL', style: Styles.titleStyle),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
-              child: Text('Información Básica', style: Styles.subtitleStyle),
-            ),
-            const PerfilForm()
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: ListView(children: const [
+            SizedBox(height: 20),
+            Text('PERFIL', style: Styles.titleStyle),
+            SizedBox(height: 20),
+            Text('Información Básica', style: Styles.subtitleStyle),
+            SizedBox(height: 20),
+            PerfilForm(),
+            SizedBox(height: 20),
+            BackFloatingButton()
           ]),
         ));
   }

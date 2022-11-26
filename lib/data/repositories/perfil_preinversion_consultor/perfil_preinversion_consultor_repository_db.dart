@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_consultor_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_consultor/perfil_preinversion_consultor_repository_db.dart';
-import '../../datasources/local/perfil_preinversion_consultor/perfil_preinversion_consultor_local_ds.dart';
+import '../../datasources/local/perfil_preinversion_consultor_local_ds.dart';
 
 class PerfilPreInversionConsultorRepositoryDBImpl
     implements PerfilPreInversionConsultorRepositoryDB {

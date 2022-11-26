@@ -41,7 +41,7 @@ class PerfilCard extends StatelessWidget {
                         ])
                       ])));
         }
-        return const SizedBox();
+        return Container();
       },
     );
   }

@@ -21,4 +21,8 @@ class MunicipioUsecaseDB {
       getMunicipiosByDepartamentoUsecaseDB(String departamentoId) {
     return repositoryDB.getMunicipiosByDepartamentoRepositoryDB(departamentoId);
   }
+
+  Future<Either<Failure, List<String>?>> getMunicipiosIdsUsecaseDB() {
+    return repositoryDB.getMunicipiosIdsRepositoryDB();
+  }
 }

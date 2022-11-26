@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/rubro_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/rubro/rubro_repository.dart';
-import '../../datasources/remote/rubro/rubro_remote_ds.dart';
+import '../../datasources/remote/rubro_remote_ds.dart';
 
 class RubroRepositoryImpl implements RubroRepository {
   final RubroRemoteDataSource rubroRemoteDataSource;

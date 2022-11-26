@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/meta_indicador_entity.dart';
 import '../../../domain/repositories/meta_indicador/meta_indicador_repository_db.dart';
-import '../../datasources/local/meta_indicador/meta_indicador_local_ds.dart';
+import '../../datasources/local/meta_indicador_local_ds.dart';
 
 class MetaIndicadorRepositoryDBImpl implements MetaIndicadorRepositoryDB {
   final MetaIndicadorLocalDataSource metaIndicadorLocalDataSource;

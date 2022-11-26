@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/auth/auth_repository.dart';
-import '../../datasources/remote/auth/auth_remote_ds.dart';
+import '../../datasources/remote/auth_remote_ds.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSource;

@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_actividad_financiera_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_repository_db.dart';
-import '../../datasources/local/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_local_ds.dart';
+import '../../datasources/local/perfil_preinversion_cofinanciador_actividad_financiera_local_ds.dart';
 
 class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
     implements PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB {
@@ -55,11 +55,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
           Either<Failure,
               PerfilPreInversionCofinanciadorActividadFinancieraEntity?>>
       getPerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
-          String id) async {
+          String perfilPreInversionId, String cofinanciadorId) async {
     try {
       final perfilPreInversionCofinanciadorActividadFinancieraDB =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
-              .getPerfilPreInversionCofinanciadorActividadFinancieraDB(id);
+              .getPerfilPreInversionCofinanciadorActividadFinancieraDB(
+                  perfilPreInversionId, cofinanciadorId);
 
       return Right(perfilPreInversionCofinanciadorActividadFinancieraDB);
     } on ServerFailure catch (e) {
@@ -92,12 +93,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
           Either<Failure,
               List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
       getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorRepositoryDB(
-          String cofinanciadorId) async {
+          String perfilPreInversionId, String cofinanciadorId) async {
     try {
       final result =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
               .getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
-                  cofinanciadorId);
+                  perfilPreInversionId, cofinanciadorId);
       return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));

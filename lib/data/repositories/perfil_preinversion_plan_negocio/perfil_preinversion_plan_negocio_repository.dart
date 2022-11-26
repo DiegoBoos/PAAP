@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_plan_negocio_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_repository.dart';
-import '../../datasources/remote/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_remote_ds.dart';
+import '../../datasources/remote/perfil_preinversion_plan_negocio_remote_ds.dart';
 
 class PerfilPreInversionPlanNegocioRepositoryImpl
     implements PerfilPreInversionPlanNegocioRepository {

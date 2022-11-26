@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_discapacidad_entity.dart';
 import '../../../domain/repositories/tipo_discapacidad/tipo_discapacidad_repository_db.dart';
-import '../../datasources/local/tipo_discapacidad/tipo_discapacidad_local_ds.dart';
+import '../../datasources/local/tipo_discapacidad_local_ds.dart';
 
 class TipoDiscapacidadRepositoryDBImpl implements TipoDiscapacidadRepositoryDB {
   final TipoDiscapacidadLocalDataSource tipoDiscapacidadLocalDataSource;

@@ -1549,7 +1549,8 @@ perfilPreInversionAliadosInit() {
       ));
 
   // cubit
-  locator.registerFactory(() => PerfilPreInversionAliadoCubit());
+  locator.registerFactory(() =>
+      PerfilPreInversionAliadoCubit(perfilPreInversionAliadoDB: locator()));
 
   // remote usecase
   locator

@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/evaluacion_entity.dart';
 import '../../../domain/repositories/evaluacion/evaluacion_repository_db.dart';
-import '../../datasources/local/evaluacion/evaluacion_local_ds.dart';
+import '../../datasources/local/evaluacion_local_ds.dart';
 
 class EvaluacionRepositoryDBImpl implements EvaluacionRepositoryDB {
   final EvaluacionLocalDataSource evaluacionLocalDataSource;

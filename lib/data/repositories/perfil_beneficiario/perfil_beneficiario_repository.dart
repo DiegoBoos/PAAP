@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_beneficiario_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/perfil_beneficiario/perfil_beneficiario_repository.dart';
-import '../../datasources/remote/perfil_beneficiario/perfil_beneficiario_remote_ds.dart';
+import '../../datasources/remote/perfil_beneficiario_remote_ds.dart';
 
 class PerfilBeneficiarioRepositoryImpl implements PerfilBeneficiarioRepository {
   final PerfilBeneficiarioRemoteDataSource perfilBeneficiarioRemoteDataSource;

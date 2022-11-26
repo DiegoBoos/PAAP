@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/actividad_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/actividad/actividad_repository.dart';
-import '../../datasources/remote/actividad/actividad_remote_ds.dart';
+import '../../datasources/remote/actividad_remote_ds.dart';
 
 class ActividadRepositoryImpl implements ActividadRepository {
   final ActividadRemoteDataSource actividadRemoteDataSource;

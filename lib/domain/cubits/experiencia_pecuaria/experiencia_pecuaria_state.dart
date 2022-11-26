@@ -1,48 +1,62 @@
 part of 'experiencia_pecuaria_cubit.dart';
 
 abstract class ExperienciaPecuariaState extends Equatable {
-  final ExperienciaPecuariaEntity? experienciaPecuaria;
-  const ExperienciaPecuariaState({this.experienciaPecuaria});
+  final ExperienciaPecuariaEntity experienciaPecuaria;
+  const ExperienciaPecuariaState({required this.experienciaPecuaria});
 
   @override
   List<Object?> get props => [experienciaPecuaria];
 }
 
 class ExperienciaPecuariaInitial extends ExperienciaPecuariaState {
-  ExperienciaPecuariaInitial()
-      : super(
-            experienciaPecuaria: ExperienciaPecuariaEntity(
-          tipoActividadProductivaId: '',
-          beneficiarioId: '',
-          frecuenciaId: '',
-          cantidadAnimales: '',
-          cantidadCria: '',
-          cantidadLevante: '',
-          cantidadCeba: '',
-          cantidadLeche: '',
-          valorJornal: '',
-          costosInsumos: '',
-          ingresos: '',
-          recordStatus: '',
-        ));
+  ExperienciaPecuariaInitial() : super(experienciaPecuaria: initObject());
 }
 
-class ExperienciaPecuariaLoading extends ExperienciaPecuariaState {}
+class ExperienciaPecuariaLoading extends ExperienciaPecuariaState {
+  ExperienciaPecuariaLoading() : super(experienciaPecuaria: initObject());
+}
 
 class ExperienciaPecuariaLoaded extends ExperienciaPecuariaState {
-  final ExperienciaPecuariaEntity? experienciaPecuariaLoaded;
+  final ExperienciaPecuariaEntity experienciaPecuariaLoaded;
 
   const ExperienciaPecuariaLoaded(this.experienciaPecuariaLoaded)
       : super(experienciaPecuaria: experienciaPecuariaLoaded);
 }
 
-class ExperienciaPecuariaSaved extends ExperienciaPecuariaState {}
+class ExperienciaPecuariaChanged extends ExperienciaPecuariaState {
+  final ExperienciaPecuariaEntity experienciaPecuariaChanged;
+
+  const ExperienciaPecuariaChanged(this.experienciaPecuariaChanged)
+      : super(experienciaPecuaria: experienciaPecuariaChanged);
+}
+
+class ExperienciaPecuariaSaved extends ExperienciaPecuariaState {
+  ExperienciaPecuariaSaved() : super(experienciaPecuaria: initObject());
+}
 
 class ExperienciaPecuariaError extends ExperienciaPecuariaState {
   final String message;
 
-  const ExperienciaPecuariaError(this.message);
+  ExperienciaPecuariaError(this.message)
+      : super(experienciaPecuaria: initObject());
 
   @override
   List<Object?> get props => [message];
+}
+
+ExperienciaPecuariaEntity initObject() {
+  return ExperienciaPecuariaEntity(
+    tipoActividadProductivaId: '',
+    beneficiarioId: '',
+    frecuenciaId: '',
+    cantidadAnimales: '',
+    cantidadCria: '',
+    cantidadLevante: '',
+    cantidadCeba: '',
+    cantidadLeche: '',
+    valorJornal: '',
+    costosInsumos: '',
+    ingresos: '',
+    recordStatus: '',
+  );
 }

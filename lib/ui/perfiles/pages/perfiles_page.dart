@@ -78,7 +78,7 @@ class _PerfilesPageState extends State<PerfilesPage> {
                 return PerfilesRows(
                     vPerfiles: vPerfiles, subtitleStyle: Styles.subtitleStyle);
               }
-              return const SizedBox();
+              return Container();
             },
           ),
           const SizedBox(height: 30),

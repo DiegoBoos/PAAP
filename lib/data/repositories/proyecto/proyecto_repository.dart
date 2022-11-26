@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/proyecto_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/proyecto/proyecto_repository.dart';
-import '../../datasources/remote/proyecto/proyecto_remote_ds.dart';
+import '../../datasources/remote/proyecto_remote_ds.dart';
 
 class ProyectoRepositoryImpl implements ProyectoRepository {
   final ProyectoRemoteDataSource proyectoRemoteDataSource;

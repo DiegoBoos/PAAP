@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/criterio_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/criterio/criterio_repository.dart';
-import '../../datasources/remote/criterio/criterio_remote_ds.dart';
+import '../../datasources/remote/criterio_remote_ds.dart';
 
 class CriterioRepositoryImpl implements CriterioRepository {
   final CriterioRemoteDataSource criterioRemoteDataSource;

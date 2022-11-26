@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_actividad_productiva_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/tipo_actividad_productiva/tipo_actividad_productiva_repository.dart';
-import '../../datasources/remote/tipo_actividad_productiva/tipo_actividad_productiva_remote_ds.dart';
+import '../../datasources/remote/tipo_actividad_productiva_remote_ds.dart';
 
 class TipoActividadProductivaRepositoryImpl
     implements TipoActividadProductivaRepository {

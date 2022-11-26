@@ -1,31 +1,49 @@
 part of 'perfil_preinversion_precio_cubit.dart';
 
 abstract class PerfilPreInversionPrecioState extends Equatable {
-  final List<PerfilPreInversionPrecioEntity>? perfilPreInversionPrecios;
+  final PerfilPreInversionPrecioEntity perfilPreInversionPrecio;
 
-  const PerfilPreInversionPrecioState({this.perfilPreInversionPrecios});
+  const PerfilPreInversionPrecioState({required this.perfilPreInversionPrecio});
 
   @override
-  List<Object?> get props => [perfilPreInversionPrecios];
+  List<Object?> get props => [perfilPreInversionPrecio];
 }
 
-class PerfilPreInversionPreciosInitial extends PerfilPreInversionPrecioState {}
-
-class PerfilPreInversionPreciosLoading extends PerfilPreInversionPrecioState {}
-
-class PerfilPreInversionPreciosLoaded extends PerfilPreInversionPrecioState {
-  final List<PerfilPreInversionPrecioEntity>? perfilPreInversionPreciosLoaded;
-
-  const PerfilPreInversionPreciosLoaded(this.perfilPreInversionPreciosLoaded)
-      : super(perfilPreInversionPrecios: perfilPreInversionPreciosLoaded);
+class PerfilPreInversionPrecioInitial extends PerfilPreInversionPrecioState {
+  PerfilPreInversionPrecioInitial()
+      : super(perfilPreInversionPrecio: initObject());
 }
 
-class PerfilPreInversionPrecioSaved extends PerfilPreInversionPrecioState {}
+class PerfilPreInversionPrecioLoading extends PerfilPreInversionPrecioState {
+  const PerfilPreInversionPrecioLoading(
+      {required super.perfilPreInversionPrecio});
+}
+
+class PerfilPreInversionPrecioChanged extends PerfilPreInversionPrecioState {
+  final PerfilPreInversionPrecioEntity perfilPreInversionPrecioChanged;
+
+  const PerfilPreInversionPrecioChanged(this.perfilPreInversionPrecioChanged)
+      : super(perfilPreInversionPrecio: perfilPreInversionPrecioChanged);
+}
+
+class PerfilPreInversionPrecioSaved extends PerfilPreInversionPrecioState {
+  PerfilPreInversionPrecioSaved()
+      : super(perfilPreInversionPrecio: initObject());
+}
 
 class PerfilPreInversionPrecioError extends PerfilPreInversionPrecioState {
   final String message;
 
-  const PerfilPreInversionPrecioError(this.message);
+  PerfilPreInversionPrecioError(this.message)
+      : super(perfilPreInversionPrecio: initObject());
   @override
   List<Object?> get props => [message];
 }
+
+PerfilPreInversionPrecioEntity initObject() => PerfilPreInversionPrecioEntity(
+    perfilPreInversionId: '',
+    productoId: '',
+    tipoCalidadId: '',
+    precio: '',
+    unidadId: '',
+    recordStatus: '');

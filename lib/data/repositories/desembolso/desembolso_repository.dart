@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/desembolso_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/desembolso/desembolso_repository.dart';
-import '../../datasources/remote/desembolso/desembolso_remote_ds.dart';
+import '../../datasources/remote/desembolso_remote_ds.dart';
 
 class DesembolsoRepositoryImpl implements DesembolsoRepository {
   final DesembolsoRemoteDataSource desembolsoRemoteDataSource;

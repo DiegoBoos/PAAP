@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/revision_entity.dart';
 export 'package:paap/domain/cubits/revision/revision_cubit.dart';
 export 'package:paap/data/repositories/revision/revision_repository.dart';
 export 'package:paap/data/repositories/revision/revision_repository_db.dart';
-export 'package:paap/data/datasources/remote/revision/revision_remote_ds.dart';
-export 'package:paap/data/datasources/local/revision/revision_local_ds.dart';
+export 'package:paap/data/datasources/remote/revision_remote_ds.dart';
+export 'package:paap/data/datasources/local/revision_local_ds.dart';

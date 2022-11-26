@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/evaluacion_respuesta_entity.dart';
 import '../../../domain/repositories/evaluacion_respuesta/evaluacion_respuesta_repository_db.dart';
-import '../../datasources/local/evaluacion_respuesta/evaluacion_respuesta_local_ds.dart';
+import '../../datasources/local/evaluacion_respuesta_local_ds.dart';
 
 class EvaluacionRespuestaRepositoryDBImpl
     implements EvaluacionRespuestaRepositoryDB {
@@ -13,6 +13,22 @@ class EvaluacionRespuestaRepositoryDBImpl
 
   EvaluacionRespuestaRepositoryDBImpl(
       {required this.evaluacionRespuestaLocalDataSource});
+
+  @override
+  Future<Either<Failure, List<EvaluacionRespuestaEntity>>>
+      getEvaluacionesRespuestasRepositoryDB(
+          String criterioId, String evaluacionId) async {
+    try {
+      final evaluacionesRespuestasDB = await evaluacionRespuestaLocalDataSource
+          .getEvaluacionesRespuestasDB(criterioId, evaluacionId);
+
+      return Right(evaluacionesRespuestasDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 
   @override
   Future<Either<Failure, List<EvaluacionRespuestaEntity>>>

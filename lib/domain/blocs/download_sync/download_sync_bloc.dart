@@ -685,11 +685,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           percent: calculatePercent())));
       await downloadUnidades(usuario, emit);
 
-      /*  add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
           title: 'Sincronizando Veredas',
           counter: state.downloadProgressModel!.counter + 1,
           percent: calculatePercent())));
-      await downloadVeredas(usuario, emit); */
+      await downloadVeredas(usuario, emit);
 
       add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
           title: 'Sincronizando Visitas',
@@ -704,7 +704,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     });
 
     on<DownloadStatusChanged>((event, emit) {
-      event.progress.counter == 61
+      event.progress.counter == 62
           ? emit(DownloadSyncSuccess())
           : emit(DownloadSyncInProgress(event.progress));
     });
@@ -1219,7 +1219,16 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
 
   Future<void> downloadVeredas(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
-    final result = await vereda.getVeredasUsecase(usuario);
+    final result = await perfilesDB.getMunicipiosPerfilesUsecaseDB();
+    //final result = await municipiosDB.getMunicipiosIdsUsecaseDB();
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await getVeredas(usuario, data, emit));
+  }
+
+  Future<void> getVeredas(UsuarioEntity usuario, List<String> municipiosIds,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await vereda.downloadVeredas(usuario, municipiosIds);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)),
         (data) async => await saveVeredas(data, emit));

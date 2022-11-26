@@ -11,7 +11,8 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoRepositoryDB {
       getPerfilesPreInversionesCofinanciadoresDesembolsosProduccionRepositoryDB();
 
   Future<Either<Failure, PerfilPreInversionCofinanciadorDesembolsoEntity?>>
-      getPerfilPreInversionCofinanciadorDesembolsoRepositoryDB(String id);
+      getPerfilPreInversionCofinanciadorDesembolsoRepositoryDB(
+          String perfilPreInversionId, String cofinanciadorId);
 
   Future<Either<Failure, int>>
       savePerfilPreInversionCofinanciadorDesembolsosRepositoryDB(
@@ -22,7 +23,7 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoRepositoryDB {
           Either<Failure,
               List<PerfilPreInversionCofinanciadorDesembolsoEntity>?>>
       getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorRepositoryDB(
-          String cofinanciadorId);
+          String perfilPreInversionId, String cofinanciadorId);
 
   Future<Either<Failure, int>>
       savePerfilPreInversionCofinanciadorDesembolsoRepositoryDB(

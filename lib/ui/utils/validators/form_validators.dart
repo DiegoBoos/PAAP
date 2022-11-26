@@ -14,7 +14,7 @@ abstract class FormValidators {
   }
 
   static validateConfirmPassword(String? value, String? password) {
-    if (value!.isEmpty) {
+    if (value == null || value.isEmpty) {
       return 'La contraseña es requerida';
     }
     if (value.length < 6) {

@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/cofinanciador_entity.dart';
 export 'package:paap/domain/cubits/cofinanciador/cofinanciador_cubit.dart';
 export 'package:paap/data/repositories/cofinanciador/cofinanciador_repository.dart';
 export 'package:paap/data/repositories/cofinanciador/cofinanciador_repository_db.dart';
-export 'package:paap/data/datasources/remote/cofinanciador/cofinanciador_remote_ds.dart';
-export 'package:paap/data/datasources/local/cofinanciador/cofinanciador_local_ds.dart';
+export 'package:paap/data/datasources/remote/cofinanciador_remote_ds.dart';
+export 'package:paap/data/datasources/local/cofinanciador_local_ds.dart';

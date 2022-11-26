@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/entities/evaluacion_respuesta_entity.dart';
 import '../../../domain/repositories/evaluacion_respuesta/evaluacion_respuesta_repository.dart';
-import '../../datasources/remote/evaluacion_respuesta/evaluacion_respuesta_remote_ds.dart';
+import '../../datasources/remote/evaluacion_respuesta_remote_ds.dart';
 
 class EvaluacionRespuestaRepositoryImpl
     implements EvaluacionRespuestaRepository {

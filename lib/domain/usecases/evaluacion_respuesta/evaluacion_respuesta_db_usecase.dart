@@ -8,6 +8,13 @@ class EvaluacionRespuestaUsecaseDB {
 
   EvaluacionRespuestaUsecaseDB(this.repositoryDB);
 
+  Future<Either<Failure, List<EvaluacionRespuestaEntity>?>>
+      getEvaluacionesRespuestasUsecaseDB(
+          String criterioId, String evaluacionId) {
+    return repositoryDB.getEvaluacionesRespuestasRepositoryDB(
+        criterioId, evaluacionId);
+  }
+
   Future<Either<Failure, EvaluacionRespuestaEntity?>>
       getEvaluacionRespuestaUsecaseDB(String criterioId, String evaluacionId) {
     return repositoryDB.getEvaluacionRespuestaRepositoryDB(
@@ -19,12 +26,6 @@ class EvaluacionRespuestaUsecaseDB {
     return repositoryDB.saveEvaluacionRespuestaRepositoryDB(
         evaluacionRespuestaEntity, perfilId);
   }
-
-  /* Future<Either<Failure, int>> saveEvaluacionesRespuestasUsecaseDB(
-      List<EvaluacionRespuestaEntity> evaluacionRespuestaEntity) {
-    return repositoryDB
-        .saveEvaluacionesRespuestasRepositoryDB(evaluacionRespuestaEntity);
-  } */
 
   Future<Either<Failure, int>> saveEvaluacionesRespuestasUsecaseDB(
       List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity) {

@@ -19,7 +19,13 @@ class ExperienciaPecuariaCubit extends Cubit<ExperienciaPecuariaState> {
         .getExperienciaPecuariaUsecaseDB(beneficiarioId);
     result.fold(
         (failure) => emit(ExperienciaPecuariaError(failure.properties.first)),
-        (data) => emit(ExperienciaPecuariaLoaded(data)));
+        (data) {
+      if (data == null) {
+        emit(ExperienciaPecuariaError('Error'));
+      } else {
+        emit(ExperienciaPecuariaLoaded(data));
+      }
+    });
   }
 
   void saveExperienciaPecuariaDB(
@@ -33,61 +39,67 @@ class ExperienciaPecuariaCubit extends Cubit<ExperienciaPecuariaState> {
 
   void changeTipoActividadProductiva(String? value) {
     final tipoActividadProductivaChanged =
-        state.experienciaPecuaria!.copyWith(tipoActividadProductivaId: value);
-    emit(ExperienciaPecuariaLoaded(tipoActividadProductivaChanged));
+        state.experienciaPecuaria.copyWith(tipoActividadProductivaId: value);
+    emit(ExperienciaPecuariaChanged(tipoActividadProductivaChanged));
   }
 
   void changeFrecuencia(String? newValue) {
     final frecuenciaChanged =
-        state.experienciaPecuaria!.copyWith(frecuenciaId: newValue);
-    emit(ExperienciaPecuariaLoaded(frecuenciaChanged));
+        state.experienciaPecuaria.copyWith(frecuenciaId: newValue);
+    emit(ExperienciaPecuariaChanged(frecuenciaChanged));
   }
 
   void changeCantidadAnimales(String? newValue) {
     final cantidadAnimalesChanged =
-        state.experienciaPecuaria!.copyWith(cantidadAnimales: newValue);
-    emit(ExperienciaPecuariaLoaded(cantidadAnimalesChanged));
+        state.experienciaPecuaria.copyWith(cantidadAnimales: newValue);
+    emit(ExperienciaPecuariaChanged(cantidadAnimalesChanged));
   }
 
   void changeCantidadCria(String? newValue) {
     final cantidadCriaChanged =
-        state.experienciaPecuaria!.copyWith(cantidadCria: newValue);
-    emit(ExperienciaPecuariaLoaded(cantidadCriaChanged));
+        state.experienciaPecuaria.copyWith(cantidadCria: newValue);
+    emit(ExperienciaPecuariaChanged(cantidadCriaChanged));
   }
 
   void changeCantidadLevante(String? newValue) {
     final cantidadLevanteChanged =
-        state.experienciaPecuaria!.copyWith(cantidadLevante: newValue);
-    emit(ExperienciaPecuariaLoaded(cantidadLevanteChanged));
+        state.experienciaPecuaria.copyWith(cantidadLevante: newValue);
+    emit(ExperienciaPecuariaChanged(cantidadLevanteChanged));
   }
 
   void changeCantidadCeba(String? newValue) {
     final cantidadCebaChanged =
-        state.experienciaPecuaria!.copyWith(cantidadCeba: newValue);
-    emit(ExperienciaPecuariaLoaded(cantidadCebaChanged));
+        state.experienciaPecuaria.copyWith(cantidadCeba: newValue);
+    emit(ExperienciaPecuariaChanged(cantidadCebaChanged));
   }
 
   void changeCantidadLeche(String? newValue) {
     final cantidadLecheChanged =
-        state.experienciaPecuaria!.copyWith(cantidadLeche: newValue);
-    emit(ExperienciaPecuariaLoaded(cantidadLecheChanged));
+        state.experienciaPecuaria.copyWith(cantidadLeche: newValue);
+    emit(ExperienciaPecuariaChanged(cantidadLecheChanged));
   }
 
   void changeValorJornal(String? newValue) {
     final valorJornalChanged =
-        state.experienciaPecuaria!.copyWith(valorJornal: newValue);
-    emit(ExperienciaPecuariaLoaded(valorJornalChanged));
+        state.experienciaPecuaria.copyWith(valorJornal: newValue);
+    emit(ExperienciaPecuariaChanged(valorJornalChanged));
   }
 
   void changeCostosInsumos(String? newValue) {
     final costosInsumosChanged =
-        state.experienciaPecuaria!.copyWith(costosInsumos: newValue);
-    emit(ExperienciaPecuariaLoaded(costosInsumosChanged));
+        state.experienciaPecuaria.copyWith(costosInsumos: newValue);
+    emit(ExperienciaPecuariaChanged(costosInsumosChanged));
   }
 
   void changeIngresos(String? newValue) {
     final ingresosChanged =
-        state.experienciaPecuaria!.copyWith(ingresos: newValue);
-    emit(ExperienciaPecuariaLoaded(ingresosChanged));
+        state.experienciaPecuaria.copyWith(ingresos: newValue);
+    emit(ExperienciaPecuariaChanged(ingresosChanged));
+  }
+
+  void changeBeneficiarioId(String value) {
+    final beneficiarioIdChanged =
+        state.experienciaPecuaria.copyWith(beneficiarioId: value);
+    emit(ExperienciaPecuariaChanged(beneficiarioIdChanged));
   }
 }

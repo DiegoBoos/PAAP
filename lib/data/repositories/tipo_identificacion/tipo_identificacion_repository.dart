@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_identificacion_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/tipo_identificacion/tipo_identificacion_repository.dart';
-import '../../datasources/remote/tipo_identificacion/tipo_identificacion_remote_ds.dart';
+import '../../datasources/remote/tipo_identificacion_remote_ds.dart';
 
 class TipoIdentificacionRepositoryImpl implements TipoIdentificacionRepository {
   final TipoIdentificacionRemoteDataSource tipoIdentificacionRemoteDataSource;

@@ -9,11 +9,13 @@ part 'actividad_state.dart';
 class ActividadCubit extends Cubit<ActividadState> {
   final ActividadUsecaseDB actividadDB;
 
-  ActividadCubit({required this.actividadDB}) : super(ActividadInitial());
+  ActividadCubit({required this.actividadDB}) : super(ActividadesInitial()) {
+    getActividadesDB();
+  }
 
-  void getActividadDB(String id) async {
-    final result = await actividadDB.getActividadUsecaseDB(id);
-    result.fold((failure) => emit(ActividadError(failure.properties.first)),
-        (data) => emit(ActividadLoaded(data)));
+  void getActividadesDB() async {
+    final result = await actividadDB.getActividadesUsecaseDB();
+    result.fold((failure) => emit(ActividadesError(failure.properties.first)),
+        (data) => emit(ActividadesLoaded(data)));
   }
 }

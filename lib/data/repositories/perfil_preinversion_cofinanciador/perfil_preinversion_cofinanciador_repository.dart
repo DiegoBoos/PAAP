@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_repository.dart';
-import '../../datasources/remote/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_remote_ds.dart';
+import '../../datasources/remote/perfil_preinversion_cofinanciador_remote_ds.dart';
 
 class PerfilPreInversionCofinanciadorRepositoryImpl
     implements PerfilPreInversionCofinanciadorRepository {

@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/cofinanciador_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/cofinanciador/cofinanciador_repository.dart';
-import '../../datasources/remote/cofinanciador/cofinanciador_remote_ds.dart';
+import '../../datasources/remote/cofinanciador_remote_ds.dart';
 
 class CofinanciadorRepositoryImpl implements CofinanciadorRepository {
   final CofinanciadorRemoteDataSource cofinanciadorRemoteDataSource;

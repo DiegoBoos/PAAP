@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/actividad_financiera_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/actividad_financiera/actividad_financiera_repository.dart';
-import '../../datasources/remote/actividad_financiera/actividad_financiera_remote_ds.dart';
+import '../../datasources/remote/actividad_financiera_remote_ds.dart';
 
 class ActividadFinancieraRepositoryImpl
     implements ActividadFinancieraRepository {

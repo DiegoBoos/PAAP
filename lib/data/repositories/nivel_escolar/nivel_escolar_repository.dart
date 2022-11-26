@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/nivel_escolar_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/nivel_escolar/nivel_escolar_repository.dart';
-import '../../datasources/remote/nivel_escolar/nivel_escolar_remote_ds.dart';
+import '../../datasources/remote/nivel_escolar_remote_ds.dart';
 
 class NivelEscolarRepositoryImpl implements NivelEscolarRepository {
   final NivelEscolarRemoteDataSource nivelEscolarRemoteDataSource;

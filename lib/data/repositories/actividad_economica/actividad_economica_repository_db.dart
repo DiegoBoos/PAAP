@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/actividad_economica_entity.dart';
 import '../../../domain/repositories/actividad_economica/actividad_economica_repository_db.dart';
-import '../../datasources/local/actividad_economica/actividad_economica_local_ds.dart';
+import '../../datasources/local/actividad_economica_local_ds.dart';
 
 class ActividadEconomicaRepositoryDBImpl
     implements ActividadEconomicaRepositoryDB {

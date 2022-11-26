@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/evaluacion_respuesta_entity.dart';
 export 'package:paap/domain/cubits/evaluacion_respuesta/evaluacion_respuesta_cubit.dart';
 export 'package:paap/data/repositories/evaluacion_respuesta/evaluacion_respuesta_repository.dart';
 export 'package:paap/data/repositories/evaluacion_respuesta/evaluacion_respuesta_repository_db.dart';
-export 'package:paap/data/datasources/remote/evaluacion_respuesta/evaluacion_respuesta_remote_ds.dart';
-export 'package:paap/data/datasources/local/evaluacion_respuesta/evaluacion_respuesta_local_ds.dart';
+export 'package:paap/data/datasources/remote/evaluacion_respuesta_remote_ds.dart';
+export 'package:paap/data/datasources/local/evaluacion_respuesta_local_ds.dart';

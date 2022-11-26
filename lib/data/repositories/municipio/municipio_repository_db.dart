@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
-import '../../../domain/entities/municipio_entity.dart';
-import '../../../domain/repositories/municipio/municipio_repository_db.dart';
-import '../../datasources/local/municipio/municipio_local_ds.dart';
+import '../../../../domain/core/error/exception.dart';
+import '../../../../domain/core/error/failure.dart';
+import '../../../../domain/entities/municipio_entity.dart';
+import '../../../../domain/repositories/municipio/municipio_repository_db.dart';
+import '../../datasources/local/municipio_local_ds.dart';
 
 class MunicipioRepositoryDBImpl implements MunicipioRepositoryDB {
   final MunicipioLocalDataSource municipioLocalDataSource;
@@ -47,6 +47,19 @@ class MunicipioRepositoryDBImpl implements MunicipioRepositoryDB {
           .getMunicipiosByDepartamentoDB(departamentoId);
 
       return Right(municipiosByDepartamentoDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<String>>> getMunicipiosIdsRepositoryDB() async {
+    try {
+      final municipioIds = await municipioLocalDataSource.getMunicipiosIdsDB();
+
+      return Right(municipioIds);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

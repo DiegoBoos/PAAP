@@ -77,7 +77,7 @@ class _TabsPageState extends State<TabsPage> {
           }
           return Scaffold(
             floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
+                FloatingActionButtonLocation.miniStartTop,
             floatingActionButton: FloatingActionButton(
               mini: true,
               backgroundColor: Theme.of(context).colorScheme.primary,
@@ -132,7 +132,7 @@ class _TabsPageState extends State<TabsPage> {
                               label: menu.nombre))
                           .toList());
                 }
-                return const SizedBox();
+                return Container();
               },
             ),
           );

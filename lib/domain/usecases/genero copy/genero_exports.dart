@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/genero_entity.dart';
 export 'package:paap/domain/cubits/genero/genero_cubit.dart';
 export 'package:paap/data/repositories/genero/genero_repository.dart';
 export 'package:paap/data/repositories/genero/genero_repository_db.dart';
-export 'package:paap/data/datasources/remote/genero/genero_remote_ds.dart';
-export 'package:paap/data/datasources/local/genero/genero_local_ds.dart';
+export 'package:paap/data/datasources/remote/genero_remote_ds.dart';
+export 'package:paap/data/datasources/local/genero_local_ds.dart';

@@ -11,16 +11,7 @@ class PerfilPreInversionPrecioCubit
   final PerfilPreInversionPrecioUsecaseDB perfilPreInversionPrecioDB;
 
   PerfilPreInversionPrecioCubit({required this.perfilPreInversionPrecioDB})
-      : super(PerfilPreInversionPreciosInitial());
-
-  void getPerfilPreInversionPreciosDB() async {
-    final result = await perfilPreInversionPrecioDB
-        .getPerfilPreInversionPreciosUsecaseDB();
-    result.fold(
-        (failure) =>
-            emit(PerfilPreInversionPrecioError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionPreciosLoaded(data)));
-  }
+      : super(PerfilPreInversionPrecioInitial());
 
   void savePerfilPreInversionPrecioDB(
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
@@ -32,5 +23,5 @@ class PerfilPreInversionPrecioCubit
         (data) => emit(PerfilPreInversionPrecioSaved()));
   }
 
-  void initState() => emit(PerfilPreInversionPreciosInitial());
+  void initState() => emit(PerfilPreInversionPrecioInitial());
 }

@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/experiencia_pecuaria_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/experiencia_pecuaria/experiencia_pecuaria_repository.dart';
-import '../../datasources/remote/experiencia_pecuaria/experiencia_pecuaria_remote_ds.dart';
+import '../../datasources/remote/experiencia_pecuaria_remote_ds.dart';
 
 class ExperienciaPecuariaRepositoryImpl
     implements ExperienciaPecuariaRepository {

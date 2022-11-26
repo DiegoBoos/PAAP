@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/revision_entity.dart';
 import '../../../domain/repositories/revision/revision_repository_db.dart';
-import '../../datasources/local/revision/revision_local_ds.dart';
+import '../../datasources/local/revision_local_ds.dart';
 
 class RevisionRepositoryDBImpl implements RevisionRepositoryDB {
   final RevisionLocalDataSource revisionLocalDataSource;

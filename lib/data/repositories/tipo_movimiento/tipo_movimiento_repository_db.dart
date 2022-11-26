@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_movimiento_entity.dart';
 import '../../../domain/repositories/tipo_movimiento/tipo_movimiento_repository_db.dart';
-import '../../datasources/local/tipo_movimiento/tipo_movimiento_local_ds.dart';
+import '../../datasources/local/tipo_movimiento_local_ds.dart';
 
 class TipoMovimientoRepositoryDBImpl implements TipoMovimientoRepositoryDB {
   final TipoMovimientoLocalDataSource tipoMovimientoLocalDataSource;

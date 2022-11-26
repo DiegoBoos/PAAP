@@ -21,6 +21,27 @@ class PerfilPreInversionAliadoEntity {
   String sitioEntregaId;
   String recordStatus;
 
+  PerfilPreInversionAliadoEntity copyWith(
+          {String? perfilPreInversionId,
+          String? aliadoId,
+          String? productoId,
+          String? volumenCompra,
+          String? unidadId,
+          String? frecuenciaId,
+          String? porcentajeCompra,
+          String? sitioEntregaId,
+          String? recordStatus}) =>
+      PerfilPreInversionAliadoEntity(
+          perfilPreInversionId: aliadoId ?? this.aliadoId,
+          aliadoId: aliadoId ?? this.aliadoId,
+          productoId: aliadoId ?? this.aliadoId,
+          volumenCompra: aliadoId ?? this.aliadoId,
+          unidadId: aliadoId ?? this.aliadoId,
+          frecuenciaId: aliadoId ?? this.aliadoId,
+          porcentajeCompra: aliadoId ?? this.aliadoId,
+          sitioEntregaId: aliadoId ?? this.aliadoId,
+          recordStatus: aliadoId ?? this.aliadoId);
+
   factory PerfilPreInversionAliadoEntity.fromJson(Map<String, dynamic> json) =>
       PerfilPreInversionAliadoEntity(
         perfilPreInversionId: json["PerfilPreInversionId"],

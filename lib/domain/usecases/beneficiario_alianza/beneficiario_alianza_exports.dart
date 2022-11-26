@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/beneficiario_alianza_entity.dart';
 export 'package:paap/domain/blocs/beneficiarios_alianza/beneficiarios_alianza_bloc.dart';
 export 'package:paap/data/repositories/beneficiario_alianza/beneficiario_alianza_repository.dart';
 export 'package:paap/data/repositories/beneficiario_alianza/beneficiario_alianza_repository_db.dart';
-export 'package:paap/data/datasources/remote/beneficiario_alianza/beneficiario_alianza_remote_ds.dart';
-export 'package:paap/data/datasources/local/beneficiario_alianza/beneficiario_alianza_local_ds.dart';
+export 'package:paap/data/datasources/remote/beneficiario_alianza_remote_ds.dart';
+export 'package:paap/data/datasources/local/beneficiario_alianza_local_ds.dart';

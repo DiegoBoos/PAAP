@@ -48,7 +48,7 @@ class PerfilesPreInversionRows extends StatelessWidget {
               vPerfilesPreInversion[index];
 
           return DataRow(cells: <DataCell>[
-            DataCell(Text(vPerfilPreInversion.perfilId)),
+            DataCell(Text(vPerfilPreInversion.perfilPreInversionId)),
             DataCell(Text(vPerfilPreInversion.nombre)),
             DataCell(IconButton(
                 onPressed: () {

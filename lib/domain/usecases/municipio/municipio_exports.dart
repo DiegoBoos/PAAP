@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/municipio_entity.dart';
 export 'package:paap/domain/cubits/municipio/municipio_cubit.dart';
 export 'package:paap/data/repositories/municipio/municipio_repository.dart';
 export 'package:paap/data/repositories/municipio/municipio_repository_db.dart';
-export 'package:paap/data/datasources/remote/municipio/municipio_remote_ds.dart';
-export 'package:paap/data/datasources/local/municipio/municipio_local_ds.dart';
+export 'package:paap/data/datasources/remote/municipio_remote_ds.dart';
+export 'package:paap/data/datasources/local/municipio_local_ds.dart';

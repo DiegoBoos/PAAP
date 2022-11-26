@@ -10,9 +10,9 @@ class MunicipioCubit extends Cubit<MunicipioState> {
   final MunicipioUsecaseDB municipioDB;
 
   MunicipioCubit({required this.municipioDB})
-      : super(const MunicipiosInitial());
-
-  void initState() => emit(const MunicipiosInitial());
+      : super(const MunicipiosInitial()) {
+    getMunicipiosDB();
+  }
 
   Future<void> getMunicipiosDB() async {
     final result = await municipioDB.getMunicipiosUsecaseDB();

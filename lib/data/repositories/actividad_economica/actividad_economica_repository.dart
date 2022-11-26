@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/actividad_economica_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/actividad_economica/actividad_economica_repository.dart';
-import '../../datasources/remote/actividad_economica/actividad_economica_remote_ds.dart';
+import '../../datasources/remote/actividad_economica_remote_ds.dart';
 
 class ActividadEconomicaRepositoryImpl implements ActividadEconomicaRepository {
   final ActividadEconomicaRemoteDataSource actividadEconomicaRemoteDataSource;

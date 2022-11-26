@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/estado_visita_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/estado_visita/estado_visita_repository.dart';
-import '../../datasources/remote/estado_visita/estado_visita_remote_ds.dart';
+import '../../datasources/remote/estado_visita_remote_ds.dart';
 
 class EstadoVisitaRepositoryImpl implements EstadoVisitaRepository {
   final EstadoVisitaRemoteDataSource estadoVisitaRemoteDataSource;

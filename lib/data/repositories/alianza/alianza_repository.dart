@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/alianza_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/alianza/alianza_repository.dart';
-import '../../datasources/remote/alianza/alianza_remote_ds.dart';
+import '../../datasources/remote/alianza_remote_ds.dart';
 
 class AlianzaRepositoryImpl implements AlianzaRepository {
   final AlianzaRemoteDataSource alianzaRemoteDataSource;

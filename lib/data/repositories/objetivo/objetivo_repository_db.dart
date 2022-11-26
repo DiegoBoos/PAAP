@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/objetivo_entity.dart';
 import '../../../domain/repositories/objetivo/objetivo_repository_db.dart';
-import '../../datasources/local/objetivo/objetivo_local_ds.dart';
+import '../../datasources/local/objetivo_local_ds.dart';
 
 class ObjetivoRepositoryDBImpl implements ObjetivoRepositoryDB {
   final ObjetivoLocalDataSource objetivoLocalDataSource;

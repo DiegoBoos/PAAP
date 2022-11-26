@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/opcion_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/opcion/opcion_repository.dart';
-import '../../datasources/remote/opcion/opcion_remote_ds.dart';
+import '../../datasources/remote/opcion_remote_ds.dart';
 
 class OpcionRepositoryImpl implements OpcionRepository {
   final OpcionRemoteDataSource opcionRemoteDataSource;

@@ -1,29 +1,61 @@
 part of 'perfil_preinversion_aliado_cubit.dart';
 
 abstract class PerfilPreInversionAliadoState extends Equatable {
-  final PerfilPreInversionAliadoEntity? perfilPreInversionAliado;
-  const PerfilPreInversionAliadoState({this.perfilPreInversionAliado});
+  final PerfilPreInversionAliadoEntity perfilPreInversionAliado;
+  const PerfilPreInversionAliadoState({required this.perfilPreInversionAliado});
 
   @override
   List<Object?> get props => [perfilPreInversionAliado];
 }
 
-class PerfilPreInversionAliadoInitial extends PerfilPreInversionAliadoState {}
+class PerfilPreInversionAliadoInitial extends PerfilPreInversionAliadoState {
+  PerfilPreInversionAliadoInitial()
+      : super(perfilPreInversionAliado: initObject());
+}
 
-class PerfilPreInversionAliadoLoading extends PerfilPreInversionAliadoState {}
+class PerfilPreInversionAliadoLoading extends PerfilPreInversionAliadoState {
+  const PerfilPreInversionAliadoLoading(
+      {required super.perfilPreInversionAliado});
+}
 
 class PerfilPreInversionAliadoLoaded extends PerfilPreInversionAliadoState {
-  final PerfilPreInversionAliadoEntity? perfilPreInversionAliadoLoaded;
+  final PerfilPreInversionAliadoEntity perfilPreInversionAliadoLoaded;
 
   const PerfilPreInversionAliadoLoaded(this.perfilPreInversionAliadoLoaded)
       : super(perfilPreInversionAliado: perfilPreInversionAliadoLoaded);
 }
 
+class PerfilPreInversionAliadoChanged extends PerfilPreInversionAliadoState {
+  final PerfilPreInversionAliadoEntity perfilPreInversionAliadoChanged;
+
+  const PerfilPreInversionAliadoChanged(this.perfilPreInversionAliadoChanged)
+      : super(perfilPreInversionAliado: perfilPreInversionAliadoChanged);
+}
+
+class PerfilPreInversionAliadoSaved extends PerfilPreInversionAliadoState {
+  const PerfilPreInversionAliadoSaved(
+      {required super.perfilPreInversionAliado});
+}
+
 class PerfilPreInversionAliadoError extends PerfilPreInversionAliadoState {
   final String message;
 
-  const PerfilPreInversionAliadoError(this.message);
+  PerfilPreInversionAliadoError(this.message)
+      : super(perfilPreInversionAliado: initObject());
 
   @override
   List<Object?> get props => [message];
+}
+
+PerfilPreInversionAliadoEntity initObject() {
+  return PerfilPreInversionAliadoEntity(
+      perfilPreInversionId: '',
+      aliadoId: '',
+      productoId: '',
+      volumenCompra: '',
+      unidadId: '',
+      frecuenciaId: '',
+      porcentajeCompra: '',
+      sitioEntregaId: '',
+      recordStatus: '');
 }

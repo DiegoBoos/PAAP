@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/departamento/departamento_repository.dart';
-import '../../datasources/remote/departamento/departamento_remote_ds.dart';
+import '../../datasources/remote/departamento_remote_ds.dart';
 
 class DepartamentoRepositoryImpl implements DepartamentoRepository {
   final DepartamentoRemoteDataSource departamentoRemoteDataSource;

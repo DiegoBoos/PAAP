@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_calidad_entity.dart';
 import '../../../domain/repositories/tipo_calidad/tipo_calidad_repository_db.dart';
-import '../../datasources/local/tipo_calidad/tipo_calidad_local_ds.dart';
+import '../../datasources/local/tipo_calidad_local_ds.dart';
 
 class TipoCalidadRepositoryDBImpl implements TipoCalidadRepositoryDB {
   final TipoCalidadLocalDataSource tipoCalidadLocalDataSource;

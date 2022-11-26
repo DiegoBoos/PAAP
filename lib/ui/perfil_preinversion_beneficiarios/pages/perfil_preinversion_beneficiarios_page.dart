@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/ui/perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 
 import '../../../domain/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
+import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
@@ -14,7 +16,17 @@ class PerfilPreInversionBeneficiariosPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menuCubit = BlocProvider.of<MenuCubit>(context);
+
     return Scaffold(
+        drawer: BlocBuilder<MenuCubit, MenuState>(
+          builder: (context, state) {
+            final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
+            return PerfilPreInversionDrawer(
+              menuHijo: menuHijo,
+            );
+          },
+        ),
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.save),
             onPressed: () => Navigator.pushNamed(
@@ -61,7 +73,7 @@ class PerfilPreInversionBeneficiariosPage extends StatelessWidget {
                         perfilPreInversionBeneficiarios,
                     subtitleStyle: Styles.subtitleStyle);
               }
-              return const SizedBox();
+              return Container();
             },
           ),
           const SizedBox(height: 30),

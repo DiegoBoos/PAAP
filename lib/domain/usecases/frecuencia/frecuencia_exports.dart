@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/frecuencia_entity.dart';
 export 'package:paap/domain/cubits/frecuencia/frecuencia_cubit.dart';
 export 'package:paap/data/repositories/frecuencia/frecuencia_repository.dart';
 export 'package:paap/data/repositories/frecuencia/frecuencia_repository_db.dart';
-export 'package:paap/data/datasources/remote/frecuencia/frecuencia_remote_ds.dart';
-export 'package:paap/data/datasources/local/frecuencia/frecuencia_local_ds.dart';
+export 'package:paap/data/datasources/remote/frecuencia_remote_ds.dart';
+export 'package:paap/data/datasources/local/frecuencia_local_ds.dart';

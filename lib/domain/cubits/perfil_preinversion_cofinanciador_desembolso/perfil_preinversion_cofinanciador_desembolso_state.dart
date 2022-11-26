@@ -2,25 +2,31 @@ part of 'perfil_preinversion_cofinanciador_desembolso_cubit.dart';
 
 abstract class PerfilPreInversionCofinanciadorDesembolsoState
     extends Equatable {
-  final PerfilPreInversionCofinanciadorDesembolsoEntity?
+  final PerfilPreInversionCofinanciadorDesembolsoEntity
       perfilPreInversionCofinanciadorDesembolso;
 
   const PerfilPreInversionCofinanciadorDesembolsoState(
-      {this.perfilPreInversionCofinanciadorDesembolso});
+      {required this.perfilPreInversionCofinanciadorDesembolso});
 
   @override
   List<Object?> get props => [perfilPreInversionCofinanciadorDesembolso];
 }
 
 class PerfilPreInversionCofinanciadorDesembolsoInitial
-    extends PerfilPreInversionCofinanciadorDesembolsoState {}
+    extends PerfilPreInversionCofinanciadorDesembolsoState {
+  PerfilPreInversionCofinanciadorDesembolsoInitial()
+      : super(perfilPreInversionCofinanciadorDesembolso: initObject());
+}
 
 class PerfilPreInversionCofinanciadorDesembolsoLoading
-    extends PerfilPreInversionCofinanciadorDesembolsoState {}
+    extends PerfilPreInversionCofinanciadorDesembolsoState {
+  const PerfilPreInversionCofinanciadorDesembolsoLoading(
+      {required super.perfilPreInversionCofinanciadorDesembolso});
+}
 
 class PerfilPreInversionCofinanciadorDesembolsoLoaded
     extends PerfilPreInversionCofinanciadorDesembolsoState {
-  final PerfilPreInversionCofinanciadorDesembolsoEntity?
+  final PerfilPreInversionCofinanciadorDesembolsoEntity
       perfilPreInversionCofinanciadorDesembolsoLoaded;
 
   const PerfilPreInversionCofinanciadorDesembolsoLoaded(
@@ -30,14 +36,38 @@ class PerfilPreInversionCofinanciadorDesembolsoLoaded
                 perfilPreInversionCofinanciadorDesembolsoLoaded);
 }
 
+class PerfilPreInversionCofinanciadorDesembolsoChanged
+    extends PerfilPreInversionCofinanciadorDesembolsoState {
+  final PerfilPreInversionCofinanciadorDesembolsoEntity
+      perfilPreInversionCofinanciadorDesembolsoChanged;
+
+  const PerfilPreInversionCofinanciadorDesembolsoChanged(
+      this.perfilPreInversionCofinanciadorDesembolsoChanged)
+      : super(
+            perfilPreInversionCofinanciadorDesembolso:
+                perfilPreInversionCofinanciadorDesembolsoChanged);
+}
+
 class PerfilPreInversionCofinanciadorDesembolsoSaved
-    extends PerfilPreInversionCofinanciadorDesembolsoState {}
+    extends PerfilPreInversionCofinanciadorDesembolsoState {
+  PerfilPreInversionCofinanciadorDesembolsoSaved()
+      : super(perfilPreInversionCofinanciadorDesembolso: initObject());
+}
 
 class PerfilPreInversionCofinanciadorDesembolsoError
     extends PerfilPreInversionCofinanciadorDesembolsoState {
   final String message;
 
-  const PerfilPreInversionCofinanciadorDesembolsoError(this.message);
+  PerfilPreInversionCofinanciadorDesembolsoError(this.message)
+      : super(perfilPreInversionCofinanciadorDesembolso: initObject());
   @override
   List<Object?> get props => [message];
 }
+
+PerfilPreInversionCofinanciadorDesembolsoEntity initObject() =>
+    PerfilPreInversionCofinanciadorDesembolsoEntity(
+        perfilPreInversionId: '',
+        cofinanciadorId: '',
+        desembolsoId: '',
+        fecha: '',
+        recordStatus: '');

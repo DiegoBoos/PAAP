@@ -1,25 +1,31 @@
 part of 'perfil_preinversion_cofinanciador_rubro_cubit.dart';
 
 abstract class PerfilPreInversionCofinanciadorRubroState extends Equatable {
-  final PerfilPreInversionCofinanciadorRubroEntity?
+  final PerfilPreInversionCofinanciadorRubroEntity
       perfilPreInversionCofinanciadorRubro;
 
   const PerfilPreInversionCofinanciadorRubroState(
-      {this.perfilPreInversionCofinanciadorRubro});
+      {required this.perfilPreInversionCofinanciadorRubro});
 
   @override
   List<Object?> get props => [perfilPreInversionCofinanciadorRubro];
 }
 
 class PerfilPreInversionCofinanciadorRubroInitial
-    extends PerfilPreInversionCofinanciadorRubroState {}
+    extends PerfilPreInversionCofinanciadorRubroState {
+  PerfilPreInversionCofinanciadorRubroInitial()
+      : super(perfilPreInversionCofinanciadorRubro: initObject());
+}
 
 class PerfilPreInversionCofinanciadorRubroLoading
-    extends PerfilPreInversionCofinanciadorRubroState {}
+    extends PerfilPreInversionCofinanciadorRubroState {
+  const PerfilPreInversionCofinanciadorRubroLoading(
+      {required super.perfilPreInversionCofinanciadorRubro});
+}
 
 class PerfilPreInversionCofinanciadorRubroLoaded
     extends PerfilPreInversionCofinanciadorRubroState {
-  final PerfilPreInversionCofinanciadorRubroEntity?
+  final PerfilPreInversionCofinanciadorRubroEntity
       perfilPreInversionCofinanciadorRubroLoaded;
 
   const PerfilPreInversionCofinanciadorRubroLoaded(
@@ -30,13 +36,27 @@ class PerfilPreInversionCofinanciadorRubroLoaded
 }
 
 class PerfilPreInversionCofinanciadorRubroSaved
-    extends PerfilPreInversionCofinanciadorRubroState {}
+    extends PerfilPreInversionCofinanciadorRubroState {
+  PerfilPreInversionCofinanciadorRubroSaved()
+      : super(perfilPreInversionCofinanciadorRubro: initObject());
+}
 
 class PerfilPreInversionCofinanciadorRubroError
     extends PerfilPreInversionCofinanciadorRubroState {
   final String message;
 
-  const PerfilPreInversionCofinanciadorRubroError(this.message);
+  PerfilPreInversionCofinanciadorRubroError(this.message)
+      : super(perfilPreInversionCofinanciadorRubro: initObject());
   @override
   List<Object?> get props => [message];
 }
+
+PerfilPreInversionCofinanciadorRubroEntity initObject() =>
+    PerfilPreInversionCofinanciadorRubroEntity(
+        perfilPreInversionId: '',
+        cofinanciadorId: '',
+        desembolsoId: '',
+        actividadFinancieraId: '',
+        rubroId: '',
+        valor: '',
+        recordStatus: '');

@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/tipo_tenencia/tipo_tenencia_repository.dart';
-import '../../datasources/remote/tipo_tenencia/tipo_tenencia_remote_ds.dart';
+import '../../datasources/remote/tipo_tenencia_remote_ds.dart';
 
 class TipoTenenciaRepositoryImpl implements TipoTenenciaRepository {
   final TipoTenenciaRemoteDataSource tipoTenenciaRemoteDataSource;

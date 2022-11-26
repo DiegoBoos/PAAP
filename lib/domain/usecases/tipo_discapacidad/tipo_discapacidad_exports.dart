@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/tipo_discapacidad_entity.dart';
 export 'package:paap/domain/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
 export 'package:paap/data/repositories/tipo_discapacidad/tipo_discapacidad_repository.dart';
 export 'package:paap/data/repositories/tipo_discapacidad/tipo_discapacidad_repository_db.dart';
-export 'package:paap/data/datasources/remote/tipo_discapacidad/tipo_discapacidad_remote_ds.dart';
-export 'package:paap/data/datasources/local/tipo_discapacidad/tipo_discapacidad_local_ds.dart';
+export 'package:paap/data/datasources/remote/tipo_discapacidad_remote_ds.dart';
+export 'package:paap/data/datasources/local/tipo_discapacidad_local_ds.dart';

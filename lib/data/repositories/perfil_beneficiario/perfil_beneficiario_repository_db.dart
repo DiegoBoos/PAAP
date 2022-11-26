@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_beneficiario_entity.dart';
 import '../../../domain/repositories/perfil_beneficiario/perfil_beneficiario_repository_db.dart';
-import '../../datasources/local/perfil_beneficiario/perfil_beneficiario_local_ds.dart';
+import '../../datasources/local/perfil_beneficiario_local_ds.dart';
 
 class PerfilBeneficiarioRepositoryDBImpl
     implements PerfilBeneficiarioRepositoryDB {
@@ -45,10 +45,11 @@ class PerfilBeneficiarioRepositoryDBImpl
 
   @override
   Future<Either<Failure, PerfilBeneficiarioEntity?>>
-      getPerfilBeneficiarioRepositoryDB(String id) async {
+      getPerfilBeneficiarioRepositoryDB(
+          String perfilId, String beneficiarioId) async {
     try {
-      final perfilBeneficiarioDB =
-          await perfilBeneficiarioLocalDataSource.getPerfilBeneficiarioDB(id);
+      final perfilBeneficiarioDB = await perfilBeneficiarioLocalDataSource
+          .getPerfilBeneficiarioDB(perfilId, beneficiarioId);
 
       return Right(perfilBeneficiarioDB);
     } on ServerFailure catch (e) {

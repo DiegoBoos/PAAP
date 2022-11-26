@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/proyecto_entity.dart';
 import '../../../domain/repositories/proyecto/proyecto_repository_db.dart';
-import '../../datasources/local/proyecto/proyecto_local_ds.dart';
+import '../../datasources/local/proyecto_local_ds.dart';
 
 class ProyectoRepositoryDBImpl implements ProyectoRepositoryDB {
   final ProyectoLocalDataSource proyectoLocalDataSource;

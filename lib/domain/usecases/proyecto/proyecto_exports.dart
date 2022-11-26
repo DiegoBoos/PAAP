@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/proyecto_entity.dart';
 export 'package:paap/domain/cubits/proyecto/proyecto_cubit.dart';
 export 'package:paap/data/repositories/proyecto/proyecto_repository.dart';
 export 'package:paap/data/repositories/proyecto/proyecto_repository_db.dart';
-export 'package:paap/data/datasources/remote/proyecto/proyecto_remote_ds.dart';
-export 'package:paap/data/datasources/local/proyecto/proyecto_local_ds.dart';
+export 'package:paap/data/datasources/remote/proyecto_remote_ds.dart';
+export 'package:paap/data/datasources/local/proyecto_local_ds.dart';

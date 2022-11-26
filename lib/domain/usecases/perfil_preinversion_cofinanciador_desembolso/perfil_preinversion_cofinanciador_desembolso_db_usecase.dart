@@ -20,16 +20,18 @@ class PerfilPreInversionCofinanciadorDesembolsoUsecaseDB {
           Either<Failure,
               List<PerfilPreInversionCofinanciadorDesembolsoEntity>?>>
       getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorUsecaseDB(
-          String cofinanciadorId) {
+          String perfilPreInversionId, String cofinanciadorId) {
     return repositoryDB
         .getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorRepositoryDB(
-            cofinanciadorId);
+            perfilPreInversionId, cofinanciadorId);
   }
 
   Future<Either<Failure, PerfilPreInversionCofinanciadorDesembolsoEntity?>>
-      getPerfilPreInversionCofinanciadorDesembolsoUsecaseDB(String id) {
+      getPerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
+          String perfilPreInversionId, String cofinanciadorId) {
     return repositoryDB
-        .getPerfilPreInversionCofinanciadorDesembolsoRepositoryDB(id);
+        .getPerfilPreInversionCofinanciadorDesembolsoRepositoryDB(
+            perfilPreInversionId, cofinanciadorId);
   }
 
   Future<Either<Failure, int>>

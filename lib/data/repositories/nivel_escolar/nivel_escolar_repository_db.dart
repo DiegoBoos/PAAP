@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/nivel_escolar_entity.dart';
 import '../../../domain/repositories/nivel_escolar/nivel_escolar_repository_db.dart';
-import '../../datasources/local/nivel_escolar/nivel_escolar_local_ds.dart';
+import '../../datasources/local/nivel_escolar_local_ds.dart';
 
 class NivelEscolarRepositoryDBImpl implements NivelEscolarRepositoryDB {
   final NivelEscolarLocalDataSource nivelEscolarLocalDataSource;

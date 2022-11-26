@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/beneficiario_entity.dart';
 import '../../../domain/repositories/beneficiario/beneficiario_repository_db.dart';
-import '../../datasources/local/beneficiario/beneficiario_local_ds.dart';
+import '../../datasources/local/beneficiario_local_ds.dart';
 
 class BeneficiarioRepositoryDBImpl implements BeneficiarioRepositoryDB {
   final BeneficiarioLocalDataSource beneficiarioLocalDataSource;

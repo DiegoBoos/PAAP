@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/agrupacion_entity.dart';
 import '../../../domain/repositories/agrupacion/agrupacion_repository_db.dart';
-import '../../datasources/local/agrupacion/agrupacion_local_ds.dart';
+import '../../datasources/local/agrupacion_local_ds.dart';
 
 class AgrupacionRepositoryDBImpl implements AgrupacionRepositoryDB {
   final AgrupacionLocalDataSource agrupacionLocalDataSource;

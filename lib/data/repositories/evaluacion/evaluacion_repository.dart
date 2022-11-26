@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/entities/evaluacion_entity.dart';
 import '../../../domain/repositories/evaluacion/evaluacion_repository.dart';
-import '../../datasources/remote/evaluacion/evaluacion_remote_ds.dart';
+import '../../datasources/remote/evaluacion_remote_ds.dart';
 
 class EvaluacionRepositoryImpl implements EvaluacionRepository {
   final EvaluacionRemoteDataSource evaluacionRemoteDataSource;

@@ -1,28 +1,28 @@
 part of 'consultor_cubit.dart';
 
 abstract class ConsultorState extends Equatable {
-  final ConsultorEntity? consultor;
-  const ConsultorState({this.consultor});
+  final List<ConsultorEntity>? consultores;
+  const ConsultorState({this.consultores});
 
   @override
-  List<Object?> get props => [consultor];
+  List<Object?> get props => [consultores];
 }
 
-class ConsultorInitial extends ConsultorState {}
+class ConsultoresInitial extends ConsultorState {}
 
-class ConsultorLoading extends ConsultorState {}
+class ConsultoresLoading extends ConsultorState {}
 
-class ConsultorLoaded extends ConsultorState {
-  final ConsultorEntity? consultorLoaded;
+class ConsultoresLoaded extends ConsultorState {
+  final List<ConsultorEntity>? consultoresLoaded;
 
-  const ConsultorLoaded(this.consultorLoaded)
-      : super(consultor: consultorLoaded);
+  const ConsultoresLoaded(this.consultoresLoaded)
+      : super(consultores: consultoresLoaded);
 }
 
-class ConsultorError extends ConsultorState {
+class ConsultoresError extends ConsultorState {
   final String message;
 
-  const ConsultorError(this.message);
+  const ConsultoresError(this.message);
 
   @override
   List<Object?> get props => [message];

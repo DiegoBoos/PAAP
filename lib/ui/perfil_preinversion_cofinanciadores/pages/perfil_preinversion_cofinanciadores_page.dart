@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/usecases/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_exports.dart';
+import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
@@ -29,58 +31,62 @@ class _PerfilPreInversionCofinanciadoresPageState
 
   @override
   Widget build(BuildContext context) {
-    final perfilPreInversionCofinanciadorCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
+    final menuCubit = BlocProvider.of<MenuCubit>(context);
+
     return Scaffold(
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.save),
             onPressed: () {
-              perfilPreInversionCofinanciadorCubit.initState();
               Navigator.pushNamed(context, 'NewEditVCofinanciadorPreInversion');
             }),
+        drawer: BlocBuilder<MenuCubit, MenuState>(
+          builder: (context, state) {
+            final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
+            return PerfilPreInversionDrawer(
+              menuHijo: menuHijo,
+            );
+          },
+        ),
         appBar: AppBar(centerTitle: true, leading: null, actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
             child: NetworkIcon(),
           )
         ]),
-        body: ListView(children: [
-          const SizedBox(height: 30),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text('COFINANCIADORES DEL PERFIL EN PREINVERSIÓN',
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: ListView(children: [
+            const SizedBox(height: 30),
+            const Text('COFINANCIADORES PERFIL PREINVERSIÓN',
                 style: Styles.titleStyle),
-          ),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text('Consulta', style: Styles.subtitleStyle),
-          ),
-          const SizedBox(height: 20),
-          BlocBuilder<PerfilPreInversionCofinanciadoresBloc,
-              PerfilPreInversionCofinanciadoresState>(
-            builder: (context, state) {
-              if (state is PerfilPreInversionCofinanciadoresLoading) {
-                return const CustomCircularProgress(
-                    alignment: Alignment.center);
-              } else if (state is PerfilPreInversionCofinanciadoresLoaded) {
-                List<PerfilPreInversionCofinanciadorEntity>
-                    perfilPreInversionCofinanciadores =
-                    state.perfilPreInversionCofinanciadoresLoaded!;
-                if (perfilPreInversionCofinanciadores.isEmpty) {
-                  return const SizedBox(
-                      child:
-                          Center(child: NoDataSvg(title: 'No hay resultados')));
+            const SizedBox(height: 20),
+            const Text('Consulta', style: Styles.subtitleStyle),
+            const SizedBox(height: 20),
+            BlocBuilder<PerfilPreInversionCofinanciadoresBloc,
+                PerfilPreInversionCofinanciadoresState>(
+              builder: (context, state) {
+                if (state is PerfilPreInversionCofinanciadoresLoading) {
+                  return const CustomCircularProgress(
+                      alignment: Alignment.center);
+                } else if (state is PerfilPreInversionCofinanciadoresLoaded) {
+                  List<PerfilPreInversionCofinanciadorEntity>
+                      perfilPreInversionCofinanciadores =
+                      state.perfilPreInversionCofinanciadoresLoaded!;
+                  if (perfilPreInversionCofinanciadores.isEmpty) {
+                    return const SizedBox(
+                        child: Center(
+                            child: NoDataSvg(title: 'No hay resultados')));
+                  }
+                  return PerfilPreInversionCofinanciadoresRows(
+                      perfilPreInversionCofinanciadores:
+                          perfilPreInversionCofinanciadores,
+                      subtitleStyle: Styles.subtitleStyle);
                 }
-                return PerfilPreInversionCofinanciadoresRows(
-                    perfilPreInversionCofinanciadores:
-                        perfilPreInversionCofinanciadores,
-                    subtitleStyle: Styles.subtitleStyle);
-              }
-              return const SizedBox();
-            },
-          ),
-          const SizedBox(height: 30),
-        ]));
+                return Container();
+              },
+            ),
+            const SizedBox(height: 30),
+          ]),
+        ));
   }
 }

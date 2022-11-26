@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_repository.dart';
-import '../../datasources/remote/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_remote_ds.dart';
+import '../../datasources/remote/perfil_preinversion_cofinanciador_desembolso_remote_ds.dart';
 
 class PerfilPreInversionCofinanciadorDesembolsoRepositoryImpl
     implements PerfilPreInversionCofinanciadorDesembolsoRepository {

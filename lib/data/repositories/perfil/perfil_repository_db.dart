@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_entity.dart';
 import '../../../domain/entities/v_perfil_entity.dart';
 import '../../../domain/repositories/perfil/perfil_repository_db.dart';
-import '../../datasources/local/perfil/perfil_local_ds.dart';
+import '../../datasources/local/perfil_local_ds.dart';
 
 class PerfilRepositoryDBImpl implements PerfilRepositoryDB {
   final PerfilLocalDataSource perfilesLocalDataSource;

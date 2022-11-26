@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/grupo_especial/grupo_especial_repository.dart';
-import '../../datasources/remote/grupo_especial/grupo_especial_remote_ds.dart';
+import '../../datasources/remote/grupo_especial_remote_ds.dart';
 
 class GrupoEspecialRepositoryImpl implements GrupoEspecialRepository {
   final GrupoEspecialRemoteDataSource grupoEspecialRemoteDataSource;

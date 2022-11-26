@@ -16,35 +16,18 @@ class PerfilPreInversionCofinanciadorForm extends StatefulWidget {
 
 class _PerfilPreInversionCofinanciadorFormState
     extends State<PerfilPreInversionCofinanciadorForm> {
-  String? cofinanciadorId;
-  final montoCtrl = TextEditingController();
-  final participacionCtrl = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    final perfilPreInversionCofinanciadorCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
-
-    if (perfilPreInversionCofinanciadorCubit.state
-        is PerfilPreInversionCofinanciadorLoaded) {
-      final perfilPreInversionCofinanciador =
-          perfilPreInversionCofinanciadorCubit
-              .state.perfilPreInversionCofinanciador!;
-
-      cofinanciadorId = perfilPreInversionCofinanciador.cofinanciadorId;
-      montoCtrl.text = perfilPreInversionCofinanciador.monto;
-      participacionCtrl.text = perfilPreInversionCofinanciador.participacion;
-    }
-  }
+  final formKeyCofinanciador = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final perfilPreinversionCofinanciadorCubit =
+    final perfilPreInversionCofinanciadorCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
 
     return BlocBuilder<PerfilPreInversionCofinanciadorCubit,
         PerfilPreInversionCofinanciadorState>(builder: (context, state) {
+      final perfilPreInversionCofinanciador =
+          perfilPreInversionCofinanciadorCubit
+              .state.perfilPreInversionCofinanciador;
       return Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
@@ -54,7 +37,10 @@ class _PerfilPreInversionCofinanciadorFormState
                 if (state is CofinanciadoresLoaded) {
                   return DropdownButtonFormField(
                       isExpanded: true,
-                      value: cofinanciadorId,
+                      value:
+                          perfilPreInversionCofinanciador.cofinanciadorId != ''
+                              ? perfilPreInversionCofinanciador.cofinanciadorId
+                              : null,
                       items: state.cofinanciadores!
                           .map<DropdownMenuItem<String>>(
                               (CofinanciadorEntity value) {
@@ -63,32 +49,61 @@ class _PerfilPreInversionCofinanciadorFormState
                           child: Text(value.nombre),
                         );
                       }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Debe seleccionar un cofinanciador';
+                        }
+                        return null;
+                      },
                       onChanged: (String? value) {
-                        perfilPreinversionCofinanciadorCubit
+                        perfilPreInversionCofinanciadorCubit
                             .changeCofinanciador(value);
                       },
                       hint: const Text('Cofinanciador'));
                 }
-                return const SizedBox();
+                return Container();
               },
             ),
             const SizedBox(height: 20),
             TextFormField(
-                controller: montoCtrl,
+                key: UniqueKey(),
+                initialValue: perfilPreInversionCofinanciador.monto,
                 decoration: CustomInputDecoration.inputDecoration(
                     hintText: 'Monto', labelText: 'Monto'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Campo Requerido';
+                  }
+                  return null;
+                },
                 onSaved: (String? newValue) {
-                  perfilPreinversionCofinanciadorCubit.changeMonto(newValue);
+                  perfilPreInversionCofinanciadorCubit.changeMonto(newValue);
                 }),
             const SizedBox(height: 20),
             TextFormField(
-                controller: participacionCtrl,
+                key: UniqueKey(),
+                initialValue: perfilPreInversionCofinanciador.participacion,
                 decoration: CustomInputDecoration.inputDecoration(
                     hintText: 'Participación', labelText: 'Participación'),
                 onSaved: (String? newValue) {
-                  perfilPreinversionCofinanciadorCubit
+                  perfilPreInversionCofinanciadorCubit
                       .changeParticipacion(newValue);
                 }),
+            const SizedBox(height: 20),
+            Align(
+                alignment: Alignment.centerRight,
+                child: FloatingActionButton(
+                    heroTag: 'canCreateDesembolsoBtn',
+                    onPressed: () {
+                      if (!formKeyCofinanciador.currentState!.validate()) {
+                        return;
+                      }
+                      formKeyCofinanciador.currentState!.save();
+
+                      perfilPreInversionCofinanciadorCubit
+                          .canCreateDesembolso();
+                    },
+                    child: const Icon(Icons.add))),
           ]),
         ),
       );

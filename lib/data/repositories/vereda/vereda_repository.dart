@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/vereda/vereda_repository.dart';
-import '../../datasources/remote/vereda/vereda_remote_ds.dart';
+import '../../datasources/remote/vereda_remote_ds.dart';
 
 class VeredaRepositoryImpl implements VeredaRepository {
   final VeredaRemoteDataSource veredaRemoteDataSource;

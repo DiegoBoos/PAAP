@@ -16,8 +16,9 @@ class PerfilBeneficiarioUsecaseDB {
   }
 
   Future<Either<Failure, PerfilBeneficiarioEntity?>>
-      getPerfilBeneficiarioUsecaseDB(String id) {
-    return repositoryDB.getPerfilBeneficiarioRepositoryDB(id);
+      getPerfilBeneficiarioUsecaseDB(String perfilId, String beneficiarioId) {
+    return repositoryDB.getPerfilBeneficiarioRepositoryDB(
+        perfilId, beneficiarioId);
   }
 
   Future<Either<Failure, int>> savePerfilBeneficiariosUsecaseDB(

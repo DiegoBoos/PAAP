@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/municipio_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/municipio/municipio_repository.dart';
-import '../../datasources/remote/municipio/municipio_remote_ds.dart';
+import '../../datasources/remote/municipio_remote_ds.dart';
 
 class MunicipioRepositoryImpl implements MunicipioRepository {
   final MunicipioRemoteDataSource municipioRemoteDataSource;

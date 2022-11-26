@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_actividad_financiera_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_repository.dart';
-import '../../datasources/remote/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_remote_ds.dart';
+import '../../datasources/remote/perfil_preinversion_cofinanciador_actividad_financiera_remote_ds.dart';
 
 class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryImpl
     implements PerfilPreInversionCofinanciadorActividadFinancieraRepository {

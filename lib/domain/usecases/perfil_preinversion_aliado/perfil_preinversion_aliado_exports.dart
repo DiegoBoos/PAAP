@@ -7,5 +7,5 @@ export 'package:paap/domain/blocs/perfil_preinversion_aliados/perfil_preinversio
 export 'package:paap/domain/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
 export 'package:paap/data/repositories/perfil_preinversion_aliado/perfil_preinversion_aliado_repository.dart';
 export 'package:paap/data/repositories/perfil_preinversion_aliado/perfil_preinversion_aliado_repository_db.dart';
-export 'package:paap/data/datasources/remote/perfil_preinversion_aliado/perfil_preinversion_aliado_remote_ds.dart';
-export 'package:paap/data/datasources/local/perfil_preinversion_aliado/perfil_preinversion_aliado_local_ds.dart';
+export 'package:paap/data/datasources/remote/perfil_preinversion_aliado_remote_ds.dart';
+export 'package:paap/data/datasources/local/perfil_preinversion_aliado_local_ds.dart';

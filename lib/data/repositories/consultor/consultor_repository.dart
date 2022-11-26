@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/consultor_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/consultor/consultor_repository.dart';
-import '../../datasources/remote/consultor/consultor_remote_ds.dart';
+import '../../datasources/remote/consultor_remote_ds.dart';
 
 class ConsultorRepositoryImpl implements ConsultorRepository {
   final ConsultorRemoteDataSource consultorRemoteDataSource;

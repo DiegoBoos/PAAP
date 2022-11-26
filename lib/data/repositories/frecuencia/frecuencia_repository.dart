@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/frecuencia_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/frecuencia/frecuencia_repository.dart';
-import '../../datasources/remote/frecuencia/frecuencia_remote_ds.dart';
+import '../../datasources/remote/frecuencia_remote_ds.dart';
 
 class FrecuenciaRepositoryImpl implements FrecuenciaRepository {
   final FrecuenciaRemoteDataSource frecuenciaRemoteDataSource;

@@ -4,7 +4,9 @@ import 'package:intl/intl.dart';
 
 import '../../../domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
 import '../../../domain/cubits/desembolso/desembolso_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
+import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/desembolso_entity.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../utils/input_decoration.dart';
@@ -13,7 +15,6 @@ import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorDesembolsoForm extends StatefulWidget {
   const PerfilPreInversionCofinanciadorDesembolsoForm({super.key});
-
   @override
   State<PerfilPreInversionCofinanciadorDesembolsoForm> createState() =>
       _PerfilPreInversionCofinanciadorDesembolsoFormState();
@@ -21,80 +22,154 @@ class PerfilPreInversionCofinanciadorDesembolsoForm extends StatefulWidget {
 
 class _PerfilPreInversionCofinanciadorDesembolsoFormState
     extends State<PerfilPreInversionCofinanciadorDesembolsoForm> {
-  var fechaCtrl = TextEditingController();
+  final formKeyDesembolso = GlobalKey<FormState>();
+
   final dateFormat = DateFormat('yyyy-MM-dd');
 
   @override
   Widget build(BuildContext context) {
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
     final perfilPreInversionCofinanciadorDesembolsoCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
             context);
+    final perfilPreInversionCofinanciadorDesembolsosBloc =
+        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsosBloc>(context,
+            listen: true);
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-        child: Column(children: [
-          BlocBuilder<DesembolsoCubit, DesembolsoState>(
-            builder: (context, state) {
-              if (state is DesembolsosLoaded) {
-                return DropdownButtonFormField(
-                    isExpanded: true,
-                    items: state.desembolsos!.map<DropdownMenuItem<String>>(
-                        (DesembolsoEntity value) {
-                      return DropdownMenuItem<String>(
-                        value: value.desembolsoId,
-                        child: Text(value.nombre),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      perfilPreInversionCofinanciadorDesembolsoCubit
-                          .changeDesembolso(value);
-                    },
-                    hint: const Text('Desembolso'));
-              }
-              return const SizedBox();
-            },
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            controller: fechaCtrl,
-            decoration: CustomInputDecoration.inputDecoration(
-                hintText: 'Fecha',
-                labelText: 'Fecha',
-                suffixIcon: IconButton(
-                    onPressed: () async {
-                      DateTime? newDate = await showDatePicker(
-                          context: context,
-                          initialDate: fechaCtrl.text != ''
-                              ? DateTime.parse(fechaCtrl.text)
-                              : DateTime.now(),
-                          firstDate: DateTime(1000),
-                          lastDate: DateTime(3000));
+    return BlocBuilder<PerfilPreInversionCofinanciadorDesembolsoCubit,
+        PerfilPreInversionCofinanciadorDesembolsoState>(
+      builder: (context, state) {
+        final perfilPreInversionCofinanciadorDesembolso =
+            state.perfilPreInversionCofinanciadorDesembolso;
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+            child: Column(children: [
+              BlocBuilder<DesembolsoCubit, DesembolsoState>(
+                builder: (context, state) {
+                  if (state is DesembolsosLoaded) {
+                    return DropdownButtonFormField(
+                        isExpanded: true,
+                        value: perfilPreInversionCofinanciadorDesembolso
+                                    .desembolsoId !=
+                                ''
+                            ? perfilPreInversionCofinanciadorDesembolso
+                                .desembolsoId
+                            : null,
+                        items: state.desembolsos!.map<DropdownMenuItem<String>>(
+                            (DesembolsoEntity value) {
+                          return DropdownMenuItem<String>(
+                            value: value.desembolsoId,
+                            child: Text(value.nombre),
+                          );
+                        }).toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Debe seleccionar un desembolso';
+                          }
+                          return null;
+                        },
+                        onChanged: (String? value) {
+                          perfilPreInversionCofinanciadorDesembolsoCubit
+                              .changeDesembolso(value);
+                        },
+                        hint: const Text('Desembolso'));
+                  }
+                  return Container();
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                key: UniqueKey(),
+                initialValue: perfilPreInversionCofinanciadorDesembolso.fecha,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Debe seleccionar una fecha';
+                  }
+                  if (DateTime.tryParse(value) == null) {
+                    return 'No es una fecha válida';
+                  }
+                  return null;
+                },
+                decoration: CustomInputDecoration.inputDecoration(
+                    hintText: 'Fecha',
+                    labelText: 'Fecha',
+                    suffixIcon: IconButton(
+                        onPressed: () async {
+                          DateTime? newDate = await showDatePicker(
+                              context: context,
+                              initialDate:
+                                  perfilPreInversionCofinanciadorDesembolso
+                                              .fecha !=
+                                          ''
+                                      ? DateTime.parse(
+                                          perfilPreInversionCofinanciadorDesembolso
+                                              .fecha)
+                                      : DateTime.now(),
+                              firstDate: DateTime(1000),
+                              lastDate: DateTime(3000));
 
-                      if (newDate == null) return;
+                          if (newDate == null) return;
 
-                      fechaCtrl.text = dateFormat.format(newDate);
+                          perfilPreInversionCofinanciadorDesembolsoCubit
+                              .changeFecha(dateFormat.format(newDate));
+                        },
+                        icon: const Icon(Icons.calendar_today))),
+              ),
+              const SizedBox(height: 20),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: FloatingActionButton(
+                      heroTag: 'desembolsoBtn',
+                      onPressed: () {
+                        if (!formKeyDesembolso.currentState!.validate()) {
+                          return;
+                        }
+                        formKeyDesembolso.currentState!.save();
 
-                      perfilPreInversionCofinanciadorDesembolsoCubit
-                          .changeFecha(fechaCtrl.text);
-                    },
-                    icon: const Icon(Icons.calendar_today))),
-          ),
-          const SizedBox(height: 20),
-          Align(
-              alignment: Alignment.centerRight,
-              child: FloatingActionButton(
-                  heroTag: 'desembolsoBtn',
-                  onPressed: () {
-                    //TODO: GuardarPerfilPreInversionCofinanciadorDesembolso
-                    final perfilPreInversionCofinanciadorDesembolso =
+                        final perfilPreInversionCofinanciadorId =
+                            perfilPreInversionCofinanciadorCubit
+                                .state
+                                .perfilPreInversionCofinanciador
+                                .cofinanciadorId;
+
+                        final vPerfilPreInversionId = vPerfilPreInversionCubit
+                            .state.vPerfilPreInversion!.perfilPreInversionId;
+
                         perfilPreInversionCofinanciadorDesembolsoCubit
-                            .state.perfilPreInversionCofinanciadorDesembolso;
-                  },
-                  child: const Icon(Icons.add))),
-          const PerfilPreInversionCofinanciadorDesembolsosRows()
-        ]),
-      ),
+                            .changePerfilPreInversion(vPerfilPreInversionId);
+                        perfilPreInversionCofinanciadorDesembolsoCubit
+                            .changePerfilPreInversionCofinanciador(
+                                perfilPreInversionCofinanciadorId);
+
+                        perfilPreInversionCofinanciadorDesembolsoCubit
+                            .perfilPreInversionCofinanciadorDesembolsoDB
+                            .savePerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
+                                perfilPreInversionCofinanciadorDesembolsoCubit
+                                    .state
+                                    .perfilPreInversionCofinanciadorDesembolso);
+
+                        perfilPreInversionCofinanciadorDesembolsosBloc.add(
+                            GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
+                                perfilPreInversionId: vPerfilPreInversionId,
+                                cofinanciadorId:
+                                    perfilPreInversionCofinanciadorId));
+
+                        if (perfilPreInversionCofinanciadorDesembolsosBloc.state
+                            is PerfilPreInversionCofinanciadorDesembolsosLoaded) {
+                          perfilPreInversionCofinanciadorDesembolsoCubit
+                              .canCreateActividadFinanciera();
+                        }
+                      },
+                      child: const Icon(Icons.add))),
+              const PerfilPreInversionCofinanciadorDesembolsosRows()
+            ]),
+          ),
+        );
+      },
     );
   }
 }
@@ -154,7 +229,7 @@ class PerfilPreInversionCofinanciadorDesembolsosRows extends StatelessWidget {
           ),
         );
       }
-      return const SizedBox();
+      return Container();
     });
   }
 }

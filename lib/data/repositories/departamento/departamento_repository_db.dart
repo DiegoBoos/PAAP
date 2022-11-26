@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/repositories/departamento/departamento_repository_db.dart';
-import '../../datasources/local/departamento/departamento_local_ds.dart';
+import '../../datasources/local/departamento_local_ds.dart';
 
 class DepartamentoRepositoryDBImpl implements DepartamentoRepositoryDB {
   final DepartamentoLocalDataSource departamentoLocalDataSource;

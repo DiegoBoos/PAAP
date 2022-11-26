@@ -10,51 +10,44 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
   final EvaluacionRespuestaUsecaseDB evaluacionRespuestaDB;
 
   EvaluacionRespuestaCubit({required this.evaluacionRespuestaDB})
-      : super(EvaluacionRespuestaInitial());
+      : super(EvaluacionesRespuestasInitial());
 
-  void getEvaluacionRespuestaDB(String criterioId, String evaluacionId) async {
-    final result = await evaluacionRespuestaDB.getEvaluacionRespuestaUsecaseDB(
-        criterioId, evaluacionId);
-    result.fold(
-        (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
-        (data) => emit(EvaluacionRespuestaLoaded(data!)));
+  void initState() => emit(EvaluacionesRespuestasInitial());
+
+  Future<List<EvaluacionRespuestaEntity>?> getEvaluacionesRespuestasDB(
+      String criterioId, String evaluacionId) async {
+    final result = await evaluacionRespuestaDB
+        .getEvaluacionesRespuestasUsecaseDB(criterioId, evaluacionId);
+    return result.fold((failure) => [], (data) => data);
   }
 
-  void saveEvaluacionRespuestaDB(
-      EvaluacionRespuestaEntity evaluacionRespuestaEntity,
+  selectEvaluacionesRespuestasDB(
+    List<EvaluacionRespuestaEntity> evaluacionesRespuestas,
+  ) {
+    emit(EvaluacionesRespuestasLoaded(evaluacionesRespuestas));
+  }
+
+  void saveEvaluacionesRespuestasDB(
+      List<EvaluacionRespuestaEntity> evaluacionesRespuestas,
       String perfilId) async {
-    final result = await evaluacionRespuestaDB.saveEvaluacionRespuestaUsecaseDB(
-        evaluacionRespuestaEntity, perfilId);
+    final result = await evaluacionRespuestaDB
+        .saveEvaluacionesRespuestasUsecaseDB(evaluacionesRespuestas);
     result.fold(
-        (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
-        (data) => emit(EvaluacionRespuestaSaved()));
+        (failure) =>
+            emit(EvaluacionesRespuestasError(failure.properties.first)),
+        (data) => emit(EvaluacionesRespuestasSaved()));
   }
 
   void clearEvaluacionRespuestasDB() async {
     final result =
         await evaluacionRespuestaDB.clearEvaluacionesRespuestasUsecaseDB();
     result.fold(
-        (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
-        (data) => emit(EvaluacionRespuestaCleared()));
+        (failure) =>
+            emit(EvaluacionesRespuestasError(failure.properties.first)),
+        (data) => emit(EvaluacionesRespuestasCleared()));
   }
 
-  void initState() => emit(EvaluacionRespuestaInitial());
-
-  void changeCriterio(String criterioId) {
-    final criterioChanged =
-        state.evaluacionRespuesta!.copyWith(criterioId: criterioId);
-    emit(EvaluacionRespuestaLoaded(criterioChanged));
-  }
-
-  void changeOpcion(String opcionId) {
-    final opcionChanged =
-        state.evaluacionRespuesta!.copyWith(opcionId: opcionId);
-    emit(EvaluacionRespuestaLoaded(opcionChanged));
-  }
-
-  void changeObservacion(String observacion) {
-    final observacionChanged =
-        state.evaluacionRespuesta!.copyWith(observacion: observacion);
-    emit(EvaluacionRespuestaLoaded(observacionChanged));
+  void updateList(List<EvaluacionRespuestaEntity>? evaluacionesRespuestas) {
+    emit(EvaluacionesRespuestasChanged(evaluacionesRespuestas!));
   }
 }

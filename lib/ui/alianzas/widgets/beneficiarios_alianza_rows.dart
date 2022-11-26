@@ -56,7 +56,7 @@ class BeneficiariosAlianzaRows extends StatelessWidget {
                       BlocProvider.of<BeneficiarioAlianzaCubit>(context);
                   beneficiarioAlianzaCubit.getBeneficiarioAlianzaDB(
                       beneficiarioAlianza.beneficiarioId);
-                  Navigator.pushNamed(context, 'VbeneficiarioAlianzaAlianza',
+                  Navigator.pushNamed(context, 'VBeneficiarioAlianza',
                       arguments: beneficiarioAlianza.beneficiarioId);
                 },
                 icon: const Icon(

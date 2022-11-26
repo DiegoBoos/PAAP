@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/beneficiario_alianza_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/beneficiario_alianza/beneficiario_alianza_repository.dart';
-import '../../datasources/remote/beneficiario_alianza/beneficiario_alianza_remote_ds.dart';
+import '../../datasources/remote/beneficiario_alianza_remote_ds.dart';
 
 class BeneficiarioAlianzaRepositoryImpl
     implements BeneficiarioAlianzaRepository {

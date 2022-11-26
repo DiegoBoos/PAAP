@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/perfil/perfil_repository.dart';
-import '../../datasources/remote/perfil/perfil_remote_ds.dart';
+import '../../datasources/remote/perfil_remote_ds.dart';
 
 class PerfilRepositoryImpl implements PerfilRepository {
   final PerfilRemoteDataSource perfilRemoteDataSource;

@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_visita_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/tipo_visita/tipo_visita_repository.dart';
-import '../../datasources/remote/tipo_visita/tipo_visita_remote_ds.dart';
+import '../../datasources/remote/tipo_visita_remote_ds.dart';
 
 class TipoVisitaRepositoryImpl implements TipoVisitaRepository {
   final TipoVisitaRemoteDataSource tipoVisitaRemoteDataSource;

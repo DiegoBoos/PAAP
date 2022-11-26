@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/aliado_entity.dart';
 import '../../../domain/repositories/aliado/aliado_repository_db.dart';
-import '../../datasources/local/aliado/aliado_local_ds.dart';
+import '../../datasources/local/aliado_local_ds.dart';
 
 class AliadoRepositoryDBImpl implements AliadoRepositoryDB {
   final AliadosLocalDataSource aliadoLocalDataSource;

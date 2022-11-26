@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/producto_objetivo_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/producto_objetivo/producto_objetivo_repository.dart';
-import '../../datasources/remote/producto_objetivo/producto_objetivo_remote_ds.dart';
+import '../../datasources/remote/producto_objetivo_remote_ds.dart';
 
 class ProductoObjetivoRepositoryImpl implements ProductoObjetivoRepository {
   final ProductoObjetivoRemoteDataSource productoObjetivoRemoteDataSource;

@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/cofinanciador_entity.dart';
 import '../../../domain/repositories/cofinanciador/cofinanciador_repository_db.dart';
-import '../../datasources/local/cofinanciador/cofinanciador_local_ds.dart';
+import '../../datasources/local/cofinanciador_local_ds.dart';
 
 class CofinanciadorRepositoryDBImpl implements CofinanciadorRepositoryDB {
   final CofinanciadorLocalDataSource cofinanciadorLocalDataSource;

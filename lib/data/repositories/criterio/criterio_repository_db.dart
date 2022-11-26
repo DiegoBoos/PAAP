@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/criterio_entity.dart';
 import '../../../domain/repositories/criterio/criterio_repository_db.dart';
-import '../../datasources/local/criterio/criterio_local_ds.dart';
+import '../../datasources/local/criterio_local_ds.dart';
 
 class CriterioRepositoryDBImpl implements CriterioRepositoryDB {
   final CriterioLocalDataSource criterioLocalDataSource;

@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_calidad_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/tipo_calidad/tipo_calidad_repository.dart';
-import '../../datasources/remote/tipo_calidad/tipo_calidad_remote_ds.dart';
+import '../../datasources/remote/tipo_calidad_remote_ds.dart';
 
 class TipoCalidadRepositoryImpl implements TipoCalidadRepository {
   final TipoCalidadRemoteDataSource tipoCalidadRemoteDataSource;

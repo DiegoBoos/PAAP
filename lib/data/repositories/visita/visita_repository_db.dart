@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/visita_entity.dart';
 import '../../../domain/repositories/visita/visita_repository_db.dart';
-import '../../datasources/local/visita/visita_local_ds.dart';
+import '../../datasources/local/visita_local_ds.dart';
 
 class VisitaRepositoryDBImpl implements VisitaRepositoryDB {
   final VisitaLocalDataSource visitaLocalDataSource;

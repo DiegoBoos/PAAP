@@ -10,7 +10,7 @@ class DownloadProgressModel {
       {required this.title,
       required this.counter,
       required this.percent,
-      this.total = 61});
+      this.total = 62});
 
   DownloadProgressModel copyWith(
           {String? title, int? counter, double? percent}) =>

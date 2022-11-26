@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_rubro_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_repository_db.dart';
-import '../../datasources/local/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_local_ds.dart';
+import '../../datasources/local/perfil_preinversion_cofinanciador_rubro_local_ds.dart';
 
 class PerfilPreInversionCofinanciadorRubroRepositoryDBImpl
     implements PerfilPreInversionCofinanciadorRubroRepositoryDB {
@@ -32,11 +32,13 @@ class PerfilPreInversionCofinanciadorRubroRepositoryDBImpl
 
   @override
   Future<Either<Failure, PerfilPreInversionCofinanciadorRubroEntity?>>
-      getPerfilPreInversionCofinanciadorRubroRepositoryDB(String id) async {
+      getPerfilPreInversionCofinanciadorRubroRepositoryDB(
+          String perfilPreInversionId, String cofinanciadorId) async {
     try {
       final perfilPreInversionCofinanciadorRubroDB =
           await perfilPreInversionCofinanciadorRubroLocalDataSource
-              .getPerfilPreInversionCofinanciadorRubroDB(id);
+              .getPerfilPreInversionCofinanciadorRubroDB(
+                  perfilPreInversionId, cofinanciadorId);
 
       return Right(perfilPreInversionCofinanciadorRubroDB);
     } on ServerFailure catch (e) {
@@ -66,11 +68,11 @@ class PerfilPreInversionCofinanciadorRubroRepositoryDBImpl
   @override
   Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>?>>
       getPerfilPreInversionCofinanciadorRubrosByCofinanciadorRepositoryDB(
-          String cofinanciadorId) async {
+          String perfilPreInversionId, String cofinanciadorId) async {
     try {
       final result = await perfilPreInversionCofinanciadorRubroLocalDataSource
           .getPerfilPreInversionCofinanciadorRubrosByCofinanciadorDB(
-              cofinanciadorId);
+              perfilPreInversionId, cofinanciadorId);
       return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));

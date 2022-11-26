@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../../domain/entities/v_alianza_entity.dart';
 
 class AlianzasRows extends StatelessWidget {
@@ -43,14 +45,16 @@ class AlianzasRows extends StatelessWidget {
           ),
         ],
         rows: List.generate(alianzas.length, (index) {
-          VAlianzaEntity alianza = alianzas[index];
+          VAlianzaEntity vAlianza = alianzas[index];
 
           return DataRow(cells: <DataCell>[
-            DataCell(Text(alianza.alianzaId)),
-            DataCell(Text(alianza.nombre)),
+            DataCell(Text(vAlianza.alianzaId)),
+            DataCell(Text(vAlianza.nombre)),
             DataCell(IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, 'VAlianza', arguments: alianza);
+                  BlocProvider.of<VAlianzaCubit>(context)
+                      .selectVPerfilPreinversion(vAlianza);
+                  Navigator.pushNamed(context, 'VAlianza');
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

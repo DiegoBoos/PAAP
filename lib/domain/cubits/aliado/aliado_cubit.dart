@@ -12,33 +12,58 @@ class AliadoCubit extends Cubit<AliadoState> {
 
   void initState() => emit(AliadoInitial());
 
+  void saveAliadoDB(AliadoEntity aliadoEntity) async {
+    final result = await aliadoUsecaseDB.saveAliadoUsecaseDB(aliadoEntity);
+    result.fold((failure) => emit(AliadoError(failure.properties.first)),
+        (data) => emit(AliadoSaved(aliado: aliadoEntity)));
+  }
+
   Future<void> selectAliado(String aliadoId) async {
     final result = await aliadoUsecaseDB.getAliadoUsecaseDB(aliadoId);
     result.fold((failure) => emit(AliadoError(failure.properties.first)),
         (data) {
       if (data == null) {
-        emit(const AliadoError('No se encontró el aliado'));
+        emit(AliadoError('No se encontró el aliado'));
       } else {
         emit(AliadoLoaded(data));
       }
     });
   }
 
-  void changeExperiencia(String? newValue) {}
+  void changeExperiencia(String? newValue) {
+    final experienciaChanged = state.aliado.copyWith(experiencia: newValue);
+    emit(AliadoChanged(experienciaChanged));
+  }
 
-  void changeNombreContacto(String? newValue) {}
+  void changeNombreContacto(String? newValue) {
+    final nombreContactoChanged =
+        state.aliado.copyWith(nombreContacto: newValue);
+    emit(AliadoChanged(nombreContactoChanged));
+  }
 
-  void changeDireccion(String? newValue) {}
+  void changeDireccion(String? newValue) {
+    final direccionChanged = state.aliado.copyWith(direccion: newValue);
+    emit(AliadoChanged(direccionChanged));
+  }
 
-  void changeCorreo(String? newValue) {}
+  void changeCorreo(String? newValue) {
+    final correoChanged = state.aliado.copyWith(correo: newValue);
+    emit(AliadoChanged(correoChanged));
+  }
 
-  void changeTelefonoFijo(String? newValue) {}
+  void changeTelefonoFijo(String? newValue) {
+    final telefonoFijoChanged = state.aliado.copyWith(telefonoFijo: newValue);
+    emit(AliadoChanged(telefonoFijoChanged));
+  }
 
-  void changeTelefonoMovil(String? newValue) {}
+  void changeTelefonoMovil(String? newValue) {
+    final telefonoMovilChanged = state.aliado.copyWith(telefonoMovil: newValue);
+    emit(AliadoChanged(telefonoMovilChanged));
+  }
 
-  void changeFechaDesactivacion(String? newValue) {}
-
-  void changeVolumenCompra(String? newValue) {}
-
-  void changePorcentajeCompra(String? newValue) {}
+  void changeFechaDesactivacion(String? newValue) {
+    final fechaDesactivacionChanged =
+        state.aliado.copyWith(fechaDesactivacion: newValue);
+    emit(AliadoChanged(fechaDesactivacionChanged));
+  }
 }

@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_entity.dart';
 import '../../../domain/entities/v_perfil_preinversion_entity.dart';
 import '../../../domain/repositories/perfil_preinversion/perfil_preinversion_repository_db.dart';
-import '../../datasources/local/perfil_preinversion/perfil_preinversion_local_ds.dart';
+import '../../datasources/local/perfil_preinversion_local_ds.dart';
 
 class PerfilPreInversionRepositoryDBImpl
     implements PerfilPreInversionRepositoryDB {

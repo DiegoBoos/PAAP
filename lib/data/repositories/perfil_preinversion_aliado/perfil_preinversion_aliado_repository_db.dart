@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_aliado_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_aliado/perfil_preinversion_aliado_repository_db.dart';
-import '../../datasources/local/perfil_preinversion_aliado/perfil_preinversion_aliado_local_ds.dart';
+import '../../datasources/local/perfil_preinversion_aliado_local_ds.dart';
 
 class PerfilPreInversionAliadoRepositoryDBImpl
     implements PerfilPreInversionAliadoRepositoryDB {

@@ -6,6 +6,7 @@ import '../../../domain/cubits/experiencia_agricola/experiencia_agricola_cubit.d
 import '../../../domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
 import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
+import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 
 class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
@@ -22,6 +23,18 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vPerfilPreinversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+    final perfilPreinversionBeneficiarioCubit =
+        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
+    final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
+    final perfilBeneficiarioCubit =
+        BlocProvider.of<PerfilBeneficiarioCubit>(context);
+    final experienciaAgricolaCubit =
+        BlocProvider.of<ExperienciaAgricolaCubit>(context);
+    final experienciaPecuariaCubit =
+        BlocProvider.of<ExperienciaPecuariaCubit>(context);
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: DataTable(
@@ -58,34 +71,26 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
             DataCell(Text(perfilPreInversionBeneficiario.nombreOrganizacion)),
             DataCell(IconButton(
                 onPressed: () {
-                  final perfilPreinversionBeneficiarioCubit =
-                      BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(
-                          context);
+                  final perfilId = vPerfilPreinversionCubit
+                      .state.vPerfilPreInversion!.perfilId;
+
+                  final beneficiarioId =
+                      perfilPreInversionBeneficiario.beneficiarioId;
 
                   perfilPreinversionBeneficiarioCubit
                       .selectPerfilPreinversionBeneficiario(
                           perfilPreInversionBeneficiario);
 
-                  final beneficiarioCubit =
-                      BlocProvider.of<BeneficiarioCubit>(context);
+                  beneficiarioCubit.loadBeneficiario(beneficiarioId);
 
-                  beneficiarioCubit.selectBeneficiario(
-                      perfilPreInversionBeneficiario.beneficiarioId);
-
-                  final perfilBeneficiarioCubit =
-                      BlocProvider.of<PerfilBeneficiarioCubit>(context);
                   perfilBeneficiarioCubit.selectPerfilBeneficiario(
-                      perfilPreInversionBeneficiario.beneficiarioId);
+                      perfilId, beneficiarioId);
 
-                  final experienciaAgricolaCubit =
-                      BlocProvider.of<ExperienciaAgricolaCubit>(context);
-                  experienciaAgricolaCubit.selectExperienciaAgricola(
-                      perfilPreInversionBeneficiario.beneficiarioId);
+                  experienciaAgricolaCubit
+                      .selectExperienciaAgricola(beneficiarioId);
 
-                  final experienciaPecuariaCubit =
-                      BlocProvider.of<ExperienciaPecuariaCubit>(context);
-                  experienciaPecuariaCubit.selectExperienciaPecuaria(
-                      perfilPreInversionBeneficiario.beneficiarioId);
+                  experienciaPecuariaCubit
+                      .selectExperienciaPecuaria(beneficiarioId);
 
                   Navigator.pushNamed(
                       context, 'NewEditVBeneficiarioPreInversion');

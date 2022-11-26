@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
 import '../../../domain/repositories/tipo_tenencia/tipo_tenencia_repository_db.dart';
-import '../../datasources/local/tipo_tenencia/tipo_tenencia_local_ds.dart';
+import '../../datasources/local/tipo_tenencia_local_ds.dart';
 
 class TipoTenenciaRepositoryDBImpl implements TipoTenenciaRepositoryDB {
   final TipoTenenciaLocalDataSource tipoTenenciaLocalDataSource;

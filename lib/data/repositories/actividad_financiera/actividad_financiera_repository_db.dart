@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/actividad_financiera_entity.dart';
 import '../../../domain/repositories/actividad_financiera/actividad_financiera_repository_db.dart';
-import '../../datasources/local/actividad_financiera/actividad_financiera_local_ds.dart';
+import '../../datasources/local/actividad_financiera_local_ds.dart';
 
 class ActividadFinancieraRepositoryDBImpl
     implements ActividadFinancieraRepositoryDB {

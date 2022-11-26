@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/agrupacion_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/agrupacion/agrupacion_repository.dart';
-import '../../datasources/remote/agrupacion/agrupacion_remote_ds.dart';
+import '../../datasources/remote/agrupacion_remote_ds.dart';
 
 class AgrupacionRepositoryImpl implements AgrupacionRepository {
   final AgrupacionRemoteDataSource agrupacionRemoteDataSource;

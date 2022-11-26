@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/repositories/genero/genero_repository_db.dart';
-import '../../datasources/local/genero/genero_local_ds.dart';
+import '../../datasources/local/genero_local_ds.dart';
 
 class GeneroRepositoryDBImpl implements GeneroRepositoryDB {
   final GeneroLocalDataSource generoLocalDataSource;

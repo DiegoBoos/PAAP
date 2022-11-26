@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/desembolso_entity.dart';
 export 'package:paap/domain/cubits/desembolso/desembolso_cubit.dart';
 export 'package:paap/data/repositories/desembolso/desembolso_repository.dart';
 export 'package:paap/data/repositories/desembolso/desembolso_repository_db.dart';
-export 'package:paap/data/datasources/remote/desembolso/desembolso_remote_ds.dart';
-export 'package:paap/data/datasources/local/desembolso/desembolso_local_ds.dart';
+export 'package:paap/data/datasources/remote/desembolso_remote_ds.dart';
+export 'package:paap/data/datasources/local/desembolso_local_ds.dart';

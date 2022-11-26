@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/beneficiario_alianza_entity.dart';
 import '../../../domain/repositories/beneficiario_alianza/beneficiario_alianza_repository_db.dart';
-import '../../datasources/local/beneficiario_alianza/beneficiario_alianza_local_ds.dart';
+import '../../datasources/local/beneficiario_alianza_local_ds.dart';
 
 class BeneficiarioAlianzaRepositoryDBImpl
     implements BeneficiarioAlianzaRepositoryDB {

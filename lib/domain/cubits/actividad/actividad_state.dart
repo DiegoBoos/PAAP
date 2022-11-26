@@ -1,28 +1,28 @@
 part of 'actividad_cubit.dart';
 
 abstract class ActividadState extends Equatable {
-  final ActividadEntity? actividad;
-  const ActividadState({this.actividad});
+  final List<ActividadEntity>? actividades;
+  const ActividadState({this.actividades});
 
   @override
-  List<Object?> get props => [actividad];
+  List<Object?> get props => [actividades];
 }
 
-class ActividadInitial extends ActividadState {}
+class ActividadesInitial extends ActividadState {}
 
-class ActividadLoading extends ActividadState {}
+class ActividadesLoading extends ActividadState {}
 
-class ActividadLoaded extends ActividadState {
-  final ActividadEntity? actividadLoaded;
+class ActividadesLoaded extends ActividadState {
+  final List<ActividadEntity>? actividadesLoaded;
 
-  const ActividadLoaded(this.actividadLoaded)
-      : super(actividad: actividadLoaded);
+  const ActividadesLoaded(this.actividadesLoaded)
+      : super(actividades: actividadesLoaded);
 }
 
-class ActividadError extends ActividadState {
+class ActividadesError extends ActividadState {
   final String message;
 
-  const ActividadError(this.message);
+  const ActividadesError(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -2,11 +2,11 @@ part of 'perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 
 abstract class PerfilPreInversionCofinanciadorActividadFinancieraState
     extends Equatable {
-  final PerfilPreInversionCofinanciadorActividadFinancieraEntity?
+  final PerfilPreInversionCofinanciadorActividadFinancieraEntity
       perfilPreInversionCofinanciadorActividadFinanciera;
 
   const PerfilPreInversionCofinanciadorActividadFinancieraState(
-      {this.perfilPreInversionCofinanciadorActividadFinanciera});
+      {required this.perfilPreInversionCofinanciadorActividadFinanciera});
 
   @override
   List<Object?> get props =>
@@ -14,14 +14,20 @@ abstract class PerfilPreInversionCofinanciadorActividadFinancieraState
 }
 
 class PerfilPreInversionCofinanciadorActividadFinancieraInitial
-    extends PerfilPreInversionCofinanciadorActividadFinancieraState {}
+    extends PerfilPreInversionCofinanciadorActividadFinancieraState {
+  PerfilPreInversionCofinanciadorActividadFinancieraInitial()
+      : super(perfilPreInversionCofinanciadorActividadFinanciera: initObject());
+}
 
 class PerfilPreInversionCofinanciadorActividadFinancieraLoading
-    extends PerfilPreInversionCofinanciadorActividadFinancieraState {}
+    extends PerfilPreInversionCofinanciadorActividadFinancieraState {
+  const PerfilPreInversionCofinanciadorActividadFinancieraLoading(
+      {required super.perfilPreInversionCofinanciadorActividadFinanciera});
+}
 
 class PerfilPreInversionCofinanciadorActividadFinancieraLoaded
     extends PerfilPreInversionCofinanciadorActividadFinancieraState {
-  final PerfilPreInversionCofinanciadorActividadFinancieraEntity?
+  final PerfilPreInversionCofinanciadorActividadFinancieraEntity
       perfilPreInversionCofinanciadorActividadFinancieraLoaded;
 
   const PerfilPreInversionCofinanciadorActividadFinancieraLoaded(
@@ -31,14 +37,39 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLoaded
                 perfilPreInversionCofinanciadorActividadFinancieraLoaded);
 }
 
+class PerfilPreInversionCofinanciadorActividadFinancieraChanged
+    extends PerfilPreInversionCofinanciadorActividadFinancieraState {
+  final PerfilPreInversionCofinanciadorActividadFinancieraEntity
+      perfilPreInversionCofinanciadorActividadFinancieraChanged;
+
+  const PerfilPreInversionCofinanciadorActividadFinancieraChanged(
+      this.perfilPreInversionCofinanciadorActividadFinancieraChanged)
+      : super(
+            perfilPreInversionCofinanciadorActividadFinanciera:
+                perfilPreInversionCofinanciadorActividadFinancieraChanged);
+}
+
 class PerfilPreInversionCofinanciadorActividadFinancieraSaved
-    extends PerfilPreInversionCofinanciadorActividadFinancieraState {}
+    extends PerfilPreInversionCofinanciadorActividadFinancieraState {
+  PerfilPreInversionCofinanciadorActividadFinancieraSaved()
+      : super(perfilPreInversionCofinanciadorActividadFinanciera: initObject());
+}
 
 class PerfilPreInversionCofinanciadorActividadFinancieraError
     extends PerfilPreInversionCofinanciadorActividadFinancieraState {
   final String message;
 
-  const PerfilPreInversionCofinanciadorActividadFinancieraError(this.message);
+  PerfilPreInversionCofinanciadorActividadFinancieraError(this.message)
+      : super(perfilPreInversionCofinanciadorActividadFinanciera: initObject());
   @override
   List<Object?> get props => [message];
 }
+
+PerfilPreInversionCofinanciadorActividadFinancieraEntity initObject() =>
+    PerfilPreInversionCofinanciadorActividadFinancieraEntity(
+        actividadFinancieraId: '',
+        perfilPreInversionId: '',
+        cofinanciadorId: '',
+        desembolsoId: '',
+        valor: '',
+        recordStatus: '');

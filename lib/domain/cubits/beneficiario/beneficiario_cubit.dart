@@ -14,14 +14,12 @@ class BeneficiarioCubit extends Cubit<BeneficiarioState> {
 
   void initState() => emit(BeneficiarioInitial());
 
-  void selectBeneficiario(String beneficiarioId) async {
+  void loadBeneficiario(String beneficiarioId) async {
     final result =
         await beneficiarioDB.getBeneficiarioUsecaseDB(beneficiarioId);
     result.fold((failure) => emit(BeneficiarioError(failure.properties.first)),
         (data) {
-      if (data == null) {
-        emit(const BeneficiarioError('No se encontró el beneficiario'));
-      } else {
+      if (data != null) {
         emit(BeneficiarioLoaded(data));
       }
     });
@@ -36,59 +34,63 @@ class BeneficiarioCubit extends Cubit<BeneficiarioState> {
 
   void changeTipoDocumento(String value) {
     final tipoIdentificacionChanged =
-        state.beneficiario?.copyWith(tipoIdentificacionId: value);
-    emit(BeneficiarioLoaded(tipoIdentificacionChanged));
+        state.beneficiario.copyWith(tipoIdentificacionId: value);
+    emit(BeneficiarioChanged(tipoIdentificacionChanged));
   }
 
   void changeFechaExpedicion(String value) {
     final fechaExpedicionDocumentoChanged =
-        state.beneficiario?.copyWith(fechaExpedicionDocumento: value);
-    emit(BeneficiarioLoaded(fechaExpedicionDocumentoChanged));
+        state.beneficiario.copyWith(fechaExpedicionDocumento: value);
+    emit(BeneficiarioChanged(fechaExpedicionDocumentoChanged));
   }
 
   void changeFechaNacimiento(String value) {
     final fechaNacimientoChanged =
-        state.beneficiario?.copyWith(fechaNacimiento: value);
-    emit(BeneficiarioLoaded(fechaNacimientoChanged));
+        state.beneficiario.copyWith(fechaNacimiento: value);
+    emit(BeneficiarioChanged(fechaNacimientoChanged));
   }
 
   void changePrimerNombre(String? newValue) {
-    final primerNombreChanged = state.beneficiario?.copyWith(nombre1: newValue);
-    emit(BeneficiarioLoaded(primerNombreChanged));
+    final primerNombreChanged = state.beneficiario.copyWith(nombre1: newValue);
+    emit(BeneficiarioChanged(primerNombreChanged));
   }
 
   void changeSegundoNombre(String? newValue) {
-    final segundoNombreChanged =
-        state.beneficiario?.copyWith(nombre2: newValue);
-    emit(BeneficiarioLoaded(segundoNombreChanged));
+    final segundoNombreChanged = state.beneficiario.copyWith(nombre2: newValue);
+    emit(BeneficiarioChanged(segundoNombreChanged));
   }
 
   void changePrimerApellido(String? newValue) {
     final primerApellidoChanged =
-        state.beneficiario?.copyWith(apellido1: newValue);
-    emit(BeneficiarioLoaded(primerApellidoChanged));
+        state.beneficiario.copyWith(apellido1: newValue);
+    emit(BeneficiarioChanged(primerApellidoChanged));
   }
 
   void changeSegundoApellido(String? newValue) {
     final segundoApellidoChanged =
-        state.beneficiario?.copyWith(apellido2: newValue);
-    emit(BeneficiarioLoaded(segundoApellidoChanged));
+        state.beneficiario.copyWith(apellido2: newValue);
+    emit(BeneficiarioChanged(segundoApellidoChanged));
   }
 
   void changeGenero(String? value) {
-    final generoChanged = state.beneficiario?.copyWith(generoId: value);
-    emit(BeneficiarioLoaded(generoChanged));
+    final generoChanged = state.beneficiario.copyWith(generoId: value);
+    emit(BeneficiarioChanged(generoChanged));
   }
 
   void changeGrupoEspecial(String value) {
     final grupoEspecialChanged =
-        state.beneficiario?.copyWith(grupoEspecialId: value);
-    emit(BeneficiarioLoaded(grupoEspecialChanged));
+        state.beneficiario.copyWith(grupoEspecialId: value);
+    emit(BeneficiarioChanged(grupoEspecialChanged));
   }
 
   void changeTelefonoMovil(String? newValue) {
     final telefonoMovilChanged =
-        state.beneficiario?.copyWith(telefonoMovil: newValue);
-    emit(BeneficiarioLoaded(telefonoMovilChanged));
+        state.beneficiario.copyWith(telefonoMovil: newValue);
+    emit(BeneficiarioChanged(telefonoMovilChanged));
+  }
+
+  void changeActivo(bool? value) {
+    final activo = state.beneficiario.copyWith(activo: value.toString());
+    emit(BeneficiarioChanged(activo));
   }
 }

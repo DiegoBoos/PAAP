@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/opcion_entity.dart';
 import '../../../domain/repositories/opcion/opcion_repository_db.dart';
-import '../../datasources/local/opcion/opcion_local_ds.dart';
+import '../../datasources/local/opcion_local_ds.dart';
 
 class OpcionRepositoryDBImpl implements OpcionRepositoryDB {
   final OpcionLocalDataSource opcionLocalDataSource;
@@ -13,10 +13,9 @@ class OpcionRepositoryDBImpl implements OpcionRepositoryDB {
   OpcionRepositoryDBImpl({required this.opcionLocalDataSource});
 
   @override
-  Future<Either<Failure, List<OpcionEntity>>> getOpcionesRepositoryDB(
-      String criterioId) async {
+  Future<Either<Failure, List<OpcionEntity>>> getOpcionesRepositoryDB() async {
     try {
-      final opcionesDB = await opcionLocalDataSource.getOpcionesDB(criterioId);
+      final opcionesDB = await opcionLocalDataSource.getOpcionesDB();
 
       return Right(opcionesDB);
     } on ServerFailure catch (e) {

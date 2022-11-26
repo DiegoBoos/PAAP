@@ -8,17 +8,13 @@ abstract class PerfilPreInversionCofinanciadorRubrosEvent extends Equatable {
 }
 
 class GetPerfilPreInversionCofinanciadorRubros
-    extends PerfilPreInversionCofinanciadorRubrosEvent {
-  final String cofinanciadorId;
-
-  const GetPerfilPreInversionCofinanciadorRubros(
-      {required this.cofinanciadorId});
-}
+    extends PerfilPreInversionCofinanciadorRubrosEvent {}
 
 class GetPerfilPreInversionCofinanciadorRubrosByCofinanciador
     extends PerfilPreInversionCofinanciadorRubrosEvent {
+  final String perfilPreInversionId;
   final String cofinanciadorId;
 
   const GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
-      {required this.cofinanciadorId});
+      {required this.perfilPreInversionId, required this.cofinanciadorId});
 }

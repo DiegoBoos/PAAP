@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/unidad_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/unidad/unidad_repository.dart';
-import '../../datasources/remote/unidad/unidad_remote_ds.dart';
+import '../../datasources/remote/unidad_remote_ds.dart';
 
 class UnidadRepositoryImpl implements UnidadRepository {
   final UnidadRemoteDataSource unidadRemoteDataSource;

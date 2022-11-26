@@ -19,7 +19,13 @@ class ExperienciaAgricolaCubit extends Cubit<ExperienciaAgricolaState> {
         .getExperienciaAgricolaUsecaseDB(beneficiarioId);
     result.fold(
         (failure) => emit(ExperienciaAgricolaError(failure.properties.first)),
-        (data) => emit(ExperienciaAgricolaLoaded(data)));
+        (data) {
+      if (data == null) {
+        emit(ExperienciaAgricolaError('Error'));
+      } else {
+        emit(ExperienciaAgricolaLoaded(data));
+      }
+    });
   }
 
   void saveExperienciaAgricolaDB(
@@ -33,84 +39,89 @@ class ExperienciaAgricolaCubit extends Cubit<ExperienciaAgricolaState> {
 
   void changeTipoActividadProductiva(String? value) {
     final tipoActividadProductivaId =
-        state.experienciaAgricola!.copyWith(tipoActividadProductivaId: value);
-    emit(ExperienciaAgricolaLoaded(tipoActividadProductivaId));
+        state.experienciaAgricola.copyWith(tipoActividadProductivaId: value);
+    emit(ExperienciaAgricolaChanged(tipoActividadProductivaId));
   }
 
   void changeFrecuencia(String? value) {
     final frecuenciaId =
-        state.experienciaAgricola!.copyWith(frecuenciaId: value);
-    emit(ExperienciaAgricolaLoaded(frecuenciaId));
+        state.experienciaAgricola.copyWith(frecuenciaId: value);
+    emit(ExperienciaAgricolaChanged(frecuenciaId));
   }
 
   void changeAreaCultivo(String? newValue) {
     final areaCultivo =
-        state.experienciaAgricola!.copyWith(areaCultivo: newValue);
-    emit(ExperienciaAgricolaLoaded(areaCultivo));
+        state.experienciaAgricola.copyWith(areaCultivo: newValue);
+    emit(ExperienciaAgricolaChanged(areaCultivo));
   }
 
   void changeCantidadProducida(String? newValue) {
     final cantidadProducida =
-        state.experienciaAgricola!.copyWith(cantidadProducida: newValue);
-    emit(ExperienciaAgricolaLoaded(cantidadProducida));
+        state.experienciaAgricola.copyWith(cantidadProducida: newValue);
+    emit(ExperienciaAgricolaChanged(cantidadProducida));
   }
 
   void changeCantidadVendida(String? newValue) {
     final cantidadVendida =
-        state.experienciaAgricola!.copyWith(cantidadVendida: newValue);
-    emit(ExperienciaAgricolaLoaded(cantidadVendida));
+        state.experienciaAgricola.copyWith(cantidadVendida: newValue);
+    emit(ExperienciaAgricolaChanged(cantidadVendida));
   }
 
   void changeCantidadAutoconsumo(String? newValue) {
     final cantidadAutoconsumo =
-        state.experienciaAgricola!.copyWith(cantidadAutoconsumo: newValue);
-    emit(ExperienciaAgricolaLoaded(cantidadAutoconsumo));
+        state.experienciaAgricola.copyWith(cantidadAutoconsumo: newValue);
+    emit(ExperienciaAgricolaChanged(cantidadAutoconsumo));
   }
 
   void changeCostoImplementacion(String? newValue) {
     final costoImplementacion =
-        state.experienciaAgricola!.copyWith(costoImplementacion: newValue);
-    emit(ExperienciaAgricolaLoaded(costoImplementacion));
+        state.experienciaAgricola.copyWith(costoImplementacion: newValue);
+    emit(ExperienciaAgricolaChanged(costoImplementacion));
   }
 
   void changeValorJornal(String? newValue) {
     final valorJornal =
-        state.experienciaAgricola!.copyWith(valorJornal: newValue);
-    emit(ExperienciaAgricolaLoaded(valorJornal));
+        state.experienciaAgricola.copyWith(valorJornal: newValue);
+    emit(ExperienciaAgricolaChanged(valorJornal));
   }
 
   void changeTotalIngresoNeto(String? newValue) {
     final totalIngresoNeto =
-        state.experienciaAgricola!.copyWith(totalIngresoNeto: newValue);
-    emit(ExperienciaAgricolaLoaded(totalIngresoNeto));
+        state.experienciaAgricola.copyWith(totalIngresoNeto: newValue);
+    emit(ExperienciaAgricolaChanged(totalIngresoNeto));
   }
 
   void changeAreaPasto(String? newValue) {
-    final areaPasto = state.experienciaAgricola!.copyWith(areaPasto: newValue);
-    emit(ExperienciaAgricolaLoaded(areaPasto));
+    final areaPasto = state.experienciaAgricola.copyWith(areaPasto: newValue);
+    emit(ExperienciaAgricolaChanged(areaPasto));
   }
 
   void changeAreaSinUso(String? newValue) {
-    final areaSinUso =
-        state.experienciaAgricola!.copyWith(areaSinUso: newValue);
-    emit(ExperienciaAgricolaLoaded(areaSinUso));
+    final areaSinUso = state.experienciaAgricola.copyWith(areaSinUso: newValue);
+    emit(ExperienciaAgricolaChanged(areaSinUso));
   }
 
   void changeAreaReservaConservacion(String? newValue) {
     final areaReservaConservacion =
-        state.experienciaAgricola!.copyWith(areaReservaConservacion: newValue);
-    emit(ExperienciaAgricolaLoaded(areaReservaConservacion));
+        state.experienciaAgricola.copyWith(areaReservaConservacion: newValue);
+    emit(ExperienciaAgricolaChanged(areaReservaConservacion));
   }
 
   void changeAreaImplementacion(String? newValue) {
     final areaImplementacion =
-        state.experienciaAgricola!.copyWith(areaImplementacion: newValue);
-    emit(ExperienciaAgricolaLoaded(areaImplementacion));
+        state.experienciaAgricola.copyWith(areaImplementacion: newValue);
+    emit(ExperienciaAgricolaChanged(areaImplementacion));
   }
 
   void changeTotalAreaPredio(String? newValue) {
     final totalAreaPredio =
-        state.experienciaAgricola!.copyWith(totalAreaPredio: newValue);
-    emit(ExperienciaAgricolaLoaded(totalAreaPredio));
+        state.experienciaAgricola.copyWith(totalAreaPredio: newValue);
+    emit(ExperienciaAgricolaChanged(totalAreaPredio));
+  }
+
+  void changeBeneficiarioId(String value) {
+    final beneficiarioIdChanged =
+        state.experienciaAgricola.copyWith(beneficiarioId: value);
+    emit(ExperienciaAgricolaChanged(beneficiarioIdChanged));
   }
 }

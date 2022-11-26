@@ -18,13 +18,20 @@ class PerfilPreInversionCofinanciadorRubroCubit
   void initState() => emit(PerfilPreInversionCofinanciadorRubroInitial());
 
   void selectPerfilPreInversionCofinanciadorRubro(
-      String cofinanciadorId) async {
+      String perfilPreInversionId, String cofinanciadorId) async {
     final result = await perfilPreInversionCofinanciadorRubroDB
-        .getPerfilPreInversionCofinanciadorRubroUsecaseDB(cofinanciadorId);
+        .getPerfilPreInversionCofinanciadorRubroUsecaseDB(
+            perfilPreInversionId, cofinanciadorId);
     result.fold(
         (failure) => emit(PerfilPreInversionCofinanciadorRubroError(
-            failure.properties.first)),
-        (data) => emit(PerfilPreInversionCofinanciadorRubroLoaded(data)));
+            failure.properties.first)), (data) {
+      if (data == null) {
+        emit(PerfilPreInversionCofinanciadorRubroError(
+            'No se pudo cargar la información del rubro del confinanciador de preinversion'));
+      } else {
+        emit(PerfilPreInversionCofinanciadorRubroLoaded(data));
+      }
+    });
   }
 
   void savePerfilPreInversionCofinanciadorRubroDB(
@@ -41,20 +48,20 @@ class PerfilPreInversionCofinanciadorRubroCubit
 
   void changeRubro(String? value) {
     final rubroChanged =
-        state.perfilPreInversionCofinanciadorRubro?.copyWith(rubroId: value);
+        state.perfilPreInversionCofinanciadorRubro.copyWith(rubroId: value);
     emit(PerfilPreInversionCofinanciadorRubroLoaded(rubroChanged));
   }
 
   void changeValor(String? newValue) {
     final valorChanged =
-        state.perfilPreInversionCofinanciadorRubro?.copyWith(valor: newValue);
+        state.perfilPreInversionCofinanciadorRubro.copyWith(valor: newValue);
     emit(PerfilPreInversionCofinanciadorRubroLoaded(valorChanged));
   }
 
   void changeActividadFinanciera(String? value) {
     final actividadFinancieraChanged = state
         .perfilPreInversionCofinanciadorRubro
-        ?.copyWith(actividadFinancieraId: value);
+        .copyWith(actividadFinancieraId: value);
     emit(
         PerfilPreInversionCofinanciadorRubroLoaded(actividadFinancieraChanged));
   }

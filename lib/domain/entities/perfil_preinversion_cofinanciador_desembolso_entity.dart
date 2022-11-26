@@ -5,6 +5,7 @@ class PerfilPreInversionCofinanciadorDesembolsoEntity {
     required this.desembolsoId,
     required this.fecha,
     required this.recordStatus,
+    this.canCreateActividadFinanciera = false,
   });
 
   String perfilPreInversionId;
@@ -12,6 +13,7 @@ class PerfilPreInversionCofinanciadorDesembolsoEntity {
   String desembolsoId;
   String fecha;
   String recordStatus;
+  bool canCreateActividadFinanciera;
 
   PerfilPreInversionCofinanciadorDesembolsoEntity copyWith({
     String? perfilPreInversionId,
@@ -19,6 +21,7 @@ class PerfilPreInversionCofinanciadorDesembolsoEntity {
     String? desembolsoId,
     String? fecha,
     String? recordStatus,
+    bool? canCreateActividadFinanciera,
   }) {
     return PerfilPreInversionCofinanciadorDesembolsoEntity(
       perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
@@ -26,6 +29,8 @@ class PerfilPreInversionCofinanciadorDesembolsoEntity {
       desembolsoId: desembolsoId ?? this.desembolsoId,
       fecha: fecha ?? this.fecha,
       recordStatus: recordStatus ?? this.recordStatus,
+      canCreateActividadFinanciera:
+          canCreateActividadFinanciera ?? this.canCreateActividadFinanciera,
     );
   }
 

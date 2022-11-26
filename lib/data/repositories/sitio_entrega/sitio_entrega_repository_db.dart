@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/sitio_entrega_entity.dart';
 import '../../../domain/repositories/sitio_entrega/sitio_entrega_repository_db.dart';
-import '../../datasources/local/sitio_entrega/sitio_entrega_local_ds.dart';
+import '../../datasources/local/sitio_entrega_local_ds.dart';
 
 class SitioEntregaRepositoryDBImpl implements SitioEntregaRepositoryDB {
   final SitioEntregaLocalDataSource sitioEntregaLocalDataSource;

@@ -29,8 +29,11 @@ class DatesForm extends StatelessWidget {
             enabled: savedDates ? false : true,
             controller: fechaInicialCtrl,
             validator: (value) {
-              if (value!.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return 'Campo Requerido';
+              }
+              if (DateTime.tryParse(value) == null) {
+                return 'No es una fecha válida';
               }
               return null;
             },
@@ -56,8 +59,11 @@ class DatesForm extends StatelessWidget {
             enabled: savedDates ? false : true,
             controller: fechaFinalCtrl,
             validator: (value) {
-              if (value!.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return 'Campo Requerido';
+              }
+              if (DateTime.tryParse(value) == null) {
+                return 'No es una fecha válida';
               }
               return null;
             },

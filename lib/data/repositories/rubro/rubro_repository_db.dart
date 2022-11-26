@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/rubro_entity.dart';
 import '../../../domain/repositories/rubro/rubro_repository_db.dart';
-import '../../datasources/local/rubro/rubro_local_ds.dart';
+import '../../datasources/local/rubro_local_ds.dart';
 
 class RubroRepositoryDBImpl implements RubroRepositoryDB {
   final RubroLocalDataSource rubroLocalDataSource;

@@ -12,15 +12,23 @@ class PerfilPreInversionPlanNegocioCubit
 
   PerfilPreInversionPlanNegocioCubit(
       {required this.perfilPreInversionPlanNegocioDB})
-      : super(PerfilPreInversionPlanNegociosInitial());
+      : super(PerfilPreInversionPlanNegocioInitial());
 
-  void getPerfilPreInversionPlanNegociosDB() async {
+  void getPerfilPreInversionPlanNegocioDB(
+      String perfilPreInversionId, String rubro, String year) async {
     final result = await perfilPreInversionPlanNegocioDB
-        .getPerfilPreInversionPlanNegociosUsecaseDB();
+        .getPerfilPreInversionPlanNegocioUsecaseDB(
+            perfilPreInversionId, rubro, year);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionPlanNegocioError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionPlanNegociosLoaded(data)));
+        (data) {
+      if (data == null) {
+        emit(PerfilPreInversionPlanNegocioError('message'));
+      } else {
+        emit(PerfilPreInversionPlanNegocioLoaded(data));
+      }
+    });
   }
 
   void savePerfilPreInversionPlanNegocioDB(
@@ -35,5 +43,5 @@ class PerfilPreInversionPlanNegocioCubit
         (data) => emit(PerfilPreInversionPlanNegocioSaved()));
   }
 
-  void initState() => emit(PerfilPreInversionPlanNegociosInitial());
+  void initState() => emit(PerfilPreInversionPlanNegocioInitial());
 }

@@ -11,6 +11,8 @@ class VisitaCubit extends Cubit<VisitaState> {
 
   VisitaCubit({required this.visitaDB}) : super(VisitaInitial());
 
+  void initState() => emit(VisitaInitial());
+
   void getVisitaDB(VisitaEntity visitaEntity) async {
     final result = await visitaDB.getVisitaUsecaseDB(visitaEntity);
     result.fold((failure) => emit(VisitaError(failure.properties.first)),
@@ -22,6 +24,4 @@ class VisitaCubit extends Cubit<VisitaState> {
     result.fold((failure) => emit(VisitaError(failure.properties.first)),
         (data) => emit(VisitaCleared()));
   }
-
-  void initState() => emit(VisitaInitial());
 }

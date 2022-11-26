@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_movimiento_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/tipo_movimiento/tipo_movimiento_repository.dart';
-import '../../datasources/remote/tipo_movimiento/tipo_movimiento_remote_ds.dart';
+import '../../datasources/remote/tipo_movimiento_remote_ds.dart';
 
 class TipoMovimientoRepositoryImpl implements TipoMovimientoRepository {
   final TipoMovimientoRemoteDataSource tipoMovimientoRemoteDataSource;

@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/convocatoria_entity.dart';
 import '../../../domain/repositories/convocatoria/convocatoria_repository_db.dart';
-import '../../datasources/local/convocatoria/convocatoria_local_ds.dart';
+import '../../datasources/local/convocatoria_local_ds.dart';
 
 class ConvocatoriaRepositoryDBImpl implements ConvocatoriaRepositoryDB {
   final ConvocatoriaLocalDataSource convocatoriaLocalDataSource;

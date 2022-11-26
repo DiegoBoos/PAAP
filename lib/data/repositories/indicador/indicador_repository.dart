@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/indicador_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/indicador/indicador_repository.dart';
-import '../../datasources/remote/indicador/indicador_remote_ds.dart';
+import '../../datasources/remote/indicador_remote_ds.dart';
 
 class IndicadorRepositoryImpl implements IndicadorRepository {
   final IndicadorRemoteDataSource indicadorRemoteDataSource;

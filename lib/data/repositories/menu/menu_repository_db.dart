@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/menu_entity.dart';
 import '../../../domain/repositories/menu/menu_repository_db.dart';
-import '../../datasources/local/menu/menu_local_ds.dart';
+import '../../datasources/local/menu_local_ds.dart';
 
 class MenuRepositoryDBImpl implements MenuRepositoryDB {
   final MenuLocalDataSource menuLocalDataSource;

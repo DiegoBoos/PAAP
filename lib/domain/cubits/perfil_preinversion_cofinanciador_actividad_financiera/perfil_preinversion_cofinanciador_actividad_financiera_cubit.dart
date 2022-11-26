@@ -33,31 +33,68 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
   }
 
   void selectPerfilPreInversionCofinanciadorActividadFinanciera(
-      String cofinanciadorId) async {
+      String perfilPreInversionId, String cofinanciadorId) async {
     final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
         .getPerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
-            cofinanciadorId);
+            perfilPreInversionId, cofinanciadorId);
     result.fold(
         (failure) => emit(
             PerfilPreInversionCofinanciadorActividadFinancieraError(
-                failure.properties.first)),
-        (data) => emit(
-            PerfilPreInversionCofinanciadorActividadFinancieraLoaded(data)));
+                failure.properties.first)), (data) {
+      if (data == null) {
+        emit(PerfilPreInversionCofinanciadorActividadFinancieraError(
+            'No se pudo cargar la información de la actividad financiera del confinanciador de preinversion'));
+      } else {
+        emit(PerfilPreInversionCofinanciadorActividadFinancieraLoaded(data));
+      }
+    });
+  }
+
+  void changePerfilPreInversion(String value) {
+    final perfilPreInversion = state
+        .perfilPreInversionCofinanciadorActividadFinanciera
+        .copyWith(perfilPreInversionId: value);
+    emit(PerfilPreInversionCofinanciadorActividadFinancieraChanged(
+        perfilPreInversion));
+  }
+
+  void changeCofinanciador(String value) {
+    final cofinanciador = state
+        .perfilPreInversionCofinanciadorActividadFinanciera
+        .copyWith(cofinanciadorId: value);
+    emit(PerfilPreInversionCofinanciadorActividadFinancieraChanged(
+        cofinanciador));
   }
 
   void changeActividadFinanciera(String? value) {
     final actividadFinancieraChanged = state
         .perfilPreInversionCofinanciadorActividadFinanciera
-        ?.copyWith(actividadFinancieraId: value);
-    emit(PerfilPreInversionCofinanciadorActividadFinancieraLoaded(
+        .copyWith(actividadFinancieraId: value);
+    emit(PerfilPreInversionCofinanciadorActividadFinancieraChanged(
         actividadFinancieraChanged));
   }
 
   void changeValor(String? text) {
     final valorChanged = state
         .perfilPreInversionCofinanciadorActividadFinanciera
-        ?.copyWith(valor: text);
-    emit(
-        PerfilPreInversionCofinanciadorActividadFinancieraLoaded(valorChanged));
+        .copyWith(valor: text);
+    emit(PerfilPreInversionCofinanciadorActividadFinancieraChanged(
+        valorChanged));
+  }
+
+  void changeDesembolso(String? value) {
+    final desembolsoChanged = state
+        .perfilPreInversionCofinanciadorActividadFinanciera
+        .copyWith(desembolsoId: value);
+    emit(PerfilPreInversionCofinanciadorActividadFinancieraChanged(
+        desembolsoChanged));
+  }
+
+  void canCreateRubro() {
+    final canCreateRubro = state
+        .perfilPreInversionCofinanciadorActividadFinanciera
+        .copyWith(canCreateRubro: true);
+    emit(PerfilPreInversionCofinanciadorActividadFinancieraChanged(
+        canCreateRubro));
   }
 }

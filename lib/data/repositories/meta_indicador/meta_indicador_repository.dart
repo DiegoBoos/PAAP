@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/meta_indicador_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/meta_indicador/meta_indicador_repository.dart';
-import '../../datasources/remote/meta_indicador/meta_indicador_remote_ds.dart';
+import '../../datasources/remote/meta_indicador_remote_ds.dart';
 
 class MetaIndicadorRepositoryImpl implements MetaIndicadorRepository {
   final MetaIndicadorRemoteDataSource metaIndicadorRemoteDataSource;

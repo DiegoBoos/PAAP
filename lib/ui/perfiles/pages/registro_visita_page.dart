@@ -79,10 +79,10 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
         ),
         BlocListener<EvaluacionRespuestaCubit, EvaluacionRespuestaState>(
           listener: (context, state) {
-            if (state is EvaluacionRespuestaSaved) {
+            if (state is EvaluacionesRespuestasSaved) {
               CustomSnackBar.showSnackBar(
                   context, 'Transacción realizada correctamente', Colors.green);
-            } else if (state is EvaluacionRespuestaError) {
+            } else if (state is EvaluacionesRespuestasError) {
               CustomSnackBar.showSnackBar(
                   context, 'Excepción no controlada', Colors.red);
             }
@@ -205,56 +205,77 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                               ),
                               if (toggleEvaluacion) const MatrizEvaluacion(),
                               if (toggleConceptos) const Conceptos(),
-                              SaveFinishCancelButtons(
-                                  onCanceled: null,
-                                  onFinished: () => showDialog(
-                                      context: context,
-                                      builder: (context) => CustomGeneralDialog(
-                                          title: 'Finalizar',
-                                          subtitle:
-                                              '¿Esta seguro que desea finalizar?',
-                                          confirmText: 'Aceptar',
-                                          cancelText: 'Cancelar',
-                                          onTapConfirm: () {
-                                            if (!formKeyRegistro.currentState!
-                                                .validate()) {
-                                              return;
-                                            }
-                                            formKeyRegistro.currentState!
-                                                .save();
+                              const SizedBox(height: 20),
+                              evaluacionCubit.state.evaluacion?.finalizado ==
+                                      'true'
+                                  ? Container()
+                                  : SaveFinishCancelButtons(
+                                      onCanceled: null,
+                                      onFinished: () => showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              CustomGeneralDialog(
+                                                  title: 'Finalizar',
+                                                  subtitle:
+                                                      '¿Esta seguro que desea finalizar?',
+                                                  confirmText: 'Aceptar',
+                                                  cancelText: 'Cancelar',
+                                                  onTapConfirm: () {
+                                                    if (!formKeyRegistro
+                                                        .currentState!
+                                                        .validate()) {
+                                                      return;
+                                                    }
+                                                    formKeyRegistro
+                                                        .currentState!
+                                                        .save();
 
-                                            evaluacionCubit
-                                                .changeFinalizado('true');
+                                                    evaluacionCubit
+                                                        .changeFinalizado(
+                                                            'true');
 
-                                            evaluacionCubit.saveEvaluacionDB(
-                                                evaluacionCubit
-                                                    .state.evaluacion!);
+                                                    evaluacionCubit
+                                                        .saveEvaluacionDB(
+                                                            evaluacionCubit
+                                                                .state
+                                                                .evaluacion!);
 
-                                            Navigator.pop(context);
-                                          },
-                                          onTapCancel: () {
-                                            Navigator.pop(context);
-                                          })),
-                                  onSaved: () {
-                                    if (!formKeyRegistro.currentState!
-                                        .validate()) {
-                                      return;
-                                    }
-                                    formKeyRegistro.currentState!.save();
+                                                    Navigator.pop(context);
+                                                  },
+                                                  onTapCancel: () {
+                                                    Navigator.pop(context);
+                                                  })),
+                                      onSaved: () {
+                                        if (!formKeyRegistro.currentState!
+                                            .validate()) {
+                                          return;
+                                        }
+                                        formKeyRegistro.currentState!.save();
 
-                                    evaluacionRespuestaCubit
-                                        .saveEvaluacionRespuestaDB(
-                                            evaluacionRespuestaCubit
-                                                .state.evaluacionRespuesta!,
-                                            vPerfil.perfilId);
-                                  })
+                                        /* evaluacionRespuestaCubit
+                                            .saveEvaluacionesRespuestasDB(
+                                                evaluacionRespuestaCubit.state
+                                                    .evaluacionesRespuestas,
+                                                vPerfil.perfilId); */
+
+                                        print(evaluacionRespuestaCubit.state
+                                            .evaluacionesRespuestas.length);
+
+                                        print(
+                                            'OpcionId: ${evaluacionRespuestaCubit.state.evaluacionesRespuestas[0].opcionId}');
+                                        print(
+                                            'Observacion: ${evaluacionRespuestaCubit.state.evaluacionesRespuestas[0].observacion}');
+
+                                        evaluacionRespuestaCubit.initState();
+                                      }),
+                              const SizedBox(height: 20),
                             ],
                           ),
                         ),
                       ],
                     );
                   }
-                  return const SizedBox();
+                  return Container();
                 },
               ),
             ]),

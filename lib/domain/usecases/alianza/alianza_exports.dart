@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/alianza_entity.dart';
 export 'package:paap/domain/blocs/alianzas/alianzas_bloc.dart';
 export 'package:paap/data/repositories/alianza/alianza_repository.dart';
 export 'package:paap/data/repositories/alianza/alianza_repository_db.dart';
-export 'package:paap/data/datasources/remote/alianza/alianza_remote_ds.dart';
-export 'package:paap/data/datasources/local/alianzas/alianzas_local_ds.dart';
+export 'package:paap/data/datasources/remote/alianza_remote_ds.dart';
+export 'package:paap/data/datasources/local/alianzas_local_ds.dart';

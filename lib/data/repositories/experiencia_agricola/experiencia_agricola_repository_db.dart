@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/experiencia_agricola_entity.dart';
 import '../../../domain/repositories/experiencia_agricola/experiencia_agricola_repository_db.dart';
-import '../../datasources/local/experiencia_agricola/experiencia_agricola_local_ds.dart';
+import '../../datasources/local/experiencia_agricola_local_ds.dart';
 
 class ExperienciaAgricolaRepositoryDBImpl
     implements ExperienciaAgricolaRepositoryDB {

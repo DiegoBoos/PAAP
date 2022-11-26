@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 
 import '../../../domain/entities/actividad_entity.dart';
 import '../../../domain/repositories/actividad/actividad_repository_db.dart';
-import '../../datasources/local/actividad/actividad_local_ds.dart';
+import '../../datasources/local/actividad_local_ds.dart';
 
 class ActividadRepositoryDBImpl implements ActividadRepositoryDB {
   final ActividadLocalDataSource actividadLocalDataSource;

@@ -5,7 +5,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/alianza_entity.dart';
 import '../../../domain/entities/v_alianza_entity.dart';
 import '../../../domain/repositories/alianza/alianza_repository_db.dart';
-import '../../datasources/local/alianzas/alianzas_local_ds.dart';
+import '../../datasources/local/alianzas_local_ds.dart';
 
 class AlianzaRepositoryDBImpl implements AlianzaRepositoryDB {
   final AlianzasLocalDataSource alianzaLocalDataSource;

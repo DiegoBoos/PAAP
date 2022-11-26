@@ -1,17 +1,20 @@
 class PerfilPreInversionCofinanciadorEntity {
-  PerfilPreInversionCofinanciadorEntity({
-    required this.perfilPreInversionId,
-    required this.cofinanciadorId,
-    required this.monto,
-    required this.participacion,
-    required this.recordStatus,
-  });
+  PerfilPreInversionCofinanciadorEntity(
+      {required this.perfilPreInversionId,
+      required this.cofinanciadorId,
+      required this.monto,
+      required this.participacion,
+      required this.recordStatus,
+      this.isEditing = false,
+      this.canCreateDesembolso = false});
 
   String perfilPreInversionId;
   String cofinanciadorId;
   String monto;
   String participacion;
   String recordStatus;
+  bool isEditing;
+  bool canCreateDesembolso;
 
   PerfilPreInversionCofinanciadorEntity copyWith({
     String? perfilPreInversionId,
@@ -19,6 +22,8 @@ class PerfilPreInversionCofinanciadorEntity {
     String? monto,
     String? participacion,
     String? recordStatus,
+    bool? isEditing,
+    bool? canCreateDesembolso,
   }) {
     return PerfilPreInversionCofinanciadorEntity(
       perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
@@ -26,6 +31,8 @@ class PerfilPreInversionCofinanciadorEntity {
       monto: monto ?? this.monto,
       participacion: participacion ?? this.participacion,
       recordStatus: recordStatus ?? this.recordStatus,
+      isEditing: isEditing ?? this.isEditing,
+      canCreateDesembolso: canCreateDesembolso ?? this.canCreateDesembolso,
     );
   }
 

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/menu_entity.dart';
-import '../../../domain/entities/v_alianza_entity.dart';
 
 class AlianzasDrawer extends StatelessWidget {
-  const AlianzasDrawer(
-      {Key? key, required this.menuHijo, required this.alianza})
-      : super(key: key);
+  const AlianzasDrawer({Key? key, required this.menuHijo}) : super(key: key);
   final List<MenuEntity> menuHijo;
-  final VAlianzaEntity alianza;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -23,11 +19,11 @@ class AlianzasDrawer extends StatelessWidget {
                 title: Text(submenu.nombre),
                 onTap: () {
                   if (submenu.menuId == '11') {
-                    Navigator.popUntil(context, (route) => route.isFirst);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, 'tabs', (route) => false);
                     return;
                   }
-                  Navigator.pushNamed(context, submenu.ruta,
-                      arguments: alianza);
+                  Navigator.pushNamed(context, submenu.ruta);
                 });
           },
         ));

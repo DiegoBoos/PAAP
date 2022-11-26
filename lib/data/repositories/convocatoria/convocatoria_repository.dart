@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/convocatoria_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/convocatoria/convocatoria_repository.dart';
-import '../../datasources/remote/convocatoria/convocatoria_remote_ds.dart';
+import '../../datasources/remote/convocatoria_remote_ds.dart';
 
 class ConvocatoriaRepositoryImpl implements ConvocatoriaRepository {
   final ConvocatoriaRemoteDataSource convocatoriaRemoteDataSource;

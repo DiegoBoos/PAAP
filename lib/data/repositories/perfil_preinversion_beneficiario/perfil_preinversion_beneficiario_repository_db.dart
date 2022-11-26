@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_repository_db.dart';
-import '../../datasources/local/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_local_ds.dart';
+import '../../datasources/local/perfil_preinversion_beneficiario_local_ds.dart';
 
 class PerfilPreInversionBeneficiarioRepositoryDBImpl
     implements PerfilPreInversionBeneficiarioRepositoryDB {
@@ -48,11 +48,13 @@ class PerfilPreInversionBeneficiarioRepositoryDBImpl
 
   @override
   Future<Either<Failure, PerfilPreInversionBeneficiarioEntity?>>
-      getPerfilPreInversionBeneficiarioRepositoryDB(String id) async {
+      getPerfilPreInversionBeneficiarioRepositoryDB(
+          String perfilPreInversionId, String beneficiarioId) async {
     try {
       final perfilPreInversionBeneficiarioDB =
           await perfilPreInversionBeneficiarioLocalDataSource
-              .getPerfilPreInversionBeneficiarioDB(id);
+              .getPerfilPreInversionBeneficiarioDB(
+                  perfilPreInversionId, beneficiarioId);
 
       return Right(perfilPreInversionBeneficiarioDB);
     } on ServerFailure catch (e) {

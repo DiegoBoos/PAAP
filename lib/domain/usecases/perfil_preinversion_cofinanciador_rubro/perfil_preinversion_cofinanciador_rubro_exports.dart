@@ -6,6 +6,6 @@ export 'package:paap/domain/entities/perfil_preinversion_cofinanciador_rubro_ent
 export 'package:paap/domain/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
 export 'package:paap/data/repositories/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_repository.dart';
 export 'package:paap/data/repositories/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_repository_db.dart';
-export 'package:paap/data/datasources/remote/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_remote_ds.dart';
-export 'package:paap/data/datasources/local/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_local_ds.dart';
+export 'package:paap/data/datasources/remote/perfil_preinversion_cofinanciador_rubro_remote_ds.dart';
+export 'package:paap/data/datasources/local/perfil_preinversion_cofinanciador_rubro_local_ds.dart';
 export 'package:paap/domain/blocs/perfil_preinversion_cofinanciador_rubros/perfil_preinversion_cofinanciador_rubros_bloc.dart';

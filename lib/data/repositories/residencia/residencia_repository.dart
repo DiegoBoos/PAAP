@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/residencia_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/residencia/residencia_repository.dart';
-import '../../datasources/remote/residencia/residencia_remote_ds.dart';
+import '../../datasources/remote/residencia_remote_ds.dart';
 
 class ResidenciaRepositoryImpl implements ResidenciaRepository {
   final ResidenciaRemoteDataSource residenciaRemoteDataSource;

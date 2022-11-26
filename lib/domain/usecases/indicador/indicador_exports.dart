@@ -6,5 +6,5 @@ export 'package:paap/domain/entities/indicador_entity.dart';
 export 'package:paap/domain/cubits/indicador/indicador_cubit.dart';
 export 'package:paap/data/repositories/indicador/indicador_repository.dart';
 export 'package:paap/data/repositories/indicador/indicador_repository_db.dart';
-export 'package:paap/data/datasources/remote/indicador/indicador_remote_ds.dart';
-export 'package:paap/data/datasources/local/indicador/indicador_local_ds.dart';
+export 'package:paap/data/datasources/remote/indicador_remote_ds.dart';
+export 'package:paap/data/datasources/local/indicador_local_ds.dart';

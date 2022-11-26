@@ -78,7 +78,7 @@ class _AlianzasPageState extends State<AlianzasPage> {
                 return AlianzasRows(
                     alianzas: alianzas, subtitleStyle: Styles.subtitleStyle);
               }
-              return const SizedBox();
+              return Container();
             },
           ),
           const SizedBox(height: 30),

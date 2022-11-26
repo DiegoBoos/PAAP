@@ -21,7 +21,7 @@ class NetworkIcon extends StatelessWidget {
         } else if (state is InternetDisconnected) {
           return const Icon(Icons.wifi_off, color: Colors.red);
         }
-        return const SizedBox();
+        return Container();
       },
     );
   }

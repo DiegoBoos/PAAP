@@ -30,24 +30,52 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
   }
 
   void selectPerfilPreInversionCofinanciadorDesembolso(
-      String cofinanciadorId) async {
+      String perfilPreInversionId, String cofinanciadorId) async {
     final result = await perfilPreInversionCofinanciadorDesembolsoDB
-        .getPerfilPreInversionCofinanciadorDesembolsoUsecaseDB(cofinanciadorId);
+        .getPerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
+            perfilPreInversionId, cofinanciadorId);
     result.fold(
         (failure) => emit(PerfilPreInversionCofinanciadorDesembolsoError(
-            failure.properties.first)),
-        (data) => emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(data)));
+            failure.properties.first)), (data) {
+      if (data == null) {
+        emit(PerfilPreInversionCofinanciadorDesembolsoError(
+            'No se pudo cargar la información del desembolso del confinanciador de preinversion'));
+      } else {
+        emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(data));
+      }
+    });
+  }
+
+  void changePerfilPreInversion(String value) {
+    final perfilPreInversionId = state.perfilPreInversionCofinanciadorDesembolso
+        .copyWith(perfilPreInversionId: value);
+    emit(
+        PerfilPreInversionCofinanciadorDesembolsoChanged(perfilPreInversionId));
+  }
+
+  void changePerfilPreInversionCofinanciador(String value) {
+    final cofinanciadorId = state.perfilPreInversionCofinanciadorDesembolso
+        .copyWith(cofinanciadorId: value);
+    emit(PerfilPreInversionCofinanciadorDesembolsoChanged(cofinanciadorId));
   }
 
   void changeDesembolso(String? value) {
     final desembolsoChanged = state.perfilPreInversionCofinanciadorDesembolso
-        ?.copyWith(desembolsoId: value);
-    emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(desembolsoChanged));
+        .copyWith(desembolsoId: value);
+    emit(PerfilPreInversionCofinanciadorDesembolsoChanged(desembolsoChanged));
   }
 
   void changeFecha(String text) {
     final fechaChanged =
-        state.perfilPreInversionCofinanciadorDesembolso?.copyWith(fecha: text);
-    emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(fechaChanged));
+        state.perfilPreInversionCofinanciadorDesembolso.copyWith(fecha: text);
+    emit(PerfilPreInversionCofinanciadorDesembolsoChanged(fechaChanged));
+  }
+
+  void canCreateActividadFinanciera() {
+    final canCreateActividadFinanciera = state
+        .perfilPreInversionCofinanciadorDesembolso
+        .copyWith(canCreateActividadFinanciera: true);
+    emit(PerfilPreInversionCofinanciadorDesembolsoChanged(
+        canCreateActividadFinanciera));
   }
 }

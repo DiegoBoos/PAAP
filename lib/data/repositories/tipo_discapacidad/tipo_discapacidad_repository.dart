@@ -6,7 +6,7 @@ import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_discapacidad_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/tipo_discapacidad/tipo_discapacidad_repository.dart';
-import '../../datasources/remote/tipo_discapacidad/tipo_discapacidad_remote_ds.dart';
+import '../../datasources/remote/tipo_discapacidad_remote_ds.dart';
 
 class TipoDiscapacidadRepositoryImpl implements TipoDiscapacidadRepository {
   final TipoDiscapacidadRemoteDataSource tipoDiscapacidadRemoteDataSource;

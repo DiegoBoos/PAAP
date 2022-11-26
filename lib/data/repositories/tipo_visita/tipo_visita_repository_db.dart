@@ -4,7 +4,7 @@ import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/tipo_visita_entity.dart';
 import '../../../domain/repositories/tipo_visita/tipo_visita_repository_db.dart';
-import '../../datasources/local/tipo_visita/tipo_visita_local_ds.dart';
+import '../../datasources/local/tipo_visita_local_ds.dart';
 
 class TipoVisitaRepositoryDBImpl implements TipoVisitaRepositoryDB {
   final TipoVisitaLocalDataSource tipoVisitaLocalDataSource;

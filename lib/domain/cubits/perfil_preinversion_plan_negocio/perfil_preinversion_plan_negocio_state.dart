@@ -1,42 +1,73 @@
 part of 'perfil_preinversion_plan_negocio_cubit.dart';
 
 abstract class PerfilPreInversionPlanNegocioState extends Equatable {
-  final List<PerfilPreInversionPlanNegocioEntity>?
-      perfilPreInversionPlanNegocios;
+  final PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocio;
 
   const PerfilPreInversionPlanNegocioState(
-      {this.perfilPreInversionPlanNegocios});
+      {required this.perfilPreInversionPlanNegocio});
 
   @override
-  List<Object?> get props => [perfilPreInversionPlanNegocios];
+  List<Object?> get props => [perfilPreInversionPlanNegocio];
 }
 
-class PerfilPreInversionPlanNegociosInitial
-    extends PerfilPreInversionPlanNegocioState {}
-
-class PerfilPreInversionPlanNegociosLoading
-    extends PerfilPreInversionPlanNegocioState {}
-
-class PerfilPreInversionPlanNegociosLoaded
+class PerfilPreInversionPlanNegocioInitial
     extends PerfilPreInversionPlanNegocioState {
-  final List<PerfilPreInversionPlanNegocioEntity>?
-      perfilPreInversionPlanNegociosLoaded;
+  PerfilPreInversionPlanNegocioInitial()
+      : super(perfilPreInversionPlanNegocio: initObject());
+}
 
-  const PerfilPreInversionPlanNegociosLoaded(
-      this.perfilPreInversionPlanNegociosLoaded)
+class PerfilPreInversionPlanNegocioLoading
+    extends PerfilPreInversionPlanNegocioState {
+  const PerfilPreInversionPlanNegocioLoading(
+      {required super.perfilPreInversionPlanNegocio});
+}
+
+class PerfilPreInversionPlanNegocioLoaded
+    extends PerfilPreInversionPlanNegocioState {
+  final PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioLoaded;
+
+  const PerfilPreInversionPlanNegocioLoaded(
+      this.perfilPreInversionPlanNegocioLoaded)
       : super(
-            perfilPreInversionPlanNegocios:
-                perfilPreInversionPlanNegociosLoaded);
+            perfilPreInversionPlanNegocio: perfilPreInversionPlanNegocioLoaded);
+}
+
+class PerfilPreInversionPlanNegocioChanged
+    extends PerfilPreInversionPlanNegocioState {
+  final PerfilPreInversionPlanNegocioEntity
+      perfilPreInversionPlanNegocioChanged;
+
+  const PerfilPreInversionPlanNegocioChanged(
+      this.perfilPreInversionPlanNegocioChanged)
+      : super(
+            perfilPreInversionPlanNegocio:
+                perfilPreInversionPlanNegocioChanged);
 }
 
 class PerfilPreInversionPlanNegocioSaved
-    extends PerfilPreInversionPlanNegocioState {}
+    extends PerfilPreInversionPlanNegocioState {
+  PerfilPreInversionPlanNegocioSaved()
+      : super(perfilPreInversionPlanNegocio: initObject());
+}
 
 class PerfilPreInversionPlanNegocioError
     extends PerfilPreInversionPlanNegocioState {
   final String message;
 
-  const PerfilPreInversionPlanNegocioError(this.message);
+  PerfilPreInversionPlanNegocioError(this.message)
+      : super(perfilPreInversionPlanNegocio: initObject());
   @override
   List<Object?> get props => [message];
 }
+
+PerfilPreInversionPlanNegocioEntity initObject() =>
+    PerfilPreInversionPlanNegocioEntity(
+        perfilPreInversionId: '',
+        rubroId: '',
+        year: '',
+        valor: '',
+        cantidad: '',
+        unidadId: '',
+        productoId: '',
+        tipoCalidadId: '',
+        recordStatus: '');
