@@ -11,6 +11,8 @@ import 'domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import 'domain/usecases/agrupacion/agrupacion_exports.dart';
 import 'domain/usecases/aliado/aliado_exports.dart';
 import 'domain/usecases/alianza/alianza_exports.dart';
+import 'domain/usecases/alianza_experiencia_agricola/alianza_experiencia_agricola_exports.dart';
+import 'domain/usecases/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_exports.dart';
 import 'domain/usecases/auth/auth_exports.dart';
 import 'domain/usecases/beneficiario/beneficiario_exports.dart';
 import 'domain/usecases/beneficiario_alianza/beneficiario_alianza_exports.dart';
@@ -669,6 +671,10 @@ downloadSyncInit() {
         experienciaAgricolaDB: locator(),
         experienciaPecuaria: locator(),
         experienciaPecuariaDB: locator(),
+        alianzaExperienciaAgricola: locator(),
+        alianzaExperienciaAgricolaDB: locator(),
+        alianzaExperienciaPecuaria: locator(),
+        alianzaExperienciaPecuariaDB: locator(),
         frecuencia: locator(),
         frecuenciaDB: locator(),
         generos: locator(),
@@ -977,6 +983,86 @@ experienciaPecuariaInit() {
   );
 }
 
+alianzaExperienciaAgricolaInit() {
+  // cubit
+  locator.registerFactory(() =>
+      AlianzaExperienciaAgricolaCubit(alianzaExperienciaAgricolaDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(
+      () => AlianzaExperienciaAgricolaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(
+      () => AlianzaExperienciaAgricolaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<AlianzaExperienciaAgricolaRepository>(
+    () => AlianzaExperienciaAgricolaRepositoryImpl(
+      alianzaExperienciaAgricolaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<AlianzaExperienciaAgricolaRepositoryDB>(
+    () => AlianzaExperienciaAgricolaRepositoryDBImpl(
+      alianzaExperienciaAgricolaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<AlianzaExperienciaAgricolaRemoteDataSource>(
+    () => AlianzaExperienciaAgricolaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<AlianzaExperienciaAgricolaLocalDataSource>(
+    () => AlianzaExperienciaAgricolaLocalDataSourceImpl(),
+  );
+}
+
+alianzaExperienciaPecuariaInit() {
+  // cubit
+  locator.registerFactory(() =>
+      AlianzaExperienciaPecuariaCubit(alianzaExperienciaPecuariaDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(
+      () => AlianzaExperienciaPecuariaUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(
+      () => AlianzaExperienciaPecuariaUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<AlianzaExperienciaPecuariaRepository>(
+    () => AlianzaExperienciaPecuariaRepositoryImpl(
+      alianzaExperienciaPecuariaRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<AlianzaExperienciaPecuariaRepositoryDB>(
+    () => AlianzaExperienciaPecuariaRepositoryDBImpl(
+      alianzaExperienciaPecuariaLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<AlianzaExperienciaPecuariaRemoteDataSource>(
+    () => AlianzaExperienciaPecuariaRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<AlianzaExperienciaPecuariaLocalDataSource>(
+    () => AlianzaExperienciaPecuariaLocalDataSourceImpl(),
+  );
+}
+
 frecuenciaInit() {
   // cubit
   locator.registerFactory(() => FrecuenciaCubit(frecuenciaDB: locator()));
@@ -1187,6 +1273,8 @@ void init() {
   perfilPreInversionPreciosInit();
   experienciaAgricolaInit();
   experienciaPecuariaInit();
+  alianzaExperienciaAgricolaInit();
+  alianzaExperienciaPecuariaInit();
   perfilPreInversionPlanNegociosInit();
 
   downloadSyncInit();

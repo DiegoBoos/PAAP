@@ -19,6 +19,8 @@ import 'domain/cubits/actividad_economica/actividad_economica_cubit.dart';
 import 'domain/cubits/actividad_financiera/actividad_financiera_cubit.dart';
 import 'domain/cubits/agrupacion/agrupacion_cubit.dart';
 import 'domain/cubits/aliado/aliado_cubit.dart';
+import 'domain/cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
+import 'domain/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
 import 'domain/cubits/beneficiario/beneficiario_cubit.dart';
 import 'domain/cubits/cofinanciador/cofinanciador_cubit.dart';
 import 'domain/cubits/consultor/consultor_cubit.dart';
@@ -137,6 +139,12 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<ExperienciaPecuariaCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<AlianzaExperienciaAgricolaCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<AlianzaExperienciaPecuariaCubit>(),
           ),
           BlocProvider(
             create: (_) => di.locator<ActividadEconomicaCubit>(),

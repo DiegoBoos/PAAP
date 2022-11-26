@@ -65,6 +65,8 @@ import '../../data/datasources/local/tipo_tenencia_local_ds.dart';
 import '../../data/datasources/local/tipo_visita_local_ds.dart';
 import '../../data/datasources/local/unidad_local_ds.dart';
 import '../../data/datasources/local/vereda_local_ds.dart';
+import '../usecases/alianza_experiencia_agricola/alianza_experiencia_agricola_exports.dart';
+import '../usecases/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_exports.dart';
 import '../usecases/sitio_entrega/sitio_entrega_exports.dart';
 
 class DBConfig {
@@ -157,6 +159,10 @@ class DBConfig {
           .createExperienciaAgricolaTable(db);
       await ExperienciaPecuariaLocalDataSourceImpl
           .createExperienciaPecuariaTable(db);
+      await AlianzaExperienciaAgricolaLocalDataSourceImpl
+          .createAlianzaExperienciaAgricolaTable(db);
+      await AlianzaExperienciaPecuariaLocalDataSourceImpl
+          .createAlianzaExperienciaPecuariaTable(db);
 
       await ActividadLocalDataSourceImpl.createActividadTable(db);
       await IndicadorLocalDataSourceImpl.createIndicadorTable(db);

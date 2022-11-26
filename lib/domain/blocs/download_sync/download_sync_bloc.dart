@@ -10,6 +10,8 @@ import '../../usecases/actividad_financiera/actividad_financiera_exports.dart';
 import '../../usecases/agrupacion/agrupacion_exports.dart';
 import '../../usecases/aliado/aliado_exports.dart';
 import '../../usecases/alianza/alianza_exports.dart';
+import '../../usecases/alianza_experiencia_agricola/alianza_experiencia_agricola_exports.dart';
+import '../../usecases/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_exports.dart';
 import '../../usecases/beneficiario/beneficiario_exports.dart';
 import '../../usecases/beneficiario_alianza/beneficiario_alianza_exports.dart';
 import '../../usecases/cofinanciador/cofinanciador_exports.dart';
@@ -110,6 +112,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final ExperienciaAgricolaUsecaseDB experienciaAgricolaDB;
   final ExperienciaPecuariaUsecase experienciaPecuaria;
   final ExperienciaPecuariaUsecaseDB experienciaPecuariaDB;
+  final AlianzaExperienciaAgricolaUsecase alianzaExperienciaAgricola;
+  final AlianzaExperienciaAgricolaUsecaseDB alianzaExperienciaAgricolaDB;
+  final AlianzaExperienciaPecuariaUsecase alianzaExperienciaPecuaria;
+  final AlianzaExperienciaPecuariaUsecaseDB alianzaExperienciaPecuariaDB;
   final FrecuenciaUsecase frecuencia;
   final FrecuenciaUsecaseDB frecuenciaDB;
   final GeneroUsecase generos;
@@ -242,6 +248,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.experienciaAgricolaDB,
     required this.experienciaPecuaria,
     required this.experienciaPecuariaDB,
+    required this.alianzaExperienciaAgricola,
+    required this.alianzaExperienciaAgricolaDB,
+    required this.alianzaExperienciaPecuaria,
+    required this.alianzaExperienciaPecuariaDB,
     required this.frecuencia,
     required this.frecuenciaDB,
     required this.generos,
@@ -447,6 +457,18 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           counter: state.downloadProgressModel!.counter + 1,
           percent: calculatePercent())));
       await downloadExperienciasPecuarias(usuario, emit);
+
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Alianzas Experiencias Agrícolas',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+      await downloadAlianzasExperienciasAgricolas(usuario, emit);
+
+      add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
+          title: 'Sincronizando Alianzas Experiencias Pecuarias',
+          counter: state.downloadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+      await downloadAlianzasExperienciasPecuarias(usuario, emit);
 
       add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
           title: 'Sincronizando Frecuencias',
@@ -704,7 +726,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     });
 
     on<DownloadStatusChanged>((event, emit) {
-      event.progress.counter == 62
+      event.progress.counter == 64
           ? emit(DownloadSyncSuccess())
           : emit(DownloadSyncInProgress(event.progress));
     });
@@ -885,6 +907,24 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)),
         (data) async => await saveExperienciasPecuarias(data, emit));
+  }
+
+  Future<void> downloadAlianzasExperienciasAgricolas(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await alianzaExperienciaAgricola
+        .getAlianzasExperienciasAgricolasUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveAlianzasExperienciasAgricolas(data, emit));
+  }
+
+  Future<void> downloadAlianzasExperienciasPecuarias(
+      UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
+    final result = await alianzaExperienciaPecuaria
+        .getAlianzasExperienciasPecuariasUsecase(usuario);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)),
+        (data) async => await saveAlianzasExperienciasPecuarias(data, emit));
   }
 
   Future<void> downloadFrecuencias(
@@ -1384,6 +1424,24 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       Emitter<DownloadSyncState> emit) async {
     final result =
         await experienciaPecuariaDB.saveExperienciasPecuariasUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> saveAlianzasExperienciasAgricolas(
+      List<AlianzaExperienciaAgricolaEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await alianzaExperienciaAgricolaDB
+        .saveAlianzasExperienciasAgricolasUsecaseDB(data);
+    return result.fold(
+        (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
+  }
+
+  Future<void> saveAlianzasExperienciasPecuarias(
+      List<AlianzaExperienciaPecuariaEntity> data,
+      Emitter<DownloadSyncState> emit) async {
+    final result = await alianzaExperienciaPecuariaDB
+        .saveAlianzasExperienciasPecuariasUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
