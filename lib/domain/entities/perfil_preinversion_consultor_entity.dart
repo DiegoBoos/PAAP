@@ -4,14 +4,14 @@ class PerfilPreInversionConsultorEntity {
     required this.consultorId,
     required this.revisionId,
     required this.fechaRevision,
-    required this.recordStatus,
+    this.recordStatus,
   });
 
   String perfilPreInversionId;
   String consultorId;
   String revisionId;
   String fechaRevision;
-  String recordStatus;
+  String? recordStatus;
 
   factory PerfilPreInversionConsultorEntity.fromJson(
           Map<String, dynamic> json) =>

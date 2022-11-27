@@ -11,16 +11,9 @@ class VeredaCubit extends Cubit<VeredaState> {
 
   VeredaCubit({required this.veredaDB}) : super(VeredasInitial());
 
-  void getVeredasByMunicipioDB(String municipioId) async {
-    final result = await veredaDB.getVeredasUsecaseDB();
+  Future<void> getVeredasByMunicipioDB(String municipioId) async {
+    final result = await veredaDB.getVeredasByMunicipioUsecaseDB(municipioId);
     result.fold((failure) => emit(VeredasError(failure.properties.first)),
-        (data) {
-      List<VeredaEntity> veredasByMunicipio = [];
-
-      veredasByMunicipio =
-          data!.where((m) => m.municipioId == municipioId).toList();
-
-      emit(VeredasLoaded(veredasByMunicipio));
-    });
+        (data) => emit(VeredasLoaded(data)));
   }
 }

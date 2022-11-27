@@ -5,7 +5,7 @@ import '../../entities/perfil_preinversion_consultor_entity.dart';
 
 abstract class PerfilPreInversionConsultorRepositoryDB {
   Future<Either<Failure, List<PerfilPreInversionConsultorEntity>>>
-      getPerfilPreInversionConsultoresRepositoryDB();
+      getPerfilPreInversionConsultoresRepositoryDB(String perfilPreInversionId);
 
   Future<Either<Failure, PerfilPreInversionConsultorEntity?>>
       getPerfilPreInversionConsultorRepositoryDB(
@@ -25,4 +25,7 @@ abstract class PerfilPreInversionConsultorRepositoryDB {
       updatePerfilesPreInversionesConsultoresProduccionDBRepositoryDB(
           List<PerfilPreInversionConsultorEntity>
               perfilesPreInversionesConsultoresEntity);
+
+  Future<Either<Failure, int>>
+      deletePerfilesPreInversionesConsultoresRepositoryDB();
 }

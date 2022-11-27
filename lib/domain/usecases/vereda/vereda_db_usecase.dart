@@ -8,8 +8,9 @@ class VeredaUsecaseDB {
 
   VeredaUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<VeredaEntity>?>> getVeredasUsecaseDB() {
-    return repositoryDB.getVeredasRepositoryDB();
+  Future<Either<Failure, List<VeredaEntity>?>> getVeredasByMunicipioUsecaseDB(
+      String municipioId) {
+    return repositoryDB.getVeredasByMunicipioRepositoryDB(municipioId);
   }
 
   Future<Either<Failure, int>> saveVeredasUsecaseDB(

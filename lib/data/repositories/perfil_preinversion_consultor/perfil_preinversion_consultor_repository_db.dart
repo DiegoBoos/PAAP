@@ -16,11 +16,12 @@ class PerfilPreInversionConsultorRepositoryDBImpl
 
   @override
   Future<Either<Failure, List<PerfilPreInversionConsultorEntity>>>
-      getPerfilPreInversionConsultoresRepositoryDB() async {
+      getPerfilPreInversionConsultoresRepositoryDB(
+          String perfilPreInversionId) async {
     try {
       final perfilPreInversionConsultoresDB =
           await perfilPreInversionConsultorLocalDataSource
-              .getPerfilPreInversionConsultoresDB();
+              .getPerfilPreInversionConsultoresDB(perfilPreInversionId);
 
       return Right(perfilPreInversionConsultoresDB);
     } on ServerFailure catch (e) {
@@ -105,6 +106,21 @@ class PerfilPreInversionConsultorRepositoryDBImpl
       final result = await perfilPreInversionConsultorLocalDataSource
           .updatePerfilesPreInversionesConsultoresProduccionDB(
               perfilesPreInversionesConsultoresEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>>
+      deletePerfilesPreInversionesConsultoresRepositoryDB() async {
+    try {
+      final result = await perfilPreInversionConsultorLocalDataSource
+          .deletePerfilesPreInversionesConsultoresDB();
 
       return Right(result);
     } on ServerFailure catch (e) {

@@ -8,4 +8,11 @@ abstract class PerfilPreInversionConsultoresEvent extends Equatable {
 }
 
 class GetPerfilPreInversionConsultores
+    extends PerfilPreInversionConsultoresEvent {
+  final String perfilPreInversionId;
+
+  const GetPerfilPreInversionConsultores(this.perfilPreInversionId);
+}
+
+class DeletePerfilPreInversionConsultores
     extends PerfilPreInversionConsultoresEvent {}

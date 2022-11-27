@@ -14,6 +14,8 @@ class DepartamentoCubit extends Cubit<DepartamentoState> {
     getDepartamentoDB();
   }
 
+  void initState() => emit(DepartamentosInitial());
+
   void getDepartamentoDB() async {
     final result = await departamentoDB.getDepartamentosUsecaseDB();
     result.fold((failure) => emit(DepartamentosError(failure.properties.first)),

@@ -6,7 +6,7 @@ import '../../models/perfil_preinversion_consultor_model.dart';
 
 abstract class PerfilPreInversionConsultorLocalDataSource {
   Future<List<PerfilPreInversionConsultorModel>>
-      getPerfilPreInversionConsultoresDB();
+      getPerfilPreInversionConsultoresDB(String perfilPreInversionId);
   Future<PerfilPreInversionConsultorModel?> getPerfilPreInversionConsultorDB(
       String perfilPreInversionId, String consultorId, String revisionId);
   Future<int> savePerfilPreInversionConsultores(
@@ -19,6 +19,7 @@ abstract class PerfilPreInversionConsultorLocalDataSource {
   Future<int> updatePerfilesPreInversionesConsultoresProduccionDB(
       List<PerfilPreInversionConsultorEntity>
           perfilesPreInversionesConsultoresProduccionEntity);
+  Future<int> deletePerfilesPreInversionesConsultoresDB();
 }
 
 class PerfilPreInversionConsultorLocalDataSourceImpl
@@ -40,10 +41,11 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionConsultorModel>>
-      getPerfilPreInversionConsultoresDB() async {
+      getPerfilPreInversionConsultoresDB(String perfilPreInversionId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionConsultor');
+    final res = await db.query('PerfilPreInversionConsultor',
+        where: 'PerfilPreInversionId = ?', whereArgs: [perfilPreInversionId]);
 
     final perfilPreInversionConsultor =
         List<PerfilPreInversionConsultorModel>.from(
@@ -102,10 +104,7 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
     final db = await DBConfig.database;
     var batch = db.batch();
 
-    //TODO: revisionId = 2 Segunda Revisión PreInversión - Factibilidad
-    perfilPreInversionConsultorEntity.revisionId = '2';
-    perfilPreInversionConsultorEntity.fechaRevision =
-        DateTime.now().toIso8601String();
+    await db.delete('PerfilPreInversionConsultor');
 
     final resQuery = await db.query('PerfilPreInversionConsultor',
         where:
@@ -177,5 +176,13 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
     final res = await batch.commit();
 
     return res.length;
+  }
+
+  @override
+  Future<int> deletePerfilesPreInversionesConsultoresDB() async {
+    final db = await DBConfig.database;
+    final res = await db.delete('PerfilPreInversionConsultor');
+
+    return res;
   }
 }

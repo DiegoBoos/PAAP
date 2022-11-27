@@ -9,8 +9,9 @@ class PerfilPreInversionConsultorUsecaseDB {
   PerfilPreInversionConsultorUsecaseDB(this.repositoryDB);
 
   Future<Either<Failure, List<PerfilPreInversionConsultorEntity>?>>
-      getPerfilPreInversionConsultoresUsecaseDB() {
-    return repositoryDB.getPerfilPreInversionConsultoresRepositoryDB();
+      getPerfilPreInversionConsultoresUsecaseDB(String perfilPreInversionId) {
+    return repositoryDB
+        .getPerfilPreInversionConsultoresRepositoryDB(perfilPreInversionId);
   }
 
   Future<Either<Failure, PerfilPreInversionConsultorEntity?>>
@@ -41,9 +42,15 @@ class PerfilPreInversionConsultorUsecaseDB {
 
   Future<Either<Failure, int>>
       updatePerfilesPreInversionesConsultoresProduccionUsecaseDB(
-          List<PerfilPreInversionConsultorEntity> experienciasAgricolasEntity) {
+          List<PerfilPreInversionConsultorEntity>
+              perfilPreInversionConsultorEntity) {
     return repositoryDB
         .updatePerfilesPreInversionesConsultoresProduccionDBRepositoryDB(
-            experienciasAgricolasEntity);
+            perfilPreInversionConsultorEntity);
+  }
+
+  Future<Either<Failure, int>>
+      deletePerfilesPreInversionesConsultoresUsecaseDB() {
+    return repositoryDB.deletePerfilesPreInversionesConsultoresRepositoryDB();
   }
 }

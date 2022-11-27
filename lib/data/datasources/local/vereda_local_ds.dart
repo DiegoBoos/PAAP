@@ -5,7 +5,7 @@ import '../../../domain/db/db_config.dart';
 import '../../models/vereda_model.dart';
 
 abstract class VeredaLocalDataSource {
-  Future<List<VeredaModel>> getVeredasDB();
+  Future<List<VeredaModel>> getVeredasByMunicipioDB(String municipioId);
   Future<int> saveVeredas(List<VeredaEntity> veredaEntity);
 }
 
@@ -17,16 +17,18 @@ class VeredaLocalDataSourceImpl implements VeredaLocalDataSource {
         Nombre	TEXT,
         CodigoDane	TEXT,
         MunicipioId	TEXT,
+        FOREIGN KEY(MunicipioId) REFERENCES Municipio(MunicipioId),
         PRIMARY KEY(VeredaId)
       )
     ''');
   }
 
   @override
-  Future<List<VeredaModel>> getVeredasDB() async {
+  Future<List<VeredaModel>> getVeredasByMunicipioDB(String municipioId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('Vereda');
+    final res = await db
+        .query('Vereda', where: 'MunicipioId = ?', whereArgs: [municipioId]);
 
     final veredasDB =
         List<VeredaModel>.from(res.map((m) => VeredaModel.fromJson(m)))

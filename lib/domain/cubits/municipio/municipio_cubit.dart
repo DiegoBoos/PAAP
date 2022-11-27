@@ -9,20 +9,12 @@ part '../municipio/municipio_state.dart';
 class MunicipioCubit extends Cubit<MunicipioState> {
   final MunicipioUsecaseDB municipioDB;
 
-  MunicipioCubit({required this.municipioDB})
-      : super(const MunicipiosInitial()) {
-    getMunicipiosDB();
-  }
+  MunicipioCubit({required this.municipioDB}) : super(MunicipiosInitial());
+
+  void initState() => emit(MunicipiosInitial());
 
   Future<void> getMunicipiosDB() async {
     final result = await municipioDB.getMunicipiosUsecaseDB();
-    result.fold((failure) => emit(MunicipiosError(failure.properties.first)),
-        (data) => emit(MunicipiosLoaded(data)));
-  }
-
-  void getMunicipiosByDepartamentoDB(String departamentoId) async {
-    final result =
-        await municipioDB.getMunicipiosByDepartamentoUsecaseDB(departamentoId);
     result.fold((failure) => emit(MunicipiosError(failure.properties.first)),
         (data) => emit(MunicipiosLoaded(data)));
   }

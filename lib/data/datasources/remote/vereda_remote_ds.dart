@@ -114,7 +114,7 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
         //final Map<String, dynamic> decodedResp = json.decode(res);
         final Map<String, dynamic> decodedResp = jsonDecode(res
             .toString()
-            .replaceAll(RegExp(r'[^A-Za-z0-9() áéíóúÁÉÍÓÚ:[\]{}.,";?]'), ''));
+            .replaceAll(RegExp(r'[^A-Za-z0-9() áéíóúÁÉÍÓÚñÑ:[\]{}.,";?]'), ''));
 
         final veredasRaw = decodedResp.entries.first.value['Table'];
 

@@ -25,7 +25,7 @@ class PerfilPreInversionConsultorCubit
         (data) => emit(PerfilPreInversionConsultorLoaded(data)));
   }
 
-  void savePerfilPreInversionConsultorDB(
+  Future<void> savePerfilPreInversionConsultorDB(
       PerfilPreInversionConsultorEntity
           perfilPreInversionConsultorEntity) async {
     final result = await perfilPreInversionConsultorDB

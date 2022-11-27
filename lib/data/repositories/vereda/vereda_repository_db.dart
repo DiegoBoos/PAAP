@@ -12,9 +12,11 @@ class VeredaRepositoryDBImpl implements VeredaRepositoryDB {
   VeredaRepositoryDBImpl({required this.veredaLocalDataSource});
 
   @override
-  Future<Either<Failure, List<VeredaEntity>>> getVeredasRepositoryDB() async {
+  Future<Either<Failure, List<VeredaEntity>>> getVeredasByMunicipioRepositoryDB(
+      String municipioId) async {
     try {
-      final veredasDB = await veredaLocalDataSource.getVeredasDB();
+      final veredasDB =
+          await veredaLocalDataSource.getVeredasByMunicipioDB(municipioId);
 
       return Right(veredasDB);
     } on ServerFailure catch (e) {

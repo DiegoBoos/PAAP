@@ -18,15 +18,35 @@ class PerfilPreInversionConsultoresBloc extends Bloc<
       emit(PerfilPreInversionConsultoresLoading());
       await _getPerfilPreInversionConsultores(event, emit);
     });
+
+    on<DeletePerfilPreInversionConsultores>((event, emit) async {
+      emit(PerfilPreInversionConsultoresLoading());
+      await _deletePerfilPreInversionConsultores(event, emit);
+    });
   }
 
   _getPerfilPreInversionConsultores(event, emit) async {
     final result = await perfilPreInversionConsultoresDB
-        .getPerfilPreInversionConsultoresUsecaseDB();
+        .getPerfilPreInversionConsultoresUsecaseDB(event.perfilPreInversionId);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionConsultoresError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionConsultoresLoaded(
-            perfilPreInversionConsultoresLoaded: data)));
+        (data) {
+      if (data == null || data.isEmpty) {
+        emit(PerfilPreInversionConsultoresInitial());
+      } else {
+        emit(PerfilPreInversionConsultoresLoaded(
+            perfilPreInversionConsultoresLoaded: data));
+      }
+    });
+  }
+
+  _deletePerfilPreInversionConsultores(event, emit) async {
+    final result = await perfilPreInversionConsultoresDB
+        .deletePerfilesPreInversionesConsultoresUsecaseDB();
+    result.fold(
+        (failure) =>
+            emit(PerfilPreInversionConsultoresError(failure.properties.first)),
+        (data) => emit(PerfilPreInversionConsultoresInitial()));
   }
 }

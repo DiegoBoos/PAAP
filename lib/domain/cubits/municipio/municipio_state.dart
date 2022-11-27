@@ -8,9 +8,7 @@ abstract class MunicipioState extends Equatable {
   List<Object?> get props => [municipios];
 }
 
-class MunicipiosInitial extends MunicipioState {
-  const MunicipiosInitial() : super(municipios: null);
-}
+class MunicipiosInitial extends MunicipioState {}
 
 class MunicipiosLoading extends MunicipioState {}
 

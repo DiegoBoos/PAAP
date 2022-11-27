@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/domain/entities/perfil_beneficiario_entity.dart';
 
 import '../../../data/models/municipio_model.dart';
 import '../../../domain/cubits/departamento/departamento_cubit.dart';
 import '../../../domain/cubits/municipio/municipio_cubit.dart';
 import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
+import '../../../domain/cubits/vereda/vereda_cubit.dart';
 import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/entities/municipio_entity.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
+import '../../../domain/entities/vereda_entity.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
@@ -21,23 +24,84 @@ class PerfilBeneficiarioForm extends StatefulWidget {
 }
 
 class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
-  List<MunicipioEntity> municipios = [];
   List<MunicipioEntity> municipiosFiltered = [];
+  List<VeredaEntity> veredasFiltered = [];
 
   String? departamentoId;
   String? municipioId;
+  String? veredaId;
 
   @override
   void deactivate() {
     super.deactivate();
     municipioId = null;
     BlocProvider.of<PerfilBeneficiarioCubit>(context).initState();
+    BlocProvider.of<MunicipioCubit>(context).initState();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadMunicipiosVeredas();
+  }
+
+  Future<void> loadMunicipiosVeredas() async {
+    final perfilBeneficiarioCubit =
+        BlocProvider.of<PerfilBeneficiarioCubit>(context);
+    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
+
+    await municipioCubit.getMunicipiosDB();
+
+    if (municipioCubit.state is MunicipiosLoaded) {
+      municipiosFiltered = municipioCubit.state.municipios!;
+    }
+
+    if (perfilBeneficiarioCubit.state is PerfilBeneficiarioLoaded) {
+      final perfilPreinversionBeneficiario =
+          perfilBeneficiarioCubit.state.perfilBeneficiario;
+      loadDepartamentoMunicipioVereda(perfilPreinversionBeneficiario);
+    }
+  }
+
+  void loadDepartamentoMunicipioVereda(
+      PerfilBeneficiarioEntity perfilBeneficiarioChanged) {
+    final municipioIdPerfilBeneficiario = perfilBeneficiarioChanged.municipioId;
+
+    final municipio = municipiosFiltered.firstWhere(
+        (municipio) => municipio.id == municipioIdPerfilBeneficiario,
+        orElse: () => MunicipioModel(id: '', nombre: '', departamentoid: ''));
+
+    if (municipio.id != '') {
+      setState(() {
+        departamentoId = municipio.departamentoid;
+        municipioId = perfilBeneficiarioChanged.municipioId != ''
+            ? perfilBeneficiarioChanged.municipioId
+            : null;
+
+        loadVeredasByMunicipio(municipioId, perfilBeneficiarioChanged);
+
+        veredaId = perfilBeneficiarioChanged.veredaId != ''
+            ? perfilBeneficiarioChanged.veredaId
+            : null;
+      });
+    }
+  }
+
+  void loadVeredasByMunicipio(String? municipioId,
+      PerfilBeneficiarioEntity perfilBeneficiarioChanged) async {
+    final veredaCubit = BlocProvider.of<VeredaCubit>(context);
+    await veredaCubit.getVeredasByMunicipioDB(municipioId!);
+    veredaId = perfilBeneficiarioChanged.veredaId != ''
+        ? perfilBeneficiarioChanged.veredaId
+        : null;
   }
 
   @override
   Widget build(BuildContext context) {
     final perfilBeneficiarioCubit =
         BlocProvider.of<PerfilBeneficiarioCubit>(context, listen: true);
+    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
+    final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
     final perfilBeneficiario = perfilBeneficiarioCubit.state.perfilBeneficiario;
 
@@ -63,6 +127,8 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
           municipioId = perfilBeneficiarioChanged.municipioId != ''
               ? perfilBeneficiarioChanged.municipioId
               : null;
+
+          loadVeredasByMunicipio(municipioId, perfilBeneficiarioChanged);
         }
       }
     }, child: BlocBuilder<PerfilBeneficiarioCubit, PerfilBeneficiarioState>(
@@ -99,12 +165,15 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                         },
                         onChanged: (String? value) {
                           setState(() {
-                            municipiosFiltered = municipios
+                            municipiosFiltered = municipioCubit
+                                .state.municipios!
                                 .where(((municipio) =>
                                     municipio.departamentoid == value))
                                 .toList();
 
+                            departamentoId = value;
                             municipioId = null;
+                            veredaId = null;
                           });
                         },
                         hint: const Text('Departamento'));
@@ -112,13 +181,9 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                   return Container();
                 },
               ),
-              BlocBuilder<MunicipioCubit, MunicipioState>(
-                builder: (context, state) {
-                  if (state is MunicipiosLoaded) {
-                    municipios = state.municipiosLoaded!;
-
-                    municipiosFiltered = municipios;
-
+              if (departamentoId != null)
+                BlocBuilder<MunicipioCubit, MunicipioState>(
+                  builder: (context, state) {
                     return DropdownButtonFormField(
                         isExpanded: true,
                         value: municipioId,
@@ -136,15 +201,47 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                           return null;
                         },
                         onChanged: (String? value) {
+                          veredaCubit.getVeredasByMunicipioDB(value!);
+
                           setState(() {
                             municipioId = value;
+                            veredaId = null;
                           });
                         },
                         hint: const Text('Municipio'));
-                  }
-                  return Container();
-                },
-              ),
+                  },
+                ),
+              if (municipioId != null)
+                BlocBuilder<VeredaCubit, VeredaState>(
+                  builder: (context, state) {
+                    if (state is VeredasLoaded) {
+                      return DropdownButtonFormField(
+                          isExpanded: true,
+                          value: veredaId,
+                          items: state.veredasLoaded!
+                              .map<DropdownMenuItem<String>>(
+                                  (VeredaEntity value) {
+                            return DropdownMenuItem<String>(
+                              value: value.veredaId,
+                              child: Text(value.nombre),
+                            );
+                          }).toList(),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Campo Requerido';
+                            }
+                            return null;
+                          },
+                          onChanged: (String? value) {
+                            setState(() {
+                              veredaId = value;
+                            });
+                          },
+                          hint: const Text('Vereda'));
+                    }
+                    return Container();
+                  },
+                ),
               BlocBuilder<TipoTenenciaCubit, TipoTenenciaState>(
                 builder: (context, state) {
                   if (state is TiposTenenciasLoaded) {

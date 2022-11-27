@@ -1,10 +1,12 @@
 part of '../perfil_preinversion_consultores/perfil_preinversion_consultores_bloc.dart';
 
 abstract class PerfilPreInversionConsultoresState extends Equatable {
-  const PerfilPreInversionConsultoresState();
+  final List<PerfilPreInversionConsultorEntity>? perfilPreInversionConsultores;
+  const PerfilPreInversionConsultoresState(
+      {this.perfilPreInversionConsultores});
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [perfilPreInversionConsultores];
 }
 
 class PerfilPreInversionConsultoresInitial
@@ -19,7 +21,9 @@ class PerfilPreInversionConsultoresLoaded
       perfilPreInversionConsultoresLoaded;
 
   const PerfilPreInversionConsultoresLoaded(
-      {this.perfilPreInversionConsultoresLoaded});
+      {this.perfilPreInversionConsultoresLoaded})
+      : super(
+            perfilPreInversionConsultores: perfilPreInversionConsultoresLoaded);
 }
 
 class PerfilPreInversionConsultoresError

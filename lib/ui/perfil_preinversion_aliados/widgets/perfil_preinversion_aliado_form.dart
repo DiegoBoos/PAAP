@@ -31,7 +31,6 @@ class PerfilPreInversionAliadoForm extends StatefulWidget {
 
 class _PerfilPreInversionAliadoFormState
     extends State<PerfilPreInversionAliadoForm> {
-  List<MunicipioEntity> municipios = [];
   List<MunicipioEntity> municipiosFiltered = [];
 
   String? departamentoId;
@@ -43,6 +42,7 @@ class _PerfilPreInversionAliadoFormState
     municipioId = null;
     BlocProvider.of<PerfilPreInversionAliadoCubit>(context).initState();
     BlocProvider.of<AliadoCubit>(context).initState();
+    BlocProvider.of<MunicipioCubit>(context).initState();
   }
 
   @override
@@ -55,10 +55,14 @@ class _PerfilPreInversionAliadoFormState
     final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
 
+    await municipioCubit.getMunicipiosDB();
+
+    if (municipioCubit.state is MunicipiosLoaded) {
+      municipiosFiltered = municipioCubit.state.municipios!;
+    }
+
     if (aliadoCubit.state is AliadoLoaded) {
       final aliado = aliadoCubit.state.aliado;
-      await municipioCubit.getMunicipiosDB();
-      municipiosFiltered = municipioCubit.state.municipios!;
       loadDepartamentoMunicipio(aliado);
     }
   }
@@ -84,6 +88,7 @@ class _PerfilPreInversionAliadoFormState
     final perfilPreInversionAliadoCubit =
         BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
     final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
+    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
 
     return BlocListener<AliadoCubit, AliadoState>(listener: (context, state) {
       if (state is AliadoError) {
@@ -161,11 +166,12 @@ class _PerfilPreInversionAliadoFormState
                     },
                     onChanged: (String? value) {
                       setState(() {
-                        municipiosFiltered = municipios
+                        municipiosFiltered = municipioCubit.state.municipios!
                             .where(((municipio) =>
                                 municipio.departamentoid == value))
                             .toList();
 
+                        departamentoId = value;
                         municipioId = null;
                       });
                     },
@@ -174,12 +180,9 @@ class _PerfilPreInversionAliadoFormState
               return Container();
             },
           ),
-          BlocBuilder<MunicipioCubit, MunicipioState>(
-            builder: (context, state) {
-              if (state is MunicipiosLoaded) {
-                municipios = state.municipiosLoaded!;
-
-                municipiosFiltered = municipios;
+          if (departamentoId != null)
+            BlocBuilder<MunicipioCubit, MunicipioState>(
+              builder: (context, state) {
                 return DropdownButtonFormField(
                     isExpanded: true,
                     value: municipioId,
@@ -202,10 +205,8 @@ class _PerfilPreInversionAliadoFormState
                       });
                     },
                     hint: const Text('Municipio'));
-              }
-              return Container();
-            },
-          ),
+              },
+            ),
           const SizedBox(height: 20),
           TextFormField(
               key: UniqueKey(),
