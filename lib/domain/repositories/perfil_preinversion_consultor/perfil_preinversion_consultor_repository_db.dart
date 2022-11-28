@@ -27,5 +27,6 @@ abstract class PerfilPreInversionConsultorRepositoryDB {
               perfilesPreInversionesConsultoresEntity);
 
   Future<Either<Failure, int>>
-      deletePerfilesPreInversionesConsultoresRepositoryDB();
+      deletePerfilesPreInversionesConsultoresRepositoryDB(
+          String perfilPreInversionId, String consultorId, String revisionId);
 }

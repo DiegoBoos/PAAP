@@ -112,10 +112,18 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
         perfilesPreInversionesConsultoresUpload = [];
     for (var perfilPreInversionConsultor
         in perfilesPreInversionesConsultoresEntity) {
-      final resp = await savePerfilPreInversionConsultor(
-          usuario, perfilPreInversionConsultor);
-      if (resp != null) {
-        perfilesPreInversionesConsultoresUpload.add(resp);
+      if (perfilPreInversionConsultor.recordStatus == 'D') {
+        final resp = await deletePerfilPreInversionConsultor(
+            usuario, perfilPreInversionConsultor);
+        if (resp != null) {
+          perfilesPreInversionesConsultoresUpload.add(resp);
+        }
+      } else {
+        final resp = await savePerfilPreInversionConsultor(
+            usuario, perfilPreInversionConsultor);
+        if (resp != null) {
+          perfilesPreInversionesConsultoresUpload.add(resp);
+        }
       }
     }
     return perfilesPreInversionesConsultoresUpload;
@@ -158,6 +166,62 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
           "Content-Type": "text/xml; charset=utf-8",
           "SOAPAction":
               "${Constants.urlSOAP}/GuardarPerfilPreInversionConsultor"
+        },
+        body: perfilPreInversionConsultorSOAP);
+
+    if (perfilPreInversionConsultorResp.statusCode == 200) {
+      final perfilPreInversionConsultorDoc =
+          xml.XmlDocument.parse(perfilPreInversionConsultorResp.body);
+
+      final respuesta = perfilPreInversionConsultorDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionConsultorEntity;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<PerfilPreInversionConsultorEntity?> deletePerfilPreInversionConsultor(
+      UsuarioEntity usuario,
+      PerfilPreInversionConsultorEntity
+          perfilPreInversionConsultorEntity) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final perfilPreInversionConsultorSOAP =
+        '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <BorrarPerfilPreInversionConsultor xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+          </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <PerfilPreInversionId>${perfilPreInversionConsultorEntity.perfilPreInversionId}</PerfilPreInversionId>
+            <ConsultorId>${perfilPreInversionConsultorEntity.consultorId}</ConsultorId>
+            <RevisionId>${perfilPreInversionConsultorEntity.revisionId}</RevisionId>            
+          </objeto>
+        </BorrarPerfilPreInversionConsultor>
+      </soap:Body>
+    </soap:Envelope>
+    ''';
+
+    final perfilPreInversionConsultorResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "${Constants.urlSOAP}/BorrarPerfilPreInversionConsultor"
         },
         body: perfilPreInversionConsultorSOAP);
 

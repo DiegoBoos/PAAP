@@ -87,6 +87,9 @@ class _PerfilPreInversionConsultoresPageState
                       dividerThickness: 1,
                       columns: <DataColumn>[
                         DataColumn(
+                          label: Container(),
+                        ),
+                        DataColumn(
                           label: Expanded(
                             child: Text('Revisión',
                                 style: Styles.subtitleStyle
@@ -100,28 +103,45 @@ class _PerfilPreInversionConsultoresPageState
                                     .copyWith(color: Colors.white)),
                           ),
                         ),
-                        DataColumn(
-                          label: Container(),
-                        ),
+                        /*  DataColumn(
+                          label: Expanded(
+                            child: Text('Fecha Asignación',
+                                style: Styles.subtitleStyle
+                                    .copyWith(color: Colors.white)),
+                          ),
+                        ), */
                       ],
                       rows: [
                         DataRow(cells: <DataCell>[
-                          DataCell(SizedBox(
-                              child: Text(perfilPreInversionConsultoresLoaded[0]
-                                  .revisionId))),
-                          DataCell(SizedBox(
-                              child: Text(perfilPreInversionConsultoresLoaded[0]
-                                  .consultorId))),
                           DataCell(SizedBox(
                               child: IconButton(
                                   onPressed: () {
                                     BlocProvider.of<
                                                 PerfilPreInversionConsultoresBloc>(
                                             context)
-                                        .add(
-                                            DeletePerfilPreInversionConsultores());
+                                        .add(DeletePerfilPreInversionConsultores(
+                                            perfilPreInversionConsultoresLoaded[
+                                                    0]
+                                                .perfilPreInversionId,
+                                            perfilPreInversionConsultoresLoaded[
+                                                    0]
+                                                .consultorId,
+                                            '1'));
                                   },
                                   icon: const Icon(Icons.delete_forever)))),
+                          DataCell(SizedBox(
+                              child: Text(perfilPreInversionConsultoresLoaded[0]
+                                  .revision
+                                  .toString()))),
+                          DataCell(SizedBox(
+                              child: Text(perfilPreInversionConsultoresLoaded[0]
+                                  .consultor
+                                  .toString()))),
+                          /* DataCell(SizedBox(
+                              child: Text(perfilPreInversionConsultoresLoaded[0]
+                                  .fechaRevision
+                                  .toString()
+                                  .substring(0, 10)))), */
                         ]),
                       ]));
             }

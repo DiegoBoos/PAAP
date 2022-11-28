@@ -43,7 +43,8 @@ class PerfilPreInversionConsultoresBloc extends Bloc<
 
   _deletePerfilPreInversionConsultores(event, emit) async {
     final result = await perfilPreInversionConsultoresDB
-        .deletePerfilesPreInversionesConsultoresUsecaseDB();
+        .deletePerfilesPreInversionesConsultoresUsecaseDB(
+            event.perfilPreInversionId, event.consultorId, event.revisionId);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionConsultoresError(failure.properties.first)),

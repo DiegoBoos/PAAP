@@ -15,4 +15,11 @@ class GetPerfilPreInversionConsultores
 }
 
 class DeletePerfilPreInversionConsultores
-    extends PerfilPreInversionConsultoresEvent {}
+    extends PerfilPreInversionConsultoresEvent {
+  final String perfilPreInversionId;
+  final String consultorId;
+  final String revisionId;
+
+  const DeletePerfilPreInversionConsultores(
+      this.perfilPreInversionId, this.consultorId, this.revisionId);
+}

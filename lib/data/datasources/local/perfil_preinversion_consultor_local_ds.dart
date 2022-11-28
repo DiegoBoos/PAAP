@@ -19,7 +19,8 @@ abstract class PerfilPreInversionConsultorLocalDataSource {
   Future<int> updatePerfilesPreInversionesConsultoresProduccionDB(
       List<PerfilPreInversionConsultorEntity>
           perfilesPreInversionesConsultoresProduccionEntity);
-  Future<int> deletePerfilesPreInversionesConsultoresDB();
+  Future<int> deletePerfilesPreInversionesConsultoresDB(
+      String perfilPreInversionId, String consultorId, String revisionId);
 }
 
 class PerfilPreInversionConsultorLocalDataSourceImpl
@@ -44,8 +45,25 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
       getPerfilPreInversionConsultoresDB(String perfilPreInversionId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionConsultor',
-        where: 'PerfilPreInversionId = ?', whereArgs: [perfilPreInversionId]);
+    /*  final res = await db.query('PerfilPreInversionConsultor',
+        where: 'PerfilPreInversionId = ?', whereArgs: [perfilPreInversionId]); */
+    String sql = '''
+      SELECT 
+      PerfilPreInversionConsultor.PerfilPreInversionId,
+      PerfilPreInversionConsultor.ConsultorId,
+      PerfilPreInversionConsultor.RevisionId,
+      PerfilPreInversionConsultor.FechaRevision,
+      Revision.Nombre as Revision,
+      Consultor.Consultor as Consultor
+      from PerfilPreInversionConsultor
+      left join Consultor on (Consultor.ConsultorId=PerfilPreInversionConsultor.ConsultorId)
+      left join Revision on (Revision.RevisionId=PerfilPreInversionConsultor.RevisionId)
+      where PerfilPreInversionId = $perfilPreInversionId
+      ''';
+
+    final res = await db.rawQuery(sql);
+
+    if (res.isEmpty) return [];
 
     final perfilPreInversionConsultor =
         List<PerfilPreInversionConsultorModel>.from(
@@ -88,8 +106,15 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
     batch.delete('PerfilPreInversionConsultor');
 
     for (var perfilPreInversionConsultor in perfilPreInversionConsultorEntity) {
-      batch.insert(
-          'PerfilPreInversionConsultor', perfilPreInversionConsultor.toJson());
+      final objInsert = {
+        'perfilPreInversionId':
+            perfilPreInversionConsultor.perfilPreInversionId,
+        'consultorId': perfilPreInversionConsultor.consultorId,
+        'revisionId': perfilPreInversionConsultor.revisionId,
+        'fechaRevision': perfilPreInversionConsultor.fechaRevision,
+        'recordStatus': 'R',
+      };
+      batch.insert('PerfilPreInversionConsultor', objInsert);
     }
 
     final res = await batch.commit();
@@ -104,7 +129,7 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
     final db = await DBConfig.database;
     var batch = db.batch();
 
-    await db.delete('PerfilPreInversionConsultor');
+    //await db.delete('PerfilPreInversionConsultor');
 
     final resQuery = await db.query('PerfilPreInversionConsultor',
         where:
@@ -116,13 +141,26 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
         ]);
 
     if (resQuery.isEmpty) {
-      perfilPreInversionConsultorEntity.recordStatus = 'N';
-      batch.insert('PerfilPreInversionConsultor',
-          perfilPreInversionConsultorEntity.toJson());
+      //perfilPreInversionConsultorEntity.recordStatus = 'N';
+      final objInsert = {
+        'perfilPreInversionId':
+            perfilPreInversionConsultorEntity.perfilPreInversionId,
+        'consultorId': perfilPreInversionConsultorEntity.consultorId,
+        'revisionId': perfilPreInversionConsultorEntity.revisionId,
+        'fechaRevision': perfilPreInversionConsultorEntity.fechaRevision,
+        'recordStatus': 'N',
+      };
+      batch.insert('PerfilPreInversionConsultor', objInsert);
     } else {
-      perfilPreInversionConsultorEntity.recordStatus = 'E';
-      batch.update('PerfilPreInversionConsultor',
-          perfilPreInversionConsultorEntity.toJson(),
+      final objUpdate = {
+        'perfilPreInversionId':
+            perfilPreInversionConsultorEntity.perfilPreInversionId,
+        'consultorId': perfilPreInversionConsultorEntity.consultorId,
+        'revisionId': perfilPreInversionConsultorEntity.revisionId,
+        'fechaRevision': perfilPreInversionConsultorEntity.fechaRevision,
+        'recordStatus': 'E',
+      };
+      batch.update('PerfilPreInversionConsultor', objUpdate,
           where: 'PerfilPreinversionId = ? AND ConsultorId = ?',
           whereArgs: [
             perfilPreInversionConsultorEntity.perfilPreInversionId,
@@ -163,14 +201,33 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
 
     for (var perfilPreInversionConsultorProduccion
         in perfilesPreInversionesConsultoresProduccionEntity) {
-      perfilPreInversionConsultorProduccion.recordStatus = 'R';
-      batch.update('PerfilPreInversionConsultor',
-          perfilPreInversionConsultorProduccion.toJson(),
-          where: 'PerfilPreinversionId = ? AND ConsultorId = ?',
-          whereArgs: [
-            perfilPreInversionConsultorProduccion.perfilPreInversionId,
-            perfilPreInversionConsultorProduccion.consultorId
-          ]);
+      if (perfilPreInversionConsultorProduccion.recordStatus == 'D') {
+        batch.delete('PerfilPreInversionConsultor',
+            where:
+                'PerfilPreinversionId = ? AND ConsultorId = ? AND RevisionId',
+            whereArgs: [
+              perfilPreInversionConsultorProduccion.perfilPreInversionId,
+              perfilPreInversionConsultorProduccion.consultorId,
+              perfilPreInversionConsultorProduccion.revisionId,
+            ]);
+      } else {
+        final objUpdate = {
+          'perfilPreInversionId':
+              perfilPreInversionConsultorProduccion.perfilPreInversionId,
+          'consultorId': perfilPreInversionConsultorProduccion.consultorId,
+          'revisionId': perfilPreInversionConsultorProduccion.revisionId,
+          'fechaRevision': perfilPreInversionConsultorProduccion.fechaRevision,
+          'recordStatus': 'R',
+        };
+        batch.update('PerfilPreInversionConsultor', objUpdate,
+            where:
+                'PerfilPreinversionId = ? AND ConsultorId = ? AND RevisionId',
+            whereArgs: [
+              perfilPreInversionConsultorProduccion.perfilPreInversionId,
+              perfilPreInversionConsultorProduccion.consultorId,
+              perfilPreInversionConsultorProduccion.revisionId,
+            ]);
+      }
     }
 
     final res = await batch.commit();
@@ -179,10 +236,47 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
   }
 
   @override
-  Future<int> deletePerfilesPreInversionesConsultoresDB() async {
+  Future<int> deletePerfilesPreInversionesConsultoresDB(
+      String perfilPreInversionId,
+      String consultorId,
+      String revisionId) async {
     final db = await DBConfig.database;
-    final res = await db.delete('PerfilPreInversionConsultor');
 
-    return res;
+    final resQuery = await db.query('PerfilPreInversionConsultor',
+        where:
+            'PerfilPreInversionId = ? AND ConsultorId = ? AND RevisionId = ?',
+        whereArgs: [perfilPreInversionId, consultorId, revisionId]);
+    if (resQuery.isEmpty) return 0;
+    final perfilPreInversionConsultorMap = {
+      for (var e in resQuery[0].entries) e.key: e.value
+    };
+    final perfilPreInversionConsultorModel =
+        PerfilPreInversionConsultorModel.fromJson(
+            perfilPreInversionConsultorMap);
+
+    if (perfilPreInversionConsultorModel.recordStatus == 'N') {
+      final res = await db.delete('PerfilPreInversionConsultor',
+          where:
+              'PerfilPreInversionId = ? AND ConsultorId = ? AND RevisionId = ?',
+          whereArgs: [perfilPreInversionId, consultorId, revisionId]);
+      return res;
+    } else {
+      final objUpdate = {
+        'perfilPreInversionId':
+            perfilPreInversionConsultorModel.perfilPreInversionId,
+        'consultorId': perfilPreInversionConsultorModel.consultorId,
+        'revisionId': perfilPreInversionConsultorModel.revisionId,
+        'fechaRevision': perfilPreInversionConsultorModel.fechaRevision,
+        'recordStatus': 'D',
+      };
+      final res = await db.update(
+        'PerfilPreInversionConsultor',
+        objUpdate,
+        where:
+            'PerfilPreInversionId = ? AND ConsultorId = ? AND RevisionId = ?',
+        whereArgs: [perfilPreInversionId, consultorId, revisionId],
+      );
+      return res;
+    }
   }
 }

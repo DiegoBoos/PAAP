@@ -5,6 +5,8 @@ class PerfilPreInversionConsultorEntity {
     required this.revisionId,
     required this.fechaRevision,
     this.recordStatus,
+    this.revision,
+    this.consultor,
   });
 
   String perfilPreInversionId;
@@ -12,6 +14,8 @@ class PerfilPreInversionConsultorEntity {
   String revisionId;
   String fechaRevision;
   String? recordStatus;
+  String? revision;
+  String? consultor;
 
   factory PerfilPreInversionConsultorEntity.fromJson(
           Map<String, dynamic> json) =>
@@ -21,6 +25,8 @@ class PerfilPreInversionConsultorEntity {
         revisionId: json["RevisionId"],
         fechaRevision: json["FechaRevision"],
         recordStatus: json["RecordStatus"],
+        revision: json["Revision"],
+        consultor: json["Consultor"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -29,5 +35,7 @@ class PerfilPreInversionConsultorEntity {
         "RevisionId": revisionId,
         "FechaRevision": fechaRevision,
         "RecordStatus": recordStatus,
+        "Revision": revision,
+        "Consultor": consultor,
       };
 }

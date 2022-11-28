@@ -117,10 +117,14 @@ class PerfilPreInversionConsultorRepositoryDBImpl
 
   @override
   Future<Either<Failure, int>>
-      deletePerfilesPreInversionesConsultoresRepositoryDB() async {
+      deletePerfilesPreInversionesConsultoresRepositoryDB(
+          String perfilPreInversionId,
+          String consultorId,
+          String revisionId) async {
     try {
       final result = await perfilPreInversionConsultorLocalDataSource
-          .deletePerfilesPreInversionesConsultoresDB();
+          .deletePerfilesPreInversionesConsultoresDB(
+              perfilPreInversionId, consultorId, revisionId);
 
       return Right(result);
     } on ServerFailure catch (e) {

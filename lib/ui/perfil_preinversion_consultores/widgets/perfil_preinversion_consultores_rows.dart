@@ -62,7 +62,7 @@ class PerfilPreInversionConsultoresRows extends StatelessWidget {
                         .state.vPerfilPreInversion!.perfilId,
                     consultorId: consultor.consultorId,
                     // revisionId = 2 Segunda Revisión PreInversión - Factibilidad
-                    revisionId: '2',
+                    revisionId: '1',
                     fechaRevision: DateTime.now().toIso8601String(),
                   );
 

@@ -49,8 +49,9 @@ class PerfilPreInversionConsultorUsecaseDB {
             perfilPreInversionConsultorEntity);
   }
 
-  Future<Either<Failure, int>>
-      deletePerfilesPreInversionesConsultoresUsecaseDB() {
-    return repositoryDB.deletePerfilesPreInversionesConsultoresRepositoryDB();
+  Future<Either<Failure, int>> deletePerfilesPreInversionesConsultoresUsecaseDB(
+      String perfilPreInversionId, String consultorId, String revisionId) {
+    return repositoryDB.deletePerfilesPreInversionesConsultoresRepositoryDB(
+        perfilPreInversionId, consultorId, revisionId);
   }
 }
