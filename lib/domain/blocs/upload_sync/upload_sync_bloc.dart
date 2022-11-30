@@ -6,6 +6,7 @@ import 'package:paap/domain/usecases/perfil_preinversion_cofinanciador_rubro/per
 
 import '../../entities/usuario_entity.dart';
 import '../../usecases/aliado/aliado_exports.dart';
+import '../../usecases/alianza_beneficiario/alianza_beneficiario_exports.dart';
 import '../../usecases/beneficiario/beneficiario_exports.dart';
 import '../../usecases/evaluacion/evaluacion_exports.dart';
 import '../../usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
@@ -41,6 +42,8 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
   final PerfilPreInversionBeneficiarioUsecase perfilPreInversionBeneficiario;
   final PerfilPreInversionBeneficiarioUsecaseDB
       perfilPreInversionBeneficiarioDB;
+  final AlianzaBeneficiarioUsecase alianzaBeneficiario;
+  final AlianzaBeneficiarioUsecaseDB alianzaBeneficiarioDB;
   final EvaluacionRespuestaUsecase evaluacionRespuesta;
   final EvaluacionRespuestaUsecaseDB evaluacionRespuestaDB;
   final AliadoUsecase aliado;
@@ -90,6 +93,8 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
     required this.perfilBeneficiarioDB,
     required this.perfilPreInversionBeneficiario,
     required this.perfilPreInversionBeneficiarioDB,
+    required this.alianzaBeneficiario,
+    required this.alianzaBeneficiarioDB,
     required this.aliado,
     required this.aliadoDB,
     required this.perfilPreInversionAliado,
@@ -155,7 +160,13 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
       await uploadPerfilBeneficiario(usuario, emit);
 
       add(UploadStatusChanged(state.uploadProgressModel!.copyWith(
-          title: 'Sincronizando Experiencias Agrícolas',
+          title: 'Sincronizando Alianza Beneficiario',
+          counter: state.uploadProgressModel!.counter + 1,
+          percent: calculatePercent())));
+      await uploadAlianzaBeneficiario(usuario, emit);
+
+      add(UploadStatusChanged(state.uploadProgressModel!.copyWith(
+          title: 'Sincronizando Perfil PreInversion Beneficiario',
           counter: state.uploadProgressModel!.counter + 1,
           percent: calculatePercent())));
       await uploadPerfilPreInversionBeneficiario(usuario, emit);
@@ -336,6 +347,18 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         (data) async =>
             await updatePerfilesPreInversionesBeneficiariosProduccion(
                 usuario, data, emit));
+  }
+
+  Future<void> saveAlianzasBeneficiarios(
+      UsuarioEntity usuario,
+      List<AlianzaBeneficiarioEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await alianzaBeneficiario.saveAlianzasBeneficiariosUsecase(
+        usuario, data);
+    return result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async =>
+            await updateAlianzasBeneficiariosProduccion(usuario, data, emit));
   }
 
   Future<void> saveVisitas(UsuarioEntity usuario, List<VisitaEntity> data,
@@ -520,6 +543,16 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
   }
 
+  Future<void> updateAlianzasBeneficiariosProduccion(
+      UsuarioEntity usuario,
+      List<AlianzaBeneficiarioEntity> data,
+      Emitter<UploadSyncState> emit) async {
+    final result = await alianzaBeneficiarioDB
+        .updateAlianzasBeneficiariosProduccionUsecaseDB(data);
+    result.fold(
+        (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
+  }
+
   Future<void> updatePerfilesPreInversionesCofinanciadoresProduccion(
       UsuarioEntity usuario,
       List<PerfilPreInversionCofinanciadorEntity> data,
@@ -681,6 +714,15 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         (failure) => add(UploadSyncError(failure.properties.first)),
         (data) async =>
             await savePerfilesPreInversionesBeneficiarios(usuario, data, emit));
+  }
+
+  // Sync Alianza Beneficiario
+  Future<void> uploadAlianzaBeneficiario(
+      UsuarioEntity usuario, Emitter<UploadSyncState> emit) async {
+    final result = await alianzaBeneficiarioDB
+        .getAlianzasBeneficiariosProduccionUsecaseDB();
+    result.fold((failure) => add(UploadSyncError(failure.properties.first)),
+        (data) async => await saveAlianzasBeneficiarios(usuario, data, emit));
   }
 
   // Sync Visita

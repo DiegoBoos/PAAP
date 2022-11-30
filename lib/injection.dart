@@ -15,7 +15,6 @@ import 'domain/usecases/alianza_experiencia_agricola/alianza_experiencia_agricol
 import 'domain/usecases/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_exports.dart';
 import 'domain/usecases/auth/auth_exports.dart';
 import 'domain/usecases/beneficiario/beneficiario_exports.dart';
-import 'domain/usecases/beneficiario_alianza/beneficiario_alianza_exports.dart';
 import 'domain/usecases/cofinanciador/cofinanciador_exports.dart';
 import 'domain/usecases/consultor/consultor_exports.dart';
 import 'domain/usecases/convocatoria/convocatoria_exports.dart';
@@ -334,44 +333,6 @@ authBlocInit() {
   );
 }
 
-beneficiarioAlianzaInit() {
-  // cubit
-  locator.registerFactory(
-      () => BeneficiariosAlianzaBloc(beneficiarioAlianzaUsecaseDB: locator()));
-
-  // remote usecase
-  locator.registerLazySingleton(() => BeneficiarioAlianzaUsecase(locator()));
-
-  // local usecase
-  locator.registerLazySingleton(() => BeneficiarioAlianzaUsecaseDB(locator()));
-
-  // repository
-  locator.registerLazySingleton<BeneficiarioAlianzaRepository>(
-    () => BeneficiarioAlianzaRepositoryImpl(
-      beneficiarioAlianzaRemoteDataSource: locator(),
-    ),
-  );
-
-  // repository DB
-  locator.registerLazySingleton<BeneficiarioAlianzaRepositoryDB>(
-    () => BeneficiarioAlianzaRepositoryDBImpl(
-      beneficiarioAlianzaLocalDataSource: locator(),
-    ),
-  );
-
-  // remote data source
-  locator.registerLazySingleton<BeneficiarioAlianzaRemoteDataSource>(
-    () => BeneficiarioAlianzaRemoteDataSourceImpl(
-      client: locator(),
-    ),
-  );
-
-  // local data source
-  locator.registerLazySingleton<BeneficiarioAlianzaLocalDataSource>(
-    () => BeneficiarioAlianzaLocalDataSourceImpl(),
-  );
-}
-
 beneficiarioInit() {
   // cubit
   locator.registerFactory(() => BeneficiarioCubit(beneficiarioDB: locator()));
@@ -643,9 +604,9 @@ downloadSyncInit() {
         aliadoDB: locator(),
         alianza: locator(),
         alianzaDB: locator(),
+        alianzaBeneficiario: locator(),
+        alianzaBeneficiarioDB: locator(),
         beneficiario: locator(),
-        beneficiarioAlianza: locator(),
-        beneficiarioAlianzaDB: locator(),
         beneficiarioDB: locator(),
         cofinanciador: locator(),
         cofinanciadorDB: locator(),
@@ -1223,7 +1184,6 @@ void init() {
   aliadoInit();
   alianzaInit();
   authBlocInit();
-  beneficiarioAlianzaInit();
   beneficiarioInit();
   perfilPreInversionBeneficiarioInit();
   cofinanciadorInit();

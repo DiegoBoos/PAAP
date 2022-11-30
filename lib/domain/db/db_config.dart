@@ -15,10 +15,11 @@ import '../../data/datasources/local/actividad_economica_local_ds.dart';
 import '../../data/datasources/local/actividad_financiera_local_ds.dart';
 import '../../data/datasources/local/agrupacion_local_ds.dart';
 import '../../data/datasources/local/aliado_local_ds.dart';
+import '../../data/datasources/local/alianza_beneficiario_local_ds.dart';
 import '../../data/datasources/local/alianzas_local_ds.dart';
 import '../../data/datasources/local/auth_local_ds.dart';
 import '../../data/datasources/local/beneficiario_local_ds.dart';
-import '../../data/datasources/local/beneficiario_alianza_local_ds.dart';
+
 import '../../data/datasources/local/cofinanciador_local_ds.dart';
 import '../../data/datasources/local/consultor_local_ds.dart';
 import '../../data/datasources/local/convocatoria_local_ds.dart';
@@ -92,8 +93,8 @@ class DBConfig {
       await AliadosLocalDataSourceImpl.createAliadoTable(db);
       await AlianzasLocalDataSourceImpl.createAlianzaTable(db);
       await AuthLocalDataSourceImpl.createUserTable(db);
-      await BeneficiarioAlianzaLocalDataSourceImpl
-          .createBeneficiarioAlianzaTable(db);
+      await AlianzaBeneficiarioLocalDataSourceImpl
+          .createAlianzaBeneficiarioTable(db);
       await BeneficiarioLocalDataSourceImpl.createBeneficiarioTable(db);
       await PerfilPreInversionBeneficiarioLocalDataSourceImpl
           .createPerfilPreInversionBeneficiarioTable(db);

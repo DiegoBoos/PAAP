@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:paap/domain/usecases/alianza_beneficiario/alianza_beneficiario_exports.dart';
 
 import '../../entities/usuario_entity.dart';
 import '../../usecases/actividad/actividad_exports.dart';
@@ -13,7 +14,6 @@ import '../../usecases/alianza/alianza_exports.dart';
 import '../../usecases/alianza_experiencia_agricola/alianza_experiencia_agricola_exports.dart';
 import '../../usecases/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_exports.dart';
 import '../../usecases/beneficiario/beneficiario_exports.dart';
-import '../../usecases/beneficiario_alianza/beneficiario_alianza_exports.dart';
 import '../../usecases/cofinanciador/cofinanciador_exports.dart';
 import '../../usecases/consultor/consultor_exports.dart';
 import '../../usecases/convocatoria/convocatoria_exports.dart';
@@ -84,8 +84,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
   final AliadoUsecaseDB aliadoDB;
   final AlianzaUsecase alianza;
   final AlianzaUsecaseDB alianzaDB;
-  final BeneficiarioAlianzaUsecase beneficiarioAlianza;
-  final BeneficiarioAlianzaUsecaseDB beneficiarioAlianzaDB;
+  final AlianzaBeneficiarioUsecase alianzaBeneficiario;
+  final AlianzaBeneficiarioUsecaseDB alianzaBeneficiarioDB;
   final BeneficiarioUsecase beneficiario;
   final BeneficiarioUsecaseDB beneficiarioDB;
   final CofinanciadorUsecase cofinanciador;
@@ -221,8 +221,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
     required this.alianza,
     required this.alianzaDB,
     required this.beneficiario,
-    required this.beneficiarioAlianza,
-    required this.beneficiarioAlianzaDB,
+    required this.alianzaBeneficiario,
+    required this.alianzaBeneficiarioDB,
     required this.beneficiarioDB,
     required this.cofinanciador,
     required this.cofinanciadorDB,
@@ -381,10 +381,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
       await downloadBeneficiarios(usuario, emit);
 
       add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
-          title: 'Sincronizando Beneficiarios Alianza',
+          title: 'Sincronizando Alianza Beneficiarios',
           counter: state.downloadProgressModel!.counter + 1,
           percent: calculatePercent())));
-      await downloadBeneficiariosAlianza(usuario, emit);
+      await downloadAlianzasBeneficiarios(usuario, emit);
 
       add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
           title: 'Sincronizando Cofinanciadores',
@@ -801,13 +801,13 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
         (data) async => await saveBeneficiarios(data, emit));
   }
 
-  Future<void> downloadBeneficiariosAlianza(
+  Future<void> downloadAlianzasBeneficiarios(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result =
-        await beneficiarioAlianza.getBeneficiariosAlianzaUsecase(usuario);
+        await alianzaBeneficiario.getAlianzasBeneficiariosUsecase(usuario);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)),
-        (data) async => await saveBeneficiariosAlianza(data, emit));
+        (data) async => await saveAlianzasBeneficiarios(data, emit));
   }
 
   Future<void> downloadCofinanciadores(
@@ -1333,10 +1333,10 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
 
-  Future<void> saveBeneficiariosAlianza(List<BeneficiarioAlianzaEntity> data,
+  Future<void> saveAlianzasBeneficiarios(List<AlianzaBeneficiarioEntity> data,
       Emitter<DownloadSyncState> emit) async {
     final result =
-        await beneficiarioAlianzaDB.saveBeneficiariosAlianzaUsecaseDB(data);
+        await alianzaBeneficiarioDB.saveAlianzasBeneficiariosUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
