@@ -6,7 +6,7 @@ import '../../models/perfil_preinversion_beneficiario_model.dart';
 
 abstract class PerfilPreInversionBeneficiarioLocalDataSource {
   Future<List<PerfilPreInversionBeneficiarioModel>>
-      getPerfilPreInversionBeneficiariosDB();
+      getPerfilPreInversionBeneficiariosDB(String perfilPreInversionId);
   Future<List<PerfilPreInversionBeneficiarioModel>>
       getPerfilesPreInversionesBeneficiariosProduccionDB();
   Future<PerfilPreInversionBeneficiarioModel?>
@@ -96,10 +96,11 @@ class PerfilPreInversionBeneficiarioLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionBeneficiarioModel>>
-      getPerfilPreInversionBeneficiariosDB() async {
+      getPerfilPreInversionBeneficiariosDB(String perfilPreInversionId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionBeneficiario');
+    final res = await db.query('PerfilPreInversionBeneficiario',
+        where: 'PerfilPreInversionId = ?', whereArgs: [perfilPreInversionId]);
 
     final perfilPreInversionBeneficiariosDB =
         List<PerfilPreInversionBeneficiarioModel>.from(

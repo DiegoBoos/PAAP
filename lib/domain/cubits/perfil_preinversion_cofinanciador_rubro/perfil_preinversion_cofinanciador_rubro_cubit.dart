@@ -21,11 +21,10 @@ class PerfilPreInversionCofinanciadorRubroCubit
       String perfilPreInversionId,
       String cofinanciadorId,
       String desembolsoId,
-      String actividadFinancieraId,
-      String rubroId) async {
+      String actividadFinancieraId) async {
     final result = await perfilPreInversionCofinanciadorRubroDB
         .getPerfilPreInversionCofinanciadorRubroUsecaseDB(perfilPreInversionId,
-            cofinanciadorId, desembolsoId, actividadFinancieraId, rubroId);
+            cofinanciadorId, desembolsoId, actividadFinancieraId);
     result.fold(
         (failure) => emit(PerfilPreInversionCofinanciadorRubroError(
             failure.properties.first)), (data) {

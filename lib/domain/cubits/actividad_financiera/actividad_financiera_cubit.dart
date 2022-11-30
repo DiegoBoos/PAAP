@@ -10,11 +10,9 @@ class ActividadFinancieraCubit extends Cubit<ActividadFinancieraState> {
   final ActividadFinancieraUsecaseDB actividadFinancieraDB;
 
   ActividadFinancieraCubit({required this.actividadFinancieraDB})
-      : super(ActividadesFinancierasInitial()) {
-    getActividadesFinancierasDB();
-  }
+      : super(ActividadesFinancierasInitial());
 
-  void getActividadesFinancierasDB() async {
+  Future<void> getActividadesFinancierasDB() async {
     final result =
         await actividadFinancieraDB.getActividadesFinancierasUsecaseDB();
     result.fold(

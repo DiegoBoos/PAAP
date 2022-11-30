@@ -11,6 +11,7 @@ import 'domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import 'domain/usecases/agrupacion/agrupacion_exports.dart';
 import 'domain/usecases/aliado/aliado_exports.dart';
 import 'domain/usecases/alianza/alianza_exports.dart';
+import 'domain/usecases/alianza_beneficiario/alianza_beneficiario_exports.dart';
 import 'domain/usecases/alianza_experiencia_agricola/alianza_experiencia_agricola_exports.dart';
 import 'domain/usecases/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_exports.dart';
 import 'domain/usecases/auth/auth_exports.dart';
@@ -1183,6 +1184,7 @@ void init() {
   agrupacionInit();
   aliadoInit();
   alianzaInit();
+  alianzaBeneficiarioInit();
   authBlocInit();
   beneficiarioInit();
   perfilPreInversionBeneficiarioInit();
@@ -2698,6 +2700,8 @@ uploadSyncInit() {
         perfilPreInversionPrecioDB: locator(),
         perfilPreInversionPlanNegocio: locator(),
         perfilPreInversionPlanNegocioDB: locator(),
+        alianzaBeneficiario: locator(),
+        alianzaBeneficiarioDB: locator(),
       ));
 }
 
@@ -2771,5 +2775,47 @@ visitaInit() {
   // local data source
   locator.registerLazySingleton<VisitaLocalDataSource>(
     () => VisitaLocalDataSourceImpl(),
+  );
+}
+
+alianzaBeneficiarioInit() {
+  // bloc
+  locator.registerFactory(
+      () => AlianzasBeneficiariosBloc(alianzaBeneficiarioUsecaseDB: locator()));
+
+  // cubit
+  locator.registerFactory(
+      () => AlianzaBeneficiarioCubit(alianzaBeneficiarioDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => AlianzaBeneficiarioUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => AlianzaBeneficiarioUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<AlianzaBeneficiarioRepository>(
+    () => AlianzaBeneficiarioRepositoryImpl(
+      alianzaBeneficiarioRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<AlianzaBeneficiarioRepositoryDB>(
+    () => AlianzaBeneficiarioRepositoryDBImpl(
+      alianzaBeneficiarioLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<AlianzaBeneficiarioRemoteDataSource>(
+    () => AlianzaBeneficiarioRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<AlianzaBeneficiarioLocalDataSource>(
+    () => AlianzaBeneficiarioLocalDataSourceImpl(),
   );
 }

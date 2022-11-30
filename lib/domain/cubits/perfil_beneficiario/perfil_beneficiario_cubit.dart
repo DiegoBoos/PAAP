@@ -36,7 +36,7 @@ class PerfilBeneficiarioCubit extends Cubit<PerfilBeneficiarioState> {
         (failure) => emit(PerfilBeneficiarioError(failure.properties.first)),
         (data) {
       if (data != null) {
-        emit(PerfilBeneficiarioChanged(data));
+        emit(PerfilBeneficiarioLoaded(data));
       }
     });
   }
@@ -48,6 +48,17 @@ class PerfilBeneficiarioCubit extends Cubit<PerfilBeneficiarioState> {
     result.fold(
         (failure) => emit(PerfilBeneficiarioError(failure.properties.first)),
         (data) => emit(PerfilBeneficiarioSaved()));
+  }
+
+  void changeMunicipioId(String value) {
+    final municipioChanged =
+        state.perfilBeneficiario.copyWith(municipioId: value);
+    emit(PerfilBeneficiarioChanged(municipioChanged));
+  }
+
+  void changeVeredaId(String value) {
+    final veredaChanged = state.perfilBeneficiario.copyWith(veredaId: value);
+    emit(PerfilBeneficiarioChanged(veredaChanged));
   }
 
   void changeTipoTenencia(String? value) {

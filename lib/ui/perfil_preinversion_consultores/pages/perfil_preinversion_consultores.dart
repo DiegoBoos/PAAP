@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/blocs/perfil_preinversion_consultores/perfil_preinversion_consultores_bloc.dart';
 import '../../../domain/cubits/consultor/consultor_cubit.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_consultor/perfil_preinversion_consultor_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/consultor_entity.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
@@ -79,71 +78,84 @@ class _PerfilPreInversionConsultoresPageState
             if (state is PerfilPreInversionConsultoresLoaded) {
               final perfilPreInversionConsultoresLoaded =
                   state.perfilPreInversionConsultoresLoaded!;
+
               return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
                   child: DataTable(
+                      horizontalMargin: 3,
+                      columnSpacing: 10,
                       headingRowColor: MaterialStateProperty.all(
                           Theme.of(context).colorScheme.secondary),
-                      dividerThickness: 1,
                       columns: <DataColumn>[
                         DataColumn(
                           label: Container(),
                         ),
-                        DataColumn(
+                        const DataColumn(
                           label: Expanded(
                             child: Text('Revisión',
-                                style: Styles.subtitleStyle
-                                    .copyWith(color: Colors.white)),
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ),
-                        DataColumn(
+                        const DataColumn(
                           label: Expanded(
                             child: Text('Consultor',
-                                style: Styles.subtitleStyle
-                                    .copyWith(color: Colors.white)),
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ),
-                        /*  DataColumn(
+                        const DataColumn(
                           label: Expanded(
                             child: Text('Fecha Asignación',
-                                style: Styles.subtitleStyle
-                                    .copyWith(color: Colors.white)),
+                                style: TextStyle(color: Colors.white)),
                           ),
-                        ), */
+                        ),
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text('Identificación',
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                        ),
                       ],
                       rows: [
                         DataRow(cells: <DataCell>[
-                          DataCell(SizedBox(
-                              child: IconButton(
-                                  onPressed: () {
-                                    BlocProvider.of<
-                                                PerfilPreInversionConsultoresBloc>(
-                                            context)
-                                        .add(DeletePerfilPreInversionConsultores(
-                                            perfilPreInversionConsultoresLoaded[
-                                                    0]
-                                                .perfilPreInversionId,
-                                            perfilPreInversionConsultoresLoaded[
-                                                    0]
-                                                .consultorId,
-                                            '1'));
-                                  },
-                                  icon: const Icon(Icons.delete_forever)))),
-                          DataCell(SizedBox(
+                          DataCell(IconButton(
+                              alignment: Alignment.centerLeft,
+                              onPressed: () {
+                                BlocProvider.of<
+                                            PerfilPreInversionConsultoresBloc>(
+                                        context)
+                                    .add(DeletePerfilPreInversionConsultores(
+                                        perfilPreInversionConsultoresLoaded[0]
+                                            .perfilPreInversionId,
+                                        perfilPreInversionConsultoresLoaded[0]
+                                            .consultorId,
+                                        '1'));
+                              },
+                              icon: const Icon(Icons.delete_forever))),
+                          DataCell(Container(
+                              alignment: AlignmentDirectional.center,
+                              child: Text(
+                                perfilPreInversionConsultoresLoaded[0]
+                                    .revision!,
+                              ))),
+                          DataCell(Container(
+                              alignment: AlignmentDirectional.center,
                               child: Text(perfilPreInversionConsultoresLoaded[0]
-                                  .revision
-                                  .toString()))),
-                          DataCell(SizedBox(
-                              child: Text(perfilPreInversionConsultoresLoaded[0]
-                                  .consultor
-                                  .toString()))),
-                          /* DataCell(SizedBox(
+                                  .consultor!))),
+                          DataCell(Container(
+                              alignment: AlignmentDirectional.center,
                               child: Text(perfilPreInversionConsultoresLoaded[0]
                                   .fechaRevision
-                                  .toString()
-                                  .substring(0, 10)))), */
+                                  .substring(0, 10)))),
+                          DataCell(Container(
+                              alignment: AlignmentDirectional.center,
+                              child: Text(perfilPreInversionConsultoresLoaded[0]
+                                  .consultorId))),
                         ]),
-                      ]));
+                      ]),
+                ),
+              );
             }
             if (state is PerfilPreInversionConsultoresInitial) {
               return BlocBuilder<ConsultorCubit, ConsultorState>(

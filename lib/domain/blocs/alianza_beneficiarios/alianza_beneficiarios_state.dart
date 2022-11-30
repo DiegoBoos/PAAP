@@ -1,23 +1,23 @@
 part of 'alianza_beneficiarios_bloc.dart';
 
-abstract class AlianzasBeneficiariostate extends Equatable {
-  const AlianzasBeneficiariostate();
+abstract class AlianzasBeneficiariosState extends Equatable {
+  const AlianzasBeneficiariosState();
 
   @override
   List<Object> get props => [];
 }
 
-class AlianzasBeneficiariosInitial extends AlianzasBeneficiariostate {}
+class AlianzasBeneficiariosInitial extends AlianzasBeneficiariosState {}
 
-class AlianzasBeneficiariosLoading extends AlianzasBeneficiariostate {}
+class AlianzasBeneficiariosLoading extends AlianzasBeneficiariosState {}
 
-class AlianzasBeneficiariosLoaded extends AlianzasBeneficiariostate {
+class AlianzasBeneficiariosLoaded extends AlianzasBeneficiariosState {
   final List<AlianzaBeneficiarioEntity>? alianzasBeneficiariosLoaded;
 
   const AlianzasBeneficiariosLoaded({this.alianzasBeneficiariosLoaded});
 }
 
-class AlianzasBeneficiariosError extends AlianzasBeneficiariostate {
+class AlianzasBeneficiariosError extends AlianzasBeneficiariosState {
   final String message;
 
   const AlianzasBeneficiariosError(this.message);

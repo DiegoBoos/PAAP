@@ -6,6 +6,7 @@ import '../../../domain/cubits/actividad_financiera/actividad_financiera_cubit.d
 import '../../../domain/cubits/desembolso/desembolso_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/actividad_financiera_entity.dart';
 import '../../../domain/entities/desembolso_entity.dart';
@@ -27,6 +28,48 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
     extends State<PerfilPreInversionCofinanciadorActividadFinancieraForm> {
   final formKeyActividadFinanciera = GlobalKey<FormState>();
 
+  String? actividadFinancieraId;
+  String? desembolsoId;
+
+  final valorCtrl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
+        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
+
+    if (perfilPreInversionCofinanciadorActividadFinancieraCubit.state
+        is PerfilPreInversionCofinanciadorActividadFinancieraLoaded) {
+      final perfilPreInversionCofinanciadorActividadFinancieraLoaded =
+          perfilPreInversionCofinanciadorActividadFinancieraCubit
+              .state.perfilPreInversionCofinanciadorActividadFinanciera;
+
+      loadPerfilPreInversionCofinanciadorActividadFinanciera(
+          perfilPreInversionCofinanciadorActividadFinancieraLoaded);
+    }
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    BlocProvider.of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(
+      context,
+    ).initState();
+  }
+
+  void loadPerfilPreInversionCofinanciadorActividadFinanciera(
+      PerfilPreInversionCofinanciadorActividadFinancieraEntity
+          perfilPreInversionCofinanciadorActividadFinancieraLoaded) {
+    actividadFinancieraId =
+        perfilPreInversionCofinanciadorActividadFinancieraLoaded
+            .actividadFinancieraId;
+    desembolsoId =
+        perfilPreInversionCofinanciadorActividadFinancieraLoaded.desembolsoId;
+    valorCtrl.text =
+        perfilPreInversionCofinanciadorActividadFinancieraLoaded.valor;
+  }
+
   @override
   Widget build(BuildContext context) {
     final vPerfilPreInversionCubit =
@@ -40,15 +83,16 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
     final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
         .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
 
+    final perfilPreInversionCofinanciadorDesembolsoCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
+      context,
+    );
+
     final perfilPreInversionCofinanciadorActividadesFinancierasBloc =
         BlocProvider.of<
                 PerfilPreInversionCofinanciadorActividadesFinancierasBloc>(
             context,
             listen: true);
-
-    final perfilPreInversionCofinanciadorActividadFinanciera =
-        perfilPreInversionCofinanciadorActividadFinancieraCubit
-            .state.perfilPreInversionCofinanciadorActividadFinanciera;
 
     final montoCofinanciador = perfilPreInversionCofinanciadorCubit
         .state.perfilPreInversionCofinanciador.monto;
@@ -62,11 +106,8 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
               if (state is ActividadesFinancierasLoaded) {
                 return DropdownButtonFormField(
                     isExpanded: true,
-                    value: perfilPreInversionCofinanciadorActividadFinanciera
-                                .actividadFinancieraId !=
-                            ''
-                        ? perfilPreInversionCofinanciadorActividadFinanciera
-                            .actividadFinancieraId
+                    value: actividadFinancieraId != ''
+                        ? actividadFinancieraId
                         : null,
                     items: state.actividadesFinancieras!
                         .map<DropdownMenuItem<String>>(
@@ -97,12 +138,7 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
               if (state is DesembolsosLoaded) {
                 return DropdownButtonFormField(
                     isExpanded: true,
-                    value: perfilPreInversionCofinanciadorActividadFinanciera
-                                .desembolsoId !=
-                            ''
-                        ? perfilPreInversionCofinanciadorActividadFinanciera
-                            .desembolsoId
-                        : null,
+                    value: desembolsoId != '' ? desembolsoId : null,
                     items: state.desembolsos!.map<DropdownMenuItem<String>>(
                         (DesembolsoEntity value) {
                       return DropdownMenuItem<String>(
@@ -127,8 +163,7 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
           ),
           const SizedBox(height: 20),
           TextFormField(
-            initialValue:
-                perfilPreInversionCofinanciadorActividadFinanciera.valor,
+            controller: valorCtrl,
             decoration: CustomInputDecoration.inputDecoration(
               hintText: 'Valor',
               labelText: 'Valor',
@@ -159,17 +194,27 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
 
                     formKeyActividadFinanciera.currentState!.save();
 
-                    final perfilPreInversionCofinanciadorId =
-                        perfilPreInversionCofinanciadorCubit.state
-                            .perfilPreInversionCofinanciador.cofinanciadorId;
-
                     final vPerfilPreInversionId = vPerfilPreInversionCubit
                         .state.vPerfilPreInversion!.perfilPreInversionId;
+
+                    final cofinanciadorId = perfilPreInversionCofinanciadorCubit
+                        .state.perfilPreInversionCofinanciador.cofinanciadorId;
+
+                    final desembolsoId =
+                        perfilPreInversionCofinanciadorDesembolsoCubit
+                            .state
+                            .perfilPreInversionCofinanciadorDesembolso
+                            .desembolsoId;
+                    final actividadFinancieraId =
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .state
+                            .perfilPreInversionCofinanciadorActividadFinanciera
+                            .actividadFinancieraId;
 
                     perfilPreInversionCofinanciadorActividadFinancieraCubit
                         .changePerfilPreInversion(vPerfilPreInversionId);
                     perfilPreInversionCofinanciadorActividadFinancieraCubit
-                        .changeCofinanciador(perfilPreInversionCofinanciadorId);
+                        .changeCofinanciador(cofinanciadorId);
 
                     perfilPreInversionCofinanciadorActividadFinancieraCubit
                         .perfilPreInversionCofinanciadorActividadFinancieraDB
@@ -181,8 +226,9 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
                     perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
                         GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
                             perfilPreInversionId: vPerfilPreInversionId,
-                            cofinanciadorId:
-                                perfilPreInversionCofinanciadorId));
+                            cofinanciadorId: cofinanciadorId,
+                            actividadFinancieraId: actividadFinancieraId,
+                            desembolsoId: desembolsoId));
 
                     if (perfilPreInversionCofinanciadorActividadesFinancierasBloc
                             .state

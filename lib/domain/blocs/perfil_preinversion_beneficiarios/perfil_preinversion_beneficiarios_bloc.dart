@@ -8,12 +8,17 @@ part 'perfil_preinversion_beneficiarios_event.dart';
 part 'perfil_preinversion_beneficiarios_state.dart';
 
 class PerfilPreInversionBeneficiariosBloc extends Bloc<
-    PerfilPreInversionBeneficiariosEvent, PerfilPreInversionBeneficiariostate> {
+    PerfilPreInversionBeneficiariosEvent,
+    PerfilPreInversionBeneficiariosState> {
   final PerfilPreInversionBeneficiarioUsecaseDB
       perfilPreInversionBeneficiarioUsecaseDB;
   PerfilPreInversionBeneficiariosBloc(
       {required this.perfilPreInversionBeneficiarioUsecaseDB})
       : super(PerfilPreInversionBeneficiariosInitial()) {
+    on(<InitState>(event, emit) async {
+      emit(PerfilPreInversionBeneficiariosInitial());
+    });
+
     on<GetPerfilPreInversionBeneficiarios>((event, emit) async {
       emit(PerfilPreInversionBeneficiariosLoading());
       await _getPerfilPreInversionBeneficiarios(event, emit);
@@ -22,11 +27,11 @@ class PerfilPreInversionBeneficiariosBloc extends Bloc<
 
   _getPerfilPreInversionBeneficiarios(event, emit) async {
     final result = await perfilPreInversionBeneficiarioUsecaseDB
-        .getPerfilPreInversionBeneficiariosUsecaseDB();
+        .getPerfilPreInversionBeneficiariosUsecaseDB(
+            event.perfilPreInversionId);
     result.fold(
         (failure) => emit(
             PerfilPreInversionBeneficiariosError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionBeneficiariosLoaded(
-            perfilPreInversionBeneficiariosLoaded: data)));
+        (data) => emit(PerfilPreInversionBeneficiariosLoaded(data!)));
   }
 }

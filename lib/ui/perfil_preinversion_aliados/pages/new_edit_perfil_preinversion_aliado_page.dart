@@ -11,16 +11,9 @@ import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/perfil_preinversion_aliado_form.dart';
 
-class NewEditPerfilPreInversionAliadoPage extends StatefulWidget {
+class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
   const NewEditPerfilPreInversionAliadoPage({super.key});
 
-  @override
-  State<NewEditPerfilPreInversionAliadoPage> createState() =>
-      _NewEditPerfilPreInversionAliadoPageState();
-}
-
-class _NewEditPerfilPreInversionAliadoPageState
-    extends State<NewEditPerfilPreInversionAliadoPage> {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
@@ -73,10 +66,11 @@ class _NewEditPerfilPreInversionAliadoPageState
 
                         formKey.currentState!.save();
 
-                        aliadoCubit.saveAliadoDB(aliadoCubit.state.aliado);
-
                         final vPerfilPreInversionId = vPerfilPreInversionCubit
                             .state.vPerfilPreInversion!.perfilPreInversionId;
+
+                        aliadoCubit.saveAliadoDB(aliadoCubit.state.aliado);
+
                         perfilPreInversionAliadoCubit
                             .changePerfilPreInversionId(vPerfilPreInversionId);
 

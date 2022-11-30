@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/entities/perfil_beneficiario_entity.dart';
 
 import '../../../data/models/municipio_model.dart';
+import '../../../domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import '../../../domain/cubits/departamento/departamento_cubit.dart';
 import '../../../domain/cubits/municipio/municipio_cubit.dart';
-import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
 import '../../../domain/cubits/vereda/vereda_cubit.dart';
+import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/entities/municipio_entity.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
@@ -16,14 +16,15 @@ import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
-class PerfilBeneficiarioForm extends StatefulWidget {
-  const PerfilBeneficiarioForm({super.key});
+class AlianzaBeneficiarioForm extends StatefulWidget {
+  const AlianzaBeneficiarioForm({super.key});
 
   @override
-  State<PerfilBeneficiarioForm> createState() => _PerfilBeneficiarioFormState();
+  State<AlianzaBeneficiarioForm> createState() =>
+      _AlianzaBeneficiarioFormState();
 }
 
-class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
+class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
   List<MunicipioEntity> municipiosFiltered = [];
   List<VeredaEntity> veredasFiltered = [];
 
@@ -47,12 +48,12 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
   void deactivate() {
     super.deactivate();
     municipioId = null;
-    BlocProvider.of<PerfilBeneficiarioCubit>(context).initState();
+    BlocProvider.of<AlianzaBeneficiarioCubit>(context).initState();
   }
 
   Future<void> loadAccesories() async {
-    final perfilBeneficiarioCubit =
-        BlocProvider.of<PerfilBeneficiarioCubit>(context);
+    final alianzaBeneficiarioCubit =
+        BlocProvider.of<AlianzaBeneficiarioCubit>(context);
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
 
     await municipioCubit.getMunicipiosDB();
@@ -61,67 +62,71 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
       municipiosFiltered = municipioCubit.state.municipios!;
     }
 
-    if (perfilBeneficiarioCubit.state is PerfilBeneficiarioLoaded) {
-      final perfilBeneficiarioLoaded =
-          perfilBeneficiarioCubit.state.perfilBeneficiario;
+    if (alianzaBeneficiarioCubit.state is AlianzaBeneficiarioLoaded) {
+      final alianzaBeneficiarioLoaded =
+          alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
-      loadPerfilBeneficiario(perfilBeneficiarioLoaded);
+      loadAlianzaBeneficiario(alianzaBeneficiarioLoaded);
     }
   }
 
-  void loadPerfilBeneficiario(
-      PerfilBeneficiarioEntity perfilBeneficiarioLoaded) {
-    final perfilBeneficiarioMunicipioId = perfilBeneficiarioLoaded.municipioId;
-    final perfilBeneficiarioVeredaId = perfilBeneficiarioLoaded.veredaId;
+  void loadAlianzaBeneficiario(
+      AlianzaBeneficiarioEntity alianzaBeneficiarioLoaded) {
+    final alianzaBeneficiarioMunicipioId =
+        alianzaBeneficiarioLoaded.municipioId;
+
+    final alianzaBeneficiarioVeredaId = alianzaBeneficiarioLoaded.veredaId;
 
     final municipio = municipiosFiltered.firstWhere(
-        (municipio) => municipio.id == perfilBeneficiarioMunicipioId,
+        (municipio) => municipio.id == alianzaBeneficiarioMunicipioId,
         orElse: () => MunicipioModel(id: '', nombre: '', departamentoid: ''));
 
     if (municipio.id != '') {
       departamentoId = municipio.departamentoid;
-      municipioId = perfilBeneficiarioMunicipioId;
-      loadVeredasByMunicipio(municipioId!, perfilBeneficiarioVeredaId);
-    }
-    experienciaCtrl.text = perfilBeneficiarioLoaded.experiencia;
-    cualBeneficioCtrl.text = perfilBeneficiarioLoaded.cualBeneficio;
-    areaProyectoCtrl.text = perfilBeneficiarioLoaded.areaProyecto;
-    areaFincaCtrl.text = perfilBeneficiarioLoaded.areaFinca;
+      municipioId = alianzaBeneficiarioMunicipioId;
 
-    tipoTenenciaId = perfilBeneficiarioLoaded.tipoTenenciaId;
+      loadVeredasByMunicipio(municipioId!, alianzaBeneficiarioVeredaId);
+      experienciaCtrl.text = alianzaBeneficiarioLoaded.experiencia;
+      cualBeneficioCtrl.text = alianzaBeneficiarioLoaded.cualBeneficio;
+      areaProyectoCtrl.text = alianzaBeneficiarioLoaded.areaProyecto;
+      areaFincaCtrl.text = alianzaBeneficiarioLoaded.areaFinca;
+    }
+
+    tipoTenenciaId = alianzaBeneficiarioLoaded.tipoTenenciaId;
 
     setState(() {});
   }
 
   void loadVeredasByMunicipio(
-      String municipioId, String perfilBeneficiarioVeredaId) async {
+      String municipioId, String alianzaBeneficiarioVeredaId) async {
     final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
     await veredaCubit.getVeredasByMunicipioDB(municipioId);
     veredaId =
-        perfilBeneficiarioVeredaId != '' ? perfilBeneficiarioVeredaId : null;
+        alianzaBeneficiarioVeredaId != '' ? alianzaBeneficiarioVeredaId : null;
   }
 
   @override
   Widget build(BuildContext context) {
-    final perfilBeneficiarioCubit =
-        BlocProvider.of<PerfilBeneficiarioCubit>(context, listen: true);
+    final alianzaBeneficiarioCubit =
+        BlocProvider.of<AlianzaBeneficiarioCubit>(context, listen: true);
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
     final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
-    final perfilBeneficiario = perfilBeneficiarioCubit.state.perfilBeneficiario;
+    final alianzaBeneficiario =
+        alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
-    return BlocListener<PerfilBeneficiarioCubit, PerfilBeneficiarioState>(
+    return BlocListener<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
         listener: (context, state) {
-      if (state is PerfilBeneficiarioError) {
+      if (state is AlianzaBeneficiarioError) {
         CustomSnackBar.showSnackBar(context, state.message, Colors.red);
       }
 
-      if (state is PerfilBeneficiarioLoaded) {
-        final perfilBeneficiarioLoaded = state.perfilBeneficiarioLoaded;
-        loadPerfilBeneficiario(perfilBeneficiarioLoaded);
+      if (state is AlianzaBeneficiarioLoaded) {
+        final alianzaBeneficiarioLoaded = state.alianzaBeneficiarioLoaded;
+        loadAlianzaBeneficiario(alianzaBeneficiarioLoaded);
       }
-    }, child: BlocBuilder<PerfilBeneficiarioCubit, PerfilBeneficiarioState>(
+    }, child: BlocBuilder<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
             builder: (context, state) {
       return Card(
         child: Padding(
@@ -129,7 +134,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
           child: Column(
             children: [
               const Text(
-                'Información del beneficiario con relación al perfil',
+                'Información del beneficiario con relación al alianza',
                 style: Styles.titleStyle,
               ),
               const SizedBox(height: 20),
@@ -198,7 +203,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                             veredaId = null;
                           });
 
-                          perfilBeneficiarioCubit
+                          alianzaBeneficiarioCubit
                               .changeMunicipioId(municipioId!);
                         },
                         hint: const Text('Municipio'));
@@ -224,7 +229,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                               veredaId = value;
                             });
 
-                            perfilBeneficiarioCubit.changeVeredaId(veredaId!);
+                            alianzaBeneficiarioCubit.changeVeredaId(veredaId!);
                           },
                           hint: const Text('Vereda'));
                     }
@@ -252,7 +257,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                           return null;
                         },
                         onChanged: (String? value) {
-                          perfilBeneficiarioCubit.changeTipoTenencia(value);
+                          alianzaBeneficiarioCubit.changeTipoTenencia(value);
                         },
                         hint: const Text('Tipo de tenencia'));
                   }
@@ -271,7 +276,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                     return null;
                   },
                   onSaved: (String? newValue) {
-                    perfilBeneficiarioCubit.changeAreaFinca(newValue);
+                    alianzaBeneficiarioCubit.changeAreaFinca(newValue);
                   }),
               const SizedBox(height: 20),
               TextFormField(
@@ -285,28 +290,28 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                     return null;
                   },
                   onSaved: (String? newValue) {
-                    perfilBeneficiarioCubit.changeAreaProyecto(newValue);
+                    alianzaBeneficiarioCubit.changeAreaProyecto(newValue);
                   }),
               const SizedBox(height: 20),
               SwitchListTile(
                   title: const Text('Es asociado'),
-                  value: perfilBeneficiario.asociado == 'true' ? true : false,
+                  value: alianzaBeneficiario.asociado == 'true' ? true : false,
                   onChanged: (bool? value) {
-                    perfilBeneficiarioCubit.changeAsociado(value);
+                    alianzaBeneficiarioCubit.changeAsociado(value);
                   }),
               SwitchListTile(
                   title: const Text('Está activo en la alianza'),
-                  value: perfilBeneficiario.activo == 'true' ? true : false,
+                  value: alianzaBeneficiario.activo == 'true' ? true : false,
                   onChanged: (bool? value) {
-                    perfilBeneficiarioCubit.changeActivo(value);
+                    alianzaBeneficiarioCubit.changeActivo(value);
                   }),
               SwitchListTile(
                   title: const Text('Fue beneficiado'),
-                  value: perfilBeneficiario.fueBeneficiado == 'true'
+                  value: alianzaBeneficiario.fueBeneficiado == 'true'
                       ? true
                       : false,
                   onChanged: (bool? value) {
-                    perfilBeneficiarioCubit.changeFueBeneficiado(value);
+                    alianzaBeneficiarioCubit.changeFueBeneficiado(value);
                   }),
               const SizedBox(height: 20),
               TextFormField(
@@ -320,7 +325,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                     return null;
                   },
                   onSaved: (String? newValue) {
-                    perfilBeneficiarioCubit.changeCualBeneficio(newValue);
+                    alianzaBeneficiarioCubit.changeCualBeneficio(newValue);
                   }),
               const SizedBox(height: 20),
               TextFormField(
@@ -335,7 +340,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                     return null;
                   },
                   onSaved: (String? newValue) {
-                    perfilBeneficiarioCubit.changeExperiencia(newValue);
+                    alianzaBeneficiarioCubit.changeExperiencia(newValue);
                   }),
             ],
           ),

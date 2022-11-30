@@ -15,8 +15,7 @@ abstract class PerfilPreInversionCofinanciadorRubroRepositoryDB {
           String perfilPreInversionId,
           String cofinanciadorId,
           String desembolsoId,
-          String actividadFinancieraId,
-          String rubroId);
+          String actividadFinancieraId);
 
   Future<Either<Failure, int>>
       savePerfilPreInversionCofinanciadorRubrosRepositoryDB(

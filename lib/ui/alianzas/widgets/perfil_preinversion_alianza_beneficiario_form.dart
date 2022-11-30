@@ -10,23 +10,23 @@ import '../../../domain/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
 import '../../../domain/entities/actividad_economica_entity.dart';
 import '../../../domain/entities/estado_civil_entity.dart';
 import '../../../domain/entities/nivel_escolar_entity.dart';
+import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 import '../../../domain/entities/residencia_entity.dart';
 import '../../../domain/entities/tipo_discapacidad_entity.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
-import 'package:paap/domain/entities/perfil_preinversion_beneficiario_entity.dart';
 
-class PerfilPreInversionBeneficiarioForm extends StatefulWidget {
-  const PerfilPreInversionBeneficiarioForm({super.key});
+class PerfilPreInversionAlianzaBeneficiarioForm extends StatefulWidget {
+  const PerfilPreInversionAlianzaBeneficiarioForm({super.key});
 
   @override
-  State<PerfilPreInversionBeneficiarioForm> createState() =>
-      _PerfilPreInversionBeneficiarioFormState();
+  State<PerfilPreInversionAlianzaBeneficiarioForm> createState() =>
+      _PerfilPreInversionAlianzaBeneficiarioFormState();
 }
 
-class _PerfilPreInversionBeneficiarioFormState
-    extends State<PerfilPreInversionBeneficiarioForm> {
+class _PerfilPreInversionAlianzaBeneficiarioFormState
+    extends State<PerfilPreInversionAlianzaBeneficiarioForm> {
   String residenciaId = '';
   String estadoCivilId = '';
   String nivelEscolarId = '';

@@ -68,15 +68,17 @@ class PerfilPreInversionConsultoresRows extends StatelessWidget {
 
                   await perfilPreInversionConsultorCubit
                       .savePerfilPreInversionConsultorDB(
-                          perfilPreInversionConsultor);
-
-                  if (perfilPreInversionConsultorCubit.state
-                      is PerfilPreInversionConsultorSaved) {
-                    BlocProvider.of<PerfilPreInversionConsultoresBloc>(context)
-                        .add(GetPerfilPreInversionConsultores(
-                            vPerfilPreInversionCubit.state.vPerfilPreInversion!
-                                .perfilPreInversionId));
-                  }
+                          perfilPreInversionConsultor)
+                      .whenComplete(() {
+                    if (perfilPreInversionConsultorCubit.state
+                        is PerfilPreInversionConsultorSaved) {
+                      BlocProvider.of<PerfilPreInversionConsultoresBloc>(
+                              context)
+                          .add(GetPerfilPreInversionConsultores(
+                              vPerfilPreInversionCubit.state
+                                  .vPerfilPreInversion!.perfilPreInversionId));
+                    }
+                  });
                 },
                 icon: const Icon(
                   Icons.person_add,

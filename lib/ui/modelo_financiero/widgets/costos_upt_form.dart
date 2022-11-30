@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/actividad/actividad_cubit.dart';
 import '../../../domain/cubits/rubro/rubro_cubit.dart';
 import '../../../domain/cubits/unidad/unidad_cubit.dart';
-import '../../../domain/entities/actividad_entity.dart';
+import '../../../domain/entities/actividad_financiera_entity.dart';
 import '../../../domain/entities/rubro_entity.dart';
 import '../../../domain/entities/unidad_entity.dart';
 import '../../utils/floating_buttons.dart';
@@ -12,7 +11,9 @@ import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class CostosUPTForm extends StatefulWidget {
-  const CostosUPTForm({super.key});
+  const CostosUPTForm(this.actividadesFinancieras, {super.key});
+
+  final List<ActividadFinancieraEntity> actividadesFinancieras;
 
   @override
   State<CostosUPTForm> createState() => _CostosUPTFormState();
@@ -38,25 +39,20 @@ class _CostosUPTFormState extends State<CostosUPTForm> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                BlocBuilder<ActividadCubit, ActividadState>(
-                  builder: (context, state) {
-                    if (state is ActividadesLoaded) {
-                      return DropdownButtonFormField(
-                          isExpanded: true,
-                          items: state.actividades!
-                              .map<DropdownMenuItem<String>>(
-                                  (ActividadEntity value) {
-                            return DropdownMenuItem<String>(
-                              value: value.actividadId,
-                              child: Text(value.nombre),
-                            );
-                          }).toList(),
-                          onChanged: (String? value) {},
-                          hint: const Text('Actividad'));
-                    }
-                    return Container();
-                  },
-                ),
+                DropdownButtonFormField(
+                    isExpanded: true,
+                    items: widget.actividadesFinancieras
+                        .where((actividadFinanciera) =>
+                            actividadFinanciera.tipoMovimientoId == '2')
+                        .map<DropdownMenuItem<String>>(
+                            (ActividadFinancieraEntity value) {
+                      return DropdownMenuItem<String>(
+                        value: value.actividadFinancieraId,
+                        child: Text(value.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {},
+                    hint: const Text('Actividad Financiera')),
                 const SizedBox(height: 20),
                 BlocBuilder<RubroCubit, RubroState>(
                   builder: (context, state) {

@@ -12,6 +12,8 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
   AlianzaBeneficiarioCubit({required this.alianzaBeneficiarioDB})
       : super(AlianzaBeneficiarioInitial());
 
+  void initState() => emit(AlianzaBeneficiarioInitial());
+
   void loadAlianzaBeneficiario(String alianzaId, String beneficiarioId) async {
     final result = await alianzaBeneficiarioDB.getAlianzaBeneficiarioUsecaseDB(
         alianzaId, beneficiarioId);
@@ -24,8 +26,6 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     });
   }
 
-  void initState() => emit(AlianzaBeneficiarioInitial());
-
   void saveAlianzaBeneficiarioDB(
       AlianzaBeneficiarioEntity alianzaBeneficiarioEntity) async {
     final result = await alianzaBeneficiarioDB
@@ -36,7 +36,7 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
             alianzaBeneficiario: alianzaBeneficiarioEntity)));
   }
 
-  void selectPerfilPreinversionBeneficiario(
+  void selectAlianzaBeneficiario(
       AlianzaBeneficiarioEntity alianzaBeneficiario) {
     emit(AlianzaBeneficiarioLoaded(alianzaBeneficiario));
   }
@@ -119,9 +119,9 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     emit(AlianzaBeneficiarioChanged(activoCorrienteChanged));
   }
 
-  void changeActivo(String? newValue) {
+  void changeActivo(bool? value) {
     final totalActivoChanged =
-        state.alianzaBeneficiario.copyWith(activo: newValue);
+        state.alianzaBeneficiario.copyWith(activo: value.toString());
     emit(AlianzaBeneficiarioChanged(totalActivoChanged));
   }
 
@@ -158,6 +158,53 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     final discapacidadChanged =
         state.alianzaBeneficiario.copyWith(tipoDiscapacidadId: value);
     emit(AlianzaBeneficiarioChanged(discapacidadChanged));
+  }
+
+  void changeMunicipioId(String value) {
+    final municipioChanged =
+        state.alianzaBeneficiario.copyWith(municipioId: value);
+    emit(AlianzaBeneficiarioChanged(municipioChanged));
+  }
+
+  void changeVeredaId(String value) {
+    final veredaChanged = state.alianzaBeneficiario.copyWith(veredaId: value);
+    emit(AlianzaBeneficiarioChanged(veredaChanged));
+  }
+
+  void changeTipoTenencia(String? value) {
+    final tipoTenenciaChanged =
+        state.alianzaBeneficiario.copyWith(tipoTenenciaId: value);
+    emit(AlianzaBeneficiarioChanged(tipoTenenciaChanged));
+  }
+
+  void changeAreaFinca(String? newValue) {
+    final areaFincaChanged =
+        state.alianzaBeneficiario.copyWith(areaFinca: newValue);
+    emit(AlianzaBeneficiarioChanged(areaFincaChanged));
+  }
+
+  void changeAreaProyecto(String? newValue) {
+    final areaProyectoChanged =
+        state.alianzaBeneficiario.copyWith(areaProyecto: newValue);
+    emit(AlianzaBeneficiarioChanged(areaProyectoChanged));
+  }
+
+  void changeAsociado(bool? value) {
+    final asociadoChanged =
+        state.alianzaBeneficiario.copyWith(asociado: value.toString());
+    emit(AlianzaBeneficiarioChanged(asociadoChanged));
+  }
+
+  void changeFueBeneficiado(bool? value) {
+    final fueBeneficiadoChanged =
+        state.alianzaBeneficiario.copyWith(fueBeneficiado: value.toString());
+    emit(AlianzaBeneficiarioChanged(fueBeneficiadoChanged));
+  }
+
+  void changeCualBeneficio(String? newValue) {
+    final cualBeneficioChanged =
+        state.alianzaBeneficiario.copyWith(cualBeneficio: newValue);
+    emit(AlianzaBeneficiarioChanged(cualBeneficioChanged));
   }
 
   void changeConyugeTipoIdentificacion(String? value) {
@@ -224,6 +271,12 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     final calificacionSisbenChanged =
         state.alianzaBeneficiario.copyWith(calificacionSisben: newValue);
     emit(AlianzaBeneficiarioChanged(calificacionSisbenChanged));
+  }
+
+  void changeConyugeIngresosMensuales(String? newValue) {
+    final conyugeIngresosMensualesChanged =
+        state.alianzaBeneficiario.copyWith(conyugeIngresosMensuales: newValue);
+    emit(AlianzaBeneficiarioChanged(conyugeIngresosMensualesChanged));
   }
 
   void changeLatitud(String? newValue) {

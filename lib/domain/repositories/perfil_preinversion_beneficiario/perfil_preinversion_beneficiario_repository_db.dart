@@ -8,7 +8,8 @@ abstract class PerfilPreInversionBeneficiarioRepositoryDB {
       getPerfilesPreInversionesBeneficiariosProduccionRepositoryDB();
 
   Future<Either<Failure, List<PerfilPreInversionBeneficiarioEntity>>>
-      getPerfilPreInversionBeneficiariosRepositoryDB();
+      getPerfilPreInversionBeneficiariosRepositoryDB(
+          String perfilPreInversionId);
 
   Future<Either<Failure, PerfilPreInversionBeneficiarioEntity?>>
       getPerfilPreInversionBeneficiarioRepositoryDB(

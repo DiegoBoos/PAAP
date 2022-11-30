@@ -1,30 +1,41 @@
 part of 'perfil_preinversion_beneficiarios_bloc.dart';
 
-abstract class PerfilPreInversionBeneficiariostate extends Equatable {
-  const PerfilPreInversionBeneficiariostate();
+abstract class PerfilPreInversionBeneficiariosState extends Equatable {
+  final List<PerfilPreInversionBeneficiarioEntity>?
+      perfilPreInversionBeneficiarios;
+
+  const PerfilPreInversionBeneficiariosState(
+      {this.perfilPreInversionBeneficiarios});
 
   @override
   List<Object> get props => [];
 }
 
 class PerfilPreInversionBeneficiariosInitial
-    extends PerfilPreInversionBeneficiariostate {}
+    extends PerfilPreInversionBeneficiariosState {
+  PerfilPreInversionBeneficiariosInitial()
+      : super(perfilPreInversionBeneficiarios: []);
+}
 
 class PerfilPreInversionBeneficiariosLoading
-    extends PerfilPreInversionBeneficiariostate {}
+    extends PerfilPreInversionBeneficiariosState {}
 
 class PerfilPreInversionBeneficiariosLoaded
-    extends PerfilPreInversionBeneficiariostate {
-  final List<PerfilPreInversionBeneficiarioEntity>?
+    extends PerfilPreInversionBeneficiariosState {
+  final List<PerfilPreInversionBeneficiarioEntity>
       perfilPreInversionBeneficiariosLoaded;
 
   const PerfilPreInversionBeneficiariosLoaded(
-      {this.perfilPreInversionBeneficiariosLoaded});
+      this.perfilPreInversionBeneficiariosLoaded)
+      : super(
+            perfilPreInversionBeneficiarios:
+                perfilPreInversionBeneficiariosLoaded);
 }
 
 class PerfilPreInversionBeneficiariosError
-    extends PerfilPreInversionBeneficiariostate {
+    extends PerfilPreInversionBeneficiariosState {
   final String message;
 
-  const PerfilPreInversionBeneficiariosError(this.message);
+  PerfilPreInversionBeneficiariosError(this.message)
+      : super(perfilPreInversionBeneficiarios: []);
 }

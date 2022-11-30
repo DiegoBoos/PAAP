@@ -29,7 +29,6 @@ abstract class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB {
       getPerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
           String perfilPreInversionId,
           String cofinanciadorId,
-          String actividadFinancieraId,
           String desembolsoId);
 
   Future<Either<Failure, int>>

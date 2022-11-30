@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/beneficiarios_alianza/beneficiarios_alianza_bloc.dart';
-import '../../../domain/entities/beneficiario_alianza_entity.dart';
+import '../../../domain/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
+import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
-import '../widgets/beneficiarios_alianza_rows.dart';
+import '../widgets/alianzas_beneficiarios_rows.dart';
 
-class BeneficiariosAlianzasPage extends StatelessWidget {
-  const BeneficiariosAlianzasPage({super.key});
+class AlianzasBeneficiariossPage extends StatelessWidget {
+  const AlianzasBeneficiariossPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +42,21 @@ class BeneficiariosAlianzasPage extends StatelessWidget {
                 style: Styles.subtitleStyle),
           ),
           const SizedBox(height: 20),
-          BlocBuilder<BeneficiariosAlianzaBloc, BeneficiariosAlianzaState>(
+          BlocBuilder<AlianzasBeneficiariosBloc, AlianzasBeneficiariosState>(
             builder: (context, state) {
-              if (state is BeneficiariosAlianzaLoading) {
+              if (state is AlianzasBeneficiariosLoading) {
                 return const CustomCircularProgress(
                     alignment: Alignment.center);
-              } else if (state is BeneficiariosAlianzaLoaded) {
-                List<BeneficiarioAlianzaEntity> beneficiariosAlianza =
-                    state.beneficiariosAlianzaLoaded!;
-                if (beneficiariosAlianza.isEmpty) {
+              } else if (state is AlianzasBeneficiariosLoaded) {
+                List<AlianzaBeneficiarioEntity> alianzasBeneficiarios =
+                    state.alianzasBeneficiariosLoaded!;
+                if (alianzasBeneficiarios.isEmpty) {
                   return const SizedBox(
                       child:
                           Center(child: NoDataSvg(title: 'No hay resultados')));
                 }
-                return BeneficiariosAlianzaRows(
-                    beneficiariosAlianzas: beneficiariosAlianza,
+                return AlianzasBeneficiariosRows(
+                    alianzasBeneficiarios: alianzasBeneficiarios,
                     subtitleStyle: Styles.subtitleStyle);
               }
               return Container();

@@ -24,7 +24,47 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
     extends State<PerfilPreInversionCofinanciadorDesembolsoForm> {
   final formKeyDesembolso = GlobalKey<FormState>();
 
+  String? desembolsoId;
+
   final dateFormat = DateFormat('yyyy-MM-dd');
+  final fechaCtrl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final perfilPreInversionCofinanciadorDesembolsoCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
+            context);
+
+    if (perfilPreInversionCofinanciadorDesembolsoCubit.state
+        is PerfilPreInversionCofinanciadorDesembolsoLoaded) {
+      final perfilPreInversionCofinanciadorDesembolsoLoaded =
+          perfilPreInversionCofinanciadorDesembolsoCubit
+              .state.perfilPreInversionCofinanciadorDesembolso;
+
+      loadPerfilPreInversionCofinanciadorDesembolso(
+          perfilPreInversionCofinanciadorDesembolsoLoaded);
+    }
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
+      context,
+    ).initState();
+  }
+
+  void loadPerfilPreInversionCofinanciadorDesembolso(
+      PerfilPreInversionCofinanciadorDesembolsoEntity
+          perfilPreInversionCofinanciadorDesembolsoLoaded) {
+    desembolsoId = perfilPreInversionCofinanciadorDesembolsoLoaded.desembolsoId;
+    desembolsoId = perfilPreInversionCofinanciadorDesembolsoLoaded.desembolsoId;
+    if (perfilPreInversionCofinanciadorDesembolsoLoaded.fecha != '') {
+      fechaCtrl.text = dateFormat.format(DateTime.parse(
+          perfilPreInversionCofinanciadorDesembolsoLoaded.fecha));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +93,7 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                   if (state is DesembolsosLoaded) {
                     return DropdownButtonFormField(
                         isExpanded: true,
-                        value: perfilPreInversionCofinanciadorDesembolso
-                                    .desembolsoId !=
-                                ''
-                            ? perfilPreInversionCofinanciadorDesembolso
-                                .desembolsoId
-                            : null,
+                        value: desembolsoId != '' ? desembolsoId : null,
                         items: state.desembolsos!.map<DropdownMenuItem<String>>(
                             (DesembolsoEntity value) {
                           return DropdownMenuItem<String>(
@@ -83,8 +118,7 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
               ),
               const SizedBox(height: 20),
               TextFormField(
-                key: UniqueKey(),
-                initialValue: perfilPreInversionCofinanciadorDesembolso.fecha,
+                controller: fechaCtrl,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Debe seleccionar una fecha';
@@ -130,20 +164,26 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                         }
                         formKeyDesembolso.currentState!.save();
 
-                        final perfilPreInversionCofinanciadorId =
+                        final vPerfilPreInversionId = vPerfilPreInversionCubit
+                            .state.vPerfilPreInversion!.perfilPreInversionId;
+
+                        final cofinanciadorId =
                             perfilPreInversionCofinanciadorCubit
                                 .state
                                 .perfilPreInversionCofinanciador
                                 .cofinanciadorId;
 
-                        final vPerfilPreInversionId = vPerfilPreInversionCubit
-                            .state.vPerfilPreInversion!.perfilPreInversionId;
+                        final desembolsoId =
+                            perfilPreInversionCofinanciadorDesembolsoCubit
+                                .state
+                                .perfilPreInversionCofinanciadorDesembolso
+                                .cofinanciadorId;
 
                         perfilPreInversionCofinanciadorDesembolsoCubit
                             .changePerfilPreInversion(vPerfilPreInversionId);
                         perfilPreInversionCofinanciadorDesembolsoCubit
                             .changePerfilPreInversionCofinanciador(
-                                perfilPreInversionCofinanciadorId);
+                                cofinanciadorId);
 
                         perfilPreInversionCofinanciadorDesembolsoCubit
                             .perfilPreInversionCofinanciadorDesembolsoDB
@@ -155,8 +195,8 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                         perfilPreInversionCofinanciadorDesembolsosBloc.add(
                             GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
                                 perfilPreInversionId: vPerfilPreInversionId,
-                                cofinanciadorId:
-                                    perfilPreInversionCofinanciadorId));
+                                cofinanciadorId: cofinanciadorId,
+                                desembolsoId: desembolsoId));
 
                         if (perfilPreInversionCofinanciadorDesembolsosBloc.state
                             is PerfilPreInversionCofinanciadorDesembolsosLoaded) {

@@ -8,6 +8,7 @@ import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/floating_buttons.dart';
@@ -18,32 +19,8 @@ import '../widgets/perfil_preinversion_cofinanciador_desembolso_form.dart';
 import '../widgets/perfil_preinversion_cofinanciador_form.dart';
 import '../widgets/perfil_preinversion_cofinanciador_rubro_form.dart';
 
-class NewEditPerfilPreInversionCofinanciadorPage extends StatefulWidget {
+class NewEditPerfilPreInversionCofinanciadorPage extends StatelessWidget {
   const NewEditPerfilPreInversionCofinanciadorPage({super.key});
-
-  @override
-  State<NewEditPerfilPreInversionCofinanciadorPage> createState() =>
-      _NewEditPerfilPreInversionCofinanciadorPageState();
-}
-
-class _NewEditPerfilPreInversionCofinanciadorPageState
-    extends State<NewEditPerfilPreInversionCofinanciadorPage> {
-  @override
-  void deactivate() {
-    super.deactivate();
-
-    BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
-      context,
-    ).initState();
-
-    BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
-      context,
-    ).initState();
-
-    BlocProvider.of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(
-      context,
-    ).initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +43,11 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
       context,
     );
 
+    final perfilPreInversionCofinanciadorRubroCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorRubroCubit>(
+      context,
+    );
+
     final perfilPreInversionCofinanciadorDesembolsosBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsosBloc>(
             context);
@@ -81,24 +63,39 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
         .state.perfilPreInversionCofinanciador;
 
     if (perfilPreInversionCofinanciador.isEditing) {
-      final cofinanciadorId = perfilPreInversionCofinanciador.cofinanciadorId;
       final vPerfilPreInversionId = vPerfilPreInversionCubit
           .state.vPerfilPreInversion!.perfilPreInversionId;
+      final cofinanciadorId = perfilPreInversionCofinanciador.cofinanciadorId;
+      final desembolsoId = perfilPreInversionCofinanciadorDesembolsoCubit
+          .state.perfilPreInversionCofinanciadorDesembolso.desembolsoId;
+      final actividadFinancieraId =
+          perfilPreInversionCofinanciadorActividadFinancieraCubit
+              .state
+              .perfilPreInversionCofinanciadorActividadFinanciera
+              .actividadFinancieraId;
+      final rubroId = perfilPreInversionCofinanciadorRubroCubit
+          .state.perfilPreInversionCofinanciadorRubro.rubroId;
 
       perfilPreInversionCofinanciadorDesembolsosBloc.add(
           GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
               perfilPreInversionId: vPerfilPreInversionId,
-              cofinanciadorId: cofinanciadorId));
+              cofinanciadorId: cofinanciadorId,
+              desembolsoId: desembolsoId));
 
       perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
           GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
               perfilPreInversionId: vPerfilPreInversionId,
-              cofinanciadorId: cofinanciadorId));
+              cofinanciadorId: cofinanciadorId,
+              actividadFinancieraId: actividadFinancieraId,
+              desembolsoId: desembolsoId));
 
       perfilPreInversionCofinanciadorRubrosBloc.add(
           GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
               perfilPreInversionId: vPerfilPreInversionId,
-              cofinanciadorId: cofinanciadorId));
+              cofinanciadorId: cofinanciadorId,
+              actividadFinancieraId: actividadFinancieraId,
+              desembolsoId: desembolsoId,
+              rubroId: rubroId));
     }
 
     final perfilPreInversionCofinanciadorDesembolso =
@@ -151,9 +148,10 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                         SaveBackButtons(
                             onSaved: () {
                               savePerfilPreInversionCofinanciador(context);
-                              savePerfilPreInversionDesembolso();
-                              savePerfilPreInversionActividadFinanciera();
-                              savePerfilPreInversionRubro();
+                              savePerfilPreInversionDesembolso(context);
+                              savePerfilPreInversionActividadFinanciera(
+                                  context);
+                              savePerfilPreInversionRubro(context);
                             },
                             routeName: 'VCofinanciadoresPreInversion')
                       ],
@@ -173,9 +171,10 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                         SaveBackButtons(
                             onSaved: () {
                               savePerfilPreInversionCofinanciador(context);
-                              savePerfilPreInversionDesembolso();
-                              savePerfilPreInversionActividadFinanciera();
-                              savePerfilPreInversionRubro();
+                              savePerfilPreInversionDesembolso(context);
+                              savePerfilPreInversionActividadFinanciera(
+                                  context);
+                              savePerfilPreInversionRubro(context);
                             },
                             routeName: 'VCofinanciadoresPreInversion')
                       ],
@@ -205,9 +204,9 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
             .state.perfilPreInversionCofinanciador);
   }
 
-  void savePerfilPreInversionDesembolso() {}
+  void savePerfilPreInversionDesembolso(BuildContext context) {}
 
-  void savePerfilPreInversionActividadFinanciera() {}
+  void savePerfilPreInversionActividadFinanciera(BuildContext context) {}
 
-  void savePerfilPreInversionRubro() {}
+  void savePerfilPreInversionRubro(BuildContext context) {}
 }

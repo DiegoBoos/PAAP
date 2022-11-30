@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/ui/utils/custom_snack_bar.dart';
 
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../domain/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
@@ -10,6 +9,7 @@ import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dar
 import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
+import '../../utils/custom_snack_bar.dart';
 import '../../utils/floating_buttons.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
@@ -19,22 +19,13 @@ import '../widgets/perfil_beneficiario_form.dart';
 import '../widgets/perfil_preinversion_beneficiario_form.dart';
 import '../widgets/conyuge_form.dart';
 
-class NewEditPerfilPreInversionBeneficiarioPage extends StatefulWidget {
+class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
   const NewEditPerfilPreInversionBeneficiarioPage({super.key});
 
-  @override
-  State<NewEditPerfilPreInversionBeneficiarioPage> createState() =>
-      _NewEditPerfilPreInversionBeneficiarioPageState();
-}
-
-class _NewEditPerfilPreInversionBeneficiarioPageState
-    extends State<NewEditPerfilPreInversionBeneficiarioPage> {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    final perfilPreInversionBeneficiarioCubit =
-        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
 
     return Scaffold(
         drawer: BlocBuilder<MenuCubit, MenuState>(
@@ -60,8 +51,21 @@ class _NewEditPerfilPreInversionBeneficiarioPageState
               child: Column(children: [
                 const Text('BENEFICIARIOS', style: Styles.titleStyle),
                 const SizedBox(height: 10),
-                BlocBuilder<PerfilPreInversionBeneficiarioCubit,
+                BlocConsumer<PerfilPreInversionBeneficiarioCubit,
                     PerfilPreInversionBeneficiarioState>(
+                  listener: (context, state) {
+                    if (state is PerfilPreInversionBeneficiarioError) {
+                      CustomSnackBar.showSnackBar(
+                          context, 'Error al guardar datos', Colors.red);
+                    }
+                    if (state is PerfilPreInversionBeneficiarioSaved) {
+                      CustomSnackBar.showSnackBar(context,
+                          'Datos guardados satisfactoriamente', Colors.green);
+
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          'VBeneficiarioPreInversion', (route) => false);
+                    }
+                  },
                   builder: (context, state) {
                     final perfilPreInversionBeneficiario =
                         state.perfilPreInversionBeneficiario;
@@ -71,13 +75,6 @@ class _NewEditPerfilPreInversionBeneficiarioPageState
 
                     final estadoCivilId =
                         perfilPreInversionBeneficiario.estadoCivilId;
-
-                    if (estadoCivilId != '') {
-                      if (estadoCivilId == '2' || estadoCivilId == '5') {
-                      } else {
-                        perfilPreInversionBeneficiarioCubit.initConyuge();
-                      }
-                    }
 
                     return Column(
                       children: [
@@ -99,15 +96,10 @@ class _NewEditPerfilPreInversionBeneficiarioPageState
 
                             formKey.currentState!.save();
 
-                            saveBeneficiario();
-                            savePerfilBeneficiario();
-                            savePerfilPreInversionBeneficiario();
-                            saveExperiencia();
-
-                            CustomSnackBar.showSnackBar(
-                                context,
-                                'Datos guardados satisfactoriamente',
-                                Colors.green);
+                            saveBeneficiario(context);
+                            savePerfilBeneficiario(context);
+                            savePerfilPreInversionBeneficiario(context);
+                            saveExperiencia(context);
                           },
                           routeName: 'VBeneficiarioPreInversion',
                         ),
@@ -122,7 +114,7 @@ class _NewEditPerfilPreInversionBeneficiarioPageState
         ));
   }
 
-  void saveBeneficiario() {
+  void saveBeneficiario(BuildContext context) {
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
     beneficiarioCubit.changeActivo(true);
 
@@ -130,7 +122,7 @@ class _NewEditPerfilPreInversionBeneficiarioPageState
     beneficiarioCubit.saveBeneficiarioDB(beneficiario);
   }
 
-  void savePerfilBeneficiario() {
+  void savePerfilBeneficiario(BuildContext context) {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
@@ -140,36 +132,78 @@ class _NewEditPerfilPreInversionBeneficiarioPageState
     final perfilId =
         vPerfilPreInversionCubit.state.vPerfilPreInversion!.perfilId;
     final beneficiarioId = beneficiarioCubit.state.beneficiario.beneficiarioId;
+    final perfilBeneficiario = perfilBeneficiarioCubit.state.perfilBeneficiario;
 
     perfilBeneficiarioCubit.changePerfilId(perfilId);
     perfilBeneficiarioCubit.changeBeneficiarioId(beneficiarioId);
+    if (perfilBeneficiario.asociado == '') {
+      perfilBeneficiarioCubit.changeAsociado(false);
+    }
+    if (perfilBeneficiario.activo == '') {
+      perfilBeneficiarioCubit.changeActivo(false);
+    }
+    if (perfilBeneficiario.fueBeneficiado == '') {
+      perfilBeneficiarioCubit.changeFueBeneficiado(false);
+    }
 
     perfilBeneficiarioCubit.savePerfilBeneficiarioDB(
         perfilBeneficiarioCubit.state.perfilBeneficiario);
   }
 
-  void savePerfilPreInversionBeneficiario() {
+  void savePerfilPreInversionBeneficiario(BuildContext context) {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
-    final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
+    final perfilBeneficiarioCubit =
+        BlocProvider.of<PerfilBeneficiarioCubit>(context);
     final perfilPreInversionBeneficiarioCubit =
         BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
 
     final perfilPreInversionId = vPerfilPreInversionCubit
         .state.vPerfilPreInversion!.perfilPreInversionId;
 
-    final beneficiarioId = beneficiarioCubit.state.beneficiario.beneficiarioId;
+    final perfilBeneficiario = perfilBeneficiarioCubit.state.perfilBeneficiario;
+
+    final perfilPreInversionBeneficiario = perfilPreInversionBeneficiarioCubit
+        .state.perfilPreInversionBeneficiario;
 
     perfilPreInversionBeneficiarioCubit
         .changePerfilPreInversionId(perfilPreInversionId);
-    perfilPreInversionBeneficiarioCubit.changeBeneficiarioId(beneficiarioId);
+    perfilPreInversionBeneficiarioCubit
+        .changeBeneficiarioId(perfilBeneficiario.beneficiarioId);
+    perfilPreInversionBeneficiarioCubit
+        .changeMunicipioId(perfilBeneficiario.municipioId);
+    perfilPreInversionBeneficiarioCubit
+        .changeVeredaId(perfilBeneficiario.veredaId);
+    perfilPreInversionBeneficiarioCubit
+        .changeAreaFinca(perfilBeneficiario.areaFinca);
+    perfilPreInversionBeneficiarioCubit
+        .changeAreaProyecto(perfilBeneficiario.areaProyecto);
+    perfilPreInversionBeneficiarioCubit
+        .changeTipoTenencia(perfilBeneficiario.tipoTenenciaId);
+    perfilPreInversionBeneficiarioCubit
+        .changeExperiencia(perfilBeneficiario.experiencia);
+    perfilPreInversionBeneficiarioCubit
+        .changeAsociado(perfilBeneficiario.asociado);
+    perfilPreInversionBeneficiarioCubit
+        .changeConocePerfil(perfilBeneficiario.conocePerfil);
+    perfilPreInversionBeneficiarioCubit
+        .changeFueBeneficiado(perfilBeneficiario.fueBeneficiado);
+    perfilPreInversionBeneficiarioCubit
+        .changeCualBeneficio(perfilBeneficiario.cualBeneficio);
+
+    if (perfilPreInversionBeneficiario.cotizanteBeps == '') {
+      perfilPreInversionBeneficiarioCubit.changeCotizanteBeps(false);
+    }
+    if (perfilPreInversionBeneficiario.accesoExplotacionTierra == '') {
+      perfilPreInversionBeneficiarioCubit.changeAccesoExplotacionTierra(false);
+    }
 
     perfilPreInversionBeneficiarioCubit.savePerfilPreInversionBeneficiarioDB(
         perfilPreInversionBeneficiarioCubit
             .state.perfilPreInversionBeneficiario);
   }
 
-  void saveExperiencia() {
+  void saveExperiencia(BuildContext context) {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);

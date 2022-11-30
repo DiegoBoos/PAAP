@@ -13,7 +13,7 @@ class VisitaInitial extends VisitaState {}
 class VisitaLoading extends VisitaState {}
 
 class VisitaLoaded extends VisitaState {
-  final VisitaEntity visitaLoaded;
+  final VisitaEntity? visitaLoaded;
 
   const VisitaLoaded(this.visitaLoaded) : super(visitaDB: visitaLoaded);
 }

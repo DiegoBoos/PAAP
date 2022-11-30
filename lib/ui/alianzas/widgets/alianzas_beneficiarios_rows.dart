@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/beneficiario_alianza/beneficiario_alianza_cubit.dart';
-import '../../../domain/entities/beneficiario_alianza_entity.dart';
+import '../../../domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
+import '../../../domain/entities/alianza_beneficiario_entity.dart';
 
-class BeneficiariosAlianzaRows extends StatelessWidget {
-  const BeneficiariosAlianzaRows({
+class AlianzasBeneficiariosRows extends StatelessWidget {
+  const AlianzasBeneficiariosRows({
     Key? key,
-    required this.beneficiariosAlianzas,
+    required this.alianzasBeneficiarios,
     required this.subtitleStyle,
   }) : super(key: key);
 
-  final List<BeneficiarioAlianzaEntity> beneficiariosAlianzas;
+  final List<AlianzaBeneficiarioEntity> alianzasBeneficiarios;
   final TextStyle subtitleStyle;
 
   @override
@@ -43,9 +43,9 @@ class BeneficiariosAlianzaRows extends StatelessWidget {
             ),
           ),
         ],
-        rows: List.generate(beneficiariosAlianzas.length, (index) {
-          BeneficiarioAlianzaEntity beneficiarioAlianza =
-              beneficiariosAlianzas[index];
+        rows: List.generate(alianzasBeneficiarios.length, (index) {
+          AlianzaBeneficiarioEntity beneficiarioAlianza =
+              alianzasBeneficiarios[index];
 
           return DataRow(cells: <DataCell>[
             DataCell(Text(beneficiarioAlianza.beneficiarioId)),
@@ -53,11 +53,10 @@ class BeneficiariosAlianzaRows extends StatelessWidget {
             DataCell(IconButton(
                 onPressed: () {
                   final beneficiarioAlianzaCubit =
-                      BlocProvider.of<BeneficiarioAlianzaCubit>(context);
-                  beneficiarioAlianzaCubit.getBeneficiarioAlianzaDB(
-                      beneficiarioAlianza.beneficiarioId);
-                  Navigator.pushNamed(context, 'VBeneficiarioAlianza',
-                      arguments: beneficiarioAlianza.beneficiarioId);
+                      BlocProvider.of<AlianzaBeneficiarioCubit>(context);
+                  beneficiarioAlianzaCubit
+                      .selectAlianzaBeneficiario(beneficiarioAlianza);
+                  Navigator.pushNamed(context, 'VBeneficiarioAlianza');
                 },
                 icon: const Icon(
                   Icons.keyboard_arrow_right,

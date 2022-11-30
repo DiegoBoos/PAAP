@@ -322,6 +322,4 @@ class PerfilPreInversionBeneficiarioEntity {
         "CedulaCatastral": cedulaCatastral,
         "RecordStatus": recordStatus,
       };
-
-  void changeAccesoExplotacionTierra(bool value) {}
 }

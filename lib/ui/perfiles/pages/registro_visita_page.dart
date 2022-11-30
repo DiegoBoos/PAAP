@@ -34,14 +34,21 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
     final visitaCubit = BlocProvider.of<VisitaCubit>(context);
     final agrupacionCubit = BlocProvider.of<AgrupacionCubit>(context);
     final evaluacionCubit = BlocProvider.of<EvaluacionCubit>(context);
-    final evaluacionRespuestaCubit =
-        BlocProvider.of<EvaluacionRespuestaCubit>(context);
 
-    visitaCubit.initState();
-    evaluacionRespuestaCubit.initState();
+    visitaCubit.getVisitaDB(vPerfilCubit.state.vPerfil!.perfilId, '1');
     agrupacionCubit
         .getAgrupacionesDB(vPerfilCubit.state.vPerfil!.convocatoriaId);
     evaluacionCubit.getEvaluacionDB(vPerfilCubit.state.vPerfil!.perfilId);
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    final visitaCubit = BlocProvider.of<VisitaCubit>(context);
+    final evaluacionRespuestaCubit =
+        BlocProvider.of<EvaluacionRespuestaCubit>(context);
+    visitaCubit.initState();
+    evaluacionRespuestaCubit.initState();
   }
 
   final formKeyDates = GlobalKey<FormState>();
@@ -68,7 +75,7 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
       listeners: [
         BlocListener<VisitaCubit, VisitaState>(
           listener: (context, state) {
-            if (state is VisitaLoaded) {
+            if (state is VisitaSaved) {
               CustomSnackBar.showSnackBar(
                   context, 'Transacción realizada correctamente', Colors.green);
             } else if (state is VisitaError) {
@@ -154,7 +161,7 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                       DateTime.now().toIso8601String(),
                                   recordStatus: 'N');
 
-                              visitaCubit.getVisitaDB(newVisita);
+                              visitaCubit.saveVisitaDB(newVisita);
                             },
                             backgroundColor:
                                 Theme.of(context).colorScheme.primary,
@@ -171,6 +178,10 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
 
                   if (state is VisitaLoaded) {
                     savedDates = true;
+                    fechaInicialCtrl.text = dateFormat.format(
+                        DateTime.parse(state.visitaLoaded!.fechaInicial));
+                    fechaFinalCtrl.text = dateFormat
+                        .format(DateTime.parse(state.visitaLoaded!.fechaFinal));
                     return Column(
                       children: [
                         DatesForm(
@@ -257,14 +268,6 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                                 evaluacionRespuestaCubit.state
                                                     .evaluacionesRespuestas,
                                                 vPerfil.perfilId); */
-
-                                        print(evaluacionRespuestaCubit.state
-                                            .evaluacionesRespuestas.length);
-
-                                        print(
-                                            'OpcionId: ${evaluacionRespuestaCubit.state.evaluacionesRespuestas[0].opcionId}');
-                                        print(
-                                            'Observacion: ${evaluacionRespuestaCubit.state.evaluacionesRespuestas[0].observacion}');
 
                                         evaluacionRespuestaCubit.initState();
                                       }),

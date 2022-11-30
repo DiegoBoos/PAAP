@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/cubits/cofinanciador/cofinanciador_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../domain/entities/cofinanciador_entity.dart';
+import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 import '../../utils/input_decoration.dart';
 
 class PerfilPreInversionCofinanciadorForm extends StatefulWidget {
@@ -18,6 +19,46 @@ class _PerfilPreInversionCofinanciadorFormState
     extends State<PerfilPreInversionCofinanciadorForm> {
   final formKeyCofinanciador = GlobalKey<FormState>();
 
+  String? cofinanciadorId;
+
+  final participacionCtrl = TextEditingController();
+  final montoCtrl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
+
+    if (perfilPreInversionCofinanciadorCubit.state
+        is PerfilPreInversionCofinanciadorLoaded) {
+      final perfilPreInversionCofinanciadorLoaded =
+          perfilPreInversionCofinanciadorCubit
+              .state.perfilPreInversionCofinanciador;
+
+      loadPerfilPreInversionCofinanciador(
+          perfilPreInversionCofinanciadorLoaded);
+    }
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
+      context,
+    ).initState();
+  }
+
+  void loadPerfilPreInversionCofinanciador(
+      PerfilPreInversionCofinanciadorEntity
+          perfilPreInversionCofinanciadorLoaded) {
+    cofinanciadorId = perfilPreInversionCofinanciadorLoaded.cofinanciadorId;
+
+    participacionCtrl.text =
+        perfilPreInversionCofinanciadorLoaded.participacion;
+    montoCtrl.text = perfilPreInversionCofinanciadorLoaded.monto;
+  }
+
   @override
   Widget build(BuildContext context) {
     final perfilPreInversionCofinanciadorCubit =
@@ -25,9 +66,6 @@ class _PerfilPreInversionCofinanciadorFormState
 
     return BlocBuilder<PerfilPreInversionCofinanciadorCubit,
         PerfilPreInversionCofinanciadorState>(builder: (context, state) {
-      final perfilPreInversionCofinanciador =
-          perfilPreInversionCofinanciadorCubit
-              .state.perfilPreInversionCofinanciador;
       return Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
@@ -37,10 +75,7 @@ class _PerfilPreInversionCofinanciadorFormState
                 if (state is CofinanciadoresLoaded) {
                   return DropdownButtonFormField(
                       isExpanded: true,
-                      value:
-                          perfilPreInversionCofinanciador.cofinanciadorId != ''
-                              ? perfilPreInversionCofinanciador.cofinanciadorId
-                              : null,
+                      value: cofinanciadorId != '' ? cofinanciadorId : null,
                       items: state.cofinanciadores!
                           .map<DropdownMenuItem<String>>(
                               (CofinanciadorEntity value) {
@@ -66,8 +101,7 @@ class _PerfilPreInversionCofinanciadorFormState
             ),
             const SizedBox(height: 20),
             TextFormField(
-                key: UniqueKey(),
-                initialValue: perfilPreInversionCofinanciador.monto,
+                controller: montoCtrl,
                 decoration: CustomInputDecoration.inputDecoration(
                     hintText: 'Monto', labelText: 'Monto'),
                 validator: (value) {
@@ -81,8 +115,7 @@ class _PerfilPreInversionCofinanciadorFormState
                 }),
             const SizedBox(height: 20),
             TextFormField(
-                key: UniqueKey(),
-                initialValue: perfilPreInversionCofinanciador.participacion,
+                controller: participacionCtrl,
                 decoration: CustomInputDecoration.inputDecoration(
                     hintText: 'Participación', labelText: 'Participación'),
                 onSaved: (String? newValue) {

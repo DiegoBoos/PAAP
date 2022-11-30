@@ -11,7 +11,6 @@ abstract class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
       getPerfilPreInversionCofinanciadorActividadFinancieraDB(
           String perfilPreInversionId,
           String cofinanciadorId,
-          String actividadFinancieraId,
           String desembolsoId);
   Future<int> savePerfilPreInversionCofinanciadorActividadesFinancieras(
       List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
@@ -75,20 +74,14 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
       getPerfilPreInversionCofinanciadorActividadFinancieraDB(
           String perfilPreInversionId,
           String cofinanciadorId,
-          String actividadFinancieraId,
           String desembolsoId) async {
     final db = await DBConfig.database;
 
     final res = await db.query(
         'PerfilPreInversionCofinanciadorActividadFinanciera',
         where:
-            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND ActividadFinancieraId = ? AND DesembolsoId = ?',
-        whereArgs: [
-          perfilPreInversionId,
-          cofinanciadorId,
-          actividadFinancieraId,
-          desembolsoId
-        ]);
+            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
+        whereArgs: [perfilPreInversionId, cofinanciadorId, desembolsoId]);
 
     if (res.isEmpty) return null;
     final perfilPreInversionCofinanciadorActividadFinancieraMap = {

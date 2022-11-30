@@ -47,8 +47,8 @@ class PerfilPreInversionBeneficiarioChanged
 
 class PerfilPreInversionBeneficiarioSaved
     extends PerfilPreInversionBeneficiarioState {
-  const PerfilPreInversionBeneficiarioSaved(
-      {required super.perfilPreInversionBeneficiario});
+  PerfilPreInversionBeneficiarioSaved()
+      : super(perfilPreInversionBeneficiario: initObject());
 }
 
 class PerfilPreInversionBeneficiarioError

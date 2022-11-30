@@ -71,17 +71,14 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
             DataCell(Text(perfilPreInversionBeneficiario.nombreOrganizacion)),
             DataCell(IconButton(
                 onPressed: () {
+                  final tipoProyecto = vPerfilPreinversionCubit
+                      .state.vPerfilPreInversion!.tipoProyecto;
+
                   final perfilId = vPerfilPreinversionCubit
                       .state.vPerfilPreInversion!.perfilId;
 
                   final beneficiarioId =
                       perfilPreInversionBeneficiario.beneficiarioId;
-                  final tipoActividadProductivaAgricolaId =
-                      experienciaAgricolaCubit
-                          .state.experienciaAgricola.tipoActividadProductivaId;
-                  final tipoActividadProductivaPecuariaId =
-                      experienciaPecuariaCubit
-                          .state.experienciaPecuaria.tipoActividadProductivaId;
 
                   perfilPreinversionBeneficiarioCubit
                       .selectPerfilPreinversionBeneficiario(
@@ -92,11 +89,15 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
                   perfilBeneficiarioCubit.selectPerfilBeneficiario(
                       perfilId, beneficiarioId);
 
-                  experienciaAgricolaCubit.selectExperienciaAgricola(
-                      tipoActividadProductivaAgricolaId, beneficiarioId);
+                  //TODO: Tipo actividad productiva, por defecto 1?
 
-                  experienciaPecuariaCubit.selectExperienciaPecuaria(
-                      tipoActividadProductivaPecuariaId, beneficiarioId);
+                  if (tipoProyecto == 'Agrícola') {
+                    experienciaAgricolaCubit.selectExperienciaAgricola(
+                        '1', beneficiarioId);
+                  } else if (tipoProyecto == 'Pecuario') {
+                    experienciaPecuariaCubit.selectExperienciaPecuaria(
+                        '1', beneficiarioId);
+                  }
 
                   Navigator.pushNamed(
                       context, 'NewEditVBeneficiarioPreInversion');

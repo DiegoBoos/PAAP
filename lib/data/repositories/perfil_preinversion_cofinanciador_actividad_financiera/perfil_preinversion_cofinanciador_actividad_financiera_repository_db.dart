@@ -57,16 +57,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
       getPerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
           String perfilPreInversionId,
           String cofinanciadorId,
-          String actividadFinancieraId,
           String desembolsoId) async {
     try {
       final perfilPreInversionCofinanciadorActividadFinancieraDB =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
               .getPerfilPreInversionCofinanciadorActividadFinancieraDB(
-                  perfilPreInversionId,
-                  cofinanciadorId,
-                  actividadFinancieraId,
-                  desembolsoId);
+                  perfilPreInversionId, cofinanciadorId, desembolsoId);
 
       return Right(perfilPreInversionCofinanciadorActividadFinancieraDB);
     } on ServerFailure catch (e) {

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import '../../../domain/cubits/genero/genero_cubit.dart';
 import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
+import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';
 import '../../../domain/entities/tipo_identificacion_entity.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
-import 'package:paap/domain/entities/perfil_preinversion_beneficiario_entity.dart';
 
 class ConyugeForm extends StatefulWidget {
   const ConyugeForm({super.key});
@@ -40,50 +40,41 @@ class _ConyugeFormState extends State<ConyugeForm> {
   void initState() {
     super.initState();
 
-    final perfilPreInversionBeneficiarioCubit =
-        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
+    final alianzaBeneficiarioCubit =
+        BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
-    if (perfilPreInversionBeneficiarioCubit.state
-        is PerfilPreInversionBeneficiarioLoaded) {
-      final perfilPreInversionBeneficiarioLoaded =
-          perfilPreInversionBeneficiarioCubit
-              .state.perfilPreInversionBeneficiario;
+    if (alianzaBeneficiarioCubit.state is AlianzaBeneficiarioLoaded) {
+      final alianzaBeneficiarioLoaded =
+          alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
-      loadConyuge(perfilPreInversionBeneficiarioLoaded);
+      loadConyuge(alianzaBeneficiarioLoaded);
     }
   }
 
-  void loadConyuge(
-      PerfilPreInversionBeneficiarioEntity
-          perfilPreInversionBeneficiarioLoaded) {
+  void loadConyuge(AlianzaBeneficiarioEntity alianzaBeneficiarioLoaded) {
     final conyugeFechaExpedicionDocumento =
-        perfilPreInversionBeneficiarioLoaded.conyugeFechaExpedicionDocumento;
+        alianzaBeneficiarioLoaded.conyugeFechaExpedicionDocumento;
 
     final conyugeFechaNacimiento =
-        perfilPreInversionBeneficiarioLoaded.conyugeFechaNacimiento;
+        alianzaBeneficiarioLoaded.conyugeFechaNacimiento;
 
     conyugeTipoIdentificacionId =
-        perfilPreInversionBeneficiarioLoaded.conyugeTipoIdentificacionId;
-    conyugeGeneroId = perfilPreInversionBeneficiarioLoaded.conyugeGeneroId;
-    conyugeGrupoEspecialId =
-        perfilPreInversionBeneficiarioLoaded.conyugeGrupoEspecialId;
+        alianzaBeneficiarioLoaded.conyugeTipoIdentificacionId;
+    conyugeGeneroId = alianzaBeneficiarioLoaded.conyugeGeneroId;
+    conyugeGrupoEspecialId = alianzaBeneficiarioLoaded.conyugeGrupoEspecialId;
 
-    conyugeIdCtrl.text = perfilPreInversionBeneficiarioLoaded.conyugeId;
+    conyugeIdCtrl.text = alianzaBeneficiarioLoaded.conyugeId;
 
     if (conyugeFechaExpedicionDocumento != '') {
       conyugeFechaExpedicionDocumentoCtrl.text =
           dateFormat.format(DateTime.parse(conyugeFechaExpedicionDocumento));
     }
 
-    conyugeNombre1Ctrl.text =
-        perfilPreInversionBeneficiarioLoaded.conyugeNombre1;
-    conyugeApellido1Ctrl.text =
-        perfilPreInversionBeneficiarioLoaded.conyugeApellido1;
-    conyugeNombre2Ctrl.text =
-        perfilPreInversionBeneficiarioLoaded.conyugeNombre2;
-    conyugeApellido2Ctrl.text =
-        perfilPreInversionBeneficiarioLoaded.conyugeApellido2;
-    conyugeGeneroId = perfilPreInversionBeneficiarioLoaded.conyugeGeneroId;
+    conyugeNombre1Ctrl.text = alianzaBeneficiarioLoaded.conyugeNombre1;
+    conyugeApellido1Ctrl.text = alianzaBeneficiarioLoaded.conyugeApellido1;
+    conyugeNombre2Ctrl.text = alianzaBeneficiarioLoaded.conyugeNombre2;
+    conyugeApellido2Ctrl.text = alianzaBeneficiarioLoaded.conyugeApellido2;
+    conyugeGeneroId = alianzaBeneficiarioLoaded.conyugeGeneroId;
 
     if (conyugeFechaNacimiento != '') {
       conyugeFechaNacimientoCtrl.text =
@@ -91,29 +82,26 @@ class _ConyugeFormState extends State<ConyugeForm> {
     }
 
     ingresosMensualesCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.conyugeIngresosMensuales;
+        alianzaBeneficiarioLoaded.conyugeIngresosMensuales;
 
-    conyugeGrupoEspecialId =
-        perfilPreInversionBeneficiarioLoaded.conyugeGrupoEspecialId;
+    conyugeGrupoEspecialId = alianzaBeneficiarioLoaded.conyugeGrupoEspecialId;
   }
 
   @override
   Widget build(BuildContext context) {
-    final perfilPreInversionBeneficiarioCubit =
-        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
+    final alianzaBeneficiarioCubit =
+        BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
-    return BlocListener<PerfilPreInversionBeneficiarioCubit,
-        PerfilPreInversionBeneficiarioState>(
+    return BlocListener<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
       listener: (context, state) {
-        if (state is PerfilPreInversionBeneficiarioLoaded) {
-          final perfilPreInversionBeneficiarioLoaded =
-              state.perfilPreInversionBeneficiarioLoaded;
+        if (state is AlianzaBeneficiarioLoaded) {
+          final alianzaBeneficiarioLoaded = state.alianzaBeneficiarioLoaded;
 
-          loadConyuge(perfilPreInversionBeneficiarioLoaded);
+          loadConyuge(alianzaBeneficiarioLoaded);
         }
       },
-      child: BlocBuilder<PerfilPreInversionBeneficiarioCubit,
-          PerfilPreInversionBeneficiarioState>(builder: (context, state) {
+      child: BlocBuilder<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
+          builder: (context, state) {
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -145,7 +133,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           return null;
                         },
                         onChanged: (String? value) {
-                          perfilPreInversionBeneficiarioCubit
+                          alianzaBeneficiarioCubit
                               .changeConyugeTipoIdentificacion(value);
                         },
                         decoration: CustomInputDecoration.inputDecoration(
@@ -168,8 +156,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                     return null;
                   }),
                   onSaved: (String? newValue) {
-                    perfilPreInversionBeneficiarioCubit
-                        .changeConyugeDocumento(newValue);
+                    alianzaBeneficiarioCubit.changeConyugeDocumento(newValue);
                   }),
               const SizedBox(height: 20),
               TextFormField(
@@ -204,9 +191,8 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           conyugeFechaExpedicionDocumentoCtrl.text =
                               dateFormat.format(newDate);
 
-                          perfilPreInversionBeneficiarioCubit
-                              .changeConyugeFechaExpedicion(
-                                  conyugeFechaExpedicionDocumentoCtrl.text);
+                          alianzaBeneficiarioCubit.changeConyugeFechaExpedicion(
+                              conyugeFechaExpedicionDocumentoCtrl.text);
                         },
                         icon: const Icon(Icons.calendar_today))),
               ),
@@ -227,7 +213,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           return null;
                         }),
                         onSaved: (String? newValue) {
-                          perfilPreInversionBeneficiarioCubit
+                          alianzaBeneficiarioCubit
                               .changeConyugeNombre1(newValue);
                         }),
                   ),
@@ -245,7 +231,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           return null;
                         }),
                         onSaved: (String? newValue) {
-                          perfilPreInversionBeneficiarioCubit
+                          alianzaBeneficiarioCubit
                               .changeConyugeApellido1(newValue);
                         }),
                   )
@@ -268,7 +254,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           return null;
                         }),
                         onSaved: (String? newValue) {
-                          perfilPreInversionBeneficiarioCubit
+                          alianzaBeneficiarioCubit
                               .changeConyugeNombre2(newValue);
                         }),
                   ),
@@ -286,7 +272,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           return null;
                         }),
                         onSaved: (String? newValue) {
-                          perfilPreInversionBeneficiarioCubit
+                          alianzaBeneficiarioCubit
                               .changeConyugeApellido2(newValue);
                         }),
                   )
@@ -312,8 +298,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           return null;
                         },
                         onChanged: (String? value) {
-                          perfilPreInversionBeneficiarioCubit
-                              .changeConyugeGenero(value);
+                          alianzaBeneficiarioCubit.changeConyugeGenero(value);
                         },
                         hint: const Text('Género'));
                   }
@@ -352,9 +337,8 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           conyugeFechaNacimientoCtrl.text =
                               dateFormat.format(newDate);
 
-                          perfilPreInversionBeneficiarioCubit
-                              .changeConyugeFechaNacimiento(
-                                  conyugeFechaNacimientoCtrl.text);
+                          alianzaBeneficiarioCubit.changeConyugeFechaNacimiento(
+                              conyugeFechaNacimientoCtrl.text);
                         },
                         icon: const Icon(Icons.calendar_today))),
               ),
@@ -375,7 +359,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           return null;
                         }),
                         onSaved: (String? newValue) {
-                          perfilPreInversionBeneficiarioCubit
+                          alianzaBeneficiarioCubit
                               .changeConyugeIngresosMensuales(newValue);
                         }),
                   ),
@@ -403,7 +387,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                                 return null;
                               },
                               onChanged: (String? value) {
-                                perfilPreInversionBeneficiarioCubit
+                                alianzaBeneficiarioCubit
                                     .changeConyugeGrupoEspecial(value);
                               },
                               hint: const Text('Grupo Especial'));

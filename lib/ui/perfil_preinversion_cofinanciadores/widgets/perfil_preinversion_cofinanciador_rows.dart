@@ -72,63 +72,54 @@ class PerfilPreInversionCofinanciadoresRows extends StatelessWidget {
           DataCell(Text(perfilPreInversionCofinanciador.cofinanciadorId)),
           DataCell(IconButton(
               onPressed: () {
-                final perfilPreInversionId = vPerfilPreInversionCubit
+                final vPerfilPreInversionId = vPerfilPreInversionCubit
                     .state.vPerfilPreInversion!.perfilPreInversionId;
 
-                perfilPreInversionCofinanciadorCubit
-                    .selectPerfilPreInversionCofinanciador(
-                        perfilPreInversionCofinanciador);
+                String cofinanciadorId = selectPerfilPreInversionCofinanciador(
+                    perfilPreInversionCofinanciador,
+                    perfilPreInversionCofinanciadorCubit);
+
+                String desembolsoId =
+                    selectPerfilPreInversionCofinanciadorDesembolso(
+                        perfilPreInversionCofinanciadorDesembolsoCubit,
+                        vPerfilPreInversionId,
+                        cofinanciadorId);
+
+                String actividadFinancieraId =
+                    selectPerfilPreInversionCofinanciadorActividadFinanciera(
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit,
+                        vPerfilPreInversionId,
+                        cofinanciadorId,
+                        desembolsoId);
+
+                String rubroId = selectPerfilPreInversionCofinanciadorRubro(
+                    perfilPreInversionCofinanciadorRubroCubit,
+                    vPerfilPreInversionId,
+                    cofinanciadorId,
+                    actividadFinancieraId,
+                    desembolsoId);
 
                 perfilPreInversionCofinanciadorCubit.isEditing();
 
-                perfilPreInversionCofinanciadorDesembolsoCubit
-                    .selectPerfilPreInversionCofinanciadorDesembolso(
-                        perfilPreInversionId,
-                        perfilPreInversionCofinanciador.cofinanciadorId,
-                        perfilPreInversionCofinanciadorDesembolsoCubit
-                            .state
-                            .perfilPreInversionCofinanciadorDesembolso
-                            .desembolsoId);
-                perfilPreInversionCofinanciadorActividadFinancieraCubit
-                    .selectPerfilPreInversionCofinanciadorActividadFinanciera(
-                        perfilPreInversionId,
-                        perfilPreInversionCofinanciador.cofinanciadorId,
-                        perfilPreInversionCofinanciadorActividadFinancieraCubit
-                            .state
-                            .perfilPreInversionCofinanciadorActividadFinanciera
-                            .actividadFinancieraId,
-                        perfilPreInversionCofinanciadorActividadFinancieraCubit
-                            .state
-                            .perfilPreInversionCofinanciadorActividadFinanciera
-                            .desembolsoId);
-                perfilPreInversionCofinanciadorRubroCubit
-                    .selectPerfilPreInversionCofinanciadorRubro(
-                        perfilPreInversionId,
-                        perfilPreInversionCofinanciador.cofinanciadorId,
-                        perfilPreInversionCofinanciadorRubroCubit
-                            .state.perfilPreInversionCofinanciadorRubro.desembolsoId,
-                        perfilPreInversionCofinanciadorRubroCubit
-                            .state
-                            .perfilPreInversionCofinanciadorRubro
-                            .actividadFinancieraId,
-                        perfilPreInversionCofinanciadorRubroCubit.state
-                            .perfilPreInversionCofinanciadorRubro.rubroId);
-
                 perfilPreInversionCofinanciadorDesembolsosBloc.add(
                     GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-                        perfilPreInversionId: perfilPreInversionId,
-                        cofinanciadorId:
-                            perfilPreInversionCofinanciador.cofinanciadorId));
+                  perfilPreInversionId: vPerfilPreInversionId,
+                  cofinanciadorId: cofinanciadorId,
+                  desembolsoId: desembolsoId,
+                ));
                 perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
                     GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
-                        perfilPreInversionId: perfilPreInversionId,
-                        cofinanciadorId:
-                            perfilPreInversionCofinanciador.cofinanciadorId));
+                        perfilPreInversionId: vPerfilPreInversionId,
+                        cofinanciadorId: cofinanciadorId,
+                        actividadFinancieraId: actividadFinancieraId,
+                        desembolsoId: desembolsoId));
                 perfilPreInversionCofinanciadorRubrosBloc.add(
                     GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
-                        perfilPreInversionId: perfilPreInversionId,
-                        cofinanciadorId:
-                            perfilPreInversionCofinanciador.cofinanciadorId));
+                        perfilPreInversionId: vPerfilPreInversionId,
+                        cofinanciadorId: cofinanciadorId,
+                        actividadFinancieraId: actividadFinancieraId,
+                        desembolsoId: desembolsoId,
+                        rubroId: rubroId));
 
                 Navigator.pushNamed(
                   context,
@@ -141,5 +132,64 @@ class PerfilPreInversionCofinanciadoresRows extends StatelessWidget {
         ]);
       }),
     );
+  }
+
+  String selectPerfilPreInversionCofinanciador(
+      PerfilPreInversionCofinanciadorEntity perfilPreInversionCofinanciador,
+      PerfilPreInversionCofinanciadorCubit
+          perfilPreInversionCofinanciadorCubit) {
+    final cofinanciadorId = perfilPreInversionCofinanciador.cofinanciadorId;
+
+    perfilPreInversionCofinanciadorCubit
+        .selectPerfilPreInversionCofinanciador(perfilPreInversionCofinanciador);
+    return cofinanciadorId;
+  }
+
+  String selectPerfilPreInversionCofinanciadorDesembolso(
+      PerfilPreInversionCofinanciadorDesembolsoCubit
+          perfilPreInversionCofinanciadorDesembolsoCubit,
+      String vPerfilPreInversionId,
+      String cofinanciadorId) {
+    perfilPreInversionCofinanciadorDesembolsoCubit
+        .selectPerfilPreInversionCofinanciadorDesembolso(
+            vPerfilPreInversionId, cofinanciadorId);
+
+    final desembolsoId = perfilPreInversionCofinanciadorDesembolsoCubit
+        .state.perfilPreInversionCofinanciadorDesembolso.desembolsoId;
+    return desembolsoId;
+  }
+
+  String selectPerfilPreInversionCofinanciadorActividadFinanciera(
+      PerfilPreInversionCofinanciadorActividadFinancieraCubit
+          perfilPreInversionCofinanciadorActividadFinancieraCubit,
+      String vPerfilPreInversionId,
+      String cofinanciadorId,
+      String desembolsoId) {
+    perfilPreInversionCofinanciadorActividadFinancieraCubit
+        .selectPerfilPreInversionCofinanciadorActividadFinanciera(
+            vPerfilPreInversionId, cofinanciadorId, desembolsoId);
+
+    final actividadFinancieraId =
+        perfilPreInversionCofinanciadorActividadFinancieraCubit
+            .state
+            .perfilPreInversionCofinanciadorActividadFinanciera
+            .actividadFinancieraId;
+    return actividadFinancieraId;
+  }
+
+  String selectPerfilPreInversionCofinanciadorRubro(
+      PerfilPreInversionCofinanciadorRubroCubit
+          perfilPreInversionCofinanciadorRubroCubit,
+      String vPerfilPreInversionId,
+      String cofinanciadorId,
+      String actividadFinancieraId,
+      String desembolsoId) {
+    perfilPreInversionCofinanciadorRubroCubit
+        .selectPerfilPreInversionCofinanciadorRubro(vPerfilPreInversionId,
+            cofinanciadorId, actividadFinancieraId, desembolsoId);
+
+    final rubroId = perfilPreInversionCofinanciadorRubroCubit
+        .state.perfilPreInversionCofinanciadorRubro.rubroId;
+    return rubroId;
   }
 }

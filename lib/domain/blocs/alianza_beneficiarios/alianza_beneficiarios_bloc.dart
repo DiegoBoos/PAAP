@@ -8,7 +8,7 @@ part 'alianza_beneficiarios_event.dart';
 part 'alianza_beneficiarios_state.dart';
 
 class AlianzasBeneficiariosBloc
-    extends Bloc<AlianzasBeneficiariosEvent, AlianzasBeneficiariostate> {
+    extends Bloc<AlianzasBeneficiariosEvent, AlianzasBeneficiariosState> {
   final AlianzaBeneficiarioUsecaseDB alianzaBeneficiarioUsecaseDB;
   AlianzasBeneficiariosBloc({required this.alianzaBeneficiarioUsecaseDB})
       : super(AlianzasBeneficiariosInitial()) {

@@ -35,22 +35,6 @@ class PerfilPreInversionCofinanciadorCubit
         (data) => emit(PerfilPreInversionCofinanciadorSaved()));
   }
 
-  void getPerfilPreInversionCofinanciadorDB(String id) async {
-    final result = await perfilPreInversionCofinanciadorDB
-        .getPerfilPreInversionCofinanciadorUsecaseDB(id);
-    result.fold(
-        (failure) => emit(
-            PerfilPreInversionCofinanciadorError(failure.properties.first)),
-        (data) {
-      if (data == null) {
-        emit(PerfilPreInversionCofinanciadorError(
-            'No se pudo cargar la información del confinanciador de preinversion'));
-      } else {
-        emit(PerfilPreInversionCofinanciadorChanged(data));
-      }
-    });
-  }
-
   void changePerfilPreInversionId(String? value) {
     final perfilPreInversionIdChanged = state.perfilPreInversionCofinanciador
         .copyWith(perfilPreInversionId: value);

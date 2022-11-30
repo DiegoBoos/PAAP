@@ -41,14 +41,66 @@ class PerfilPreInversionBeneficiarioCubit
     result.fold(
         (failure) =>
             emit(PerfilPreInversionBeneficiarioError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionBeneficiarioSaved(
-            perfilPreInversionBeneficiario:
-                perfilPreInversionBeneficiarioEntity)));
+        (data) => emit(PerfilPreInversionBeneficiarioSaved()));
   }
 
   void selectPerfilPreinversionBeneficiario(
       PerfilPreInversionBeneficiarioEntity perfilPreInversionBeneficiario) {
     emit(PerfilPreInversionBeneficiarioLoaded(perfilPreInversionBeneficiario));
+  }
+
+  void changeMunicipioId(String value) {
+    final municipioChanged =
+        state.perfilPreInversionBeneficiario.copyWith(municipioId: value);
+    emit(PerfilPreInversionBeneficiarioChanged(municipioChanged));
+  }
+
+  void changeVeredaId(String value) {
+    final veredaChanged =
+        state.perfilPreInversionBeneficiario.copyWith(veredaId: value);
+    emit(PerfilPreInversionBeneficiarioChanged(veredaChanged));
+  }
+
+  void changeTipoTenencia(String? value) {
+    final tipoTenenciaChanged =
+        state.perfilPreInversionBeneficiario.copyWith(tipoTenenciaId: value);
+    emit(PerfilPreInversionBeneficiarioChanged(tipoTenenciaChanged));
+  }
+
+  void changeAreaFinca(String? newValue) {
+    final areaFincaChanged =
+        state.perfilPreInversionBeneficiario.copyWith(areaFinca: newValue);
+    emit(PerfilPreInversionBeneficiarioChanged(areaFincaChanged));
+  }
+
+  void changeAreaProyecto(String? newValue) {
+    final areaProyectoChanged =
+        state.perfilPreInversionBeneficiario.copyWith(areaProyecto: newValue);
+    emit(PerfilPreInversionBeneficiarioChanged(areaProyectoChanged));
+  }
+
+  void changeAsociado(String? value) {
+    final asociadoChanged = state.perfilPreInversionBeneficiario
+        .copyWith(asociado: value.toString());
+    emit(PerfilPreInversionBeneficiarioChanged(asociadoChanged));
+  }
+
+  void changeConocePerfil(String? value) {
+    final conocePerfilChanged = state.perfilPreInversionBeneficiario
+        .copyWith(conocePerfil: value.toString());
+    emit(PerfilPreInversionBeneficiarioChanged(conocePerfilChanged));
+  }
+
+  void changeFueBeneficiado(String? value) {
+    final fueBeneficiadoChanged = state.perfilPreInversionBeneficiario
+        .copyWith(fueBeneficiado: value.toString());
+    emit(PerfilPreInversionBeneficiarioChanged(fueBeneficiadoChanged));
+  }
+
+  void changeCualBeneficio(String? newValue) {
+    final cualBeneficioChanged =
+        state.perfilPreInversionBeneficiario.copyWith(cualBeneficio: newValue);
+    emit(PerfilPreInversionBeneficiarioChanged(cualBeneficioChanged));
   }
 
   void changeResidencia(String? value) {
@@ -231,6 +283,13 @@ class PerfilPreInversionBeneficiarioCubit
     emit(PerfilPreInversionBeneficiarioChanged(conyugeGrupoEspecialChanged));
   }
 
+  void changeConyugeIngresosMensuales(String? newValue) {
+    final conyugeIngresosMensualesChanged = state.perfilPreInversionBeneficiario
+        .copyWith(conyugeIngresosMensuales: newValue);
+    emit(
+        PerfilPreInversionBeneficiarioChanged(conyugeIngresosMensualesChanged));
+  }
+
   void changeCalificacionSisben(String? newValue) {
     final calificacionSisbenChanged = state.perfilPreInversionBeneficiario
         .copyWith(calificacionSisben: newValue);
@@ -253,6 +312,12 @@ class PerfilPreInversionBeneficiarioCubit
     final longitudChanged =
         state.perfilPreInversionBeneficiario.copyWith(longitud: newValue);
     emit(PerfilPreInversionBeneficiarioChanged(longitudChanged));
+  }
+
+  void changeCedulaCatastral(String? newValue) {
+    final cedulaCatastralChanged = state.perfilPreInversionBeneficiario
+        .copyWith(cedulaCatastral: newValue);
+    emit(PerfilPreInversionBeneficiarioChanged(cedulaCatastralChanged));
   }
 
   void changeCotizanteBeps(bool? value) {

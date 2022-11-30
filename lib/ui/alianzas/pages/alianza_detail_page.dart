@@ -5,7 +5,6 @@ import 'package:paap/ui/alianzas/widgets/alianzas_drawer.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
-import '../widgets/alianza_form.dart';
 
 class AlianzaDetailPage extends StatelessWidget {
   const AlianzaDetailPage({super.key});
@@ -45,7 +44,6 @@ class AlianzaDetailPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 30),
           child: Text('Información Básica', style: Styles.subtitleStyle),
         ),
-        const AlianzaForm()
       ]),
     );
   }

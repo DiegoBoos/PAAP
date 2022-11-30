@@ -13,16 +13,14 @@ import '../../utils/styles.dart';
 import 'package:paap/domain/entities/experiencia_agricola_entity.dart';
 import 'package:paap/domain/entities/experiencia_pecuaria_entity.dart';
 
-class BeneficiarioExperienciaForm extends StatefulWidget {
-  const BeneficiarioExperienciaForm({super.key});
+class AlianzaExperienciaForm extends StatefulWidget {
+  const AlianzaExperienciaForm({super.key});
 
   @override
-  State<BeneficiarioExperienciaForm> createState() =>
-      _BeneficiarioExperienciaFormState();
+  State<AlianzaExperienciaForm> createState() => _AlianzaExperienciaFormState();
 }
 
-class _BeneficiarioExperienciaFormState
-    extends State<BeneficiarioExperienciaForm> {
+class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
   String experienciaAgricolaTipoActividadProductivaId = '';
   String experienciaAgricolaFrecuenciaId = '';
 

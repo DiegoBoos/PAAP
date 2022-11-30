@@ -2,25 +2,24 @@ import 'package:dartz/dartz.dart';
 
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
-import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
-import '../../../domain/repositories/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_repository_db.dart';
-import '../../datasources/local/perfil_preinversion_beneficiario_local_ds.dart';
+import '../../../domain/entities/alianza_beneficiario_entity.dart';
+import '../../../domain/repositories/alianza_beneficiario/alianza_beneficiario_repository_db.dart';
+import '../../datasources/local/alianza_beneficiario_local_ds.dart';
 
-class PerfilPreInversionBeneficiarioRepositoryDBImpl
-    implements PerfilPreInversionBeneficiarioRepositoryDB {
-  final PerfilPreInversionBeneficiarioLocalDataSource
-      perfilPreInversionBeneficiarioLocalDataSource;
+class AlianzaBeneficiarioRepositoryDBImpl
+    implements AlianzaBeneficiarioRepositoryDB {
+  final AlianzaBeneficiarioLocalDataSource alianzaBeneficiarioLocalDataSource;
 
-  PerfilPreInversionBeneficiarioRepositoryDBImpl(
-      {required this.perfilPreInversionBeneficiarioLocalDataSource});
+  AlianzaBeneficiarioRepositoryDBImpl(
+      {required this.alianzaBeneficiarioLocalDataSource});
 
   @override
-  Future<Either<Failure, List<PerfilPreInversionBeneficiarioEntity>>>
-      getPerfilesPreInversionesBeneficiariosProduccionRepositoryDB() async {
+  Future<Either<Failure, List<AlianzaBeneficiarioEntity>>>
+      getAlianzasBeneficiariosProduccionRepositoryDB() async {
     try {
       final perfilesPreInversionesBeneficiariosDB =
-          await perfilPreInversionBeneficiarioLocalDataSource
-              .getPerfilesPreInversionesBeneficiariosProduccionDB();
+          await alianzaBeneficiarioLocalDataSource
+              .getAlianzasBeneficiariosProduccionDB();
 
       return Right(perfilesPreInversionesBeneficiariosDB);
     } on ServerFailure catch (e) {
@@ -31,14 +30,13 @@ class PerfilPreInversionBeneficiarioRepositoryDBImpl
   }
 
   @override
-  Future<Either<Failure, List<PerfilPreInversionBeneficiarioEntity>>>
-      getPerfilPreInversionBeneficiariosRepositoryDB() async {
+  Future<Either<Failure, List<AlianzaBeneficiarioEntity>>>
+      getAlianzasBeneficiariosRepositoryDB() async {
     try {
-      final perfilPreInversionBeneficiariosDB =
-          await perfilPreInversionBeneficiarioLocalDataSource
-              .getPerfilPreInversionBeneficiariosDB();
+      final alianzaBeneficiariosDB =
+          await alianzaBeneficiarioLocalDataSource.getAlianzasBeneficiariosDB();
 
-      return Right(perfilPreInversionBeneficiariosDB);
+      return Right(alianzaBeneficiariosDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -47,16 +45,14 @@ class PerfilPreInversionBeneficiarioRepositoryDBImpl
   }
 
   @override
-  Future<Either<Failure, PerfilPreInversionBeneficiarioEntity?>>
-      getPerfilPreInversionBeneficiarioRepositoryDB(
+  Future<Either<Failure, AlianzaBeneficiarioEntity?>>
+      getAlianzaBeneficiarioRepositoryDB(
           String perfilPreInversionId, String beneficiarioId) async {
     try {
-      final perfilPreInversionBeneficiarioDB =
-          await perfilPreInversionBeneficiarioLocalDataSource
-              .getPerfilPreInversionBeneficiarioDB(
-                  perfilPreInversionId, beneficiarioId);
+      final alianzaBeneficiarioDB = await alianzaBeneficiarioLocalDataSource
+          .getAlianzaBeneficiarioDB(perfilPreInversionId, beneficiarioId);
 
-      return Right(perfilPreInversionBeneficiarioDB);
+      return Right(alianzaBeneficiarioDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -65,13 +61,11 @@ class PerfilPreInversionBeneficiarioRepositoryDBImpl
   }
 
   @override
-  Future<Either<Failure, int>> savePerfilPreInversionBeneficiariosRepositoryDB(
-      List<PerfilPreInversionBeneficiarioEntity>
-          perfilPreInversionBeneficiarioEntity) async {
+  Future<Either<Failure, int>> saveAlianzasBeneficiariosRepositoryDB(
+      List<AlianzaBeneficiarioEntity> alianzaBeneficiarioEntity) async {
     try {
-      final result = await perfilPreInversionBeneficiarioLocalDataSource
-          .savePerfilPreInversionBeneficiarios(
-              perfilPreInversionBeneficiarioEntity);
+      final result = await alianzaBeneficiarioLocalDataSource
+          .saveAlianzasBeneficiarios(alianzaBeneficiarioEntity);
       return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
@@ -81,15 +75,12 @@ class PerfilPreInversionBeneficiarioRepositoryDBImpl
   }
 
   @override
-  Future<Either<Failure, int>> savePerfilPreInversionBeneficiarioRepositoryDB(
-      PerfilPreInversionBeneficiarioEntity
-          perfilPreInversionBeneficiarioEntity) async {
+  Future<Either<Failure, int>> saveAlianzaBeneficiarioRepositoryDB(
+      AlianzaBeneficiarioEntity alianzaBeneficiarioEntity) async {
     try {
-      final perfilPreInversionBeneficiarioDB =
-          await perfilPreInversionBeneficiarioLocalDataSource
-              .savePerfilPreInversionBeneficiarioDB(
-                  perfilPreInversionBeneficiarioEntity);
-      return Right(perfilPreInversionBeneficiarioDB);
+      final alianzaBeneficiarioDB = await alianzaBeneficiarioLocalDataSource
+          .saveAlianzaBeneficiarioDB(alianzaBeneficiarioEntity);
+      return Right(alianzaBeneficiarioDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -99,12 +90,12 @@ class PerfilPreInversionBeneficiarioRepositoryDBImpl
 
   @override
   Future<Either<Failure, int>>
-      updatePerfilesPreInversionesBeneficiariosProduccionDBRepositoryDB(
-          List<PerfilPreInversionBeneficiarioEntity>
+      updateAlianzasBeneficiariosProduccionDBRepositoryDB(
+          List<AlianzaBeneficiarioEntity>
               perfilesPreInversionesBeneficiariosEntity) async {
     try {
-      final result = await perfilPreInversionBeneficiarioLocalDataSource
-          .updatePerfilesPreInversionesBeneficiariosProduccionDB(
+      final result = await alianzaBeneficiarioLocalDataSource
+          .updateAlianzasBeneficiariosProduccionDB(
               perfilesPreInversionesBeneficiariosEntity);
 
       return Right(result);

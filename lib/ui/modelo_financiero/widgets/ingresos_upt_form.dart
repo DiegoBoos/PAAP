@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/domain/entities/actividad_financiera_entity.dart';
 import 'package:paap/domain/usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 
-import '../../../domain/cubits/actividad/actividad_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
 import '../../../domain/cubits/producto/producto_cubit.dart';
 import '../../../domain/cubits/rubro/rubro_cubit.dart';
@@ -18,7 +18,9 @@ import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class IngresosUPTForm extends StatefulWidget {
-  const IngresosUPTForm({super.key});
+  const IngresosUPTForm(this.actividadesFinancieras, {super.key});
+
+  final List<ActividadFinancieraEntity> actividadesFinancieras;
 
   @override
   State<IngresosUPTForm> createState() => _IngresosUPTFormState();
@@ -126,25 +128,20 @@ class _IngresosUPTFormState extends State<IngresosUPTForm> {
                   const Text('Cantidad Esperada Por Año',
                       style: Styles.titleStyle),
                   const SizedBox(height: 10),
-                  BlocBuilder<ActividadCubit, ActividadState>(
-                    builder: (context, state) {
-                      if (state is ActividadesLoaded) {
-                        return DropdownButtonFormField(
-                            isExpanded: true,
-                            items: state.actividades!
-                                .map<DropdownMenuItem<String>>(
-                                    (ActividadEntity value) {
-                              return DropdownMenuItem<String>(
-                                value: value.actividadId,
-                                child: Text(value.nombre),
-                              );
-                            }).toList(),
-                            onChanged: (String? value) {},
-                            hint: const Text('Actividad'));
-                      }
-                      return Container();
-                    },
-                  ),
+                  DropdownButtonFormField(
+                      isExpanded: true,
+                      items: widget.actividadesFinancieras
+                          .where((actividadFinanciera) =>
+                              actividadFinanciera.tipoMovimientoId == '3')
+                          .map<DropdownMenuItem<String>>(
+                              (ActividadFinancieraEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.actividadFinancieraId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) {},
+                      hint: const Text('Actividad Financiera')),
                   const SizedBox(height: 20),
                   BlocBuilder<RubroCubit, RubroState>(
                     builder: (context, state) {
