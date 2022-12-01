@@ -11,7 +11,7 @@ class AgrupacionCubit extends Cubit<AgrupacionState> {
 
   AgrupacionCubit({required this.agrupacionDB}) : super(AgrupacionesInitial());
 
-  void getAgrupacionesDB(String convocatoriaId) async {
+  Future<void> getAgrupacionesDB(String convocatoriaId) async {
     final result = await agrupacionDB.getAgrupacionesUsecaseDB(convocatoriaId);
     result.fold((failure) => emit(AgrupacionesError(failure.properties.first)),
         (data) => emit(AgrupacionesLoaded(data)));

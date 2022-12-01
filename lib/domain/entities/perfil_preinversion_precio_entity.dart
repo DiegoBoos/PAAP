@@ -15,6 +15,23 @@ class PerfilPreInversionPrecioEntity {
   String unidadId;
   String recordStatus;
 
+  PerfilPreInversionPrecioEntity copyWith(
+      {String? perfilPreInversionId,
+      String? productoId,
+      String? tipoCalidadId,
+      String? precio,
+      String? unidadId,
+      String? recordStatus}) {
+    return PerfilPreInversionPrecioEntity(
+      perfilPreInversionId: perfilPreInversionId ?? this.perfilPreInversionId,
+      productoId: productoId ?? this.productoId,
+      tipoCalidadId: tipoCalidadId ?? this.tipoCalidadId,
+      precio: precio ?? this.precio,
+      unidadId: unidadId ?? this.unidadId,
+      recordStatus: recordStatus ?? this.recordStatus,
+    );
+  }
+
   factory PerfilPreInversionPrecioEntity.fromJson(Map<String, dynamic> json) =>
       PerfilPreInversionPrecioEntity(
         perfilPreInversionId: json["PerfilPreInversionId"],

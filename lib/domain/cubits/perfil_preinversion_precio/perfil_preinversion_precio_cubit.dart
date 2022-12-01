@@ -24,4 +24,10 @@ class PerfilPreInversionPrecioCubit
   }
 
   void initState() => emit(PerfilPreInversionPrecioInitial());
+
+  void changePrecio(String? newValue) {
+    final precioChanged =
+        state.perfilPreInversionPrecio.copyWith(precio: newValue);
+    emit(PerfilPreInversionPrecioChanged(precioChanged));
+  }
 }

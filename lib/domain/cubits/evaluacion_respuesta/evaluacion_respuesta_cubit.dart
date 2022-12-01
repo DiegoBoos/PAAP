@@ -10,44 +10,63 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
   final EvaluacionRespuestaUsecaseDB evaluacionRespuestaDB;
 
   EvaluacionRespuestaCubit({required this.evaluacionRespuestaDB})
-      : super(EvaluacionesRespuestasInitial());
+      : super(EvaluacionRespuestaInitial());
 
-  void initState() => emit(EvaluacionesRespuestasInitial());
+  void initState() => emit(EvaluacionRespuestaInitial());
 
-  Future<List<EvaluacionRespuestaEntity>?> getEvaluacionesRespuestasDB(
-      String criterioId, String evaluacionId) async {
-    final result = await evaluacionRespuestaDB
-        .getEvaluacionesRespuestasUsecaseDB(criterioId, evaluacionId);
-    return result.fold((failure) => [], (data) => data);
-  }
-
-  selectEvaluacionesRespuestasDB(
-    List<EvaluacionRespuestaEntity> evaluacionesRespuestas,
-  ) {
-    emit(EvaluacionesRespuestasLoaded(evaluacionesRespuestas));
-  }
-
-  void saveEvaluacionesRespuestasDB(
-      List<EvaluacionRespuestaEntity> evaluacionesRespuestas,
-      String perfilId) async {
-    final result = await evaluacionRespuestaDB
-        .saveEvaluacionesRespuestasUsecaseDB(evaluacionesRespuestas);
+  void getEvaluacionRespuestaDB(String criterioId, String evaluacionId) async {
+    final result = await evaluacionRespuestaDB.getEvaluacionRespuestaUsecaseDB(
+        criterioId, evaluacionId);
     result.fold(
-        (failure) =>
-            emit(EvaluacionesRespuestasError(failure.properties.first)),
-        (data) => emit(EvaluacionesRespuestasSaved()));
+        (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
+        (data) => emit(EvaluacionRespuestaLoaded(data!)));
+  }
+
+  selectEvaluacionRespuestaDB(
+    EvaluacionRespuestaEntity evaluacionRespuesta,
+  ) {
+    emit(EvaluacionRespuestaLoaded(evaluacionRespuesta));
+  }
+
+  void saveEvaluacionRespuestaDB(
+      EvaluacionRespuestaEntity evaluacionRespuestaEntity,
+      String perfilId) async {
+    final result = await evaluacionRespuestaDB.saveEvaluacionRespuestaUsecaseDB(
+        evaluacionRespuestaEntity, perfilId);
+    result.fold(
+        (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
+        (data) => emit(EvaluacionRespuestaSaved()));
   }
 
   void clearEvaluacionRespuestasDB() async {
     final result =
         await evaluacionRespuestaDB.clearEvaluacionesRespuestasUsecaseDB();
     result.fold(
-        (failure) =>
-            emit(EvaluacionesRespuestasError(failure.properties.first)),
-        (data) => emit(EvaluacionesRespuestasCleared()));
+        (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
+        (data) => emit(EvaluacionRespuestaCleared()));
   }
 
-  void updateList(List<EvaluacionRespuestaEntity>? evaluacionesRespuestas) {
-    emit(EvaluacionesRespuestasChanged(evaluacionesRespuestas!));
+  void changeCriterio(String criterioId) {
+    final currentState = state;
+
+    final newEvaluacionRespuesta =
+        currentState.evaluacionRespuesta!.copyWith(criterioId: criterioId);
+    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+  }
+
+  void changeOpcion(String opcionId) {
+    final currentState = state;
+
+    final newEvaluacionRespuesta =
+        currentState.evaluacionRespuesta!.copyWith(opcionId: opcionId);
+    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+  }
+
+  void changeObservacion(String observacion) {
+    final currentState = state;
+
+    final newEvaluacionRespuesta =
+        currentState.evaluacionRespuesta!.copyWith(observacion: observacion);
+    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
   }
 }

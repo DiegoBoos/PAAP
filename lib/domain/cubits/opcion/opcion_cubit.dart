@@ -11,9 +11,10 @@ class OpcionCubit extends Cubit<OpcionState> {
 
   OpcionCubit({required this.opcionDB}) : super(OpcionesInitial());
 
-  Future<List<OpcionEntity>?> getOpcionesDB() async {
-    final result = await opcionDB.getOpcionesUsecaseDB();
-    return result.fold((failure) => [], (data) => data);
+  void getOpcionesDB(String criterioId) async {
+    final result = await opcionDB.getOpcionesUsecaseDB(criterioId);
+    result.fold((failure) => emit(OpcionesError(failure.properties.first)),
+        (data) => emit(OpcionesLoaded(data)));
   }
 
   void initState() => emit(OpcionesInitial());

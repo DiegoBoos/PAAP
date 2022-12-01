@@ -1,47 +1,41 @@
 part of 'evaluacion_respuesta_cubit.dart';
 
 abstract class EvaluacionRespuestaState extends Equatable {
-  final List<EvaluacionRespuestaEntity> evaluacionesRespuestas;
-  const EvaluacionRespuestaState({required this.evaluacionesRespuestas});
+  final EvaluacionRespuestaEntity? evaluacionRespuesta;
+  const EvaluacionRespuestaState({this.evaluacionRespuesta});
 
   @override
-  List<Object?> get props => [evaluacionesRespuestas];
+  List<Object?> get props => [evaluacionRespuesta];
 }
 
-class EvaluacionesRespuestasInitial extends EvaluacionRespuestaState {
-  EvaluacionesRespuestasInitial() : super(evaluacionesRespuestas: []);
+class EvaluacionRespuestaInitial extends EvaluacionRespuestaState {
+  EvaluacionRespuestaInitial()
+      : super(
+            evaluacionRespuesta: EvaluacionRespuestaEntity(
+                criterioId: '',
+                evaluacionId: '',
+                observacion: '',
+                opcionId: '',
+                recordStatus: ''));
 }
 
-class EvaluacionesRespuestasLoading extends EvaluacionRespuestaState {
-  const EvaluacionesRespuestasLoading({required super.evaluacionesRespuestas});
+class EvaluacionRespuestaLoading extends EvaluacionRespuestaState {}
+
+class EvaluacionRespuestaLoaded extends EvaluacionRespuestaState {
+  final EvaluacionRespuestaEntity evaluacionRespuestaLoaded;
+
+  const EvaluacionRespuestaLoaded(this.evaluacionRespuestaLoaded)
+      : super(evaluacionRespuesta: evaluacionRespuestaLoaded);
 }
 
-class EvaluacionesRespuestasLoaded extends EvaluacionRespuestaState {
-  final List<EvaluacionRespuestaEntity> evaluacionesRespuestasLoaded;
+class EvaluacionRespuestaSaved extends EvaluacionRespuestaState {}
 
-  const EvaluacionesRespuestasLoaded(this.evaluacionesRespuestasLoaded)
-      : super(evaluacionesRespuestas: evaluacionesRespuestasLoaded);
-}
+class EvaluacionRespuestaCleared extends EvaluacionRespuestaState {}
 
-class EvaluacionesRespuestasChanged extends EvaluacionRespuestaState {
-  final List<EvaluacionRespuestaEntity> evaluacionesRespuestasChanged;
-
-  const EvaluacionesRespuestasChanged(this.evaluacionesRespuestasChanged)
-      : super(evaluacionesRespuestas: evaluacionesRespuestasChanged);
-}
-
-class EvaluacionesRespuestasSaved extends EvaluacionRespuestaState {
-  EvaluacionesRespuestasSaved() : super(evaluacionesRespuestas: []);
-}
-
-class EvaluacionesRespuestasCleared extends EvaluacionRespuestaState {
-  EvaluacionesRespuestasCleared() : super(evaluacionesRespuestas: []);
-}
-
-class EvaluacionesRespuestasError extends EvaluacionRespuestaState {
+class EvaluacionRespuestaError extends EvaluacionRespuestaState {
   final String message;
 
-  EvaluacionesRespuestasError(this.message) : super(evaluacionesRespuestas: []);
+  const EvaluacionRespuestaError(this.message);
 
   @override
   List<Object?> get props => [message];

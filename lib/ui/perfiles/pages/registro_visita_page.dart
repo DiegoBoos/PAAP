@@ -30,15 +30,20 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
   @override
   void initState() {
     super.initState();
+
+    loadAccesories();
+  }
+
+  void loadAccesories() async {
     final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
     final visitaCubit = BlocProvider.of<VisitaCubit>(context);
     final agrupacionCubit = BlocProvider.of<AgrupacionCubit>(context);
     final evaluacionCubit = BlocProvider.of<EvaluacionCubit>(context);
 
-    visitaCubit.getVisitaDB(vPerfilCubit.state.vPerfil!.perfilId, '1');
-    agrupacionCubit
+    await visitaCubit.getVisitaDB(vPerfilCubit.state.vPerfil!.perfilId, '1');
+    await agrupacionCubit
         .getAgrupacionesDB(vPerfilCubit.state.vPerfil!.convocatoriaId);
-    evaluacionCubit.getEvaluacionDB(vPerfilCubit.state.vPerfil!.perfilId);
+    await evaluacionCubit.getEvaluacionDB(vPerfilCubit.state.vPerfil!.perfilId);
   }
 
   @override
@@ -86,10 +91,10 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
         ),
         BlocListener<EvaluacionRespuestaCubit, EvaluacionRespuestaState>(
           listener: (context, state) {
-            if (state is EvaluacionesRespuestasSaved) {
+            if (state is EvaluacionRespuestaSaved) {
               CustomSnackBar.showSnackBar(
                   context, 'Transacción realizada correctamente', Colors.green);
-            } else if (state is EvaluacionesRespuestasError) {
+            } else if (state is EvaluacionRespuestaError) {
               CustomSnackBar.showSnackBar(
                   context, 'Excepción no controlada', Colors.red);
             }

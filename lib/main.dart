@@ -339,7 +339,10 @@ class MyApp extends StatelessWidget {
             create: (_) => di.locator<PerfilPreInversionPrecioCubit>(),
           ),
           BlocProvider(
-            create: (_) => di.locator<PerfilPreInversionPlanNegocioCubit>(),
+            create: (_) => di.locator<PerfilPreInversionCostosUPTCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<PerfilPreInversionIngresosUPTCubit>(),
           ),
         ],
         child: MaterialApp(

@@ -1959,8 +1959,16 @@ perfilPreInversionPreciosInit() {
 }
 
 perfilPreInversionPlanNegociosInit() {
+  // bloc
+  locator.registerFactory(() => PerfilPreInversionPlanNegociosBloc(
+      perfilPreInversionPlanNegocioUsecaseDB: locator()));
+
   // cubit
-  locator.registerFactory(() => PerfilPreInversionPlanNegocioCubit(
+  locator.registerFactory(() => PerfilPreInversionCostosUPTCubit(
+      perfilPreInversionPlanNegocioDB: locator()));
+
+  // cubit
+  locator.registerFactory(() => PerfilPreInversionIngresosUPTCubit(
       perfilPreInversionPlanNegocioDB: locator()));
 
   // remote usecase
