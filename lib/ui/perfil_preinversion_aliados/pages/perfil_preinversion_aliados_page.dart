@@ -83,7 +83,9 @@ class _PerfilPreInversionAliadosPageState
                         perfilPreInversionAliados: perfilPreInversionAliados,
                         subtitleStyle: Styles.subtitleStyle);
                   }
-                  return Container();
+                  return const NoDataSvg(
+                    title: 'No hay resultados',
+                  );
                 },
               ),
               const SizedBox(height: 30),

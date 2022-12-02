@@ -447,16 +447,16 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
             usuario, data, emit));
   }
 
-  Future<void> savePerfilesPreInversionesPlanNegocios(
+  Future<void> savePerfilesPreInversionesplanesNegocios(
       UsuarioEntity usuario,
       List<PerfilPreInversionPlanNegocioEntity> data,
       Emitter<UploadSyncState> emit) async {
     final result = await perfilPreInversionPlanNegocio
-        .savePerfilesPreInversionesPlanNegociosUsecase(usuario, data);
+        .savePerfilesPreInversionesplanesNegociosUsecase(usuario, data);
     return result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)),
         (data) async =>
-            await updatePerfilesPreInversionesPlanNegociosProduccion(
+            await updatePerfilesPreInversionesplanesNegociosProduccion(
                 usuario, data, emit));
   }
 
@@ -617,12 +617,12 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
   }
 
-  Future<void> updatePerfilesPreInversionesPlanNegociosProduccion(
+  Future<void> updatePerfilesPreInversionesplanesNegociosProduccion(
       UsuarioEntity usuario,
       List<PerfilPreInversionPlanNegocioEntity> data,
       Emitter<UploadSyncState> emit) async {
     final result = await perfilPreInversionPlanNegocioDB
-        .updatePerfilesPreInversionesPlanNegociosProduccionUsecaseDB(data);
+        .updatePerfilesPreInversionesplanesNegociosProduccionUsecaseDB(data);
     result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)), (_) {});
   }
@@ -805,10 +805,10 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
   Future<void> uploadPerfilPreInversionPlanNegocio(
       UsuarioEntity usuario, Emitter<UploadSyncState> emit) async {
     final result = await perfilPreInversionPlanNegocioDB
-        .getPerfilesPreInversionesPlanNegociosProduccionUsecaseDB();
+        .getPerfilesPreInversionesplanesNegociosProduccionUsecaseDB();
     result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)),
-        (data) async =>
-            await savePerfilesPreInversionesPlanNegocios(usuario, data, emit));
+        (data) async => await savePerfilesPreInversionesplanesNegocios(
+            usuario, data, emit));
   }
 }

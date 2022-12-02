@@ -14,26 +14,11 @@ class VisitaRepositoryDBImpl implements VisitaRepositoryDB {
 
   @override
   Future<Either<Failure, VisitaEntity?>> getVisitaRepositoryDB(
-      String perfilId, String tipoVisitaId) async {
-    try {
-      final visitasDB =
-          await visitaLocalDataSource.getVisitaDB(perfilId, tipoVisitaId);
-
-      return Right(visitasDB);
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(e.properties));
-    } on ServerException {
-      return const Left(ServerFailure(['Excepción no controlada']));
-    }
-  }
-
-  @override
-  Future<Either<Failure, int>> saveVisitaRepositoryDB(
       VisitaEntity visitaEntity) async {
     try {
-      final result = await visitaLocalDataSource.saveVisitaDB(visitaEntity);
+      final visitasDB = await visitaLocalDataSource.getVisitaDB(visitaEntity);
 
-      return Right(result);
+      return Right(visitasDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

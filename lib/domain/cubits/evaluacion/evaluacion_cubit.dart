@@ -13,7 +13,7 @@ class EvaluacionCubit extends Cubit<EvaluacionState> {
   Future<void> getEvaluacionDB(String perfilId) async {
     final result = await evaluacionDB.getEvaluacionUsecaseDB(perfilId);
     result.fold((failure) => emit(EvaluacionError(failure.properties.first)),
-        (data) => emit(EvaluacionLoaded(data)));
+        (data) => emit(EvaluacionLoaded(data!)));
   }
 
   void saveEvaluacionDB(EvaluacionEntity evaluacionEntity) async {

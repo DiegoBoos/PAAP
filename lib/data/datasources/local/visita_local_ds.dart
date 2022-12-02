@@ -1,14 +1,13 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../../domain/entities/evaluacion_entity.dart';
-import '../../../domain/entities/visita_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../../../domain/entities/evaluacion_entity.dart';
+import '../../../../domain/entities/visita_entity.dart';
+import '../../../../domain/db/db_config.dart';
 import '../../models/visita_model.dart';
 
 abstract class VisitaLocalDataSource {
-  Future<VisitaModel?> getVisitaDB(String perfilId, String tipoVisitaId);
+  Future<VisitaModel> getVisitaDB(VisitaEntity visitaEntity);
   Future<List<VisitaModel>> getVisitasProduccionDB();
-  Future<int> saveVisitaDB(VisitaEntity visitasEntity);
   Future<int> saveVisitasDB(List<VisitaEntity> visitasEntity);
   Future<int> updateVisitasProduccionDB(List<VisitaEntity> visitasEntity);
   Future<int> clearVisitasDB();
@@ -36,14 +35,29 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
   }
 
   @override
-  Future<VisitaModel?> getVisitaDB(String perfilId, String tipoVisitaId) async {
+  Future<VisitaModel> getVisitaDB(VisitaEntity visitaEntity) async {
     final db = await DBConfig.database;
     final res = await db.query('Visita',
         where: 'PerfilId = ? AND TipoVisitaId = ?',
-        whereArgs: [perfilId, tipoVisitaId]);
+        whereArgs: [visitaEntity.perfilId, visitaEntity.tipoVisitaId]);
 
     if (res.isEmpty) {
-      return null;
+      visitaEntity.recordStatus = 'N';
+      await saveVisitaDB(visitaEntity);
+      EvaluacionEntity newEvaluacion = EvaluacionEntity(
+          evaluacionId: '',
+          perfilId: visitaEntity.perfilId,
+          resumen: '',
+          fortalezas: '',
+          debilidades: '',
+          riesgos: '',
+          finalizado: 'false',
+          usuarioIdCoordinador: '',
+          fechaEvaluacion: '',
+          preAprobado: 'false',
+          recordStatus: 'N');
+      await saveEvaluacionDB(newEvaluacion);
+      return VisitaModel.fromJson(visitaEntity.toJson());
     }
 
     final visitaMap = {for (var e in res[0].entries) e.key: e.value};
@@ -81,27 +95,8 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
     return res.length;
   }
 
-  @override
   Future<int> saveVisitaDB(VisitaEntity visitaEntity) async {
     final db = await DBConfig.database;
-
-    visitaEntity.recordStatus = 'N';
-
-    /*  EvaluacionEntity newEvaluacion = EvaluacionEntity(
-          evaluacionId: '0',
-          perfilId: visitaEntity.perfilId,
-          resumen: '',
-          fortalezas: '',
-          debilidades: '',
-          riesgos: '',
-          finalizado: 'false',
-          usuarioIdCoordinador: '',
-          fechaEvaluacion: '',
-          preAprobado: 'false',
-          recordStatus: 'N');
-      await saveEvaluacionDB(newEvaluacion);
-      return VisitaModel.fromJson(visitaEntity.toJson()); */
-
     final res = await db.insert('Visita', visitaEntity.toJson());
 
     return res;

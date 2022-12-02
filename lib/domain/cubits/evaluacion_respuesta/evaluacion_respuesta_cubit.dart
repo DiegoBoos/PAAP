@@ -14,12 +14,11 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
 
   void initState() => emit(EvaluacionRespuestaInitial());
 
-  void getEvaluacionRespuestaDB(String criterioId, String evaluacionId) async {
+  Future<EvaluacionRespuestaEntity?> getEvaluacionRespuestaDB(
+      String criterioId, String evaluacionId) async {
     final result = await evaluacionRespuestaDB.getEvaluacionRespuestaUsecaseDB(
         criterioId, evaluacionId);
-    result.fold(
-        (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
-        (data) => emit(EvaluacionRespuestaLoaded(data!)));
+    return result.fold((failure) => null, (data) => data);
   }
 
   selectEvaluacionRespuestaDB(

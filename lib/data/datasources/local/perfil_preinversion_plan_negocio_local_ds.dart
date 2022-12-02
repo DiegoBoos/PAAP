@@ -6,20 +6,20 @@ import '../../models/perfil_preinversion_plan_negocio_model.dart';
 
 abstract class PerfilPreInversionPlanNegocioLocalDataSource {
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilPreInversionPlanNegociosDB();
+      getPerfilPreInversionplanesNegociosDB();
   Future<PerfilPreInversionPlanNegocioModel?>
       getPerfilPreInversionPlanNegocioDB(
           String perfilPreInversionId, String rubroId, String year);
-  Future<int> savePerfilPreInversionPlanNegocios(
+  Future<int> savePerfilPreInversionplanesNegocios(
       List<PerfilPreInversionPlanNegocioEntity>
           perfilPreInversionPlanNegocioEntity);
   Future<int> savePerfilPreInversionPlanNegocioDB(
       PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity);
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilesPreInversionesPlanNegociosProduccionDB();
-  Future<int> updatePerfilesPreInversionesPlanNegociosProduccionDB(
+      getPerfilesPreInversionesplanesNegociosProduccionDB();
+  Future<int> updatePerfilesPreInversionesplanesNegociosProduccionDB(
       List<PerfilPreInversionPlanNegocioEntity>
-          perfilesPreInversionesPlanNegociosProduccionEntity);
+          perfilesPreInversionesplanesNegociosProduccionEntity);
 }
 
 class PerfilPreInversionPlanNegocioLocalDataSourceImpl
@@ -42,7 +42,7 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilPreInversionPlanNegociosDB() async {
+      getPerfilPreInversionplanesNegociosDB() async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionPlanNegocio');
@@ -77,7 +77,7 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
   }
 
   @override
-  Future<int> savePerfilPreInversionPlanNegocios(
+  Future<int> savePerfilPreInversionplanesNegocios(
       List<PerfilPreInversionPlanNegocioEntity>
           perfilPreInversionPlanNegocioEntity) async {
     final db = await DBConfig.database;
@@ -135,7 +135,7 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilesPreInversionesPlanNegociosProduccionDB() async {
+      getPerfilesPreInversionesplanesNegociosProduccionDB() async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionPlanNegocio',
@@ -143,24 +143,24 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
 
     if (res.isEmpty) return [];
 
-    final perfilesPreInversionesPlanNegociosModel =
+    final perfilesPreInversionesplanesNegociosModel =
         List<PerfilPreInversionPlanNegocioModel>.from(
                 res.map((m) => PerfilPreInversionPlanNegocioModel.fromJson(m)))
             .toList();
 
-    return perfilesPreInversionesPlanNegociosModel;
+    return perfilesPreInversionesplanesNegociosModel;
   }
 
   @override
-  Future<int> updatePerfilesPreInversionesPlanNegociosProduccionDB(
+  Future<int> updatePerfilesPreInversionesplanesNegociosProduccionDB(
       List<PerfilPreInversionPlanNegocioEntity>
-          perfilesPreInversionesPlanNegociosProduccionEntity) async {
+          perfilesPreInversionesplanesNegociosProduccionEntity) async {
     final db = await DBConfig.database;
 
     var batch = db.batch();
 
     for (var perfilPreInversionPlanNegocioProduccion
-        in perfilesPreInversionesPlanNegociosProduccionEntity) {
+        in perfilesPreInversionesplanesNegociosProduccionEntity) {
       perfilPreInversionPlanNegocioProduccion.recordStatus = 'R';
       batch.update('PerfilPreInversionPlanNegocio',
           perfilPreInversionPlanNegocioProduccion.toJson(),

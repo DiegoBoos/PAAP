@@ -1237,7 +1237,7 @@ void init() {
   experienciaPecuariaInit();
   alianzaExperienciaAgricolaInit();
   alianzaExperienciaPecuariaInit();
-  perfilPreInversionPlanNegociosInit();
+  perfilPreInversionplanesNegociosInit();
 
   downloadSyncInit();
   uploadSyncInit();
@@ -1958,9 +1958,9 @@ perfilPreInversionPreciosInit() {
   );
 }
 
-perfilPreInversionPlanNegociosInit() {
+perfilPreInversionplanesNegociosInit() {
   // bloc
-  locator.registerFactory(() => PerfilPreInversionPlanNegociosBloc(
+  locator.registerFactory(() => PerfilPreInversionPlanesNegociosBloc(
       perfilPreInversionPlanNegocioUsecaseDB: locator()));
 
   // cubit

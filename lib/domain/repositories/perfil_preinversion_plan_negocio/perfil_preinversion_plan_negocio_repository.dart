@@ -6,9 +6,9 @@ import '../../entities/usuario_entity.dart';
 
 abstract class PerfilPreInversionPlanNegocioRepository {
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilPreInversionPlanNegociosRepository(UsuarioEntity usuario);
+      getPerfilPreInversionplanesNegociosRepository(UsuarioEntity usuario);
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      savePerfilesPreInversionesPlanNegociosRepository(
+      savePerfilesPreInversionesplanesNegociosRepository(
           UsuarioEntity usuario,
           List<PerfilPreInversionPlanNegocioEntity>
               perfilPreInversionPlanNegocioEntity);

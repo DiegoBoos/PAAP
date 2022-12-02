@@ -27,13 +27,15 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
   bool showOpciones = false;
 
   String? opcionId;
+  final observacionCtrl = TextEditingController();
+
+  List<OpcionEntity> opciones = [];
 
   @override
   Widget build(BuildContext context) {
     final agrupacionCubit = BlocProvider.of<AgrupacionCubit>(context);
     final opcionCubit = BlocProvider.of<OpcionCubit>(context);
     final criterioCubit = BlocProvider.of<CriterioCubit>(context);
-    final evaluacionCubit = BlocProvider.of<EvaluacionCubit>(context);
 
     final evaluacionRespuestaCubit =
         BlocProvider.of<EvaluacionRespuestaCubit>(context);
@@ -49,14 +51,13 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                 child: Text(value.nombre),
               );
             }).toList(),
-            onChanged: (String? value) {
+            onChanged: (String? value) async {
               showOpciones = false;
               setState(() {
                 agrupacion = agrupacionCubit.state.agrupaciones!
                     .firstWhere(((element) => element.agrupacionId == value));
-
-                criterioCubit.getCriteriosDB(agrupacion.agrupacionId);
               });
+              await criterioCubit.getCriteriosDB(agrupacion.agrupacionId);
             },
             hint: const Text('Agrupación')),
         if (agrupacion.agrupacionId != '')
@@ -83,119 +84,93 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
               const SizedBox(height: 20),
               BlocBuilder<EvaluacionCubit, EvaluacionState>(
                 builder: (context, state) {
-                  if (state is EvaluacionLoaded) {
-                    final evaluacionState = state;
+                  final evaluacion = state.evaluacion;
 
-                    return BlocBuilder<CriterioCubit, CriterioState>(
-                      builder: (context, state) {
-                        if (state is CriteriosLoading) {
-                          return const CustomCircularProgress(
-                              alignment: Alignment.center);
-                        } else if (state is CriteriosLoaded) {
-                          List<CriterioEntity> criterios =
-                              state.criteriosLoaded!;
-                          if (criterios.isEmpty) {
-                            showOpciones = false;
-                            return const SizedBox(
-                                child: Center(
-                                    child:
-                                        NoDataSvg(title: 'No hay criterios')));
-                          }
-                          return DropdownButtonFormField(
+                  return BlocBuilder<CriterioCubit, CriterioState>(
+                    builder: (context, state) {
+                      if (state is CriteriosLoading) {
+                        return const CustomCircularProgress(
+                            alignment: Alignment.center);
+                      } else if (state is CriteriosLoaded) {
+                        List<CriterioEntity> criterios = state.criteriosLoaded!;
+                        if (criterios.isEmpty) {
+                          showOpciones = false;
+                          return const Center(
+                              child: NoDataSvg(title: 'No hay criterios'));
+                        }
+                        return DropdownButtonFormField(
+                            isExpanded: true,
+                            items: criterioCubit.state.criterios!
+                                .map<DropdownMenuItem<String>>(
+                                    (CriterioEntity value) {
+                              return DropdownMenuItem<String>(
+                                value: value.criterioId,
+                                child: Text(value.nombre),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) async {
+                              opcionId = null;
+
+                              final evaluacionRespuesta =
+                                  await evaluacionRespuestaCubit
+                                      .getEvaluacionRespuestaDB(
+                                          value!, evaluacion!.evaluacionId);
+
+                              if (evaluacionRespuesta != null) {
+                                observacionCtrl.text =
+                                    evaluacionRespuesta.observacion;
+                                opcionId = evaluacionRespuesta.opcionId;
+                              }
+
+                              opciones = await opcionCubit.getOpcionesDB(value);
+                              evaluacionRespuestaCubit.changeCriterio(value);
+
+                              showOpciones = true;
+
+                              setState(() {});
+                            },
+                            hint: const Text('Criterios'));
+                      }
+                      return Container();
+                    },
+                  );
+                },
+              ),
+              if (showOpciones)
+                opciones.isEmpty
+                    ? const Center(child: NoDataSvg(title: 'No hay opciones'))
+                    : Column(
+                        children: [
+                          DropdownButtonFormField(
                               isExpanded: true,
-                              items: criterioCubit.state.criterios!
-                                  .map<DropdownMenuItem<String>>(
-                                      (CriterioEntity value) {
+                              value: opcionId != '' ? opcionId : null,
+                              items: opciones.map<DropdownMenuItem<String>>(
+                                  (OpcionEntity value) {
                                 return DropdownMenuItem<String>(
-                                  value: value.criterioId,
+                                  value: value.opcionId,
                                   child: Text(value.nombre),
                                 );
                               }).toList(),
                               onChanged: (String? value) {
-                                opcionCubit.getOpcionesDB(value!);
-                                evaluacionRespuestaCubit
-                                    .getEvaluacionRespuestaDB(
-                                        value,
-                                        evaluacionState
-                                            .evaluacion!.evaluacionId);
-                                evaluacionRespuestaCubit.changeCriterio(value);
-                                evaluacionRespuestaCubit.changeOpcion('');
-
-                                setState(() => showOpciones = true);
+                                evaluacionRespuestaCubit.changeOpcion(value!);
+                                setState(() {
+                                  opcionId = value;
+                                });
                               },
-                              hint: const Text('Criterios'));
-                        }
-                        return const SizedBox();
-                      },
-                    );
-                  }
-                  return const SizedBox();
-                },
-              ),
-              if (showOpciones)
-                BlocBuilder<EvaluacionRespuestaCubit, EvaluacionRespuestaState>(
-                  builder: (context, state) {
-                    if (state is EvaluacionRespuestaLoaded) {
-                      final evaluacionRespuestaState =
-                          state.evaluacionRespuestaLoaded;
-
-                      return BlocBuilder<OpcionCubit, OpcionState>(
-                        builder: (context, state) {
-                          if (state is OpcionesLoading) {
-                            return const CustomCircularProgress(
-                                alignment: Alignment.center);
-                          } else if (state is OpcionesLoaded) {
-                            List<OpcionEntity> opciones = state.opcionesLoaded!;
-                            if (opciones.isEmpty) {
-                              return const SizedBox(
-                                  child: Center(
-                                      child:
-                                          NoDataSvg(title: 'No hay opciones')));
-                            }
-                            return Column(
-                              children: [
-                                DropdownButtonFormField(
-                                    isExpanded: true,
-                                    value:
-                                        evaluacionRespuestaState.opcionId != ''
-                                            ? evaluacionRespuestaState.opcionId
-                                            : null,
-                                    items: opcionCubit.state.opciones!
-                                        .map<DropdownMenuItem<String>>(
-                                            (OpcionEntity value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value.opcionId,
-                                        child: Text(value.nombre),
-                                      );
-                                    }).toList(),
-                                    onChanged: (String? value) {
-                                      evaluacionRespuestaCubit
-                                          .changeOpcion(value!);
-                                    },
-                                    hint: const Text('Opciones')),
-                                const SizedBox(height: 20),
-                                TextFormField(
-                                  initialValue:
-                                      evaluacionRespuestaState.observacion,
-                                  decoration:
-                                      CustomInputDecoration.inputDecoration(
-                                          hintText: 'Observaciones',
-                                          labelText: 'Observaciones'),
-                                  onSaved: (String? newValue) {
-                                    evaluacionRespuestaCubit
-                                        .changeObservacion(newValue!);
-                                  },
-                                )
-                              ],
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                      );
-                    }
-                    return const SizedBox();
-                  },
-                ),
+                              hint: const Text('Opciones')),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: observacionCtrl,
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Observaciones',
+                                labelText: 'Observaciones'),
+                            onSaved: (String? newValue) {
+                              evaluacionRespuestaCubit
+                                  .changeObservacion(newValue!);
+                            },
+                          )
+                        ],
+                      ),
             ],
           ),
       ],

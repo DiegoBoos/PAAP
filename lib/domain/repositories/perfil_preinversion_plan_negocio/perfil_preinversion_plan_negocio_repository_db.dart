@@ -5,24 +5,24 @@ import '../../entities/perfil_preinversion_plan_negocio_entity.dart';
 
 abstract class PerfilPreInversionPlanNegocioRepositoryDB {
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilPreInversionPlanNegociosRepositoryDB();
+      getPerfilPreInversionplanesNegociosRepositoryDB();
 
   Future<Either<Failure, PerfilPreInversionPlanNegocioEntity?>>
       getPerfilPreInversionPlanNegocioRepositoryDB(
           String perfilPreInversionId, String rubroId, String year);
 
-  Future<Either<Failure, int>> savePerfilPreInversionPlanNegociosRepositoryDB(
+  Future<Either<Failure, int>> savePerfilPreInversionplanesNegociosRepositoryDB(
       List<PerfilPreInversionPlanNegocioEntity>
           perfilPreInversionPlanNegocioEntity);
 
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilesPreInversionesPlanNegociosProduccionRepositoryDB();
+      getPerfilesPreInversionesplanesNegociosProduccionRepositoryDB();
 
   Future<Either<Failure, int>> savePerfilPreInversionPlanNegocioRepositoryDB(
       PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity);
 
   Future<Either<Failure, int>>
-      updatePerfilesPreInversionesPlanNegociosProduccionDBRepositoryDB(
+      updatePerfilesPreInversionesplanesNegociosProduccionDBRepositoryDB(
           List<PerfilPreInversionPlanNegocioEntity>
-              perfilesPreInversionesPlanNegociosEntity);
+              perfilesPreInversionesplanesNegociosEntity);
 }

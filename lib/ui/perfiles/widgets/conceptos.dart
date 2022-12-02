@@ -17,7 +17,7 @@ class Conceptos extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
 
-      final evaluacion = state.evaluacion;
+      final evaluacion = state.evaluacion!;
 
       return Column(
         children: [
@@ -40,8 +40,8 @@ class Conceptos extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           TextFormField(
-            initialValue: evaluacion?.fortalezas ?? '',
-            enabled: evaluacion?.finalizado == 'true' ? false : true,
+            initialValue: evaluacion.fortalezas,
+            enabled: evaluacion.finalizado == 'true' ? false : true,
             maxLines: null,
             decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'Fortalezas', labelText: 'Fortalezas'),
@@ -51,8 +51,8 @@ class Conceptos extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           TextFormField(
-            initialValue: evaluacion?.debilidades ?? '',
-            enabled: evaluacion?.finalizado == 'true' ? false : true,
+            initialValue: evaluacion.debilidades,
+            enabled: evaluacion.finalizado == 'true' ? false : true,
             maxLines: null,
             decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'Debilidadaes', labelText: 'Debilidadaes'),
@@ -62,8 +62,8 @@ class Conceptos extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           TextFormField(
-            initialValue: evaluacion?.riesgos ?? '',
-            enabled: evaluacion?.finalizado == 'true' ? false : true,
+            initialValue: evaluacion.riesgos,
+            enabled: evaluacion.finalizado == 'true' ? false : true,
             maxLines: null,
             decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'Riesgos', labelText: 'Riesgos'),
@@ -73,8 +73,8 @@ class Conceptos extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           TextFormField(
-            initialValue: evaluacion?.resumen ?? '',
-            enabled: evaluacion?.finalizado == 'true' ? false : true,
+            initialValue: evaluacion.resumen,
+            enabled: evaluacion.finalizado == 'true' ? false : true,
             maxLines: null,
             decoration: CustomInputDecoration.inputDecoration(
                 hintText: 'Resumen', labelText: 'Resumen'),

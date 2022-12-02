@@ -603,7 +603,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Perfiles PreInversion Plan Negocios',
           counter: state.downloadProgressModel!.counter + 1,
           percent: calculatePercent())));
-      await downloadPerfilPreInversionPlanNegocios(usuario, emit);
+      await downloadPerfilPreInversionplanesNegocios(usuario, emit);
 
       add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
           title: 'Sincronizando Productos',
@@ -1109,13 +1109,13 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
         (data) async => await savePerfilPreInversionPrecios(data, emit));
   }
 
-  Future<void> downloadPerfilPreInversionPlanNegocios(
+  Future<void> downloadPerfilPreInversionplanesNegocios(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result = await perfilPreInversionPlanNegocio
-        .getPerfilPreInversionPlanNegociosUsecase(usuario);
+        .getPerfilPreInversionplanesNegociosUsecase(usuario);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)),
-        (data) async => await savePerfilPreInversionPlanNegocios(data, emit));
+        (data) async => await savePerfilPreInversionplanesNegocios(data, emit));
   }
 
   Future<void> downloadProductos(
@@ -1611,11 +1611,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
 
-  Future<void> savePerfilPreInversionPlanNegocios(
+  Future<void> savePerfilPreInversionplanesNegocios(
       List<PerfilPreInversionPlanNegocioEntity> data,
       Emitter<DownloadSyncState> emit) async {
     final result = await perfilPreInversionPlanNegocioDB
-        .savePerfilPreInversionPlanNegociosUsecaseDB(data);
+        .savePerfilPreInversionplanesNegociosUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
