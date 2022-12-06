@@ -42,4 +42,20 @@ class EvaluacionRepositoryImpl implements EvaluacionRepository {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
+
+  @override
+  Future<Either<Failure, List<EvaluacionEntity>>>
+      getEvaluacionesNuevasRepository(
+          UsuarioEntity usuario, List<String> perfilesIds) async {
+    try {
+      final evaluaciones = await evaluacionRemoteDataSource
+          .getEvaluacionesNuevas(usuario, perfilesIds);
+
+      return Right(evaluaciones);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
 }

@@ -75,6 +75,7 @@ class AliadosLocalDataSourceImpl implements AliadosLocalDataSource {
     batch.delete('Aliado');
 
     for (var aliado in aliadoEntity) {
+      aliado.recordStatus = 'R';
       batch.insert('Aliado', aliado.toJson());
     }
 

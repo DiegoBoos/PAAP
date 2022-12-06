@@ -37,7 +37,7 @@ class EvaluacionUsecaseDB {
     return repositoryDB.getEvaluacionesProduccionRepositoryDB();
   }
 
-  Future<Either<Failure, int>> updateEvaluacionesProduccionUsecaseDB(
+  Future<Either<Failure, List<String>>> updateEvaluacionesProduccionUsecaseDB(
       List<EvaluacionEntity> evaluacionesEntity) {
     return repositoryDB
         .updateEvaluacionesProduccionDBRepositoryDB(evaluacionesEntity);

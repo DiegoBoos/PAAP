@@ -7,12 +7,14 @@ class EvaluacionRespuestaModel extends EvaluacionRespuestaEntity {
     required String opcionId,
     String? observacion,
     String? recordStatus,
+    String? remoteEvaluacionId,
   }) : super(
           criterioId: criterioId,
           evaluacionId: evaluacionId,
           opcionId: opcionId,
           observacion: observacion ?? '',
           recordStatus: recordStatus ?? '',
+          remoteEvaluacionId: remoteEvaluacionId ?? '',
         );
 
   factory EvaluacionRespuestaModel.fromJson(Map<String, dynamic> json) =>
@@ -22,6 +24,7 @@ class EvaluacionRespuestaModel extends EvaluacionRespuestaEntity {
         opcionId: json["OpcionId"],
         observacion: json["Observacion"],
         recordStatus: json["RecordStatus"],
+        remoteEvaluacionId: json["RemoteEvaluacionId"],
       );
 
   @override
@@ -31,5 +34,6 @@ class EvaluacionRespuestaModel extends EvaluacionRespuestaEntity {
         "OpcionId": opcionId,
         "Observacion": observacion,
         "RecordStatus": recordStatus,
+        "RemoteEvaluacionId": remoteEvaluacionId,
       };
 }

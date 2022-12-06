@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 
+import '../../../domain/entities/evaluacion_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/entities/evaluacion_respuesta_entity.dart';
 import '../../../domain/repositories/evaluacion_respuesta/evaluacion_respuesta_repository.dart';
@@ -39,6 +40,22 @@ class EvaluacionRespuestaRepositoryImpl
           .saveEvaluacionesRespuestas(usuario, evaluacionesRespuestasEntity);
 
       return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<EvaluacionRespuestaEntity>>>
+      getEvaluacionesRespuestasNuevasRepository(
+          UsuarioEntity usuario, List<EvaluacionEntity> evaluaciones) async {
+    try {
+      final evaluacionesRespuestas = await evaluacionRespuestaRemoteDataSource
+          .getEvaluacionesRespuestasNuevas(usuario, evaluaciones);
+
+      return Right(evaluacionesRespuestas);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

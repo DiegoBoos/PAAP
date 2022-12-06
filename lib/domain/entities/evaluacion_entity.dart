@@ -11,6 +11,7 @@ class EvaluacionEntity {
     required this.fechaEvaluacion,
     required this.preAprobado,
     required this.recordStatus,
+    required this.remoteEvaluacionId,
   });
 
   String evaluacionId;
@@ -24,6 +25,7 @@ class EvaluacionEntity {
   String fechaEvaluacion;
   String preAprobado;
   String recordStatus;
+  String remoteEvaluacionId;
 
   factory EvaluacionEntity.fromJson(Map<String, dynamic> json) =>
       EvaluacionEntity(
@@ -38,6 +40,7 @@ class EvaluacionEntity {
         fechaEvaluacion: json["FechaEvaluacion"],
         preAprobado: json["PreAprobado"],
         recordStatus: json["RecordStatus"],
+        remoteEvaluacionId: json["RemoteEvaluacionId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,6 +55,7 @@ class EvaluacionEntity {
         "FechaEvaluacion": fechaEvaluacion,
         "PreAprobado": preAprobado,
         "RecordStatus": recordStatus,
+        "RemoteEvaluacionId": remoteEvaluacionId,
       };
 
   EvaluacionEntity copyWith({
@@ -66,6 +70,7 @@ class EvaluacionEntity {
     String? fechaEvaluacion,
     String? preAprobado,
     String? recordStatus,
+    String? remoteEvaluacionId,
   }) =>
       EvaluacionEntity(
         evaluacionId: evaluacionId ?? this.evaluacionId,
@@ -79,5 +84,6 @@ class EvaluacionEntity {
         fechaEvaluacion: fechaEvaluacion ?? this.fechaEvaluacion,
         preAprobado: preAprobado ?? this.preAprobado,
         recordStatus: recordStatus ?? this.recordStatus,
+        remoteEvaluacionId: remoteEvaluacionId ?? this.remoteEvaluacionId,
       );
 }

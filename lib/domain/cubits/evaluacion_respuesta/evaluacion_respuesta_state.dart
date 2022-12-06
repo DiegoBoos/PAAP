@@ -16,7 +16,8 @@ class EvaluacionRespuestaInitial extends EvaluacionRespuestaState {
                 evaluacionId: '',
                 observacion: '',
                 opcionId: '',
-                recordStatus: ''));
+                recordStatus: '',
+                remoteEvaluacionId: ''));
 }
 
 class EvaluacionRespuestaLoading extends EvaluacionRespuestaState {}

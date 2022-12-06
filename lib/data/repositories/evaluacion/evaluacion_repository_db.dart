@@ -71,8 +71,9 @@ class EvaluacionRepositoryDBImpl implements EvaluacionRepositoryDB {
   }
 
   @override
-  Future<Either<Failure, int>> updateEvaluacionesProduccionDBRepositoryDB(
-      List<EvaluacionEntity> evaluacionesEntity) async {
+  Future<Either<Failure, List<String>>>
+      updateEvaluacionesProduccionDBRepositoryDB(
+          List<EvaluacionEntity> evaluacionesEntity) async {
     try {
       final result = await evaluacionLocalDataSource
           .updateEvaluacionesProduccionDB(evaluacionesEntity);

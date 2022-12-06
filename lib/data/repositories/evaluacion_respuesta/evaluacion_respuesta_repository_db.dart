@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 
+import '../../../domain/entities/evaluacion_entity.dart';
 import '../../../domain/entities/evaluacion_respuesta_entity.dart';
 import '../../../domain/repositories/evaluacion_respuesta/evaluacion_respuesta_repository_db.dart';
 import '../../datasources/local/evaluacion_respuesta_local_ds.dart';
@@ -99,6 +100,21 @@ class EvaluacionRespuestaRepositoryDBImpl
       final result = await evaluacionRespuestaLocalDataSource
           .updateEvaluacionesRespuestasProduccionDB(
               evaluacionesRespuestasEntity);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> updateRespuestaRemoteEvaluacionIdRepositoryDB(
+      List<EvaluacionEntity> evaluacionesEntity) async {
+    try {
+      final result = await evaluacionRespuestaLocalDataSource
+          .updateRespuestaRemoteEvaluacionIdDB(evaluacionesEntity);
 
       return Right(result);
     } on ServerFailure catch (e) {

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failure.dart';
+import '../../entities/evaluacion_entity.dart';
 import '../../entities/evaluacion_respuesta_entity.dart';
 
 abstract class EvaluacionRespuestaRepositoryDB {
@@ -26,4 +27,7 @@ abstract class EvaluacionRespuestaRepositoryDB {
   Future<Either<Failure, int>>
       updateEvaluacionesRespuestasProduccionDBRepositoryDB(
           List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity);
+
+  Future<Either<Failure, int>> updateRespuestaRemoteEvaluacionIdRepositoryDB(
+      List<EvaluacionEntity> evaluaciones);
 }

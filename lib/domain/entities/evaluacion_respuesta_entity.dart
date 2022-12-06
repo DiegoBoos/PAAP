@@ -5,6 +5,7 @@ class EvaluacionRespuestaEntity {
     required this.opcionId,
     required this.observacion,
     required this.recordStatus,
+    required this.remoteEvaluacionId,
   });
 
   String criterioId;
@@ -12,6 +13,7 @@ class EvaluacionRespuestaEntity {
   String opcionId;
   String observacion;
   String recordStatus;
+  String remoteEvaluacionId;
 
   EvaluacionRespuestaEntity copyWith({
     String? criterioId,
@@ -19,6 +21,7 @@ class EvaluacionRespuestaEntity {
     String? opcionId,
     String? observacion,
     String? recordStatus,
+    String? remoteEvaluacionId,
   }) {
     return EvaluacionRespuestaEntity(
       criterioId: criterioId ?? this.criterioId,
@@ -26,6 +29,7 @@ class EvaluacionRespuestaEntity {
       opcionId: opcionId ?? this.opcionId,
       observacion: observacion ?? this.observacion,
       recordStatus: recordStatus ?? this.recordStatus,
+      remoteEvaluacionId: remoteEvaluacionId ?? this.remoteEvaluacionId,
     );
   }
 
@@ -36,6 +40,7 @@ class EvaluacionRespuestaEntity {
         opcionId: json["OpcionId"],
         observacion: json["Observacion"],
         recordStatus: json["RecordStatus"],
+        remoteEvaluacionId: json["RemoteEvaluacionId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -44,5 +49,6 @@ class EvaluacionRespuestaEntity {
         "OpcionId": opcionId,
         "Observacion": observacion,
         "RecordStatus": recordStatus,
+        "RemoteEvaluacionId": remoteEvaluacionId,
       };
 }

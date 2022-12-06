@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../core/error/failure.dart';
+import '../../entities/evaluacion_entity.dart';
 import '../../entities/evaluacion_respuesta_entity.dart';
 import '../../repositories/evaluacion_respuesta/evaluacion_respuesta_repository_db.dart';
 
@@ -31,6 +32,12 @@ class EvaluacionRespuestaUsecaseDB {
       List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity) {
     return repositoryDB
         .saveEvaluacionesRespuestasRepositoryDB(evaluacionesRespuestasEntity);
+  }
+
+  Future<Either<Failure, int>> updateRespuestaRemoteEvaluacionIdUsecaseDB(
+      List<EvaluacionEntity> evaluacionesEntity) {
+    return repositoryDB
+        .updateRespuestaRemoteEvaluacionIdRepositoryDB(evaluacionesEntity);
   }
 
   Future<Either<Failure, int>> clearEvaluacionesRespuestasUsecaseDB() {

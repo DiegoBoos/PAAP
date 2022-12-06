@@ -10,14 +10,14 @@ class EvaluacionUsecase {
 
   EvaluacionUsecase(this.repository);
 
-/*   Future<Either<Failure, int>> saveEvaluacionUsecase(
-      UsuarioEntity usuario, EvaluacionEntity evaluacionEntity) {
-    return repository.saveEvaluacionRepository(usuario, evaluacionEntity);
-  } */
-
   Future<Either<Failure, List<EvaluacionEntity>>> getEvaluacionesUsecase(
       UsuarioEntity usuario) {
     return repository.getEvaluacionesRepository(usuario);
+  }
+
+  Future<Either<Failure, List<EvaluacionEntity>>> getEvaluacionesNuevasUsecase(
+      UsuarioEntity usuario, List<String> perfilesIds) {
+    return repository.getEvaluacionesNuevasRepository(usuario, perfilesIds);
   }
 
   Future<Either<Failure, List<EvaluacionEntity>>> saveEvaluacionesUsecase(

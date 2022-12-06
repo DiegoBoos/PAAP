@@ -2710,6 +2710,10 @@ uploadSyncInit() {
         perfilPreInversionPlanNegocioDB: locator(),
         alianzaBeneficiario: locator(),
         alianzaBeneficiarioDB: locator(),
+        alianzaExperienciaAgricola: locator(),
+        alianzaExperienciaAgricolaDB: locator(),
+        alianzaExperienciaPecuaria: locator(),
+        alianzaExperienciaPecuariaDB: locator(),
       ));
 }
 

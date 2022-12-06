@@ -9,7 +9,7 @@ abstract class EvaluacionLocalDataSource {
   Future<List<EvaluacionModel>> getEvaluacionesProduccionDB();
   Future<int> saveEvaluacionDB(EvaluacionEntity evaluacionEntity);
   Future<int> saveEvaluacionesDB(List<EvaluacionEntity> evaluacionEntity);
-  Future<int> updateEvaluacionesProduccionDB(
+  Future<List<String>> updateEvaluacionesProduccionDB(
       List<EvaluacionEntity> evaluacionesEntity);
   Future<int> clearEvaluacionesDB();
 }
@@ -29,6 +29,7 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
         FechaEvaluacion	TEXT,
         PreAprobado	TEXT,
         RecordStatus	TEXT,
+        RemoteEvaluacionId	INTEGER,
         PRIMARY KEY(EvaluacionId AUTOINCREMENT)
       )
     ''');
@@ -68,6 +69,8 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
 
     for (var evaluacion in evaluacionEntity) {
       evaluacion.recordStatus = 'R';
+      evaluacion.remoteEvaluacionId = evaluacion.evaluacionId;
+
       batch.insert('Evaluacion', evaluacion.toJson());
     }
 
@@ -89,26 +92,43 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
         List<EvaluacionModel>.from(res.map((m) => EvaluacionModel.fromJson(m)))
             .toList();
 
+    /* for (var evaluacion in evaluacionesModel) {
+      if (evaluacion.recordStatus == 'N') {
+        evaluacion.evaluacionId = '0';
+      }
+    } */
+
     return evaluacionesModel;
   }
 
   @override
-  Future<int> updateEvaluacionesProduccionDB(
+  Future<List<String>> updateEvaluacionesProduccionDB(
       List<EvaluacionEntity> evaluacionesProduccionEntity) async {
+    List<String> perfilIdsEvaluacionesNews = [];
     final db = await DBConfig.database;
 
     var batch = db.batch();
 
     for (var evaluacionProduccion in evaluacionesProduccionEntity) {
-      evaluacionProduccion.recordStatus = 'R';
-      batch.update('Evaluacion', evaluacionProduccion.toJson(),
-          where: 'EvaluacionId = ?',
-          whereArgs: [evaluacionProduccion.evaluacionId]);
+      if (evaluacionProduccion.recordStatus == 'N') {
+        perfilIdsEvaluacionesNews.add(evaluacionProduccion.perfilId);
+        batch.delete('Evaluacion',
+            where: 'EvaluacionId = ?',
+            whereArgs: [evaluacionProduccion.evaluacionId]);
+        batch.delete('EvaluacionRespuesta',
+            where: 'EvaluacionId = ?',
+            whereArgs: [evaluacionProduccion.evaluacionId]);
+      } else {
+        evaluacionProduccion.recordStatus = 'R';
+        batch.update('Evaluacion', evaluacionProduccion.toJson(),
+            where: 'EvaluacionId = ?',
+            whereArgs: [evaluacionProduccion.evaluacionId]);
+      }
     }
 
-    final res = await batch.commit();
+    await batch.commit();
 
-    return res.length;
+    return perfilIdsEvaluacionesNews;
   }
 
   @override

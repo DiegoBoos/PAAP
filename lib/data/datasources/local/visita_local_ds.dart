@@ -55,7 +55,8 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
           usuarioIdCoordinador: '',
           fechaEvaluacion: '',
           preAprobado: 'false',
-          recordStatus: 'N');
+          recordStatus: 'N',
+          remoteEvaluacionId: '');
       await saveEvaluacionDB(newEvaluacion);
       return VisitaModel.fromJson(visitaEntity.toJson());
     }
