@@ -45,6 +45,11 @@ class PerfilPreInversionIngresosUPTCubit
 
   void initState() => emit(PerfilPreInversionIngresosUPTInitial());
 
+  selectPerfilPreInversionIngresosUPT(
+      PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocio) {
+    emit(PerfilPreInversionIngresosUPTLoaded(perfilPreInversionPlanNegocio));
+  }
+
   void changeRubro(String? value) {
     final rubroChanged =
         state.perfilPreInversionIngresosUPT.copyWith(rubroId: value);

@@ -13,8 +13,8 @@ class VisitaCubit extends Cubit<VisitaState> {
 
   void initState() => emit(VisitaInitial());
 
-  Future<void> getVisitaDB(VisitaEntity visitaEntity) async {
-    final result = await visitaDB.getVisitaUsecaseDB(visitaEntity);
+  Future<void> getVisitaDB(String perfilId, String tipoVisitaId) async {
+    final result = await visitaDB.getVisitaUsecaseDB(perfilId, tipoVisitaId);
     result.fold((failure) => emit(VisitaError(failure.properties.first)),
         (data) {
       if (data != null) {
@@ -22,6 +22,14 @@ class VisitaCubit extends Cubit<VisitaState> {
       } else {
         emit(VisitaInitial());
       }
+    });
+  }
+
+  Future<void> saveVisitaEvaluacionDB(VisitaEntity visitaEntity) async {
+    final result = await visitaDB.saveVisitaEvaluacionUsecaseDB(visitaEntity);
+    result.fold((failure) => emit(VisitaError(failure.properties.first)),
+        (data) {
+      emit(VisitaLoaded(data));
     });
   }
 

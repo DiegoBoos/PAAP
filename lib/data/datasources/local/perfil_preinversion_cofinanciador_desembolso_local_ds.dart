@@ -23,7 +23,7 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoLocalDataSource {
           List<PerfilPreInversionCofinanciadorDesembolsoEntity>
               perfilesPreInversionesCofinanciadoresDesembolsosProduccionEntity);
   getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorDB(
-      String perfilPreInversionId, String cofinanciadorId, String desembolsoId);
+      String perfilPreInversionId, String cofinanciadorId);
 }
 
 class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
@@ -49,7 +49,18 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
       getPerfilPreInversionCofinanciadorDesembolsosDB() async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionCofinanciadorDesembolso');
+    String sql = '''
+      select
+      PerfilPreInversionCofinanciadorDesembolso.PerfilPreInversionId,
+      PerfilPreInversionCofinanciadorDesembolso.CofinanciadorId,
+      PerfilPreInversionCofinanciadorDesembolso.DesembolsoId,
+      Fecha as fecha,
+      Desembolso.Nombre as desembolso
+      from PerfilPreInversionCofinanciadorDesembolso
+      left join Desembolso on (Desembolso.DesembolsoId=PerfilPreInversionCofinanciadorDesembolso.DesembolsoId)
+      ''';
+
+    final res = await db.rawQuery(sql);
 
     final perfilPreInversionCofinanciadorDesembolso =
         List<PerfilPreInversionCofinanciadorDesembolsoModel>.from(res.map((m) =>
@@ -103,15 +114,22 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
 
   @override
   getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorDB(
-      String perfilPreInversionId,
-      String cofinanciadorId,
-      String desembolsoId) async {
+      String perfilPreInversionId, String cofinanciadorId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionCofinanciadorDesembolso',
-        where:
-            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
-        whereArgs: [perfilPreInversionId, cofinanciadorId, desembolsoId]);
+    String sql = '''
+      select
+      PerfilPreInversionCofinanciadorDesembolso.PerfilPreInversionId,
+      PerfilPreInversionCofinanciadorDesembolso.CofinanciadorId,
+      PerfilPreInversionCofinanciadorDesembolso.DesembolsoId,
+      Fecha as fecha,
+      Desembolso.Nombre as desembolso
+      from PerfilPreInversionCofinanciadorDesembolso
+      left join Desembolso on (Desembolso.DesembolsoId=PerfilPreInversionCofinanciadorDesembolso.DesembolsoId)
+      where PerfilPreInversionCofinanciadorDesembolso.PerfilPreInversionId = $perfilPreInversionId AND PerfilPreInversionCofinanciadorDesembolso.CofinanciadorId = $cofinanciadorId
+      ''';
+
+    final res = await db.rawQuery(sql);
 
     final perfilPreInversionCofinanciadorDesembolso =
         List<PerfilPreInversionCofinanciadorDesembolsoModel>.from(res.map((m) =>

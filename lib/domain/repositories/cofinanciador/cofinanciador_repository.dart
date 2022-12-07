@@ -6,5 +6,5 @@ import '../../entities/usuario_entity.dart';
 
 abstract class CofinanciadorRepository {
   Future<Either<Failure, List<CofinanciadorEntity>>>
-      getCofinanciadoresRepository(UsuarioEntity usuario);
+      getCofinanciadoresByDepartamentoRepository(UsuarioEntity usuario);
 }

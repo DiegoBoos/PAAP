@@ -4,7 +4,7 @@ class VAlianzaModel extends VAlianzaEntity {
   VAlianzaModel(
       {required String alianzaId,
       required String perfilPreInversionId,
-      required String convocatoriaId,
+      String? convocatoria,
       String? nombre,
       String? abreviatura,
       String? nit,
@@ -23,7 +23,7 @@ class VAlianzaModel extends VAlianzaEntity {
       : super(
             alianzaId: alianzaId,
             perfilPreInversionId: perfilPreInversionId,
-            convocatoriaId: convocatoriaId,
+            convocatoria: convocatoria ?? '',
             nombre: nombre ?? '',
             abreviatura: abreviatura ?? '',
             nit: nit ?? '',
@@ -43,7 +43,7 @@ class VAlianzaModel extends VAlianzaEntity {
   factory VAlianzaModel.fromJson(Map<String, dynamic> json) => VAlianzaModel(
       alianzaId: json["alianzaId"],
       perfilPreInversionId: json["perfilPreInversionId"],
-      convocatoriaId: json["convocatoriaId"],
+      convocatoria: json["convocatoria"],
       nombre: json["nombre"],
       abreviatura: json["abreviatura"],
       nit: json["nit"],
@@ -64,7 +64,7 @@ class VAlianzaModel extends VAlianzaEntity {
   Map<String, dynamic> toJson() => {
         "alianzaId": alianzaId,
         "perfilPreInversionId": perfilPreInversionId,
-        "convocatoriaId": convocatoriaId,
+        "convocatoria": convocatoria,
         "nombre": nombre,
         "abreviatura": abreviatura,
         "municipio": municipio,

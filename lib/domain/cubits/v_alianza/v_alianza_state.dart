@@ -1,21 +1,21 @@
 part of 'v_alianza_cubit.dart';
 
 abstract class VAlianzaState extends Equatable {
-  final VAlianzaEntity? vPerfilPreInversion;
+  final VAlianzaEntity? vAlianza;
 
-  const VAlianzaState({this.vPerfilPreInversion});
+  const VAlianzaState({this.vAlianza});
 
   @override
-  List<Object?> get props => [vPerfilPreInversion];
+  List<Object?> get props => [vAlianza];
 }
 
 class VAlianzaInitial extends VAlianzaState {}
 
 class VAlianzaSelected extends VAlianzaState {
-  final VAlianzaEntity? vPerfilPreInversionSelected;
+  final VAlianzaEntity? vAlianzaSelected;
 
-  const VAlianzaSelected(this.vPerfilPreInversionSelected)
-      : super(vPerfilPreInversion: vPerfilPreInversionSelected);
+  const VAlianzaSelected(this.vAlianzaSelected)
+      : super(vAlianza: vAlianzaSelected);
 }
 
 class VAlianzaError extends VAlianzaState {

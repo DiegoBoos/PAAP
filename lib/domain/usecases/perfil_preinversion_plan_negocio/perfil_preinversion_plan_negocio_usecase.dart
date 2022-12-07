@@ -11,16 +11,16 @@ class PerfilPreInversionPlanNegocioUsecase {
   PerfilPreInversionPlanNegocioUsecase(this.repository);
 
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilPreInversionplanesNegociosUsecase(UsuarioEntity usuario) {
-    return repository.getPerfilPreInversionplanesNegociosRepository(usuario);
+      getPerfilPreInversionPlanesNegociosUsecase(UsuarioEntity usuario) {
+    return repository.getPerfilPreInversionPlanesNegociosRepository(usuario);
   }
 
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      savePerfilesPreInversionesplanesNegociosUsecase(
+      savePerfilesPreInversionesPlanesNegociosUsecase(
           UsuarioEntity usuario,
           List<PerfilPreInversionPlanNegocioEntity>
               perfilPreInversionPlanNegocioEntity) {
-    return repository.savePerfilesPreInversionesplanesNegociosRepository(
+    return repository.savePerfilesPreInversionesPlanesNegociosRepository(
         usuario, perfilPreInversionPlanNegocioEntity);
   }
 }

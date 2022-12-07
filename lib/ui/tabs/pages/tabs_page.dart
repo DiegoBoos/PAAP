@@ -11,6 +11,7 @@ import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/entities/menu_entity.dart';
 
+import '../../alianzas/pages/alianzas_page.dart';
 import '../../perfiles/pages/perfiles_page.dart';
 import '../../utils/custom_general_dialog.dart';
 import '../../utils/custom_snack_bar.dart';
@@ -47,7 +48,7 @@ class _TabsPageState extends State<TabsPage> {
     const HomePage(),
     const PerfilesPage(),
     const PerfilesPreInversionPage(),
-    //const AlianzasPage(),
+    const AlianzasPage(),
   ];
 
   @override
@@ -77,7 +78,7 @@ class _TabsPageState extends State<TabsPage> {
           }
           return Scaffold(
             floatingActionButtonLocation:
-                FloatingActionButtonLocation.miniStartTop,
+                FloatingActionButtonLocation.miniEndTop,
             floatingActionButton: FloatingActionButton(
               mini: true,
               backgroundColor: Theme.of(context).colorScheme.primary,

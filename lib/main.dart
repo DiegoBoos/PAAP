@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'domain/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
 import 'domain/blocs/alianzas/alianzas_bloc.dart';
 import 'domain/blocs/auth/auth_bloc.dart';
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
@@ -19,6 +20,7 @@ import 'domain/cubits/actividad_economica/actividad_economica_cubit.dart';
 import 'domain/cubits/actividad_financiera/actividad_financiera_cubit.dart';
 import 'domain/cubits/agrupacion/agrupacion_cubit.dart';
 import 'domain/cubits/aliado/aliado_cubit.dart';
+import 'domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import 'domain/cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
 import 'domain/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
 import 'domain/cubits/beneficiario/beneficiario_cubit.dart';
@@ -71,6 +73,7 @@ import 'domain/cubits/tipo_proyecto/tipo_proyecto_cubit.dart';
 import 'domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
 import 'domain/cubits/tipo_visita/tipo_visita_cubit.dart';
 import 'domain/cubits/unidad/unidad_cubit.dart';
+import 'domain/cubits/v_alianza/v_alianza_cubit.dart';
 import 'domain/cubits/v_perfil/v_perfil_cubit.dart';
 import 'domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import 'domain/cubits/vereda/vereda_cubit.dart';
@@ -160,6 +163,15 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<AlianzasBloc>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<AlianzasBeneficiariosBloc>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<AlianzaBeneficiarioCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<VAlianzaCubit>(),
           ),
           BlocProvider(
             create: (_) => di.locator<AuthBloc>(),
@@ -343,6 +355,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<PerfilPreInversionIngresosUPTCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<PerfilPreInversionPlanesNegociosBloc>(),
           ),
         ],
         child: MaterialApp(

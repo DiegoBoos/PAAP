@@ -49,6 +49,7 @@ class AlianzaBeneficiarioEntity {
     required this.longitud,
     required this.latitud,
     required this.cedulaCatastral,
+    this.beneficiario,
     required this.recordStatus,
   });
 
@@ -101,6 +102,7 @@ class AlianzaBeneficiarioEntity {
   String longitud;
   String latitud;
   String cedulaCatastral;
+  String? beneficiario;
   String recordStatus;
 
   AlianzaBeneficiarioEntity copyWith({

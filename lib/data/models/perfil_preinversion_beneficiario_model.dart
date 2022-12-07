@@ -52,6 +52,7 @@ class PerfilPreInversionBeneficiarioModel
     String? longitud,
     String? latitud,
     String? cedulaCatastral,
+    String? beneficiario,
     String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
@@ -104,6 +105,7 @@ class PerfilPreInversionBeneficiarioModel
           longitud: longitud ?? '',
           latitud: latitud ?? '',
           cedulaCatastral: cedulaCatastral ?? '',
+          beneficiario: beneficiario ?? '',
           recordStatus: recordStatus ?? '',
         );
 
@@ -160,6 +162,7 @@ class PerfilPreInversionBeneficiarioModel
         longitud: json["Longitud"],
         latitud: json["Latitud"],
         cedulaCatastral: json["CedulaCatastral"],
+        beneficiario: json["beneficiario"],
         recordStatus: json["RecordStatus"],
       );
 

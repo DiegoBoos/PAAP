@@ -8,6 +8,8 @@ class PerfilPreInversionCofinanciadorActividadFinancieraModel
     required String cofinanciadorId,
     required String desembolsoId,
     required String valor,
+    String? actividadFinanciera,
+    String? desembolso,
     String? recordStatus,
   }) : super(
           actividadFinancieraId: actividadFinancieraId,
@@ -15,6 +17,8 @@ class PerfilPreInversionCofinanciadorActividadFinancieraModel
           cofinanciadorId: cofinanciadorId,
           desembolsoId: desembolsoId,
           valor: valor,
+          actividadFinanciera: actividadFinanciera ?? '',
+          desembolso: desembolso ?? '',
           recordStatus: recordStatus ?? '',
         );
 
@@ -26,6 +30,8 @@ class PerfilPreInversionCofinanciadorActividadFinancieraModel
         cofinanciadorId: json["CofinanciadorId"],
         desembolsoId: json["DesembolsoId"],
         valor: json["Valor"],
+        actividadFinanciera: json["ActividadFinanciera"],
+        desembolso: json["Desembolso"],
         recordStatus: json["RecordStatus"],
       );
 

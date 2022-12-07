@@ -9,6 +9,9 @@ class PerfilPreInversionCofinanciadorRubroModel
     required String actividadFinancieraId,
     required String rubroId,
     required String valor,
+    String? actividadFinanciera,
+    String? rubro,
+    String? desembolso,
     String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
@@ -17,6 +20,9 @@ class PerfilPreInversionCofinanciadorRubroModel
           actividadFinancieraId: actividadFinancieraId,
           rubroId: rubroId,
           valor: valor,
+          actividadFinanciera: actividadFinanciera ?? '',
+          rubro: rubro ?? '',
+          desembolso: desembolso ?? '',
           recordStatus: recordStatus ?? '',
         );
 
@@ -29,6 +35,9 @@ class PerfilPreInversionCofinanciadorRubroModel
         actividadFinancieraId: json["ActividadFinancieraId"],
         rubroId: json["RubroId"],
         valor: json["Valor"],
+        actividadFinanciera: json["actividadFinanciera"],
+        rubro: json["rubro"],
+        desembolso: json["desembolso"],
         recordStatus: json["RecordStatus"],
       );
 

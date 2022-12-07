@@ -24,9 +24,13 @@ class _PerfilPreInversionCofinanciadorFormState
   final participacionCtrl = TextEditingController();
   final montoCtrl = TextEditingController();
 
+  List<CofinanciadorEntity> cofinanciadores = [];
+  String? departamento;
+
   @override
   void initState() {
     super.initState();
+
     final perfilPreInversionCofinanciadorCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
 
@@ -57,6 +61,24 @@ class _PerfilPreInversionCofinanciadorFormState
     participacionCtrl.text =
         perfilPreInversionCofinanciadorLoaded.participacion;
     montoCtrl.text = perfilPreInversionCofinanciadorLoaded.monto;
+
+    loadCofinanciadoresByDepartamento(perfilPreInversionCofinanciadorLoaded);
+  }
+
+  loadCofinanciadoresByDepartamento(
+      PerfilPreInversionCofinanciadorEntity
+          perfilPreInversionCofinanciadorLoaded) async {
+    final cofinanciadorId =
+        perfilPreInversionCofinanciadorLoaded.cofinanciadorId;
+
+    final cofinanciadorCubit = BlocProvider.of<CofinanciadorCubit>(context);
+
+    cofinanciadores = await cofinanciadorCubit.getCofinanciadores();
+
+    final cofinanciador = cofinanciadores
+        .firstWhere((cofinanciador) => cofinanciador.id == cofinanciadorId);
+
+    departamento = cofinanciador.departamento;
   }
 
   @override
@@ -70,35 +92,29 @@ class _PerfilPreInversionCofinanciadorFormState
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: Column(children: [
-            BlocBuilder<CofinanciadorCubit, CofinanciadorState>(
-              builder: (context, state) {
-                if (state is CofinanciadoresLoaded) {
-                  return DropdownButtonFormField(
-                      isExpanded: true,
-                      value: cofinanciadorId != '' ? cofinanciadorId : null,
-                      items: state.cofinanciadores!
-                          .map<DropdownMenuItem<String>>(
-                              (CofinanciadorEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.id,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Debe seleccionar un cofinanciador';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        perfilPreInversionCofinanciadorCubit
-                            .changeCofinanciador(value);
-                      },
-                      hint: const Text('Cofinanciador'));
-                }
-                return Container();
-              },
-            ),
+            DropdownButtonFormField(
+                isExpanded: true,
+                value: cofinanciadorId != '' ? cofinanciadorId : null,
+                items: cofinanciadores
+                    .where((cofinanciador) =>
+                        cofinanciador.departamento == departamento)
+                    .map<DropdownMenuItem<String>>((CofinanciadorEntity value) {
+                  return DropdownMenuItem<String>(
+                    value: value.id,
+                    child: Text(value.nombre),
+                  );
+                }).toList(),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Debe seleccionar un cofinanciador';
+                  }
+                  return null;
+                },
+                onChanged: (String? value) {
+                  perfilPreInversionCofinanciadorCubit
+                      .changeCofinanciador(value);
+                },
+                hint: const Text('Cofinanciador')),
             const SizedBox(height: 20),
             TextFormField(
                 controller: montoCtrl,

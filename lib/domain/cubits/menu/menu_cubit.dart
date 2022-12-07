@@ -60,7 +60,7 @@ class MenuCubit extends Cubit<MenuState> {
     return perfilesMenu;
   }
 
-  List<MenuEntity> alianzasMenuSorted(List<MenuEntity> menu) {
+  List<MenuEntity> alianzaMenuSorted(List<MenuEntity> menu) {
     final alianzasMenu = menu
         .where((menu) =>
             menu.menuId == '11' || menu.menuId == '43' || menu.menuId == '44')

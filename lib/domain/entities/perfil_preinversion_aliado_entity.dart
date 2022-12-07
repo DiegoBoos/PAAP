@@ -8,6 +8,7 @@ class PerfilPreInversionAliadoEntity {
     required this.frecuenciaId,
     required this.porcentajeCompra,
     required this.sitioEntregaId,
+    this.aliado,
     required this.recordStatus,
   });
 
@@ -19,6 +20,7 @@ class PerfilPreInversionAliadoEntity {
   String frecuenciaId;
   String porcentajeCompra;
   String sitioEntregaId;
+  String? aliado;
   String recordStatus;
 
   PerfilPreInversionAliadoEntity copyWith(

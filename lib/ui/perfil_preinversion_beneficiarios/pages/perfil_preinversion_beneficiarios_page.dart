@@ -51,16 +51,12 @@ class _PerfilPreInversionBeneficiariosPageState
             child: const Icon(Icons.save),
             onPressed: () => Navigator.pushNamed(
                 context, 'NewEditVBeneficiarioPreInversion')),
-        appBar: AppBar(
-            title: const Text('Beneficiarios'),
-            centerTitle: true,
-            leading: null,
-            actions: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: NetworkIcon(),
-              )
-            ]),
+        appBar: AppBar(title: const Text('Beneficiarios'), actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: NetworkIcon(),
+          )
+        ]),
         body: ListView(children: [
           const SizedBox(height: 30),
           const Padding(

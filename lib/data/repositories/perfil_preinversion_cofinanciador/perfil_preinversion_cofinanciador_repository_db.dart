@@ -31,38 +31,6 @@ class PerfilPreInversionCofinanciadorRepositoryDBImpl
   }
 
   @override
-  Future<Either<Failure, List<PerfilPreInversionCofinanciadorEntity>>>
-      getPerfilPreInversionCofinanciadoresRepositoryDB() async {
-    try {
-      final perfilPreInversionCofinanciadoresDB =
-          await perfilPreInversionCofinanciadorLocalDataSource
-              .getPerfilPreInversionCofinanciadoresDB();
-
-      return Right(perfilPreInversionCofinanciadoresDB);
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(e.properties));
-    } on ServerException {
-      return const Left(ServerFailure(['Excepción no controlada']));
-    }
-  }
-
-  @override
-  Future<Either<Failure, PerfilPreInversionCofinanciadorEntity?>>
-      getPerfilPreInversionCofinanciadorRepositoryDB(String id) async {
-    try {
-      final perfilPreInversionCofinanciadorDB =
-          await perfilPreInversionCofinanciadorLocalDataSource
-              .getPerfilPreInversionCofinanciadorDB(id);
-
-      return Right(perfilPreInversionCofinanciadorDB);
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(e.properties));
-    } on ServerException {
-      return const Left(ServerFailure(['Excepción no controlada']));
-    }
-  }
-
-  @override
   Future<Either<Failure, int>> savePerfilPreInversionCofinanciadorRepositoryDB(
       PerfilPreInversionCofinanciadorEntity
           perfilPreInversionCofinanciadorEntity) async {
@@ -112,5 +80,19 @@ class PerfilPreInversionCofinanciadorRepositoryDBImpl
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
+  }
+
+  @override
+  Future<Either<Failure, PerfilPreInversionCofinanciadorEntity?>>
+      getPerfilPreInversionCofinanciadorRepositoryDB(String id) {
+    // TODO: implement getPerfilPreInversionCofinanciadorRepositoryDB
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorEntity>>>
+      getPerfilPreInversionCofinanciadoresRepositoryDB() {
+    // TODO: implement getPerfilPreInversionCofinanciadoresRepositoryDB
+    throw UnimplementedError();
   }
 }

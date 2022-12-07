@@ -10,7 +10,8 @@ import '../../models/cofinanciador_model.dart';
 import '../../utils.dart';
 
 abstract class CofinanciadorRemoteDataSource {
-  Future<List<CofinanciadorModel>> getCofinanciadores(UsuarioEntity usuario);
+  Future<List<CofinanciadorModel>> getCofinanciadoresByDepartamento(
+      UsuarioEntity usuario);
 }
 
 class CofinanciadorRemoteDataSourceImpl
@@ -20,7 +21,7 @@ class CofinanciadorRemoteDataSourceImpl
   CofinanciadorRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<List<CofinanciadorModel>> getCofinanciadores(
+  Future<List<CofinanciadorModel>> getCofinanciadoresByDepartamento(
       UsuarioEntity usuario) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');

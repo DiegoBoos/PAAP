@@ -17,12 +17,12 @@ class PerfilPreInversionPlanesNegociosBloc extends Bloc<
       : super(PerfilPreInversionPlanesNegociosInitial()) {
     on<GetPerfilPreInversionPlanesNegocios>((event, emit) async {
       emit(PerfilPreInversionPlanesNegociosLoading());
-      await _getPerfilPreInversionplanesNegocios(event, emit);
+      await _getPerfilPreInversionPlanesNegocios(event, emit);
     });
   }
-  _getPerfilPreInversionplanesNegocios(event, emit) async {
+  _getPerfilPreInversionPlanesNegocios(event, emit) async {
     final result = await perfilPreInversionPlanNegocioUsecaseDB
-        .getPerfilPreInversionplanesNegociosUsecaseDB();
+        .getPerfilPreInversionPlanesNegociosUsecaseDB();
     result.fold(
         (failure) => emit(
             PerfilPreInversionPlanesNegociosError(failure.properties.first)),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/usecases/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_exports.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/loading_page.dart';
@@ -23,10 +24,15 @@ class _PerfilPreInversionCofinanciadoresPageState
   @override
   void initState() {
     super.initState();
+
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+
     final perfilPreInversionCofinanciadoresBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadoresBloc>(context);
-    perfilPreInversionCofinanciadoresBloc
-        .add(GetPerfilPreInversionCofinanciadores());
+    perfilPreInversionCofinanciadoresBloc.add(
+        GetPerfilPreInversionCofinanciadores(vPerfilPreInversionCubit
+            .state.vPerfilPreInversion!.perfilPreInversionId));
   }
 
   @override

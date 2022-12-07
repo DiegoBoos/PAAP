@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/entities/menu_entity.dart';
 
-class AlianzasDrawer extends StatelessWidget {
-  const AlianzasDrawer({Key? key, required this.menuHijo}) : super(key: key);
+class AlianzaDrawer extends StatelessWidget {
+  const AlianzaDrawer({Key? key, required this.menuHijo}) : super(key: key);
   final List<MenuEntity> menuHijo;
   @override
   Widget build(BuildContext context) {
@@ -19,8 +19,8 @@ class AlianzasDrawer extends StatelessWidget {
                 title: Text(submenu.nombre),
                 onTap: () {
                   if (submenu.menuId == '11') {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, 'tabs', (route) => false);
+                    Navigator.popUntil(context, (route) => route.isFirst);
+
                     return;
                   }
                   Navigator.pushNamed(context, submenu.ruta);

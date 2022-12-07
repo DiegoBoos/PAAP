@@ -69,30 +69,6 @@ class PerfilPreInversionCofinanciadorRubroRepositoryDBImpl
   }
 
   @override
-  Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>?>>
-      getPerfilPreInversionCofinanciadorRubrosByCofinanciadorRepositoryDB(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId,
-          String actividadFinancieraId,
-          String rubroId) async {
-    try {
-      final result = await perfilPreInversionCofinanciadorRubroLocalDataSource
-          .getPerfilPreInversionCofinanciadorRubrosByCofinanciadorDB(
-              perfilPreInversionId,
-              cofinanciadorId,
-              desembolsoId,
-              actividadFinancieraId,
-              rubroId);
-      return Right(result);
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(e.properties));
-    } on ServerException {
-      return const Left(ServerFailure(['Excepción no controlada']));
-    }
-  }
-
-  @override
   Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>>>
       getPerfilesPreInversionesCofinanciadoresRubrosProduccionRepositoryDB() async {
     try {
@@ -142,5 +118,17 @@ class PerfilPreInversionCofinanciadorRubroRepositoryDBImpl
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
+  }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>?>>
+      getPerfilPreInversionCofinanciadorRubrosByCofinanciadorRepositoryDB(
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String desembolsoId,
+          String actividadFinancieraId,
+          String rubroId) {
+    // TODO: implement getPerfilPreInversionCofinanciadorRubrosByCofinanciadorRepositoryDB
+    throw UnimplementedError();
   }
 }

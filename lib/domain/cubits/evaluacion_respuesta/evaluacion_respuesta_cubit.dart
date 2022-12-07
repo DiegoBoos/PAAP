@@ -34,38 +34,30 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
         evaluacionRespuestaEntity, perfilId);
     result.fold(
         (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
-        (data) => emit(EvaluacionRespuestaSaved()));
-  }
-
-  void clearEvaluacionRespuestasDB() async {
-    final result =
-        await evaluacionRespuestaDB.clearEvaluacionesRespuestasUsecaseDB();
-    result.fold(
-        (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
-        (data) => emit(EvaluacionRespuestaCleared()));
+        (data) => emit(EvaluacionRespuestaSaved(
+            evaluacionRespuesta: evaluacionRespuestaEntity)));
   }
 
   void changeCriterio(String criterioId) {
-    final currentState = state;
-
-    final newEvaluacionRespuesta =
-        currentState.evaluacionRespuesta!.copyWith(criterioId: criterioId);
-    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+    final changeCriterio =
+        state.evaluacionRespuesta.copyWith(criterioId: criterioId);
+    emit(EvaluacionRespuestaLoaded(changeCriterio));
   }
 
   void changeOpcion(String opcionId) {
-    final currentState = state;
-
-    final newEvaluacionRespuesta =
-        currentState.evaluacionRespuesta!.copyWith(opcionId: opcionId);
-    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+    final changeOpcion = state.evaluacionRespuesta.copyWith(opcionId: opcionId);
+    emit(EvaluacionRespuestaLoaded(changeOpcion));
   }
 
   void changeObservacion(String observacion) {
-    final currentState = state;
+    final changeObservacion =
+        state.evaluacionRespuesta.copyWith(observacion: observacion);
+    emit(EvaluacionRespuestaLoaded(changeObservacion));
+  }
 
-    final newEvaluacionRespuesta =
-        currentState.evaluacionRespuesta!.copyWith(observacion: observacion);
-    emit(EvaluacionRespuestaLoaded(newEvaluacionRespuesta));
+  void changeEvaluacion(String evaluacionId) {
+    final changeEvaluacion =
+        state.evaluacionRespuesta.copyWith(evaluacionId: evaluacionId);
+    emit(EvaluacionRespuestaLoaded(changeEvaluacion));
   }
 }

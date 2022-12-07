@@ -99,8 +99,64 @@ class PerfilPreInversionBeneficiarioLocalDataSourceImpl
       getPerfilPreInversionBeneficiariosDB(String perfilPreInversionId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionBeneficiario',
-        where: 'PerfilPreInversionId = ?', whereArgs: [perfilPreInversionId]);
+    String sql = '''
+      select
+      PerfilPreInversionBeneficiario.PerfilPreInversionId,
+      PerfilPreInversionBeneficiario.BeneficiarioId,
+      PerfilPreInversionBeneficiario.MunicipioId,
+      PerfilPreInversionBeneficiario.VeredaId,
+      PerfilPreInversionBeneficiario.AreaFinca,
+      PerfilPreInversionBeneficiario.AreaProyecto,
+      PerfilPreInversionBeneficiario.TipoTenenciaId,
+      PerfilPreInversionBeneficiario.Experiencia,
+      PerfilPreInversionBeneficiario.Asociado,
+      PerfilPreInversionBeneficiario.ConocePerfil,
+      PerfilPreInversionBeneficiario.FueBeneficiado,
+      PerfilPreInversionBeneficiario.CualBeneficio,
+      PerfilPreInversionBeneficiario.Activo,
+      PerfilPreInversionBeneficiario.MiembrosHogar,
+      PerfilPreInversionBeneficiario.MiembrosEcoActivos,
+      PerfilPreInversionBeneficiario.ResidenciaId,
+      PerfilPreInversionBeneficiario.AccesoExplotacionTierra,
+      PerfilPreInversionBeneficiario.GastosMensuales,
+      PerfilPreInversionBeneficiario.MesesAsociado,
+      PerfilPreInversionBeneficiario.NombreOrganizacion,
+      PerfilPreInversionBeneficiario.ActivoInmobiliario,
+      PerfilPreInversionBeneficiario.ActivoFinanciero,
+      PerfilPreInversionBeneficiario.ActivoProductivo,
+      PerfilPreInversionBeneficiario.ActivoCorriente,
+      PerfilPreInversionBeneficiario.Nota,
+      PerfilPreInversionBeneficiario.NombreFinca,
+      PerfilPreInversionBeneficiario.NivelEscolarId,
+      PerfilPreInversionBeneficiario.CotizanteBEPS,
+      PerfilPreInversionBeneficiario.EstadoCivilId,
+      PerfilPreInversionBeneficiario.CalificacionSISBEN,
+      PerfilPreInversionBeneficiario.IngresosMensuales,
+      PerfilPreInversionBeneficiario.TipoDiscapacidadId,
+      PerfilPreInversionBeneficiario.ConyugeTipoIdentificacionId,
+      PerfilPreInversionBeneficiario.ConyugeId,
+      PerfilPreInversionBeneficiario.ConyugeNombre1,
+      PerfilPreInversionBeneficiario.ConyugeNombre2,
+      PerfilPreInversionBeneficiario.ConyugeApellido1,
+      PerfilPreInversionBeneficiario.ConyugeApellido2,
+      PerfilPreInversionBeneficiario.ConyugeGeneroId,
+      PerfilPreInversionBeneficiario.ConyugeFechaExpedicionDocumento,
+      PerfilPreInversionBeneficiario.ConyugeGrupoEspecialId,
+      PerfilPreInversionBeneficiario.ConyugeFechaNacimiento,
+      PerfilPreInversionBeneficiario.ConyugeIngresosMensuales,
+      PerfilPreInversionBeneficiario.ActividadEconomicaId,
+      PerfilPreInversionBeneficiario.IngresosDiarios,
+      PerfilPreInversionBeneficiario.DiasTrabajo,
+      PerfilPreInversionBeneficiario.Longitud,
+      PerfilPreInversionBeneficiario.Latitud,
+      PerfilPreInversionBeneficiario.CedulaCatastral,
+      Beneficiario.Nombre1 as beneficiario
+      from PerfilPreInversionBeneficiario
+      left join Beneficiario on (Beneficiario.BeneficiarioId=PerfilPreInversionBeneficiario.BeneficiarioId)
+      where PerfilPreInversionId = $perfilPreInversionId;
+    ''';
+
+    final res = await db.rawQuery(sql);
 
     final perfilPreInversionBeneficiariosDB =
         List<PerfilPreInversionBeneficiarioModel>.from(

@@ -17,16 +17,15 @@ import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
-class PerfilPreInversionAlianzaBeneficiarioForm extends StatefulWidget {
-  const PerfilPreInversionAlianzaBeneficiarioForm({super.key});
+class AlianzaBeneficiarioForm extends StatefulWidget {
+  const AlianzaBeneficiarioForm({super.key});
 
   @override
-  State<PerfilPreInversionAlianzaBeneficiarioForm> createState() =>
-      _PerfilPreInversionAlianzaBeneficiarioFormState();
+  State<AlianzaBeneficiarioForm> createState() =>
+      _AlianzaBeneficiarioFormState();
 }
 
-class _PerfilPreInversionAlianzaBeneficiarioFormState
-    extends State<PerfilPreInversionAlianzaBeneficiarioForm> {
+class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
   String residenciaId = '';
   String estadoCivilId = '';
   String nivelEscolarId = '';

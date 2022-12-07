@@ -1174,7 +1174,7 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         counter: 18,
         percent: calculatePercent())));
     final result = await perfilPreInversionPlanNegocioDB
-        .getPerfilPreInversionplanesNegociosUsecaseDB();
+        .getPerfilPreInversionPlanesNegociosUsecaseDB();
     result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)),
         (data) async => await savePerfilesPreInversionesPlanNegociosRemote(
@@ -1190,7 +1190,7 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         counter: 18,
         percent: calculatePercent())));
     final result = await perfilPreInversionPlanNegocio
-        .savePerfilesPreInversionesplanesNegociosUsecase(usuario, data);
+        .savePerfilesPreInversionesPlanesNegociosUsecase(usuario, data);
     return result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)),
         (data) async =>
@@ -1204,7 +1204,7 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         counter: 18,
         percent: calculatePercent())));
     final result = await perfilPreInversionPlanNegocio
-        .getPerfilPreInversionplanesNegociosUsecase(usuario);
+        .getPerfilPreInversionPlanesNegociosUsecase(usuario);
     return result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)),
         (data) async => await saveDownloadPerfilesPreInversionesPlanNegocioes(
@@ -1221,7 +1221,7 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         counter: 18,
         percent: calculatePercent())));
     final result = await perfilPreInversionPlanNegocioDB
-        .savePerfilPreInversionplanesNegociosUsecaseDB(data);
+        .savePerfilPreInversionPlanesNegociosUsecaseDB(data);
     return result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)),
         (_) async => uploadAlianzaExperienciaAgricola(usuario, emit));

@@ -31,6 +31,12 @@ class PerfilPreInversionAliadosRows extends StatelessWidget {
                 Text('ID', style: subtitleStyle.copyWith(color: Colors.white)),
           ),
         ),
+        DataColumn(
+          label: Expanded(
+            child: Text('Nombre',
+                style: subtitleStyle.copyWith(color: Colors.white)),
+          ),
+        ),
         const DataColumn(
           label: Expanded(
             child: Text(''),
@@ -43,6 +49,7 @@ class PerfilPreInversionAliadosRows extends StatelessWidget {
 
         return DataRow(cells: <DataCell>[
           DataCell(Text(perfilPreInversionAliado.aliadoId)),
+          DataCell(Text(perfilPreInversionAliado.aliado!)),
           DataCell(IconButton(
               onPressed: () async {
                 final perfilPreInversionAliadoCubit =

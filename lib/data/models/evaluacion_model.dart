@@ -41,7 +41,7 @@ class EvaluacionModel extends EvaluacionEntity {
         fechaEvaluacion: json["FechaEvaluacion"],
         preAprobado: json["PreAprobado"],
         recordStatus: json["RecordStatus"],
-        remoteEvaluacionId: json["RemoteEvaluacionId"],
+        remoteEvaluacionId: json["RemoteEvaluacionId"].toString(),
       );
 
   @override

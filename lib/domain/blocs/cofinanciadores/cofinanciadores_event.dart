@@ -7,4 +7,8 @@ abstract class CofinanciadoresEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetCofinanciadores extends CofinanciadoresEvent {}
+class GetCofinanciadoresByDepartamento extends CofinanciadoresEvent {
+  final String departamento;
+
+  const GetCofinanciadoresByDepartamento(this.departamento);
+}

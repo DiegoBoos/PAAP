@@ -5,7 +5,8 @@ import '../../../domain/db/db_config.dart';
 import '../../models/alianza_beneficiario_model.dart';
 
 abstract class AlianzaBeneficiarioLocalDataSource {
-  Future<List<AlianzaBeneficiarioModel>> getAlianzasBeneficiariosDB();
+  Future<List<AlianzaBeneficiarioModel>> getAlianzasBeneficiariosDB(
+      String alianzaId);
   Future<List<AlianzaBeneficiarioModel>> getAlianzasBeneficiariosProduccionDB();
   Future<AlianzaBeneficiarioModel?> getAlianzaBeneficiarioDB(
       String alianzaId, String beneficiarioId);
@@ -90,10 +91,67 @@ class AlianzaBeneficiarioLocalDataSourceImpl
   }
 
   @override
-  Future<List<AlianzaBeneficiarioModel>> getAlianzasBeneficiariosDB() async {
+  Future<List<AlianzaBeneficiarioModel>> getAlianzasBeneficiariosDB(
+      String alianzaId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('AlianzaBeneficiario');
+    String sql = '''
+      AlianzaBeneficiario.AlianzaId,
+      AlianzaBeneficiario.BeneficiarioId,
+      AlianzaBeneficiario.MunicipioId,
+      AlianzaBeneficiario.VeredaId,
+      AlianzaBeneficiario.AreaFinca,
+      AlianzaBeneficiario.AreaProyecto,
+      AlianzaBeneficiario.TipoTenenciaId,
+      AlianzaBeneficiario.Experiencia,
+      AlianzaBeneficiario.Asociado,
+      AlianzaBeneficiario.ConocePerfil,
+      AlianzaBeneficiario.FueBeneficiado,
+      AlianzaBeneficiario.CualBeneficio,
+      AlianzaBeneficiario.Activo,
+      AlianzaBeneficiario.MiembrosHogar,
+      AlianzaBeneficiario.MiembrosEcoActivos,
+      AlianzaBeneficiario.ResidenciaId,
+      AlianzaBeneficiario.AccesoExplotacionTierra,
+      AlianzaBeneficiario.GastosMensuales,
+      AlianzaBeneficiario.MesesAsociado,
+      AlianzaBeneficiario.NombreOrganizacion,
+      AlianzaBeneficiario.ActivoInmobiliario,
+      AlianzaBeneficiario.ActivoFinanciero,
+      AlianzaBeneficiario.ActivoProductivo,
+      AlianzaBeneficiario.ActivoCorriente,
+      AlianzaBeneficiario.Nota,
+      AlianzaBeneficiario.NombreFinca,
+      AlianzaBeneficiario.NivelEscolarId,
+      AlianzaBeneficiario.CotizanteBEPS,
+      AlianzaBeneficiario.EstadoCivilId,
+      AlianzaBeneficiario.CalificacionSISBEN,
+      AlianzaBeneficiario.IngresosMensuales,
+      AlianzaBeneficiario.TipoDiscapacidadId,
+      AlianzaBeneficiario.ConyugeTipoIdentificacionId,
+      AlianzaBeneficiario.ConyugeId,
+      AlianzaBeneficiario.ConyugeNombre1,
+      AlianzaBeneficiario.ConyugeNombre2,
+      AlianzaBeneficiario.ConyugeApellido1,
+      AlianzaBeneficiario.ConyugeApellido2,
+      AlianzaBeneficiario.ConyugeGeneroId,
+      AlianzaBeneficiario.ConyugeFechaExpedicionDocumento,
+      AlianzaBeneficiario.ConyugeGrupoEspecialId,
+      AlianzaBeneficiario.ConyugeFechaNacimiento,
+      AlianzaBeneficiario.ConyugeIngresosMensuales,
+      AlianzaBeneficiario.ActividadEconomicaId,
+      AlianzaBeneficiario.IngresosDiarios,
+      AlianzaBeneficiario.DiasTrabajo,
+      AlianzaBeneficiario.Longitud,
+      AlianzaBeneficiario.Latitud,
+      AlianzaBeneficiario.CedulaCatastral
+      Beneficiario.Beneficiario as Beneficiario
+      left join Beneficiario on (Beneficiario.BeneficiarioId=AlianzaBeneficiario.BeneficiarioId)
+      from AlianzaBeneficiario
+      where PerfilPreInversionId = $alianzaId;
+    ''';
+
+    final res = await db.rawQuery(sql);
 
     final alianzasBeneficiariosDB = List<AlianzaBeneficiarioModel>.from(
         res.map((m) => AlianzaBeneficiarioModel.fromJson(m))).toList();

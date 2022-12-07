@@ -49,6 +49,7 @@ class PerfilPreInversionBeneficiarioEntity {
     required this.longitud,
     required this.latitud,
     required this.cedulaCatastral,
+    this.beneficiario,
     required this.recordStatus,
   });
 
@@ -101,6 +102,7 @@ class PerfilPreInversionBeneficiarioEntity {
   String longitud;
   String latitud;
   String cedulaCatastral;
+  String? beneficiario;
   String recordStatus;
 
   PerfilPreInversionBeneficiarioEntity copyWith({

@@ -7,12 +7,18 @@ class PerfilPreInversionCofinanciadorModel
     required String cofinanciadorId,
     String? monto,
     String? participacion,
+    String? cofinanciador,
+    String? telefonoMovil,
+    String? correo,
     String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
           cofinanciadorId: cofinanciadorId,
           monto: monto ?? '',
           participacion: participacion ?? '',
+          cofinanciador: cofinanciador ?? '',
+          telefonoMovil: telefonoMovil ?? '',
+          correo: correo ?? '',
           recordStatus: recordStatus ?? '',
         );
 
@@ -23,6 +29,9 @@ class PerfilPreInversionCofinanciadorModel
         cofinanciadorId: json["CofinanciadorId"],
         monto: json["Monto"],
         participacion: json["Participacion"],
+        cofinanciador: json["cofinanciador"],
+        telefonoMovil: json["telefonoMovil"],
+        correo: json["correo"],
         recordStatus: json["RecordStatus"],
       );
 

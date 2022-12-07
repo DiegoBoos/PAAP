@@ -51,6 +51,7 @@ class AlianzaBeneficiarioModel extends AlianzaBeneficiarioEntity {
     String? longitud,
     String? latitud,
     String? cedulaCatastral,
+    String? beneficiario,
     String? recordStatus,
   }) : super(
           alianzaId: alianzaId,
@@ -103,6 +104,7 @@ class AlianzaBeneficiarioModel extends AlianzaBeneficiarioEntity {
           longitud: longitud ?? '',
           latitud: latitud ?? '',
           cedulaCatastral: cedulaCatastral ?? '',
+          beneficiario: beneficiario ?? '',
           recordStatus: recordStatus ?? '',
         );
 

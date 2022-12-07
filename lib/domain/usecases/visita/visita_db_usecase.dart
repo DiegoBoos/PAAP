@@ -9,8 +9,13 @@ class VisitaUsecaseDB {
   VisitaUsecaseDB(this.repositoryDB);
 
   Future<Either<Failure, VisitaEntity?>> getVisitaUsecaseDB(
+      String perfilId, String tipoVisitaId) {
+    return repositoryDB.getVisitaRepositoryDB(perfilId, tipoVisitaId);
+  }
+
+  Future<Either<Failure, VisitaEntity>> saveVisitaEvaluacionUsecaseDB(
       VisitaEntity visitaEntity) {
-    return repositoryDB.getVisitaRepositoryDB(visitaEntity);
+    return repositoryDB.saveVisitaEvaluacionRepositoryDB(visitaEntity);
   }
 
   Future<Either<Failure, int>> saveVisitasUsecaseDB(

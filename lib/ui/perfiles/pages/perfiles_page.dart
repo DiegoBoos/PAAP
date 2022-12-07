@@ -31,16 +31,12 @@ class _PerfilesPageState extends State<PerfilesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: const Text('Perfiles'),
-            centerTitle: true,
-            leading: null,
-            actions: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: NetworkIcon(),
-              )
-            ]),
+        appBar: AppBar(title: const Text('Perfiles'), actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 70.0),
+            child: NetworkIcon(),
+          ),
+        ]),
         body: ListView(children: [
           const SizedBox(height: 30),
           Padding(

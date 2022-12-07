@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'ui/alianzas/pages/alianza_detail_page.dart';
+import 'ui/alianzas_beneficiarios/pages/alianzas_beneficiarios_page.dart';
+import 'ui/alianzas_beneficiarios/pages/new_edit_alianza_beneficiario_page.dart';
 import 'ui/perfil_preinversion_consultores/pages/perfil_preinversion_consultores.dart';
 import 'ui/modelo_financiero/pages/modelo_financiero_page.dart';
 import 'ui/perfil_preinversion_aliados/pages/new_edit_perfil_preinversion_aliado_page.dart';
@@ -49,11 +52,14 @@ class AppRouter {
     'VModeloFinanciero': (BuildContext context) {
       return const ModeloFinancieroPage();
     },
-    /*  'VAlianza': (BuildContext context) {
+    'VAlianza': (BuildContext context) {
       return const AlianzaDetailPage();
     },
     'VBeneficiarioAlianza': (BuildContext context) {
-      return const BeneficiariosAlianzasPage();
-    } */
+      return const AlianzasBeneficiariosPage();
+    },
+    'NewEditVBeneficiarioAlianza': (BuildContext context) {
+      return const NewEditAlianzaBeneficiarioPage();
+    }
   };
 }

@@ -22,7 +22,7 @@ class PerfilPreInversionAliadosBloc extends Bloc<PerfilPreInversionAliadosEvent,
 
   _getPerfilPreInversionAliados(event, emit) async {
     final result = await perfilPreInversionAliadosDB
-        .getPerfilPreInversionAliadosUsecaseDB();
+        .getPerfilPreInversionAliadosUsecaseDB(event.perfilPreInversionId);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionAliadosError(failure.properties.first)),

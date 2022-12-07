@@ -26,6 +26,12 @@ class IngresosUPTForm extends StatefulWidget {
 }
 
 class _IngresosUPTFormState extends State<IngresosUPTForm> {
+  List<RubroEntity> rubrosFiltered = [];
+
+  String? actividadFinancieraId;
+  String? rubroId;
+  String? unidadId;
+
   String? productoId;
   String? tipoCalidadId;
 
@@ -37,8 +43,19 @@ class _IngresosUPTFormState extends State<IngresosUPTForm> {
   @override
   void initState() {
     super.initState();
+    loadAccesories();
+  }
+
+  Future<void> loadAccesories() async {
     final perfilPreInversionIngresosUPTCubit =
         BlocProvider.of<PerfilPreInversionIngresosUPTCubit>(context);
+    final rubroCubit = BlocProvider.of<RubroCubit>(context);
+
+    await rubroCubit.getRubrosDB();
+
+    if (rubroCubit.state is RubrosLoaded) {
+      rubrosFiltered = rubroCubit.state.rubros!;
+    }
 
     if (perfilPreInversionIngresosUPTCubit.state
         is PerfilPreInversionIngresosUPTLoaded) {
@@ -50,7 +67,15 @@ class _IngresosUPTFormState extends State<IngresosUPTForm> {
   }
 
   void loadPerfilPreInversionIngresosUPT(
-      PerfilPreInversionPlanNegocioEntity perfilPreInversionIngresosUPT) {}
+      PerfilPreInversionPlanNegocioEntity perfilPreInversionIngresosUPTLoaded) {
+    rubroId = perfilPreInversionIngresosUPTLoaded.rubroId;
+    unidadId = perfilPreInversionIngresosUPTLoaded.unidadId;
+    yearCtrl.text = perfilPreInversionIngresosUPTLoaded.year;
+    cantidadCtrl.text = perfilPreInversionIngresosUPTLoaded.cantidad;
+    valorCtrl.text = perfilPreInversionIngresosUPTLoaded.valor;
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +83,8 @@ class _IngresosUPTFormState extends State<IngresosUPTForm> {
         BlocProvider.of<PerfilPreInversionIngresosUPTCubit>(context);
     final perfilPreInversionPrecioCubit =
         BlocProvider.of<PerfilPreInversionPrecioCubit>(context);
+    final rubroCubit = BlocProvider.of<RubroCubit>(context);
+
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
         child: ListView(children: [
@@ -170,6 +197,9 @@ class _IngresosUPTFormState extends State<IngresosUPTForm> {
                       if (state is ActividadesFinancierasLoaded) {
                         return DropdownButtonFormField(
                             isExpanded: true,
+                            value: actividadFinancieraId != ''
+                                ? actividadFinancieraId
+                                : null,
                             items: state.actividadesFinancierasLoaded!
                                 .where((actividadFinanciera) =>
                                     actividadFinanciera.tipoMovimientoId == '3')
@@ -181,7 +211,14 @@ class _IngresosUPTFormState extends State<IngresosUPTForm> {
                               );
                             }).toList(),
                             onChanged: (String? value) {
-                              //TODO: Cargar rubros
+                              setState(() {
+                                rubrosFiltered = rubroCubit.state.rubros!
+                                    .where(((rubro) =>
+                                        rubro.actividadFinancieraId == value))
+                                    .toList();
+
+                                rubroId = null;
+                              });
                             },
                             hint: const Text('Actividad'));
                       }
@@ -194,6 +231,7 @@ class _IngresosUPTFormState extends State<IngresosUPTForm> {
                       if (state is RubrosLoaded) {
                         return DropdownButtonFormField(
                             isExpanded: true,
+                            value: rubroId,
                             items: state.rubros!.map<DropdownMenuItem<String>>(
                                 (RubroEntity value) {
                               return DropdownMenuItem<String>(
@@ -216,6 +254,7 @@ class _IngresosUPTFormState extends State<IngresosUPTForm> {
                       if (state is UnidadesLoaded) {
                         return DropdownButtonFormField(
                             isExpanded: true,
+                            value: unidadId != '' ? unidadId : null,
                             items: state.unidades!
                                 .map<DropdownMenuItem<String>>(
                                     (UnidadEntity value) {
@@ -273,8 +312,8 @@ class _IngresosUPTFormState extends State<IngresosUPTForm> {
             ),
           ),
           const SizedBox(height: 20),
-          const SaveBackButtons(
-            onSaved: null,
+          SaveBackButtons(
+            onSaved: () {},
             routeName: 'tabs',
           )
         ]));

@@ -603,7 +603,7 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
           title: 'Sincronizando Perfiles PreInversion Plan Negocios',
           counter: state.downloadProgressModel!.counter + 1,
           percent: calculatePercent())));
-      await downloadPerfilPreInversionplanesNegocios(usuario, emit);
+      await downloadPerfilPreInversionPlanesNegocios(usuario, emit);
 
       add(DownloadStatusChanged(state.downloadProgressModel!.copyWith(
           title: 'Sincronizando Productos',
@@ -812,7 +812,8 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
 
   Future<void> downloadCofinanciadores(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
-    final result = await cofinanciador.getCofinanciadoresUsecase(usuario);
+    final result =
+        await cofinanciador.getCofinanciadoresByDepartamentoUsecase(usuario);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)),
         (data) async => await saveCofinanciadores(data, emit));
@@ -1109,13 +1110,13 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
         (data) async => await savePerfilPreInversionPrecios(data, emit));
   }
 
-  Future<void> downloadPerfilPreInversionplanesNegocios(
+  Future<void> downloadPerfilPreInversionPlanesNegocios(
       UsuarioEntity usuario, Emitter<DownloadSyncState> emit) async {
     final result = await perfilPreInversionPlanNegocio
-        .getPerfilPreInversionplanesNegociosUsecase(usuario);
+        .getPerfilPreInversionPlanesNegociosUsecase(usuario);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)),
-        (data) async => await savePerfilPreInversionplanesNegocios(data, emit));
+        (data) async => await savePerfilPreInversionPlanesNegocios(data, emit));
   }
 
   Future<void> downloadProductos(
@@ -1611,11 +1612,11 @@ class DownloadSyncBloc extends Bloc<DownloadSyncEvent, DownloadSyncState> {
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }
 
-  Future<void> savePerfilPreInversionplanesNegocios(
+  Future<void> savePerfilPreInversionPlanesNegocios(
       List<PerfilPreInversionPlanNegocioEntity> data,
       Emitter<DownloadSyncState> emit) async {
     final result = await perfilPreInversionPlanNegocioDB
-        .savePerfilPreInversionplanesNegociosUsecaseDB(data);
+        .savePerfilPreInversionPlanesNegociosUsecaseDB(data);
     return result.fold(
         (failure) => add(DownloadSyncError(failure.properties.first)), (_) {});
   }

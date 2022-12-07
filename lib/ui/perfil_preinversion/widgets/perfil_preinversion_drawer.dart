@@ -21,8 +21,8 @@ class PerfilPreInversionDrawer extends StatelessWidget {
                 title: Text(submenu.nombre),
                 onTap: () {
                   if (submenu.menuId == '36') {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, 'tabs', (route) => false);
+                    Navigator.popUntil(context, (route) => route.isFirst);
+
                     return;
                   }
 

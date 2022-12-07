@@ -9,8 +9,8 @@ class AlianzaBeneficiarioUsecaseDB {
   AlianzaBeneficiarioUsecaseDB(this.repositoryDB);
 
   Future<Either<Failure, List<AlianzaBeneficiarioEntity>?>>
-      getAlianzasBeneficiariosUsecaseDB() {
-    return repositoryDB.getAlianzasBeneficiariosRepositoryDB();
+      getAlianzasBeneficiariosUsecaseDB(String alianzaId) {
+    return repositoryDB.getAlianzasBeneficiariosRepositoryDB(alianzaId);
   }
 
   Future<Either<Failure, AlianzaBeneficiarioEntity?>>

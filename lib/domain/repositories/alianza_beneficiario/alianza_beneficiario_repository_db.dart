@@ -5,10 +5,10 @@ import '../../entities/alianza_beneficiario_entity.dart';
 
 abstract class AlianzaBeneficiarioRepositoryDB {
   Future<Either<Failure, List<AlianzaBeneficiarioEntity>>>
-      getAlianzasBeneficiariosProduccionRepositoryDB();
+      getAlianzasBeneficiariosRepositoryDB(String alianzaId);
 
   Future<Either<Failure, List<AlianzaBeneficiarioEntity>>>
-      getAlianzasBeneficiariosRepositoryDB();
+      getAlianzasBeneficiariosProduccionRepositoryDB();
 
   Future<Either<Failure, AlianzaBeneficiarioEntity?>>
       getAlianzaBeneficiarioRepositoryDB(

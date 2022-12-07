@@ -5,6 +5,8 @@ class PerfilPreInversionCofinanciadorActividadFinancieraEntity {
       required this.cofinanciadorId,
       required this.desembolsoId,
       required this.valor,
+      this.actividadFinanciera,
+      this.desembolso,
       required this.recordStatus,
       this.canCreateRubro = false});
 
@@ -14,6 +16,8 @@ class PerfilPreInversionCofinanciadorActividadFinancieraEntity {
   String desembolsoId;
   String valor;
   String recordStatus;
+  String? actividadFinanciera;
+  String? desembolso;
   bool canCreateRubro;
 
   PerfilPreInversionCofinanciadorActividadFinancieraEntity copyWith({

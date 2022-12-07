@@ -19,38 +19,32 @@ class EvaluacionCubit extends Cubit<EvaluacionState> {
   void saveEvaluacionDB(EvaluacionEntity evaluacionEntity) async {
     final result = await evaluacionDB.saveEvaluacionUsecaseDB(evaluacionEntity);
     result.fold((failure) => emit(EvaluacionError(failure.properties.first)),
-        (data) => emit(EvaluacionSaved()));
-  }
-
-  void clearEvaluacionsDB() async {
-    final result = await evaluacionDB.clearEvaluacionesUsecaseDB();
-    result.fold((failure) => emit(EvaluacionError(failure.properties.first)),
-        (data) => emit(EvaluacionCleared()));
+        (data) => emit(EvaluacionSaved(evaluacion: evaluacionEntity)));
   }
 
   void initState() => emit(EvaluacionInitial());
 
   void changeResumen(String value) {
-    final resumenChanged = state.evaluacion!.copyWith(resumen: value);
+    final resumenChanged = state.evaluacion.copyWith(resumen: value);
     emit(EvaluacionLoaded(resumenChanged));
   }
 
   void changeFortalezas(String value) {
-    final fortalezasChanged = state.evaluacion!.copyWith(fortalezas: value);
+    final fortalezasChanged = state.evaluacion.copyWith(fortalezas: value);
     emit(EvaluacionLoaded(fortalezasChanged));
   }
 
   void changeDebilidades(String value) {
-    final debilidadesChanged = state.evaluacion!.copyWith(debilidades: value);
+    final debilidadesChanged = state.evaluacion.copyWith(debilidades: value);
     emit(EvaluacionLoaded(debilidadesChanged));
   }
 
   void changeRiesgos(String value) {
-    final riesgosChanged = state.evaluacion!.copyWith(riesgos: value);
+    final riesgosChanged = state.evaluacion.copyWith(riesgos: value);
     emit(EvaluacionLoaded(riesgosChanged));
   }
 
   void changeFinalizado(String value) {
-    state.evaluacion!.copyWith(finalizado: value);
+    state.evaluacion.copyWith(finalizado: value);
   }
 }

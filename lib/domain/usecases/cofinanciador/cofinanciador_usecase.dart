@@ -10,8 +10,8 @@ class CofinanciadorUsecase {
 
   CofinanciadorUsecase(this.repository);
 
-  Future<Either<Failure, List<CofinanciadorEntity>>> getCofinanciadoresUsecase(
-      UsuarioEntity usuario) {
-    return repository.getCofinanciadoresRepository(usuario);
+  Future<Either<Failure, List<CofinanciadorEntity>>>
+      getCofinanciadoresByDepartamentoUsecase(UsuarioEntity usuario) {
+    return repository.getCofinanciadoresByDepartamentoRepository(usuario);
   }
 }

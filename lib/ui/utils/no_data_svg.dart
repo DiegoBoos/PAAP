@@ -14,6 +14,7 @@ class NoDataSvg extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 10),
           SvgPicture.asset('assets/images/no-data.svg', height: 100),

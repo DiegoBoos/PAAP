@@ -8,7 +8,6 @@ import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/floating_buttons.dart';
@@ -43,11 +42,6 @@ class NewEditPerfilPreInversionCofinanciadorPage extends StatelessWidget {
       context,
     );
 
-    final perfilPreInversionCofinanciadorRubroCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorRubroCubit>(
-      context,
-    );
-
     final perfilPreInversionCofinanciadorDesembolsosBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsosBloc>(
             context);
@@ -66,17 +60,8 @@ class NewEditPerfilPreInversionCofinanciadorPage extends StatelessWidget {
       final vPerfilPreInversionId = vPerfilPreInversionCubit
           .state.vPerfilPreInversion!.perfilPreInversionId;
       final cofinanciadorId = perfilPreInversionCofinanciador.cofinanciadorId;
-      final desembolsoId = perfilPreInversionCofinanciadorDesembolsoCubit
-          .state.perfilPreInversionCofinanciadorDesembolso.desembolsoId;
-      final actividadFinancieraId =
-          perfilPreInversionCofinanciadorActividadFinancieraCubit
-              .state
-              .perfilPreInversionCofinanciadorActividadFinanciera
-              .actividadFinancieraId;
-      final rubroId = perfilPreInversionCofinanciadorRubroCubit
-          .state.perfilPreInversionCofinanciadorRubro.rubroId;
 
-      perfilPreInversionCofinanciadorDesembolsosBloc.add(
+      /*  perfilPreInversionCofinanciadorDesembolsosBloc.add(
           GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
               perfilPreInversionId: vPerfilPreInversionId,
               cofinanciadorId: cofinanciadorId,
@@ -95,7 +80,7 @@ class NewEditPerfilPreInversionCofinanciadorPage extends StatelessWidget {
               cofinanciadorId: cofinanciadorId,
               actividadFinancieraId: actividadFinancieraId,
               desembolsoId: desembolsoId,
-              rubroId: rubroId));
+              rubroId: rubroId)); */
     }
 
     final perfilPreInversionCofinanciadorDesembolso =

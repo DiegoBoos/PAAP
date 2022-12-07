@@ -18,14 +18,14 @@ class PerfilPreInversionPlanNegocioRepositoryImpl
 
   @override
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilPreInversionplanesNegociosRepository(
+      getPerfilPreInversionPlanesNegociosRepository(
           UsuarioEntity usuario) async {
     try {
-      final perfilPreInversionplanesNegocios =
+      final perfilPreInversionPlanesNegocios =
           await perfilPreInversionPlanNegocioRemoteDataSource
-              .getPerfilPreInversionplanesNegocios(usuario);
+              .getPerfilPreInversionPlanesNegocios(usuario);
 
-      return Right(perfilPreInversionplanesNegocios);
+      return Right(perfilPreInversionPlanesNegocios);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -35,14 +35,14 @@ class PerfilPreInversionPlanNegocioRepositoryImpl
 
   @override
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      savePerfilesPreInversionesplanesNegociosRepository(
+      savePerfilesPreInversionesPlanesNegociosRepository(
           UsuarioEntity usuario,
           List<PerfilPreInversionPlanNegocioEntity>
-              perfilesPreInversionesplanesNegociosEntity) async {
+              perfilesPreInversionesPlanesNegociosEntity) async {
     try {
       final result = await perfilPreInversionPlanNegocioRemoteDataSource
-          .savePerfilesPreInversionesplanesNegocios(
-              usuario, perfilesPreInversionesplanesNegociosEntity);
+          .savePerfilesPreInversionesPlanesNegocios(
+              usuario, perfilesPreInversionesPlanesNegociosEntity);
 
       return Right(result);
     } on ServerFailure catch (e) {
@@ -50,5 +50,22 @@ class PerfilPreInversionPlanNegocioRepositoryImpl
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
+  }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
+      getPerfilPreInversionplanesNegociosRepository(UsuarioEntity usuario) {
+    // TODO: implement getPerfilPreInversionplanesNegociosRepository
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
+      savePerfilesPreInversionesplanesNegociosRepository(
+          UsuarioEntity usuario,
+          List<PerfilPreInversionPlanNegocioEntity>
+              perfilPreInversionPlanNegocioEntity) {
+    // TODO: implement savePerfilesPreInversionesplanesNegociosRepository
+    throw UnimplementedError();
   }
 }

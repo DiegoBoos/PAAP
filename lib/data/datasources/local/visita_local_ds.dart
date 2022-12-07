@@ -6,7 +6,8 @@ import '../../../../domain/db/db_config.dart';
 import '../../models/visita_model.dart';
 
 abstract class VisitaLocalDataSource {
-  Future<VisitaModel> getVisitaDB(VisitaEntity visitaEntity);
+  Future<VisitaModel?> getVisita(String perfilId, String tipoVisitaId);
+  Future<VisitaModel> saveVisitaEvaluacion(VisitaEntity visitaEntity);
   Future<List<VisitaModel>> getVisitasProduccionDB();
   Future<int> saveVisitasDB(List<VisitaEntity> visitasEntity);
   Future<int> updateVisitasProduccionDB(List<VisitaEntity> visitasEntity);
@@ -35,36 +36,39 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
   }
 
   @override
-  Future<VisitaModel> getVisitaDB(VisitaEntity visitaEntity) async {
+  Future<VisitaModel?> getVisita(String perfilId, String tipoVisitaId) async {
     final db = await DBConfig.database;
     final res = await db.query('Visita',
         where: 'PerfilId = ? AND TipoVisitaId = ?',
-        whereArgs: [visitaEntity.perfilId, visitaEntity.tipoVisitaId]);
+        whereArgs: [perfilId, tipoVisitaId]);
 
-    if (res.isEmpty) {
-      visitaEntity.recordStatus = 'N';
-      await saveVisitaDB(visitaEntity);
-      EvaluacionEntity newEvaluacion = EvaluacionEntity(
-          evaluacionId: '',
-          perfilId: visitaEntity.perfilId,
-          resumen: '',
-          fortalezas: '',
-          debilidades: '',
-          riesgos: '',
-          finalizado: 'false',
-          usuarioIdCoordinador: '',
-          fechaEvaluacion: '',
-          preAprobado: 'false',
-          recordStatus: 'N',
-          remoteEvaluacionId: '');
-      await saveEvaluacionDB(newEvaluacion);
-      return VisitaModel.fromJson(visitaEntity.toJson());
-    }
+    if (res.isEmpty) return null;
 
     final visitaMap = {for (var e in res[0].entries) e.key: e.value};
     final visitaModel = VisitaModel.fromJson(visitaMap);
 
     return visitaModel;
+  }
+
+  @override
+  Future<VisitaModel> saveVisitaEvaluacion(VisitaEntity visitaEntity) async {
+    visitaEntity.recordStatus = 'N';
+    await saveVisitaDB(visitaEntity);
+    EvaluacionEntity newEvaluacion = EvaluacionEntity(
+        evaluacionId: '',
+        perfilId: visitaEntity.perfilId,
+        resumen: '',
+        fortalezas: '',
+        debilidades: '',
+        riesgos: '',
+        finalizado: 'false',
+        usuarioIdCoordinador: '',
+        fechaEvaluacion: '',
+        preAprobado: 'false',
+        recordStatus: 'N',
+        remoteEvaluacionId: '');
+    await saveEvaluacionDB(newEvaluacion);
+    return VisitaModel.fromJson(visitaEntity.toJson());
   }
 
   @override

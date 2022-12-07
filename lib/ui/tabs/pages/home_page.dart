@@ -18,14 +18,11 @@ class HomePage extends StatelessWidget {
               leading: const Icon(Icons.person_pin),
               title: Text('${usuario.nombre} ${usuario.apellido}',
                   style: const TextStyle(color: Colors.white))),
-          actions: [
-            Image.asset(
-              'assets/images/logo.png',
-              width: 100,
+          actions: const [
+            Padding(
+              padding: EdgeInsets.only(right: 70.0),
+              child: NetworkIcon(),
             ),
-            const SizedBox(width: 20),
-            const NetworkIcon(),
-            const SizedBox(width: 20),
           ],
         ),
         body: Padding(

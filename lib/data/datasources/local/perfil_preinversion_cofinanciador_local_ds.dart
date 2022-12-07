@@ -6,9 +6,8 @@ import '../../models/perfil_preinversion_cofinanciador_model.dart';
 
 abstract class PerfilPreInversionCofinanciadorLocalDataSource {
   Future<List<PerfilPreInversionCofinanciadorModel>>
-      getPerfilPreInversionCofinanciadoresDB();
-  Future<PerfilPreInversionCofinanciadorModel?>
-      getPerfilPreInversionCofinanciadorDB(String id);
+      getPerfilPreInversionCofinanciadoresDB(String perfilPreInversionId);
+
   Future<int> savePerfilesPreInversionesCofinanciadores(
       List<PerfilPreInversionCofinanciadorEntity>
           perfilPreInversionCofinanciadorEntity);
@@ -40,35 +39,30 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionCofinanciadorModel>>
-      getPerfilPreInversionCofinanciadoresDB() async {
+      getPerfilPreInversionCofinanciadoresDB(
+          String perfilPreInversionId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionCofinanciador');
+    String sql = '''
+      select 
+      PerfilPreInversionCofinanciador.PerfilPreInversionId,
+      PerfilPreInversionCofinanciador.CofinanciadorId,
+      Monto as monto,
+      Cofinanciador.Nombre as cofinanciador,
+      Cofinanciador.Teléfono_x0020_Móvil as telefonoMovil,
+      Cofinanciador.Correo as correo
+      from PerfilPreInversionCofinanciador
+      left join Cofinanciador on (Cofinanciador.ID=PerfilPreInversionCofinanciador.CofinanciadorId)
+      where PerfilPreInversionId = $perfilPreInversionId
+      ''';
+
+    final res = await db.rawQuery(sql);
 
     final perfilPreInversionCofinanciador =
         List<PerfilPreInversionCofinanciadorModel>.from(res.map(
             (m) => PerfilPreInversionCofinanciadorModel.fromJson(m))).toList();
 
     return perfilPreInversionCofinanciador;
-  }
-
-  @override
-  Future<PerfilPreInversionCofinanciadorModel?>
-      getPerfilPreInversionCofinanciadorDB(String id) async {
-    final db = await DBConfig.database;
-
-    final res = await db.query('PerfilPreInversionCofinanciador',
-        where: 'PerfilPreInversionId = ?', whereArgs: [id]);
-
-    if (res.isEmpty) return null;
-    final perfilPreInversionCofinanciadorMap = {
-      for (var e in res[0].entries) e.key: e.value
-    };
-    final perfilPreInversionCofinanciadorModel =
-        PerfilPreInversionCofinanciadorModel.fromJson(
-            perfilPreInversionCofinanciadorMap);
-
-    return perfilPreInversionCofinanciadorModel;
   }
 
   @override

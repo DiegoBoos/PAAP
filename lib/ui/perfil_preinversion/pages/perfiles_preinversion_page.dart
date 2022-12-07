@@ -32,16 +32,13 @@ class _PerfilesPreInversionPageState extends State<PerfilesPreInversionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: const Text('Perfiles PreInversion'),
-            centerTitle: true,
-            leading: null,
-            actions: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: NetworkIcon(),
-              )
-            ]),
+        appBar:
+            AppBar(title: const Text('Perfiles PreInversion'), actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 70.0),
+            child: NetworkIcon(),
+          ),
+        ]),
         body: ListView(children: [
           const SizedBox(height: 30),
           Padding(

@@ -4,6 +4,7 @@ class PerfilPreInversionCofinanciadorDesembolsoEntity {
     required this.cofinanciadorId,
     required this.desembolsoId,
     required this.fecha,
+    this.desembolso,
     required this.recordStatus,
     this.canCreateActividadFinanciera = false,
   });
@@ -12,6 +13,7 @@ class PerfilPreInversionCofinanciadorDesembolsoEntity {
   String cofinanciadorId;
   String desembolsoId;
   String fecha;
+  String? desembolso;
   String recordStatus;
   bool canCreateActividadFinanciera;
 

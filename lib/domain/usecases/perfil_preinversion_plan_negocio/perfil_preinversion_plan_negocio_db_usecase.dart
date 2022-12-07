@@ -9,8 +9,8 @@ class PerfilPreInversionPlanNegocioUsecaseDB {
   PerfilPreInversionPlanNegocioUsecaseDB(this.repositoryDB);
 
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>?>>
-      getPerfilPreInversionplanesNegociosUsecaseDB() {
-    return repositoryDB.getPerfilPreInversionplanesNegociosRepositoryDB();
+      getPerfilPreInversionPlanesNegociosUsecaseDB() {
+    return repositoryDB.getPerfilPreInversionPlanesNegociosRepositoryDB();
   }
 
   Future<Either<Failure, PerfilPreInversionPlanNegocioEntity?>>
@@ -20,17 +20,17 @@ class PerfilPreInversionPlanNegocioUsecaseDB {
         perfilPreInversionId, rubroId, year);
   }
 
-  Future<Either<Failure, int>> savePerfilPreInversionplanesNegociosUsecaseDB(
+  Future<Either<Failure, int>> savePerfilPreInversionPlanesNegociosUsecaseDB(
       List<PerfilPreInversionPlanNegocioEntity>
-          perfilPreInversionplanesNegociosEntity) {
-    return repositoryDB.savePerfilPreInversionplanesNegociosRepositoryDB(
-        perfilPreInversionplanesNegociosEntity);
+          perfilPreInversionPlanesNegociosEntity) {
+    return repositoryDB.savePerfilPreInversionPlanesNegociosRepositoryDB(
+        perfilPreInversionPlanesNegociosEntity);
   }
 
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilesPreInversionesplanesNegociosProduccionUsecaseDB() {
+      getPerfilesPreInversionesPlanesNegociosProduccionUsecaseDB() {
     return repositoryDB
-        .getPerfilesPreInversionesplanesNegociosProduccionRepositoryDB();
+        .getPerfilesPreInversionesPlanesNegociosProduccionRepositoryDB();
   }
 
   Future<Either<Failure, int>> savePerfilPreInversionPlanNegocioUsecaseDB(
@@ -40,11 +40,11 @@ class PerfilPreInversionPlanNegocioUsecaseDB {
   }
 
   Future<Either<Failure, int>>
-      updatePerfilesPreInversionesplanesNegociosProduccionUsecaseDB(
+      updatePerfilesPreInversionesPlanesNegociosProduccionUsecaseDB(
           List<PerfilPreInversionPlanNegocioEntity>
               experienciasAgricolasEntity) {
     return repositoryDB
-        .updatePerfilesPreInversionesplanesNegociosProduccionDBRepositoryDB(
+        .updatePerfilesPreInversionesPlanesNegociosProduccionDBRepositoryDB(
             experienciasAgricolasEntity);
   }
 }

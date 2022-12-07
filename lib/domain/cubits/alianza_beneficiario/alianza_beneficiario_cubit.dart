@@ -12,8 +12,6 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
   AlianzaBeneficiarioCubit({required this.alianzaBeneficiarioDB})
       : super(AlianzaBeneficiarioInitial());
 
-  void initState() => emit(AlianzaBeneficiarioInitial());
-
   void loadAlianzaBeneficiario(String alianzaId, String beneficiarioId) async {
     final result = await alianzaBeneficiarioDB.getAlianzaBeneficiarioUsecaseDB(
         alianzaId, beneficiarioId);
@@ -26,19 +24,73 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     });
   }
 
+  void initState() => emit(AlianzaBeneficiarioInitial());
+
+  void selectAlianzaBeneficiario(
+      AlianzaBeneficiarioEntity alianzaBeneficiario) {
+    emit(AlianzaBeneficiarioLoaded(alianzaBeneficiario));
+  }
+
   void saveAlianzaBeneficiarioDB(
       AlianzaBeneficiarioEntity alianzaBeneficiarioEntity) async {
     final result = await alianzaBeneficiarioDB
         .saveAlianzaBeneficiarioUsecaseDB(alianzaBeneficiarioEntity);
     result.fold(
         (failure) => emit(AlianzaBeneficiarioError(failure.properties.first)),
-        (data) => emit(AlianzaBeneficiarioSaved(
-            alianzaBeneficiario: alianzaBeneficiarioEntity)));
+        (data) => emit(AlianzaBeneficiarioSaved()));
   }
 
-  void selectAlianzaBeneficiario(
-      AlianzaBeneficiarioEntity alianzaBeneficiario) {
-    emit(AlianzaBeneficiarioLoaded(alianzaBeneficiario));
+  void changeMunicipioId(String value) {
+    final municipioChanged =
+        state.alianzaBeneficiario.copyWith(municipioId: value);
+    emit(AlianzaBeneficiarioChanged(municipioChanged));
+  }
+
+  void changeVeredaId(String value) {
+    final veredaChanged = state.alianzaBeneficiario.copyWith(veredaId: value);
+    emit(AlianzaBeneficiarioChanged(veredaChanged));
+  }
+
+  void changeTipoTenencia(String? value) {
+    final tipoTenenciaChanged =
+        state.alianzaBeneficiario.copyWith(tipoTenenciaId: value);
+    emit(AlianzaBeneficiarioChanged(tipoTenenciaChanged));
+  }
+
+  void changeAreaFinca(String? newValue) {
+    final areaFincaChanged =
+        state.alianzaBeneficiario.copyWith(areaFinca: newValue);
+    emit(AlianzaBeneficiarioChanged(areaFincaChanged));
+  }
+
+  void changeAreaProyecto(String? newValue) {
+    final areaProyectoChanged =
+        state.alianzaBeneficiario.copyWith(areaProyecto: newValue);
+    emit(AlianzaBeneficiarioChanged(areaProyectoChanged));
+  }
+
+  void changeAsociado(String? value) {
+    final asociadoChanged =
+        state.alianzaBeneficiario.copyWith(asociado: value.toString());
+    emit(AlianzaBeneficiarioChanged(asociadoChanged));
+  }
+
+  void changeConocePerfil(String? value) {
+    final conocePerfilChanged =
+        state.alianzaBeneficiario.copyWith(conocePerfil: value.toString());
+    emit(AlianzaBeneficiarioChanged(conocePerfilChanged));
+  }
+
+  void changeFueBeneficiado(String? value) {
+    final fueBeneficiadoChanged =
+        state.alianzaBeneficiario.copyWith(fueBeneficiado: value.toString());
+    emit(AlianzaBeneficiarioChanged(fueBeneficiadoChanged));
+  }
+
+  void changeCualBeneficio(String? newValue) {
+    final cualBeneficioChanged =
+        state.alianzaBeneficiario.copyWith(cualBeneficio: newValue);
+    emit(AlianzaBeneficiarioChanged(cualBeneficioChanged));
   }
 
   void changeResidencia(String? value) {
@@ -119,9 +171,9 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     emit(AlianzaBeneficiarioChanged(activoCorrienteChanged));
   }
 
-  void changeActivo(bool? value) {
+  void changeActivo(String? newValue) {
     final totalActivoChanged =
-        state.alianzaBeneficiario.copyWith(activo: value.toString());
+        state.alianzaBeneficiario.copyWith(activo: newValue);
     emit(AlianzaBeneficiarioChanged(totalActivoChanged));
   }
 
@@ -158,53 +210,6 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     final discapacidadChanged =
         state.alianzaBeneficiario.copyWith(tipoDiscapacidadId: value);
     emit(AlianzaBeneficiarioChanged(discapacidadChanged));
-  }
-
-  void changeMunicipioId(String value) {
-    final municipioChanged =
-        state.alianzaBeneficiario.copyWith(municipioId: value);
-    emit(AlianzaBeneficiarioChanged(municipioChanged));
-  }
-
-  void changeVeredaId(String value) {
-    final veredaChanged = state.alianzaBeneficiario.copyWith(veredaId: value);
-    emit(AlianzaBeneficiarioChanged(veredaChanged));
-  }
-
-  void changeTipoTenencia(String? value) {
-    final tipoTenenciaChanged =
-        state.alianzaBeneficiario.copyWith(tipoTenenciaId: value);
-    emit(AlianzaBeneficiarioChanged(tipoTenenciaChanged));
-  }
-
-  void changeAreaFinca(String? newValue) {
-    final areaFincaChanged =
-        state.alianzaBeneficiario.copyWith(areaFinca: newValue);
-    emit(AlianzaBeneficiarioChanged(areaFincaChanged));
-  }
-
-  void changeAreaProyecto(String? newValue) {
-    final areaProyectoChanged =
-        state.alianzaBeneficiario.copyWith(areaProyecto: newValue);
-    emit(AlianzaBeneficiarioChanged(areaProyectoChanged));
-  }
-
-  void changeAsociado(bool? value) {
-    final asociadoChanged =
-        state.alianzaBeneficiario.copyWith(asociado: value.toString());
-    emit(AlianzaBeneficiarioChanged(asociadoChanged));
-  }
-
-  void changeFueBeneficiado(bool? value) {
-    final fueBeneficiadoChanged =
-        state.alianzaBeneficiario.copyWith(fueBeneficiado: value.toString());
-    emit(AlianzaBeneficiarioChanged(fueBeneficiadoChanged));
-  }
-
-  void changeCualBeneficio(String? newValue) {
-    final cualBeneficioChanged =
-        state.alianzaBeneficiario.copyWith(cualBeneficio: newValue);
-    emit(AlianzaBeneficiarioChanged(cualBeneficioChanged));
   }
 
   void changeConyugeTipoIdentificacion(String? value) {
@@ -267,16 +272,16 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     emit(AlianzaBeneficiarioChanged(conyugeGrupoEspecialChanged));
   }
 
-  void changeCalificacionSisben(String? newValue) {
-    final calificacionSisbenChanged =
-        state.alianzaBeneficiario.copyWith(calificacionSisben: newValue);
-    emit(AlianzaBeneficiarioChanged(calificacionSisbenChanged));
-  }
-
   void changeConyugeIngresosMensuales(String? newValue) {
     final conyugeIngresosMensualesChanged =
         state.alianzaBeneficiario.copyWith(conyugeIngresosMensuales: newValue);
     emit(AlianzaBeneficiarioChanged(conyugeIngresosMensualesChanged));
+  }
+
+  void changeCalificacionSisben(String? newValue) {
+    final calificacionSisbenChanged =
+        state.alianzaBeneficiario.copyWith(calificacionSisben: newValue);
+    emit(AlianzaBeneficiarioChanged(calificacionSisbenChanged));
   }
 
   void changeLatitud(String? newValue) {
@@ -295,6 +300,12 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     final longitudChanged =
         state.alianzaBeneficiario.copyWith(longitud: newValue);
     emit(AlianzaBeneficiarioChanged(longitudChanged));
+  }
+
+  void changeCedulaCatastral(String? newValue) {
+    final cedulaCatastralChanged =
+        state.alianzaBeneficiario.copyWith(cedulaCatastral: newValue);
+    emit(AlianzaBeneficiarioChanged(cedulaCatastralChanged));
   }
 
   void changeCotizanteBeps(bool? value) {

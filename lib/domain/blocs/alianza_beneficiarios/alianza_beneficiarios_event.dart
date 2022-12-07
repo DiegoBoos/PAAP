@@ -7,4 +7,8 @@ abstract class AlianzasBeneficiariosEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetAlianzasBeneficiarios extends AlianzasBeneficiariosEvent {}
+class GetAlianzasBeneficiarios extends AlianzasBeneficiariosEvent {
+  final String alianzaId;
+
+  const GetAlianzasBeneficiarios(this.alianzaId);
+}

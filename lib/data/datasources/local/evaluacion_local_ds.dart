@@ -52,7 +52,9 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
   @override
   Future<int> saveEvaluacionDB(EvaluacionEntity evaluacionEntity) async {
     final db = await DBConfig.database;
-    evaluacionEntity.recordStatus = 'E';
+    if (evaluacionEntity.recordStatus != 'N') {
+      evaluacionEntity.recordStatus = 'E';
+    }
     final res = await db.update('Evaluacion', evaluacionEntity.toJson(),
         where: 'EvaluacionId = ?', whereArgs: [evaluacionEntity.evaluacionId]);
 

@@ -9,13 +9,10 @@ class PerfilPreInversionCofinanciadorUsecaseDB {
   PerfilPreInversionCofinanciadorUsecaseDB(this.repositoryDB);
 
   Future<Either<Failure, List<PerfilPreInversionCofinanciadorEntity>?>>
-      getPerfilPreInversionCofinanciadoresUsecaseDB() {
+      getPerfilPreInversionCofinanciadoresUsecaseDB(
+          String perfilPreInversionId) {
+    //TODO: perfilPreInversionId
     return repositoryDB.getPerfilPreInversionCofinanciadoresRepositoryDB();
-  }
-
-  Future<Either<Failure, PerfilPreInversionCofinanciadorEntity?>>
-      getPerfilPreInversionCofinanciadorUsecaseDB(String id) {
-    return repositoryDB.getPerfilPreInversionCofinanciadorRepositoryDB(id);
   }
 
   Future<Either<Failure, int>>

@@ -68,7 +68,7 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
 
           return DataRow(cells: <DataCell>[
             DataCell(Text(perfilPreInversionBeneficiario.beneficiarioId)),
-            DataCell(Text(perfilPreInversionBeneficiario.nombreOrganizacion)),
+            DataCell(Text(perfilPreInversionBeneficiario.beneficiario!)),
             DataCell(IconButton(
                 onPressed: () {
                   final tipoProyecto = vPerfilPreinversionCubit

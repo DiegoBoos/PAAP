@@ -5,9 +5,9 @@ import '../../../domain/db/db_config.dart';
 import '../../models/perfil_preinversion_aliado_model.dart';
 
 abstract class PerfilPreInversionAliadoLocalDataSource {
-  Future<List<PerfilPreInversionAliadoModel>> getPerfilPreInversionAliadosDB();
-  Future<PerfilPreInversionAliadoModel?> getPerfilPreInversionAliadoDB(
-      String id);
+  Future<List<PerfilPreInversionAliadoModel>> getPerfilPreInversionAliadosDB(
+      String perfilPreInversionId);
+
   Future<int> savePerfilPreInversionAliados(
       List<PerfilPreInversionAliadoEntity> perfilPreInversionAliadoEntity);
   Future<int> savePerfilPreInversionAliadoDB(
@@ -43,35 +43,33 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
   }
 
   @override
-  Future<List<PerfilPreInversionAliadoModel>>
-      getPerfilPreInversionAliadosDB() async {
+  Future<List<PerfilPreInversionAliadoModel>> getPerfilPreInversionAliadosDB(
+      String perfilPreInversionId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionAliado');
+    String sql = '''
+      select 
+      PerfilPreInversionAliado.PerfilPreInversionId,
+      PerfilPreInversionAliado.AliadoId,
+      PerfilPreInversionAliado.ProductoId,
+      PerfilPreInversionAliado.VolumenCompra,
+      PerfilPreInversionAliado.UnidadId,
+      PerfilPreInversionAliado.FrecuenciaId,
+      PerfilPreInversionAliado.PorcentajeCompra,
+      PerfilPreInversionAliado.SitioEntregaId,
+      Aliado.Nombre as aliado
+      from PerfilPreInversionAliado
+      left join Aliado on (Aliado.AliadoId=PerfilPreInversionAliado.AliadoId)
+      where PerfilPreInversionId = $perfilPreInversionId
+      ''';
+
+    final res = await db.rawQuery(sql);
 
     final perfilPreInversionAliadosDB =
         List<PerfilPreInversionAliadoModel>.from(
             res.map((m) => PerfilPreInversionAliadoModel.fromJson(m))).toList();
 
     return perfilPreInversionAliadosDB;
-  }
-
-  @override
-  Future<PerfilPreInversionAliadoModel?> getPerfilPreInversionAliadoDB(
-      String id) async {
-    final db = await DBConfig.database;
-
-    final res = await db.query('PerfilPreInversionAliado',
-        where: 'PerfilPreInversionId = ?', whereArgs: [id]);
-
-    if (res.isEmpty) return null;
-    final perfilPreInversionAliadoMap = {
-      for (var e in res[0].entries) e.key: e.value
-    };
-    final perfilPreInversionAliadoModel =
-        PerfilPreInversionAliadoModel.fromJson(perfilPreInversionAliadoMap);
-
-    return perfilPreInversionAliadoModel;
   }
 
   @override

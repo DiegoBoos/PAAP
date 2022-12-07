@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/entities/menu_entity.dart';
 
-class PerfilesDrawer extends StatelessWidget {
-  const PerfilesDrawer({Key? key, required this.menuHijo}) : super(key: key);
+class PerfilDrawer extends StatelessWidget {
+  const PerfilDrawer({Key? key, required this.menuHijo}) : super(key: key);
   final List<MenuEntity> menuHijo;
   @override
   Widget build(BuildContext context) {

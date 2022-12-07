@@ -18,11 +18,8 @@ class CostosUPTPage extends StatefulWidget {
 class _CostosUPTPageState extends State<CostosUPTPage> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PerfilPreInversionPlanesNegociosBloc,
+    return BlocBuilder<PerfilPreInversionPlanesNegociosBloc,
         PerfilPreInversionPlanesNegociosState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
       builder: (context, state) {
         if (state is PerfilPreInversionPlanesNegociosLoading) {
           return const CustomCircularProgress(alignment: Alignment.center);
@@ -35,9 +32,11 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
                 child: Center(child: NoDataSvg(title: 'No hay resultados')));
           }
           return PerfilPreInversionPlanesNegociosRows(
-              perfilPreInversionPlanesNegocios:
-                  perfilPreInversionPlanesNegocios,
-              subtitleStyle: Styles.subtitleStyle);
+            perfilPreInversionPlanesNegocios: perfilPreInversionPlanesNegocios,
+            subtitleStyle: Styles.subtitleStyle,
+            isCostosUPT: true,
+            isIngresosUPT: false,
+          );
         }
         return const NoDataSvg(
           title: 'No hay resultados',

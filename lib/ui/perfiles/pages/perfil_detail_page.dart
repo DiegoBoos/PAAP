@@ -6,7 +6,7 @@ import '../../utils/floating_buttons.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/perfil_form.dart';
-import '../widgets/perfiles_drawer.dart';
+import '../widgets/perfil_drawer.dart';
 
 class PerfilDetailPage extends StatelessWidget {
   const PerfilDetailPage({super.key});
@@ -19,7 +19,7 @@ class PerfilDetailPage extends StatelessWidget {
         drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
             final menuHijo = menuCubit.perfilesMenuSorted(state.menus!);
-            return PerfilesDrawer(
+            return PerfilDrawer(
               menuHijo: menuHijo,
             );
           },

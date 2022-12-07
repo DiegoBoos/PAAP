@@ -45,16 +45,14 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
       getPerfilPreInversionConsultoresDB(String perfilPreInversionId) async {
     final db = await DBConfig.database;
 
-    /*  final res = await db.query('PerfilPreInversionConsultor',
-        where: 'PerfilPreInversionId = ?', whereArgs: [perfilPreInversionId]); */
     String sql = '''
-      SELECT 
+      select 
       PerfilPreInversionConsultor.PerfilPreInversionId,
       PerfilPreInversionConsultor.ConsultorId,
       PerfilPreInversionConsultor.RevisionId,
       PerfilPreInversionConsultor.FechaRevision,
       Revision.Nombre as Revision,
-      Consultor.Consultor as Consultor
+      Consultor.Consultor as consultor
       from PerfilPreInversionConsultor
       left join Consultor on (Consultor.ConsultorId=PerfilPreInversionConsultor.ConsultorId)
       left join Revision on (Revision.RevisionId=PerfilPreInversionConsultor.RevisionId)

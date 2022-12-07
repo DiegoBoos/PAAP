@@ -12,6 +12,10 @@ class AlianzasBeneficiariosBloc
   final AlianzaBeneficiarioUsecaseDB alianzaBeneficiarioUsecaseDB;
   AlianzasBeneficiariosBloc({required this.alianzaBeneficiarioUsecaseDB})
       : super(AlianzasBeneficiariosInitial()) {
+    on(<InitState>(event, emit) async {
+      emit(AlianzasBeneficiariosInitial());
+    });
+
     on<GetAlianzasBeneficiarios>((event, emit) async {
       emit(AlianzasBeneficiariosLoading());
       await _getAlianzasBeneficiarios(event, emit);
@@ -19,11 +23,10 @@ class AlianzasBeneficiariosBloc
   }
 
   _getAlianzasBeneficiarios(event, emit) async {
-    final result =
-        await alianzaBeneficiarioUsecaseDB.getAlianzasBeneficiariosUsecaseDB();
+    final result = await alianzaBeneficiarioUsecaseDB
+        .getAlianzasBeneficiariosUsecaseDB(event.alinzaId);
     result.fold(
         (failure) => emit(AlianzasBeneficiariosError(failure.properties.first)),
-        (data) => emit(
-            AlianzasBeneficiariosLoaded(alianzasBeneficiariosLoaded: data)));
+        (data) => emit(AlianzasBeneficiariosLoaded(data!)));
   }
 }

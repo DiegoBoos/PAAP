@@ -21,11 +21,11 @@ class PerfilPreInversionCofinanciadorRubrosBloc extends Bloc<
       await _perfilPreInversionCofinanciadorRubros(event, emit);
     });
 
-    on<GetPerfilPreInversionCofinanciadorRubrosByCofinanciador>(
+    /*  on<GetPerfilPreInversionCofinanciadorRubrosByCofinanciador>(
         (event, emit) async {
       emit(PerfilPreInversionCofinanciadorRubrosLoading());
       await _perfilPreInversionCofinanciadorRubrosByCofinanciador(event, emit);
-    });
+    }); */
   }
 
   _perfilPreInversionCofinanciadorRubros(event, emit) async {
@@ -37,7 +37,7 @@ class PerfilPreInversionCofinanciadorRubrosBloc extends Bloc<
         (data) => emit(PerfilPreInversionCofinanciadorRubrosLoaded(data)));
   }
 
-  _perfilPreInversionCofinanciadorRubrosByCofinanciador(event, emit) async {
+  /* _perfilPreInversionCofinanciadorRubrosByCofinanciador(event, emit) async {
     final result = await perfilPreInversionCofinanciadorRubroUsecaseDB
         .getPerfilPreInversionCofinanciadorRubrosByCofinanciadorUsecaseDB(
             event.perfilPreInversionId,
@@ -49,5 +49,5 @@ class PerfilPreInversionCofinanciadorRubrosBloc extends Bloc<
         (failure) => emit(PerfilPreInversionCofinanciadorRubrosError(
             failure.properties.first)),
         (data) => emit(PerfilPreInversionCofinanciadorRubrosLoaded(data)));
-  }
+  } */
 }

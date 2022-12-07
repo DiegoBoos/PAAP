@@ -2,44 +2,69 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
-import '../../../domain/entities/alianza_beneficiario_entity.dart';
+import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
+
+import '../../alianzas/widgets/alianza_drawer.dart';
 import '../widgets/alianzas_beneficiarios_rows.dart';
 
-class AlianzasBeneficiariossPage extends StatelessWidget {
-  const AlianzasBeneficiariossPage({super.key});
+class AlianzasBeneficiariosPage extends StatefulWidget {
+  const AlianzasBeneficiariosPage({super.key});
+
+  @override
+  State<AlianzasBeneficiariosPage> createState() =>
+      _AlianzasBeneficiariosPageState();
+}
+
+class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
+  @override
+  void initState() {
+    super.initState();
+    final vAlianzaCubit = BlocProvider.of<VAlianzaCubit>(context);
+
+    final alianzasBeneficiariosBloc =
+        BlocProvider.of<AlianzasBeneficiariosBloc>(context);
+    alianzasBeneficiariosBloc
+        .add(GetAlianzasBeneficiarios(vAlianzaCubit.state.vAlianza!.alianzaId));
+  }
 
   @override
   Widget build(BuildContext context) {
+    final menuCubit = BlocProvider.of<MenuCubit>(context);
+
     return Scaffold(
+        drawer: BlocBuilder<MenuCubit, MenuState>(
+          builder: (context, state) {
+            final menuHijo = menuCubit.alianzaMenuSorted(state.menus!);
+            return AlianzaDrawer(
+              menuHijo: menuHijo,
+            );
+          },
+        ),
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.save),
             onPressed: () =>
-                Navigator.pushNamed(context, 'VBeneficiarioAlianza')),
-        appBar: AppBar(
-            title: const Text('Beneficiarios Alianza'),
-            centerTitle: true,
-            leading: null,
-            actions: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: NetworkIcon(),
-              )
-            ]),
+                Navigator.pushNamed(context, 'NewEditVBeneficiarioAlianza')),
+        appBar: AppBar(title: const Text('Beneficiarios'), actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: NetworkIcon(),
+          )
+        ]),
         body: ListView(children: [
           const SizedBox(height: 30),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text('BENEFICIARIOS ALIANZA', style: Styles.titleStyle),
+            child: Text('BENEFICIARIOS', style: Styles.titleStyle),
           ),
           const SizedBox(height: 20),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text('Consulta, Creación y Modificación',
-                style: Styles.subtitleStyle),
+            child: Text('Consulta', style: Styles.subtitleStyle),
           ),
           const SizedBox(height: 20),
           BlocBuilder<AlianzasBeneficiariosBloc, AlianzasBeneficiariosState>(
@@ -47,9 +72,9 @@ class AlianzasBeneficiariossPage extends StatelessWidget {
               if (state is AlianzasBeneficiariosLoading) {
                 return const CustomCircularProgress(
                     alignment: Alignment.center);
-              } else if (state is AlianzasBeneficiariosLoaded) {
-                List<AlianzaBeneficiarioEntity> alianzasBeneficiarios =
-                    state.alianzasBeneficiariosLoaded!;
+              }
+              if (state is AlianzasBeneficiariosLoaded) {
+                final alianzasBeneficiarios = state.alianzasBeneficiariosLoaded;
                 if (alianzasBeneficiarios.isEmpty) {
                   return const SizedBox(
                       child:

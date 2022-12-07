@@ -6,13 +6,15 @@ class PerfilPreInversionCofinanciadorDesembolsoModel
     required String perfilPreInversionId,
     required String cofinanciadorId,
     required String desembolsoId,
-    required String fecha,
+    String? fecha,
+    String? desembolso,
     String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
           cofinanciadorId: cofinanciadorId,
           desembolsoId: desembolsoId,
-          fecha: fecha,
+          fecha: fecha ?? '',
+          desembolso: desembolso ?? '',
           recordStatus: recordStatus ?? '',
         );
 
@@ -23,6 +25,7 @@ class PerfilPreInversionCofinanciadorDesembolsoModel
         cofinanciadorId: json["CofinanciadorId"],
         desembolsoId: json["DesembolsoId"],
         fecha: json["Fecha"],
+        desembolso: json["desembolso"],
         recordStatus: json["RecordStatus"],
       );
 

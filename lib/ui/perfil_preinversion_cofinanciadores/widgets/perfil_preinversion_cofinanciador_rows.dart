@@ -45,92 +45,125 @@ class PerfilPreInversionCofinanciadoresRows extends StatelessWidget {
     final perfilPreInversionCofinanciadorRubrosBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadorRubrosBloc>(context);
 
-    return DataTable(
-      headingRowColor:
-          MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-      dividerThickness: 1,
-      columnSpacing: 10,
-      dataRowHeight: 150,
-      columns: <DataColumn>[
-        DataColumn(
-          label: Expanded(
-            child:
-                Text('ID', style: subtitleStyle.copyWith(color: Colors.white)),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        headingRowColor:
+            MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
+        dividerThickness: 1,
+        columnSpacing: 10,
+        dataRowHeight: 150,
+        columns: <DataColumn>[
+          DataColumn(label: Container()),
+          DataColumn(
+            label: Expanded(
+              child: Text('CofinanciadorId',
+                  style: subtitleStyle.copyWith(color: Colors.white)),
+            ),
           ),
-        ),
-        const DataColumn(
-          label: Expanded(
-            child: Text(''),
+          DataColumn(
+            label: Expanded(
+              child: Text('Nombre',
+                  style: subtitleStyle.copyWith(color: Colors.white)),
+            ),
           ),
-        ),
-      ],
-      rows: List.generate(perfilPreInversionCofinanciadores.length, (index) {
-        PerfilPreInversionCofinanciadorEntity perfilPreInversionCofinanciador =
-            perfilPreInversionCofinanciadores[index];
+          DataColumn(
+            label: Expanded(
+              child: Text('Teléfono Móvil',
+                  style: subtitleStyle.copyWith(color: Colors.white)),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text('Correo',
+                  style: subtitleStyle.copyWith(color: Colors.white)),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text('Monto',
+                  style: subtitleStyle.copyWith(color: Colors.white)),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text('Participación',
+                  style: subtitleStyle.copyWith(color: Colors.white)),
+            ),
+          ),
+        ],
+        rows: List.generate(perfilPreInversionCofinanciadores.length, (index) {
+          PerfilPreInversionCofinanciadorEntity
+              perfilPreInversionCofinanciador =
+              perfilPreInversionCofinanciadores[index];
 
-        return DataRow(cells: <DataCell>[
-          DataCell(Text(perfilPreInversionCofinanciador.cofinanciadorId)),
-          DataCell(IconButton(
-              onPressed: () {
-                final vPerfilPreInversionId = vPerfilPreInversionCubit
-                    .state.vPerfilPreInversion!.perfilPreInversionId;
+          return DataRow(cells: <DataCell>[
+            DataCell(IconButton(
+                onPressed: () {
+                  final vPerfilPreInversionId = vPerfilPreInversionCubit
+                      .state.vPerfilPreInversion!.perfilPreInversionId;
 
-                String cofinanciadorId = selectPerfilPreInversionCofinanciador(
-                    perfilPreInversionCofinanciador,
-                    perfilPreInversionCofinanciadorCubit);
+                  String cofinanciadorId =
+                      selectPerfilPreInversionCofinanciador(
+                          perfilPreInversionCofinanciador,
+                          perfilPreInversionCofinanciadorCubit);
+                  String desembolsoId =
+                      selectPerfilPreInversionCofinanciadorDesembolso(
+                          perfilPreInversionCofinanciadorDesembolsoCubit,
+                          vPerfilPreInversionId,
+                          cofinanciadorId);
 
-                String desembolsoId =
-                    selectPerfilPreInversionCofinanciadorDesembolso(
-                        perfilPreInversionCofinanciadorDesembolsoCubit,
-                        vPerfilPreInversionId,
-                        cofinanciadorId);
+                  String actividadFinancieraId =
+                      selectPerfilPreInversionCofinanciadorActividadFinanciera(
+                          perfilPreInversionCofinanciadorActividadFinancieraCubit,
+                          vPerfilPreInversionId,
+                          cofinanciadorId,
+                          desembolsoId);
 
-                String actividadFinancieraId =
-                    selectPerfilPreInversionCofinanciadorActividadFinanciera(
-                        perfilPreInversionCofinanciadorActividadFinancieraCubit,
-                        vPerfilPreInversionId,
-                        cofinanciadorId,
-                        desembolsoId);
+                  String rubroId = selectPerfilPreInversionCofinanciadorRubro(
+                      perfilPreInversionCofinanciadorRubroCubit,
+                      vPerfilPreInversionId,
+                      cofinanciadorId,
+                      actividadFinancieraId,
+                      desembolsoId);
+                  perfilPreInversionCofinanciadorCubit.isEditing();
 
-                String rubroId = selectPerfilPreInversionCofinanciadorRubro(
-                    perfilPreInversionCofinanciadorRubroCubit,
-                    vPerfilPreInversionId,
-                    cofinanciadorId,
-                    actividadFinancieraId,
-                    desembolsoId);
+                  perfilPreInversionCofinanciadorDesembolsosBloc.add(
+                      GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
+                          perfilPreInversionId: vPerfilPreInversionId,
+                          cofinanciadorId: cofinanciadorId,
+                          desembolsoId: desembolsoId));
+                  perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
+                      GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
+                          perfilPreInversionId: vPerfilPreInversionId,
+                          cofinanciadorId: cofinanciadorId,
+                          desembolsoId: desembolsoId,
+                          actividadFinancieraId: actividadFinancieraId));
+                  perfilPreInversionCofinanciadorRubrosBloc.add(
+                      GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
+                          perfilPreInversionId: vPerfilPreInversionId,
+                          cofinanciadorId: cofinanciadorId,
+                          actividadFinancieraId: actividadFinancieraId,
+                          desembolsoId: desembolsoId,
+                          rubroId: rubroId));
 
-                perfilPreInversionCofinanciadorCubit.isEditing();
-
-                perfilPreInversionCofinanciadorDesembolsosBloc.add(
-                    GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-                  perfilPreInversionId: vPerfilPreInversionId,
-                  cofinanciadorId: cofinanciadorId,
-                  desembolsoId: desembolsoId,
-                ));
-                perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
-                    GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
-                        perfilPreInversionId: vPerfilPreInversionId,
-                        cofinanciadorId: cofinanciadorId,
-                        actividadFinancieraId: actividadFinancieraId,
-                        desembolsoId: desembolsoId));
-                perfilPreInversionCofinanciadorRubrosBloc.add(
-                    GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
-                        perfilPreInversionId: vPerfilPreInversionId,
-                        cofinanciadorId: cofinanciadorId,
-                        actividadFinancieraId: actividadFinancieraId,
-                        desembolsoId: desembolsoId,
-                        rubroId: rubroId));
-
-                Navigator.pushNamed(
-                  context,
-                  'NewEditVCofinanciadorPreInversion',
-                );
-              },
-              icon: const Icon(
-                Icons.keyboard_arrow_right,
-              ))),
-        ]);
-      }),
+                  Navigator.pushNamed(
+                    context,
+                    'NewEditVCofinanciadorPreInversion',
+                  );
+                },
+                icon: const Icon(
+                  Icons.keyboard_arrow_right,
+                ))),
+            DataCell(Text(perfilPreInversionCofinanciador.cofinanciadorId)),
+            DataCell(Text(perfilPreInversionCofinanciador.cofinanciador!)),
+            DataCell(Text(perfilPreInversionCofinanciador.telefonoMovil!)),
+            DataCell(Text(perfilPreInversionCofinanciador.correo!)),
+            DataCell(Text(perfilPreInversionCofinanciador.monto)),
+            DataCell(Text(perfilPreInversionCofinanciador.participacion)),
+          ]);
+        }),
+      ),
     );
   }
 

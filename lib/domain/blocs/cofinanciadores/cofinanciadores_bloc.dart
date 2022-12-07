@@ -12,13 +12,13 @@ class CofinanciadoresBloc
   final CofinanciadorUsecaseDB cofinanciadorUsecaseDB;
   CofinanciadoresBloc({required this.cofinanciadorUsecaseDB})
       : super(CofinanciadoresInitial()) {
-    on<GetCofinanciadores>((event, emit) async {
+    on<GetCofinanciadoresByDepartamento>((event, emit) async {
       emit(CofinanciadoresLoading());
-      await _getCofinanciadores(event, emit);
+      await _getCofinanciadoresByDepartamento(event, emit);
     });
   }
 
-  _getCofinanciadores(event, emit) async {
+  _getCofinanciadoresByDepartamento(event, emit) async {
     final result = await cofinanciadorUsecaseDB.getCofinanciadoresUsecaseDB();
     result.fold(
         (failure) => emit(CofinanciadoresError(failure.properties.first)),

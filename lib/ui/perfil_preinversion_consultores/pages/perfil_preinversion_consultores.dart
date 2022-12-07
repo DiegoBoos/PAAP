@@ -48,16 +48,12 @@ class _PerfilPreInversionConsultoresPageState
             );
           },
         ),
-        appBar: AppBar(
-            title: const Text(' Consultor'),
-            centerTitle: true,
-            leading: null,
-            actions: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: NetworkIcon(),
-              )
-            ]),
+        appBar: AppBar(title: const Text(' Consultor'), actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: NetworkIcon(),
+          )
+        ]),
         body: ListView(children: [
           const SizedBox(height: 30),
           const Padding(

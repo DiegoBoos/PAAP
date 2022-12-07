@@ -6,7 +6,6 @@ import '../../../domain/cubits/actividad_financiera/actividad_financiera_cubit.d
 import '../../../domain/cubits/desembolso/desembolso_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/actividad_financiera_entity.dart';
 import '../../../domain/entities/desembolso_entity.dart';
@@ -82,11 +81,6 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
 
     final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
         .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
-
-    final perfilPreInversionCofinanciadorDesembolsoCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
-      context,
-    );
 
     final perfilPreInversionCofinanciadorActividadesFinancierasBloc =
         BlocProvider.of<
@@ -200,17 +194,6 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
                     final cofinanciadorId = perfilPreInversionCofinanciadorCubit
                         .state.perfilPreInversionCofinanciador.cofinanciadorId;
 
-                    final desembolsoId =
-                        perfilPreInversionCofinanciadorDesembolsoCubit
-                            .state
-                            .perfilPreInversionCofinanciadorDesembolso
-                            .desembolsoId;
-                    final actividadFinancieraId =
-                        perfilPreInversionCofinanciadorActividadFinancieraCubit
-                            .state
-                            .perfilPreInversionCofinanciadorActividadFinanciera
-                            .actividadFinancieraId;
-
                     perfilPreInversionCofinanciadorActividadFinancieraCubit
                         .changePerfilPreInversion(vPerfilPreInversionId);
                     perfilPreInversionCofinanciadorActividadFinancieraCubit
@@ -223,12 +206,12 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
                                 .state
                                 .perfilPreInversionCofinanciadorActividadFinanciera);
 
-                    perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
+                    /*  perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
                         GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
                             perfilPreInversionId: vPerfilPreInversionId,
                             cofinanciadorId: cofinanciadorId,
                             actividadFinancieraId: actividadFinancieraId,
-                            desembolsoId: desembolsoId));
+                            desembolsoId: desembolsoId)); */
 
                     if (perfilPreInversionCofinanciadorActividadesFinancierasBloc
                             .state
@@ -253,58 +236,114 @@ class PerfilPreInversionCofinanciadorActividadesFinancierasRows
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<
-            PerfilPreInversionCofinanciadorActividadesFinancierasBloc,
-            PerfilPreInversionCofinanciadorActividadesFinancierasState>(
-        builder: (context, state) {
-      if (state
-          is PerfilPreInversionCofinanciadorActividadesFinancierasLoading) {
-        return const CustomCircularProgress(alignment: Alignment.center);
-      }
-      if (state
-          is PerfilPreInversionCofinanciadorActividadesFinancierasLoaded) {
-        final perfilPreInversionCofinanciadorActividadesFinancieras =
-            state.perfilPreInversionCofinanciadorActividadesFinancieras!;
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: DataTable(
-            columnSpacing: 30,
-            headingRowColor: MaterialStateProperty.all(
-                Theme.of(context).colorScheme.secondary),
-            columns: <DataColumn>[
-              DataColumn(
-                label: Expanded(
-                  child: Text('Actividad Financiera',
-                      style: Styles.subtitleStyle
-                          .copyWith(color: Colors.white, fontSize: 15)),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: BlocBuilder<
+              PerfilPreInversionCofinanciadorActividadesFinancierasBloc,
+              PerfilPreInversionCofinanciadorActividadesFinancierasState>(
+          builder: (context, state) {
+        if (state
+            is PerfilPreInversionCofinanciadorActividadesFinancierasLoading) {
+          return const CustomCircularProgress(alignment: Alignment.center);
+        }
+        if (state
+            is PerfilPreInversionCofinanciadorActividadesFinancierasLoaded) {
+          final perfilPreInversionCofinanciadorActividadesFinancieras =
+              state.perfilPreInversionCofinanciadorActividadesFinancieras!;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: DataTable(
+              columnSpacing: 30,
+              headingRowColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.secondary),
+              columns: <DataColumn>[
+                DataColumn(
+                  label: Expanded(
+                    child: Text('ActividadFinancieraId',
+                        style: Styles.subtitleStyle
+                            .copyWith(color: Colors.white, fontSize: 15)),
+                  ),
                 ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Valor',
-                      style: Styles.subtitleStyle
-                          .copyWith(color: Colors.white, fontSize: 15)),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('PerfilPreInversionId',
+                        style: Styles.subtitleStyle
+                            .copyWith(color: Colors.white, fontSize: 15)),
+                  ),
                 ),
-              ),
-            ],
-            rows: List.generate(
-                perfilPreInversionCofinanciadorActividadesFinancieras.length,
-                (index) {
-              PerfilPreInversionCofinanciadorActividadFinancieraEntity
-                  perfilPreInversionCofinanciadorActividadFinanciera =
-                  perfilPreInversionCofinanciadorActividadesFinancieras[index];
+                DataColumn(
+                  label: Expanded(
+                    child: Text('CofinanciadorId',
+                        style: Styles.subtitleStyle
+                            .copyWith(color: Colors.white, fontSize: 15)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('DesembolsoId',
+                        style: Styles.subtitleStyle
+                            .copyWith(color: Colors.white, fontSize: 15)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Valor',
+                        style: Styles.subtitleStyle
+                            .copyWith(color: Colors.white, fontSize: 15)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Actividad Financiera',
+                        style: Styles.subtitleStyle
+                            .copyWith(color: Colors.white, fontSize: 15)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Desembolso',
+                        style: Styles.subtitleStyle
+                            .copyWith(color: Colors.white, fontSize: 15)),
+                  ),
+                ),
+              ],
+              rows: List.generate(
+                  perfilPreInversionCofinanciadorActividadesFinancieras.length,
+                  (index) {
+                PerfilPreInversionCofinanciadorActividadFinancieraEntity
+                    perfilPreInversionCofinanciadorActividadFinanciera =
+                    perfilPreInversionCofinanciadorActividadesFinancieras[
+                        index];
 
-              return DataRow(cells: <DataCell>[
-                DataCell(Text(perfilPreInversionCofinanciadorActividadFinanciera
-                    .actividadFinancieraId)),
-                DataCell(Text(
-                    perfilPreInversionCofinanciadorActividadFinanciera.valor)),
-              ]);
-            }),
-          ),
-        );
-      }
-      return Container();
-    });
+                return DataRow(cells: <DataCell>[
+                  DataCell(Text(
+                      perfilPreInversionCofinanciadorActividadFinanciera
+                          .actividadFinancieraId)),
+                  DataCell(Text(
+                      perfilPreInversionCofinanciadorActividadFinanciera
+                          .perfilPreInversionId)),
+                  DataCell(Text(
+                      perfilPreInversionCofinanciadorActividadFinanciera
+                          .cofinanciadorId)),
+                  DataCell(Text(
+                      perfilPreInversionCofinanciadorActividadFinanciera
+                          .desembolsoId)),
+                  DataCell(Text(
+                      perfilPreInversionCofinanciadorActividadFinanciera
+                          .valor)),
+                  DataCell(Text(
+                      perfilPreInversionCofinanciadorActividadFinanciera
+                          .actividadFinanciera!)),
+                  DataCell(Text(
+                      perfilPreInversionCofinanciadorActividadFinanciera
+                          .desembolso!)),
+                ]);
+              }),
+            ),
+          );
+        }
+        return Container();
+      }),
+    );
   }
 }

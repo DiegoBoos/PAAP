@@ -5,13 +5,10 @@ import '../../entities/perfil_preinversion_aliado_entity.dart';
 
 abstract class PerfilPreInversionAliadoRepositoryDB {
   Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
-      getPerfilPreInversionAliadosRepositoryDB();
+      getPerfilPreInversionAliadosRepositoryDB(String perfilPreInversionId);
 
   Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
       getPerfilesPreInversionesAliadosProduccionRepositoryDB();
-
-  Future<Either<Failure, PerfilPreInversionAliadoEntity?>>
-      getPerfilPreInversionAliadoRepositoryDB(String id);
 
   Future<Either<Failure, int>> savePerfilPreInversionAliadosRepositoryDB(
       List<PerfilPreInversionAliadoEntity> perfilPreInversionAliadoEntity);

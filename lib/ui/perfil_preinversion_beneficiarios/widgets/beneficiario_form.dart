@@ -8,7 +8,7 @@ import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
 import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';
 import '../../../domain/entities/tipo_identificacion_entity.dart';
@@ -92,8 +92,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
 
   @override
   Widget build(BuildContext context) {
-    final vPerfilPreinversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
+    final vAlianzaCubit = BlocProvider.of<VAlianzaCubit>(context);
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
     final perfilBeneficiarioCubit =
         BlocProvider.of<PerfilBeneficiarioCubit>(context);
@@ -133,17 +132,15 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                 return null;
               },
               onFieldSubmitted: (String value) {
-                final perfilPreInversionId = vPerfilPreinversionCubit
-                    .state.vPerfilPreInversion!.perfilId;
+                final alianzaId = vAlianzaCubit.state.vAlianza!.alianzaId;
 
                 beneficiarioCubit.loadBeneficiario(value);
 
                 perfilBeneficiarioCubit.loadPerfilBeneficiario(
-                    perfilPreInversionId, value);
+                    alianzaId, value);
 
                 perfilPreInversionBeneficiarioCubit
-                    .loadPerfilPreInversionBeneficiario(
-                        perfilPreInversionId, value);
+                    .loadPerfilPreInversionBeneficiario(alianzaId, value);
               },
             ),
             const SizedBox(height: 20),

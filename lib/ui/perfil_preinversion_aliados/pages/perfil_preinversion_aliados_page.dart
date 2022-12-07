@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/perfil_preinversion_aliados/perfil_preinversion_aliados_bloc.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_aliado_entity.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/loading_page.dart';
@@ -24,9 +25,13 @@ class _PerfilPreInversionAliadosPageState
   @override
   void initState() {
     super.initState();
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
     final perfilPreInversionAliadosBloc =
         BlocProvider.of<PerfilPreInversionAliadosBloc>(context);
-    perfilPreInversionAliadosBloc.add(GetPerfilPreInversionAliados());
+    perfilPreInversionAliadosBloc.add(GetPerfilPreInversionAliados(
+        vPerfilPreInversionCubit
+            .state.vPerfilPreInversion!.perfilPreInversionId));
   }
 
   @override
@@ -48,8 +53,6 @@ class _PerfilPreInversionAliadosPageState
         ),
         appBar: AppBar(
             title: const Text('PerfilPreInversionAliados'),
-            centerTitle: true,
-            leading: null,
             actions: const [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),

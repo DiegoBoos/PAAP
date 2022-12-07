@@ -5,6 +5,9 @@ class PerfilPreInversionCofinanciadorEntity {
       required this.monto,
       required this.participacion,
       required this.recordStatus,
+      this.cofinanciador,
+      this.telefonoMovil,
+      this.correo,
       this.isEditing = false,
       this.canCreateDesembolso = false});
 
@@ -12,6 +15,9 @@ class PerfilPreInversionCofinanciadorEntity {
   String cofinanciadorId;
   String monto;
   String participacion;
+  String? cofinanciador;
+  String? telefonoMovil;
+  String? correo;
   String recordStatus;
   bool isEditing;
   bool canCreateDesembolso;
@@ -43,6 +49,7 @@ class PerfilPreInversionCofinanciadorEntity {
         cofinanciadorId: json["CofinanciadorId"],
         monto: json["Monto"],
         participacion: json["Participacion"],
+        cofinanciador: json["Cofinanciador"],
         recordStatus: json["RecordStatus"],
       );
 

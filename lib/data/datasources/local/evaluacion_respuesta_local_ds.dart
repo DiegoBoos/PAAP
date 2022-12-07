@@ -118,7 +118,9 @@ class EvaluacionRespuestaLocalDataSourceImpl
       evaluacionRespuestaEntity.recordStatus = 'N';
       batch.insert('EvaluacionRespuesta', evaluacionRespuestaEntity.toJson());
     } else {
-      evaluacionRespuestaEntity.recordStatus = 'E';
+      if (evaluacionRespuestaEntity.recordStatus != 'N') {
+        evaluacionRespuestaEntity.recordStatus = 'E';
+      }
       batch.update('EvaluacionRespuesta', evaluacionRespuestaEntity.toJson(),
           where: 'CriterioId = ? AND EvaluacionId = ?',
           whereArgs: [

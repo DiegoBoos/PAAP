@@ -114,7 +114,7 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                               final evaluacionRespuesta =
                                   await evaluacionRespuestaCubit
                                       .getEvaluacionRespuestaDB(
-                                          value!, evaluacion!.evaluacionId);
+                                          value!, evaluacion.evaluacionId);
 
                               if (evaluacionRespuesta != null) {
                                 observacionCtrl.text =

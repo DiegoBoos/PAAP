@@ -59,10 +59,11 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
       PerfilPreInversionCofinanciadorDesembolsoEntity
           perfilPreInversionCofinanciadorDesembolsoLoaded) {
     desembolsoId = perfilPreInversionCofinanciadorDesembolsoLoaded.desembolsoId;
-    desembolsoId = perfilPreInversionCofinanciadorDesembolsoLoaded.desembolsoId;
     if (perfilPreInversionCofinanciadorDesembolsoLoaded.fecha != '') {
       fechaCtrl.text = dateFormat.format(DateTime.parse(
           perfilPreInversionCofinanciadorDesembolsoLoaded.fecha));
+    } else {
+      fechaCtrl.text = dateFormat.format(DateTime.now());
     }
   }
 
@@ -82,131 +83,128 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
     return BlocBuilder<PerfilPreInversionCofinanciadorDesembolsoCubit,
         PerfilPreInversionCofinanciadorDesembolsoState>(
       builder: (context, state) {
-        final perfilPreInversionCofinanciadorDesembolso =
-            state.perfilPreInversionCofinanciadorDesembolso;
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-            child: Column(children: [
-              BlocBuilder<DesembolsoCubit, DesembolsoState>(
-                builder: (context, state) {
-                  if (state is DesembolsosLoaded) {
-                    return DropdownButtonFormField(
-                        isExpanded: true,
-                        value: desembolsoId != '' ? desembolsoId : null,
-                        items: state.desembolsos!.map<DropdownMenuItem<String>>(
-                            (DesembolsoEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.desembolsoId,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Debe seleccionar un desembolso';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          perfilPreInversionCofinanciadorDesembolsoCubit
-                              .changeDesembolso(value);
-                        },
-                        hint: const Text('Desembolso'));
-                  }
-                  return Container();
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: fechaCtrl,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Debe seleccionar una fecha';
-                  }
-                  if (DateTime.tryParse(value) == null) {
-                    return 'No es una fecha válida';
-                  }
-                  return null;
-                },
-                decoration: CustomInputDecoration.inputDecoration(
-                    hintText: 'Fecha',
-                    labelText: 'Fecha',
-                    suffixIcon: IconButton(
-                        onPressed: () async {
-                          DateTime? newDate = await showDatePicker(
-                              context: context,
-                              initialDate:
-                                  perfilPreInversionCofinanciadorDesembolso
-                                              .fecha !=
-                                          ''
-                                      ? DateTime.parse(
-                                          perfilPreInversionCofinanciadorDesembolso
-                                              .fecha)
-                                      : DateTime.now(),
-                              firstDate: DateTime(1000),
-                              lastDate: DateTime(3000));
-
-                          if (newDate == null) return;
-
-                          perfilPreInversionCofinanciadorDesembolsoCubit
-                              .changeFecha(dateFormat.format(newDate));
-                        },
-                        icon: const Icon(Icons.calendar_today))),
-              ),
-              const SizedBox(height: 20),
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: FloatingActionButton(
-                      heroTag: 'desembolsoBtn',
-                      onPressed: () {
-                        if (!formKeyDesembolso.currentState!.validate()) {
-                          return;
-                        }
-                        formKeyDesembolso.currentState!.save();
-
-                        final vPerfilPreInversionId = vPerfilPreInversionCubit
-                            .state.vPerfilPreInversion!.perfilPreInversionId;
-
-                        final cofinanciadorId =
-                            perfilPreInversionCofinanciadorCubit
-                                .state
-                                .perfilPreInversionCofinanciador
-                                .cofinanciadorId;
-
-                        final desembolsoId =
+        return Form(
+          key: formKeyDesembolso,
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+              child: Column(children: [
+                BlocBuilder<DesembolsoCubit, DesembolsoState>(
+                  builder: (context, state) {
+                    if (state is DesembolsosLoaded) {
+                      return DropdownButtonFormField(
+                          isExpanded: true,
+                          value: desembolsoId != '' ? desembolsoId : null,
+                          items: state.desembolsos!
+                              .map<DropdownMenuItem<String>>(
+                                  (DesembolsoEntity value) {
+                            return DropdownMenuItem<String>(
+                              value: value.desembolsoId,
+                              child: Text(value.nombre),
+                            );
+                          }).toList(),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Debe seleccionar un desembolso';
+                            }
+                            return null;
+                          },
+                          onChanged: (String? value) {
                             perfilPreInversionCofinanciadorDesembolsoCubit
-                                .state
-                                .perfilPreInversionCofinanciadorDesembolso
-                                .cofinanciadorId;
+                                .changeDesembolso(value);
+                          },
+                          hint: const Text('Desembolso'));
+                    }
+                    return Container();
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: fechaCtrl,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Debe seleccionar una fecha';
+                    }
+                    if (DateTime.tryParse(value) == null) {
+                      return 'No es una fecha válida';
+                    }
+                    return null;
+                  },
+                  decoration: CustomInputDecoration.inputDecoration(
+                      hintText: 'Fecha',
+                      labelText: 'Fecha',
+                      suffixIcon: IconButton(
+                          onPressed: () async {
+                            DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.parse(fechaCtrl.text),
+                                firstDate: DateTime(1000),
+                                lastDate: DateTime(3000));
 
-                        perfilPreInversionCofinanciadorDesembolsoCubit
-                            .changePerfilPreInversion(vPerfilPreInversionId);
-                        perfilPreInversionCofinanciadorDesembolsoCubit
-                            .changePerfilPreInversionCofinanciador(
-                                cofinanciadorId);
+                            if (newDate == null) return;
 
-                        perfilPreInversionCofinanciadorDesembolsoCubit
-                            .perfilPreInversionCofinanciadorDesembolsoDB
-                            .savePerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
-                                perfilPreInversionCofinanciadorDesembolsoCubit
-                                    .state
-                                    .perfilPreInversionCofinanciadorDesembolso);
+                            fechaCtrl.text = dateFormat.format(newDate);
 
-                        perfilPreInversionCofinanciadorDesembolsosBloc.add(
-                            GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-                                perfilPreInversionId: vPerfilPreInversionId,
-                                cofinanciadorId: cofinanciadorId,
-                                desembolsoId: desembolsoId));
+                            perfilPreInversionCofinanciadorDesembolsoCubit
+                                .changeFecha(fechaCtrl.text);
+                          },
+                          icon: const Icon(Icons.calendar_today))),
+                ),
+                const SizedBox(height: 20),
+                Align(
+                    alignment: Alignment.centerRight,
+                    child: FloatingActionButton(
+                        heroTag: 'desembolsoBtn',
+                        onPressed: () {
+                          if (!formKeyDesembolso.currentState!.validate()) {
+                            return;
+                          }
+                          formKeyDesembolso.currentState!.save();
 
-                        if (perfilPreInversionCofinanciadorDesembolsosBloc.state
-                            is PerfilPreInversionCofinanciadorDesembolsosLoaded) {
+                          final vPerfilPreInversionId = vPerfilPreInversionCubit
+                              .state.vPerfilPreInversion!.perfilPreInversionId;
+
+                          final cofinanciadorId =
+                              perfilPreInversionCofinanciadorCubit
+                                  .state
+                                  .perfilPreInversionCofinanciador
+                                  .cofinanciadorId;
+
+                          /*   final desembolsoId =
+                              perfilPreInversionCofinanciadorDesembolsoCubit
+                                  .state
+                                  .perfilPreInversionCofinanciadorDesembolso
+                                  .cofinanciadorId; */
+
                           perfilPreInversionCofinanciadorDesembolsoCubit
-                              .canCreateActividadFinanciera();
-                        }
-                      },
-                      child: const Icon(Icons.add))),
-              const PerfilPreInversionCofinanciadorDesembolsosRows()
-            ]),
+                              .changePerfilPreInversion(vPerfilPreInversionId);
+                          perfilPreInversionCofinanciadorDesembolsoCubit
+                              .changePerfilPreInversionCofinanciador(
+                                  cofinanciadorId);
+
+                          perfilPreInversionCofinanciadorDesembolsoCubit
+                              .savePerfilPreInversionCofinanciadorDesembolsoDB(
+                                  perfilPreInversionCofinanciadorDesembolsoCubit
+                                      .state
+                                      .perfilPreInversionCofinanciadorDesembolso);
+
+                          /*  perfilPreInversionCofinanciadorDesembolsosBloc.add(
+                              GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
+                                  perfilPreInversionId: vPerfilPreInversionId,
+                                  cofinanciadorId: cofinanciadorId,
+                                  desembolsoId: desembolsoId)); */
+
+                          if (perfilPreInversionCofinanciadorDesembolsosBloc
+                                  .state
+                              is PerfilPreInversionCofinanciadorDesembolsosLoaded) {
+                            perfilPreInversionCofinanciadorDesembolsoCubit
+                                .canCreateActividadFinanciera();
+                          }
+                        },
+                        child: const Icon(Icons.add))),
+                const PerfilPreInversionCofinanciadorDesembolsosRows()
+              ]),
+            ),
           ),
         );
       },
@@ -221,55 +219,85 @@ class PerfilPreInversionCofinanciadorDesembolsosRows extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PerfilPreInversionCofinanciadorDesembolsosBloc,
-            PerfilPreInversionCofinanciadorDesembolsosState>(
-        builder: (context, state) {
-      if (state is PerfilPreInversionCofinanciadorDesembolsosLoading) {
-        return const CustomCircularProgress(alignment: Alignment.center);
-      }
-      if (state is PerfilPreInversionCofinanciadorDesembolsosLoaded) {
-        final perfilPreInversionCofinanciadorDesembolsos =
-            state.perfilPreInversionCofinanciadorDesembolsosLoaded!;
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: DataTable(
-            headingRowColor: MaterialStateProperty.all(
-                Theme.of(context).colorScheme.secondary),
-            dividerThickness: 1,
-            columns: <DataColumn>[
-              DataColumn(
-                label: Expanded(
-                  child: Text('Nombre',
-                      style:
-                          Styles.subtitleStyle.copyWith(color: Colors.white)),
-                ),
-              ),
-              const DataColumn(
-                label: Expanded(
-                  child: Text(''),
-                ),
-              ),
-            ],
-            rows: List.generate(
-                perfilPreInversionCofinanciadorDesembolsos.length, (index) {
-              PerfilPreInversionCofinanciadorDesembolsoEntity
-                  perfilPreInversionCofinanciadorDesembolso =
-                  perfilPreInversionCofinanciadorDesembolsos[index];
+    final dateFormat = DateFormat('yyyy-MM-dd');
 
-              return DataRow(cells: <DataCell>[
-                DataCell(Text(
-                    perfilPreInversionCofinanciadorDesembolso.desembolsoId)),
-                const DataCell(IconButton(
-                    onPressed: null,
-                    icon: Icon(
-                      Icons.cancel,
-                    ))),
-              ]);
-            }),
-          ),
-        );
-      }
-      return Container();
-    });
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: BlocBuilder<PerfilPreInversionCofinanciadorDesembolsosBloc,
+              PerfilPreInversionCofinanciadorDesembolsosState>(
+          builder: (context, state) {
+        if (state is PerfilPreInversionCofinanciadorDesembolsosLoading) {
+          return const CustomCircularProgress(alignment: Alignment.center);
+        }
+        if (state is PerfilPreInversionCofinanciadorDesembolsosLoaded) {
+          final perfilPreInversionCofinanciadorDesembolsos =
+              state.perfilPreInversionCofinanciadorDesembolsosLoaded!;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: DataTable(
+              headingRowColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.secondary),
+              dividerThickness: 1,
+              columns: <DataColumn>[
+                DataColumn(
+                  label: Expanded(
+                    child: Text('ID',
+                        style:
+                            Styles.subtitleStyle.copyWith(color: Colors.white)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Nombre',
+                        style:
+                            Styles.subtitleStyle.copyWith(color: Colors.white)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Fecha',
+                        style:
+                            Styles.subtitleStyle.copyWith(color: Colors.white)),
+                  ),
+                ),
+                const DataColumn(
+                  label: Expanded(
+                    child: Text(''),
+                  ),
+                ),
+              ],
+              rows: List.generate(
+                  perfilPreInversionCofinanciadorDesembolsos.length, (index) {
+                PerfilPreInversionCofinanciadorDesembolsoEntity
+                    perfilPreInversionCofinanciadorDesembolso =
+                    perfilPreInversionCofinanciadorDesembolsos[index];
+
+                /*  final date = DateTime.tryParse(
+                    perfilPreInversionCofinanciadorDesembolso.fecha);
+
+                if (date != null) {
+                  fecha = dateFormat.format(date);
+                } */
+
+                return DataRow(cells: <DataCell>[
+                  DataCell(Text(
+                      perfilPreInversionCofinanciadorDesembolso.desembolsoId)),
+                  DataCell(Text(
+                      perfilPreInversionCofinanciadorDesembolso.desembolso!)),
+                  DataCell(
+                      Text(perfilPreInversionCofinanciadorDesembolso.fecha)),
+                  const DataCell(IconButton(
+                      onPressed: null,
+                      icon: Icon(
+                        Icons.cancel,
+                      ))),
+                ]);
+              }),
+            ),
+          );
+        }
+        return Container();
+      }),
+    );
   }
 }

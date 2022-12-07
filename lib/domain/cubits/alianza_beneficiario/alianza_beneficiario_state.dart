@@ -31,7 +31,7 @@ class AlianzaBeneficiarioChanged extends AlianzaBeneficiarioState {
 }
 
 class AlianzaBeneficiarioSaved extends AlianzaBeneficiarioState {
-  const AlianzaBeneficiarioSaved({required super.alianzaBeneficiario});
+  AlianzaBeneficiarioSaved() : super(alianzaBeneficiario: initObject());
 }
 
 class AlianzaBeneficiarioError extends AlianzaBeneficiarioState {

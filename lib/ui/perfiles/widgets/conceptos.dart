@@ -13,11 +13,7 @@ class Conceptos extends StatelessWidget {
     final evaluacionCubit = BlocProvider.of<EvaluacionCubit>(context);
     return BlocBuilder<EvaluacionCubit, EvaluacionState>(
         builder: (context, state) {
-      if (state is EvaluacionLoading) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      final evaluacion = state.evaluacion!;
+      final evaluacion = state.evaluacion;
 
       return Column(
         children: [

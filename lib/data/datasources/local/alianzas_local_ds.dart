@@ -52,7 +52,7 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
     select
     AlianzaId as alianzaId,
     PerfilPreInversionId as perfilPreInversionId,
-    ConvocatoriaId as convocatoriaId,
+    Convocatoria.Nombre as convocatoria,
     Alianza.Nombre as nombre, 
     Abreviatura as abreviatura, 
     NIT as nit, 
@@ -70,6 +70,7 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
     Legalizado as legalizado
     from Alianza
     left join Municipio on (Municipio.MunicipioId=Alianza.MunicipioId)
+    left join Convocatoria on (Convocatoria.ConvocatoriaId=Alianza.ConvocatoriaId)
     left join TipoProyecto on (TipoProyecto.TipoProyectoId=Alianza.TipoProyectoId)
     left join Producto as ProductoPrincipal on (ProductoPrincipal.ProductoId =Alianza.ProductoId)
     left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =Alianza.ProductoAsociadoId)    
@@ -109,7 +110,7 @@ class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
     ProductoPrincipal.Nombre as productoPrincipal,
     ProductoAsociado.Nombre as productoAsociado,
     ValorTotalProyecto as valorTotalProyecto,
-    IncentivoModular as incentivoModular
+    IncentivoModular as incentivoModular,
     Legalizado as legalizado
     from Alianza
     left join Municipio on (Municipio.MunicipioId=Alianza.MunicipioId)

@@ -15,13 +15,12 @@ class AlianzaBeneficiarioRepositoryDBImpl
 
   @override
   Future<Either<Failure, List<AlianzaBeneficiarioEntity>>>
-      getAlianzasBeneficiariosProduccionRepositoryDB() async {
+      getAlianzasBeneficiariosRepositoryDB(String alianzaId) async {
     try {
-      final perfilesPreInversionesBeneficiariosDB =
-          await alianzaBeneficiarioLocalDataSource
-              .getAlianzasBeneficiariosProduccionDB();
+      final alianzaBeneficiariosDB = await alianzaBeneficiarioLocalDataSource
+          .getAlianzasBeneficiariosDB(alianzaId);
 
-      return Right(perfilesPreInversionesBeneficiariosDB);
+      return Right(alianzaBeneficiariosDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -31,12 +30,13 @@ class AlianzaBeneficiarioRepositoryDBImpl
 
   @override
   Future<Either<Failure, List<AlianzaBeneficiarioEntity>>>
-      getAlianzasBeneficiariosRepositoryDB() async {
+      getAlianzasBeneficiariosProduccionRepositoryDB() async {
     try {
-      final alianzaBeneficiariosDB =
-          await alianzaBeneficiarioLocalDataSource.getAlianzasBeneficiariosDB();
+      final perfilesPreInversionesBeneficiariosDB =
+          await alianzaBeneficiarioLocalDataSource
+              .getAlianzasBeneficiariosProduccionDB();
 
-      return Right(alianzaBeneficiariosDB);
+      return Right(perfilesPreInversionesBeneficiariosDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

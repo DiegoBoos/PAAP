@@ -7,4 +7,8 @@ abstract class PerfilPreInversionAliadosEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetPerfilPreInversionAliados extends PerfilPreInversionAliadosEvent {}
+class GetPerfilPreInversionAliados extends PerfilPreInversionAliadosEvent {
+  final String perfilPreInversionId;
+
+  const GetPerfilPreInversionAliados(this.perfilPreInversionId);
+}

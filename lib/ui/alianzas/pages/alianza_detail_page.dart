@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/ui/alianzas/widgets/alianzas_drawer.dart';
+import 'package:paap/ui/alianzas/widgets/alianza_drawer.dart';
 
 import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../utils/floating_buttons.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
+import '../widgets/alianza_form.dart';
 
 class AlianzaDetailPage extends StatelessWidget {
   const AlianzaDetailPage({super.key});
@@ -14,37 +16,32 @@ class AlianzaDetailPage extends StatelessWidget {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
 
     return Scaffold(
-      drawer: BlocBuilder<MenuCubit, MenuState>(
-        builder: (context, state) {
-          final menuHijo = menuCubit.alianzasMenuSorted(state.menus!);
-          return AlianzasDrawer(
-            menuHijo: menuHijo,
-          );
-        },
-      ),
-      appBar: AppBar(title: const Text('Detalle Alianza'), actions: const [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.0),
-          child: NetworkIcon(),
-        )
-      ]),
-      body: ListView(children: [
-        const SizedBox(height: 30),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text('ALIANZA', style: Styles.titleStyle),
-            ],
-          ),
+        drawer: BlocBuilder<MenuCubit, MenuState>(
+          builder: (context, state) {
+            final menuHijo = menuCubit.alianzaMenuSorted(state.menus!);
+            return AlianzaDrawer(
+              menuHijo: menuHijo,
+            );
+          },
         ),
-        const SizedBox(height: 20),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
-          child: Text('Información Básica', style: Styles.subtitleStyle),
-        ),
-      ]),
-    );
+        appBar: AppBar(title: const Text('Detalle Alianza'), actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: NetworkIcon(),
+          )
+        ]),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: ListView(children: const [
+            SizedBox(height: 20),
+            Text('Alianza', style: Styles.titleStyle),
+            SizedBox(height: 20),
+            Text('Información Básica', style: Styles.subtitleStyle),
+            SizedBox(height: 20),
+            AlianzaForm(),
+            SizedBox(height: 20),
+            BackFloatingButton(),
+          ]),
+        ));
   }
 }

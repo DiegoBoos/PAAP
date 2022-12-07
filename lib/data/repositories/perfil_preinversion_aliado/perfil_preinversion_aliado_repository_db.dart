@@ -32,29 +32,14 @@ class PerfilPreInversionAliadoRepositoryDBImpl
 
   @override
   Future<Either<Failure, List<PerfilPreInversionAliadoEntity>>>
-      getPerfilPreInversionAliadosRepositoryDB() async {
+      getPerfilPreInversionAliadosRepositoryDB(
+          String perfilPreInversionId) async {
     try {
       final perfilPreInversionAliadosDB =
           await perfilPreInversionAliadoLocalDataSource
-              .getPerfilPreInversionAliadosDB();
+              .getPerfilPreInversionAliadosDB(perfilPreInversionId);
 
       return Right(perfilPreInversionAliadosDB);
-    } on ServerFailure catch (e) {
-      return Left(ServerFailure(e.properties));
-    } on ServerException {
-      return const Left(ServerFailure(['Excepción no controlada']));
-    }
-  }
-
-  @override
-  Future<Either<Failure, PerfilPreInversionAliadoEntity?>>
-      getPerfilPreInversionAliadoRepositoryDB(String id) async {
-    try {
-      final perfilPreInversionAliadoDB =
-          await perfilPreInversionAliadoLocalDataSource
-              .getPerfilPreInversionAliadoDB(id);
-
-      return Right(perfilPreInversionAliadoDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

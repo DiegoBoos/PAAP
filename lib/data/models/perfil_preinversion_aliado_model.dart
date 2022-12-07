@@ -10,6 +10,7 @@ class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
     required String frecuenciaId,
     String? porcentajeCompra,
     required String sitioEntregaId,
+    String? aliado,
     String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
@@ -20,6 +21,7 @@ class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
           frecuenciaId: frecuenciaId,
           porcentajeCompra: porcentajeCompra ?? '',
           sitioEntregaId: sitioEntregaId,
+          aliado: aliado ?? '',
           recordStatus: recordStatus ?? '',
         );
 
@@ -33,6 +35,7 @@ class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
         frecuenciaId: json["FrecuenciaId"],
         porcentajeCompra: json["PorcentajeCompra"],
         sitioEntregaId: json["SitioEntregaId"],
+        aliado: json["aliado"],
         recordStatus: json["RecordStatus"],
       );
 

@@ -15,10 +15,10 @@ class CofinanciadorRepositoryImpl implements CofinanciadorRepository {
 
   @override
   Future<Either<Failure, List<CofinanciadorEntity>>>
-      getCofinanciadoresRepository(UsuarioEntity usuario) async {
+      getCofinanciadoresByDepartamentoRepository(UsuarioEntity usuario) async {
     try {
-      final cofinanciadors =
-          await cofinanciadorRemoteDataSource.getCofinanciadores(usuario);
+      final cofinanciadors = await cofinanciadorRemoteDataSource
+          .getCofinanciadoresByDepartamento(usuario);
 
       return Right(cofinanciadors);
     } on ServerFailure catch (e) {
