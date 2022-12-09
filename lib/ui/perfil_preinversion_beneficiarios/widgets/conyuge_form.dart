@@ -127,36 +127,38 @@ class _ConyugeFormState extends State<ConyugeForm> {
                 builder: (context, state) {
                   if (state is TiposIdentificacionesLoaded) {
                     return DropdownButtonFormField(
-                        value: conyugeTipoIdentificacionId != ''
-                            ? conyugeTipoIdentificacionId
-                            : null,
-                        items: state.tiposIdentificaciones
-                            ?.map<DropdownMenuItem<String>>(
-                                (TipoIdentificacionEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.tipoIdentificacionId,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          perfilPreInversionBeneficiarioCubit
-                              .changeConyugeTipoIdentificacion(value);
-                        },
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'Tipo de documento',
-                            labelText: 'Tipo de documento'));
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Tipo de identificación',
+                          labelText: 'Tipo de identificación'),
+                      value: conyugeTipoIdentificacionId != ''
+                          ? conyugeTipoIdentificacionId
+                          : null,
+                      items: state.tiposIdentificaciones
+                          ?.map<DropdownMenuItem<String>>(
+                              (TipoIdentificacionEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.tipoIdentificacionId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        perfilPreInversionBeneficiarioCubit
+                            .changeConyugeTipoIdentificacion(value);
+                      },
+                    );
                   }
                   return Container();
                 },
               ),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: conyugeIdCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Documento de identificación',
@@ -173,6 +175,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: conyugeFechaExpedicionDocumentoCtrl,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -297,31 +300,34 @@ class _ConyugeFormState extends State<ConyugeForm> {
                 builder: (context, state) {
                   if (state is GenerosLoaded) {
                     return DropdownButtonFormField(
-                        value: conyugeGeneroId != '' ? conyugeGeneroId : null,
-                        items: state.generos?.map<DropdownMenuItem<String>>(
-                            (GeneroEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.generoId,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          perfilPreInversionBeneficiarioCubit
-                              .changeConyugeGenero(value);
-                        },
-                        hint: const Text('Género'));
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Género', labelText: 'Género'),
+                      value: conyugeGeneroId != '' ? conyugeGeneroId : null,
+                      items: state.generos
+                          ?.map<DropdownMenuItem<String>>((GeneroEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.generoId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        perfilPreInversionBeneficiarioCubit
+                            .changeConyugeGenero(value);
+                      },
+                    );
                   }
                   return Container();
                 },
               ),
               const SizedBox(height: 20),
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: conyugeFechaNacimientoCtrl,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -359,60 +365,55 @@ class _ConyugeFormState extends State<ConyugeForm> {
                         icon: const Icon(Icons.calendar_today))),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                        controller: ingresosMensualesCtrl,
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'Ingresos Mensuales',
-                            labelText: 'Ingresos Mensuales'),
-                        validator: ((value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        }),
-                        onSaved: (String? newValue) {
-                          perfilPreInversionBeneficiarioCubit
-                              .changeConyugeIngresosMensuales(newValue);
-                        }),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: BlocBuilder<GrupoEspecialCubit, GrupoEspecialState>(
-                      builder: (context, state) {
-                        if (state is GruposEspecialesLoaded) {
-                          return DropdownButtonFormField(
-                              value: conyugeGrupoEspecialId != ''
-                                  ? conyugeGrupoEspecialId
-                                  : null,
-                              items: state.gruposEspeciales
-                                  ?.map<DropdownMenuItem<String>>(
-                                      (GrupoEspecialEntity value) {
-                                return DropdownMenuItem<String>(
-                                  value: value.grupoEspecialId,
-                                  child: Text(value.nombre),
-                                );
-                              }).toList(),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Campo Requerido';
-                                }
-                                return null;
-                              },
-                              onChanged: (String? value) {
-                                perfilPreInversionBeneficiarioCubit
-                                    .changeConyugeGrupoEspecial(value);
-                              },
-                              hint: const Text('Grupo Especial'));
+              TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: ingresosMensualesCtrl,
+                  decoration: CustomInputDecoration.inputDecoration(
+                      hintText: 'Ingresos Mensuales',
+                      labelText: 'Ingresos Mensuales'),
+                  validator: ((value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo Requerido';
+                    }
+                    return null;
+                  }),
+                  onSaved: (String? newValue) {
+                    perfilPreInversionBeneficiarioCubit
+                        .changeConyugeIngresosMensuales(newValue);
+                  }),
+              const SizedBox(height: 20),
+              BlocBuilder<GrupoEspecialCubit, GrupoEspecialState>(
+                builder: (context, state) {
+                  if (state is GruposEspecialesLoaded) {
+                    return DropdownButtonFormField(
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Grupo Especial',
+                          labelText: 'Grupo Especial'),
+                      value: conyugeGrupoEspecialId != ''
+                          ? conyugeGrupoEspecialId
+                          : null,
+                      items: state.gruposEspeciales!
+                          .map<DropdownMenuItem<String>>(
+                              (GrupoEspecialEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.grupoEspecialId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
                         }
-                        return Container();
+                        return null;
                       },
-                    ),
-                  )
-                ],
+                      onChanged: (String? value) {
+                        perfilPreInversionBeneficiarioCubit
+                            .changeConyugeGrupoEspecial(value);
+                      },
+                    );
+                  }
+                  return Container();
+                },
               ),
             ]),
           ),

@@ -20,7 +20,24 @@ class PerfilPreInversionPrecioRepositoryDBImpl
     try {
       final perfilPreInversionPreciosDB =
           await perfilPreInversionPrecioLocalDataSource
-              .getPerfilPreInversionPreciosDB();
+              .getPerfilPreInversionPrecios();
+
+      return Right(perfilPreInversionPreciosDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PerfilPreInversionPrecioEntity>>>
+      getPerfilesPreInversionesPreciosRepositoryDB(
+          String perfilPreInversionId) async {
+    try {
+      final perfilPreInversionPreciosDB =
+          await perfilPreInversionPrecioLocalDataSource
+              .getPerfilesPreInversionesPrecios(perfilPreInversionId);
 
       return Right(perfilPreInversionPreciosDB);
     } on ServerFailure catch (e) {
@@ -32,13 +49,12 @@ class PerfilPreInversionPrecioRepositoryDBImpl
 
   @override
   Future<Either<Failure, PerfilPreInversionPrecioEntity?>>
-      getPerfilPreInversionPrecioRepositoryDB(String perfilPreInversionId,
-          String productoId, String tipoCalidadId) async {
+      getPerfilPreInversionPrecioRepositoryDB(
+          String perfilPreInversionId) async {
     try {
       final perfilPreInversionPrecioDB =
           await perfilPreInversionPrecioLocalDataSource
-              .getPerfilPreInversionPrecioDB(
-                  perfilPreInversionId, productoId, tipoCalidadId);
+              .getPerfilPreInversionPrecio(perfilPreInversionId);
 
       return Right(perfilPreInversionPrecioDB);
     } on ServerFailure catch (e) {
@@ -69,7 +85,7 @@ class PerfilPreInversionPrecioRepositoryDBImpl
     try {
       final perfilPreInversionPreciosDB =
           await perfilPreInversionPrecioLocalDataSource
-              .getPerfilesPreInversionesPreciosProduccionDB();
+              .getPerfilesPreInversionesPreciosProduccion();
 
       return Right(perfilPreInversionPreciosDB);
     } on ServerFailure catch (e) {
@@ -85,7 +101,7 @@ class PerfilPreInversionPrecioRepositoryDBImpl
     try {
       final perfilPreInversionPrecioDB =
           await perfilPreInversionPrecioLocalDataSource
-              .savePerfilPreInversionPrecioDB(perfilPreInversionPrecioEntity);
+              .savePerfilPreInversionPrecio(perfilPreInversionPrecioEntity);
       return Right(perfilPreInversionPrecioDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
@@ -101,7 +117,7 @@ class PerfilPreInversionPrecioRepositoryDBImpl
               perfilesPreInversionesPreciosEntity) async {
     try {
       final result = await perfilPreInversionPrecioLocalDataSource
-          .updatePerfilesPreInversionesPreciosProduccionDB(
+          .updatePerfilesPreInversionesPreciosProduccion(
               perfilesPreInversionesPreciosEntity);
 
       return Right(result);

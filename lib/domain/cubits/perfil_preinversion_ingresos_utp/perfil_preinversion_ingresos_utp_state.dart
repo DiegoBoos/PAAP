@@ -1,7 +1,7 @@
 part of 'perfil_preinversion_ingresos_utp_cubit.dart';
 
 abstract class PerfilPreInversionIngresosUPTState extends Equatable {
-  final PerfilPreInversionPlanNegocioEntity perfilPreInversionIngresosUPT;
+  final VPerfilPreInversionPlanNegocioEntity perfilPreInversionIngresosUPT;
 
   const PerfilPreInversionIngresosUPTState(
       {required this.perfilPreInversionIngresosUPT});
@@ -24,7 +24,8 @@ class PerfilPreInversionIngresosUPTLoading
 
 class PerfilPreInversionIngresosUPTLoaded
     extends PerfilPreInversionIngresosUPTState {
-  final PerfilPreInversionPlanNegocioEntity perfilPreInversionIngresosUPTLoaded;
+  final VPerfilPreInversionPlanNegocioEntity
+      perfilPreInversionIngresosUPTLoaded;
 
   const PerfilPreInversionIngresosUPTLoaded(
       this.perfilPreInversionIngresosUPTLoaded)
@@ -34,7 +35,7 @@ class PerfilPreInversionIngresosUPTLoaded
 
 class PerfilPreInversionIngresosUPTChanged
     extends PerfilPreInversionIngresosUPTState {
-  final PerfilPreInversionPlanNegocioEntity
+  final VPerfilPreInversionPlanNegocioEntity
       perfilPreInversionIngresosUPTChanged;
 
   const PerfilPreInversionIngresosUPTChanged(
@@ -60,14 +61,17 @@ class PerfilPreInversionIngresosUPTError
   List<Object?> get props => [message];
 }
 
-PerfilPreInversionPlanNegocioEntity _initObject() =>
-    PerfilPreInversionPlanNegocioEntity(
-        perfilPreInversionId: '',
+VPerfilPreInversionPlanNegocioEntity _initObject() =>
+    VPerfilPreInversionPlanNegocioEntity(
+        actividadFinancieraId: '',
+        actividadFinanciera: '',
         rubroId: '',
-        year: '',
-        valor: '',
-        cantidad: '',
+        rubro: '',
         unidadId: '',
+        unidad: '',
+        year: '',
+        cantidad: '',
+        valor: '',
         productoId: '',
         tipoCalidadId: '',
-        recordStatus: '');
+        porcentaje: '');

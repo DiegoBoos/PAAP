@@ -11,16 +11,16 @@ import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 import '../widgets/perfil_preinversion_cofinanciador_rows.dart';
 
-class PerfilPreInversionCofinanciadoresPage extends StatefulWidget {
-  const PerfilPreInversionCofinanciadoresPage({super.key});
+class PerfilesPreInversionesCofinanciadoresPage extends StatefulWidget {
+  const PerfilesPreInversionesCofinanciadoresPage({super.key});
 
   @override
-  State<PerfilPreInversionCofinanciadoresPage> createState() =>
-      _PerfilPreInversionCofinanciadoresPageState();
+  State<PerfilesPreInversionesCofinanciadoresPage> createState() =>
+      _PerfilesPreInversionesCofinanciadoresPageState();
 }
 
-class _PerfilPreInversionCofinanciadoresPageState
-    extends State<PerfilPreInversionCofinanciadoresPage> {
+class _PerfilesPreInversionesCofinanciadoresPageState
+    extends State<PerfilesPreInversionesCofinanciadoresPage> {
   @override
   void initState() {
     super.initState();
@@ -83,7 +83,7 @@ class _PerfilPreInversionCofinanciadoresPageState
                         child: Center(
                             child: NoDataSvg(title: 'No hay resultados')));
                   }
-                  return PerfilPreInversionCofinanciadoresRows(
+                  return PerfilPreInversionCofinanciadorRows(
                       perfilPreInversionCofinanciadores:
                           perfilPreInversionCofinanciadores,
                       subtitleStyle: Styles.subtitleStyle);

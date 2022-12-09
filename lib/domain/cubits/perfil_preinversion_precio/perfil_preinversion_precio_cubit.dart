@@ -13,17 +13,51 @@ class PerfilPreInversionPrecioCubit
   PerfilPreInversionPrecioCubit({required this.perfilPreInversionPrecioDB})
       : super(PerfilPreInversionPrecioInitial());
 
-  void savePerfilPreInversionPrecioDB(
+  void initState() => emit(PerfilPreInversionPrecioInitial());
+
+  void getPerfilPreInversionPrecioCubit(String perfilPreInversionId) async {
+    final result = await perfilPreInversionPrecioDB
+        .getPerfilPreInversionPrecioUsecaseDB(perfilPreInversionId);
+    result.fold(
+        (failure) =>
+            emit(PerfilPreInversionPrecioError(failure.properties.first)),
+        (data) => emit(PerfilPreInversionPrecioLoaded(data!)));
+  }
+
+  Future<void> savePerfilPreInversionPrecioDB(
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
     final result = await perfilPreInversionPrecioDB
         .savePerfilPreInversionPrecioUsecaseDB(perfilPreInversionPrecioEntity);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionPrecioError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionPrecioSaved()));
+        (data) => emit(PerfilPreInversionPrecioSaved(
+            perfilPreInversionPrecio: perfilPreInversionPrecioEntity)));
   }
 
-  void initState() => emit(PerfilPreInversionPrecioInitial());
+  void changePerfilPreInversionId(String perfilPreInversionId) {
+    final perfilPreInversionIdChanged = state.perfilPreInversionPrecio
+        .copyWith(perfilPreInversionId: perfilPreInversionId);
+    emit(PerfilPreInversionPrecioChanged(perfilPreInversionIdChanged));
+  }
+
+  void changeTipoCalidad(String? value) {
+    final tipoCalidad =
+        state.perfilPreInversionPrecio.copyWith(tipoCalidadId: value);
+    emit(PerfilPreInversionPrecioChanged(tipoCalidad));
+  }
+
+  void changeProducto(String? value) {
+    final productoChanged =
+        state.perfilPreInversionPrecio.copyWith(productoId: value);
+    emit(PerfilPreInversionPrecioChanged(productoChanged));
+  }
+
+  void changeUnidad(String? value) {
+    final unidadChanged =
+        state.perfilPreInversionPrecio.copyWith(unidadId: value);
+    emit(PerfilPreInversionPrecioChanged(unidadChanged));
+  }
 
   void changePrecio(String? newValue) {
     final precioChanged =

@@ -20,7 +20,7 @@ class PerfilPreInversionAliadoRepositoryDBImpl
     try {
       final perfilesPreInversionesAliadosDB =
           await perfilPreInversionAliadoLocalDataSource
-              .getPerfilesPreInversionesAliadosProduccionDB();
+              .getPerfilesPreInversionesAliadosProduccion();
 
       return Right(perfilesPreInversionesAliadosDB);
     } on ServerFailure catch (e) {
@@ -68,7 +68,7 @@ class PerfilPreInversionAliadoRepositoryDBImpl
     try {
       final perfilPreInversionAliadoDB =
           await perfilPreInversionAliadoLocalDataSource
-              .savePerfilPreInversionAliadoDB(perfilPreInversionAliadoEntity);
+              .savePerfilPreInversionAliado(perfilPreInversionAliadoEntity);
       return Right(perfilPreInversionAliadoDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
@@ -84,7 +84,7 @@ class PerfilPreInversionAliadoRepositoryDBImpl
               perfilesPreInversionesAliadosEntity) async {
     try {
       final result = await perfilPreInversionAliadoLocalDataSource
-          .updatePerfilesPreInversionesAliadosProduccionDB(
+          .updatePerfilesPreInversionesAliadosProduccion(
               perfilesPreInversionesAliadosEntity);
 
       return Right(result);

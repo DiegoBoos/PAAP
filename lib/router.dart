@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'ui/alianzas/pages/alianza_detail_page.dart';
 import 'ui/alianzas_beneficiarios/pages/alianzas_beneficiarios_page.dart';
 import 'ui/alianzas_beneficiarios/pages/new_edit_alianza_beneficiario_page.dart';
-import 'ui/perfil_preinversion_consultores/pages/perfil_preinversion_consultores.dart';
+import 'ui/modelo_financiero/pages/new_edit_perfil_preinversion_costos_upt.dart';
+import 'ui/modelo_financiero/pages/new_edit_perfil_preinversion_ingresos_upt.dart';
+import 'ui/perfiles_preinversiones_consultores/pages/perfil_preinversion_consultores.dart';
 import 'ui/modelo_financiero/pages/modelo_financiero_page.dart';
 import 'ui/perfil_preinversion_aliados/pages/new_edit_perfil_preinversion_aliado_page.dart';
 import 'ui/perfil_preinversion_aliados/pages/perfil_preinversion_aliados_page.dart';
 import 'ui/auth/pages/sign_in_page.dart';
 import 'ui/perfil_preinversion_beneficiarios/pages/new_edit_perfil_preinversion_beneficiario_page.dart';
 import 'ui/perfil_preinversion_beneficiarios/pages/perfil_preinversion_beneficiarios_page.dart';
-import 'ui/perfil_preinversion_cofinanciadores/pages/new_edit_perfil_preinversion_cofinanciador_page.dart';
-import 'ui/perfil_preinversion_cofinanciadores/pages/perfil_preinversion_cofinanciadores_page.dart';
+import 'ui/perfiles_preinversiones_cofinanciadores/pages/new_edit_perfil_preinversion_cofinanciador_page.dart';
+import 'ui/perfiles_preinversiones_cofinanciadores/pages/perfiles_preinversiones_cofinanciadores_page.dart';
 import 'ui/perfiles/pages/perfil_detail_page.dart';
 import 'ui/perfiles/pages/registro_visita_page.dart';
 import 'ui/perfil_preinversion/pages/perfil_preinversion_detail_page.dart';
@@ -41,7 +43,7 @@ class AppRouter {
       return const NewEditPerfilPreInversionAliadoPage();
     },
     'VCofinanciadoresPreInversion': (BuildContext context) {
-      return const PerfilPreInversionCofinanciadoresPage();
+      return const PerfilesPreInversionesCofinanciadoresPage();
     },
     'NewEditVCofinanciadorPreInversion': (BuildContext context) {
       return const NewEditPerfilPreInversionCofinanciadorPage();
@@ -60,6 +62,12 @@ class AppRouter {
     },
     'NewEditVBeneficiarioAlianza': (BuildContext context) {
       return const NewEditAlianzaBeneficiarioPage();
+    },
+    'NewEditPerfilPreInversionCostosUPT': (BuildContext context) {
+      return const NewEditPerfilPreInversionCostosUPT();
+    },
+    'NewEditPerfilPreInversionIngresosUPT': (BuildContext context) {
+      return const NewEditPerfilPreInversionIngresosUPT();
     }
   };
 }

@@ -18,13 +18,13 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
   Future<
           Either<Failure,
               List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
-      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionRepositoryDB() async {
+      getPerfilPreInversionCofinanciadorActividadesFinancierasRepositoryDB() async {
     try {
-      final perfilPreInversionCofinanciadorActividadFinancierasDB =
+      final perfilPreInversionCofinanciadorActividadesFinancierasDB =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
-              .getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB();
+              .getPerfilPreInversionCofinanciadorActividadesFinancierasDB();
 
-      return Right(perfilPreInversionCofinanciadorActividadFinancierasDB);
+      return Right(perfilPreInversionCofinanciadorActividadesFinancierasDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -36,13 +36,13 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
   Future<
           Either<Failure,
               List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
-      getPerfilPreInversionCofinanciadorActividadesFinancierasRepositoryDB() async {
+      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionRepositoryDB() async {
     try {
-      final perfilPreInversionCofinanciadorActividadesFinancierasDB =
+      final perfilPreInversionCofinanciadorActividadFinancierasDB =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
-              .getPerfilPreInversionCofinanciadorActividadesFinancierasDB();
+              .getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB();
 
-      return Right(perfilPreInversionCofinanciadorActividadesFinancierasDB);
+      return Right(perfilPreInversionCofinanciadorActividadFinancierasDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -65,6 +65,32 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
                   perfilPreInversionId, cofinanciadorId, desembolsoId);
 
       return Right(perfilPreInversionCofinanciadorActividadFinancieraDB);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<
+          Either<Failure,
+              List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
+      getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorRepositoryDB(
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String actividadFinancieraId,
+          String desembolsoId) async {
+    try {
+      final perfilPreInversionCofinanciadorActividadesFinancierasDB =
+          await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
+              .getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
+                  perfilPreInversionId,
+                  cofinanciadorId,
+                  actividadFinancieraId,
+                  desembolsoId);
+
+      return Right(perfilPreInversionCofinanciadorActividadesFinancierasDB);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -125,18 +151,5 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
-  }
-
-  @override
-  Future<
-          Either<Failure,
-              List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
-      getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorRepositoryDB(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String actividadFinancieraId,
-          String desembolsoId) {
-    // TODO: implement getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorRepositoryDB
-    throw UnimplementedError();
   }
 }

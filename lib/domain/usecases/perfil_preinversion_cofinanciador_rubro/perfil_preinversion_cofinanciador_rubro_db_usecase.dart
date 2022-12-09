@@ -13,15 +13,22 @@ class PerfilPreInversionCofinanciadorRubroUsecaseDB {
     return repositoryDB.getPerfilPreInversionCofinanciadorRubrosRepositoryDB();
   }
 
-  //TODO: método
-
-  /* Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>?>>
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>?>>
       getPerfilPreInversionCofinanciadorRubrosByCofinanciadorUsecaseDB(
-          String perfilPreInversionId, String cofinanciadorId) {
+    String perfilPreInversionId,
+    String cofinanciadorId,
+    String desembolsoId,
+    String actividadFinancieraId,
+    String rubroId,
+  ) {
     return repositoryDB
         .getPerfilPreInversionCofinanciadorRubrosByCofinanciadorRepositoryDB(
-            perfilPreInversionId, cofinanciadorId);
-  } */
+            perfilPreInversionId,
+            cofinanciadorId,
+            desembolsoId,
+            actividadFinancieraId,
+            rubroId);
+  }
 
   Future<Either<Failure, PerfilPreInversionCofinanciadorRubroEntity?>>
       getPerfilPreInversionCofinanciadorRubroUsecaseDB(

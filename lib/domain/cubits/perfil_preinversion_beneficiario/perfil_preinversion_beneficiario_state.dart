@@ -17,8 +17,8 @@ class PerfilPreInversionBeneficiarioInitial
 
 class PerfilPreInversionBeneficiarioLoading
     extends PerfilPreInversionBeneficiarioState {
-  PerfilPreInversionBeneficiarioLoading()
-      : super(perfilPreInversionBeneficiario: initObject());
+  const PerfilPreInversionBeneficiarioLoading(
+      {required super.perfilPreInversionBeneficiario});
 }
 
 class PerfilPreInversionBeneficiarioLoaded
@@ -47,8 +47,8 @@ class PerfilPreInversionBeneficiarioChanged
 
 class PerfilPreInversionBeneficiarioSaved
     extends PerfilPreInversionBeneficiarioState {
-  PerfilPreInversionBeneficiarioSaved()
-      : super(perfilPreInversionBeneficiario: initObject());
+  const PerfilPreInversionBeneficiarioSaved(
+      {required super.perfilPreInversionBeneficiario});
 }
 
 class PerfilPreInversionBeneficiarioError

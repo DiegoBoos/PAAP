@@ -51,21 +51,4 @@ class PerfilPreInversionPlanNegocioRepositoryImpl
       return const Left(ServerFailure(['Excepción no controlada']));
     }
   }
-
-  @override
-  Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilPreInversionplanesNegociosRepository(UsuarioEntity usuario) {
-    // TODO: implement getPerfilPreInversionplanesNegociosRepository
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      savePerfilesPreInversionesplanesNegociosRepository(
-          UsuarioEntity usuario,
-          List<PerfilPreInversionPlanNegocioEntity>
-              perfilPreInversionPlanNegocioEntity) {
-    // TODO: implement savePerfilesPreInversionesplanesNegociosRepository
-    throw UnimplementedError();
-  }
 }

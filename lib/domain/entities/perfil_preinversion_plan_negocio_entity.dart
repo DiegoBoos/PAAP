@@ -8,7 +8,7 @@ class PerfilPreInversionPlanNegocioEntity {
     required this.unidadId,
     required this.productoId,
     required this.tipoCalidadId,
-    required this.recordStatus,
+    this.recordStatus,
   });
 
   String perfilPreInversionId;
@@ -19,7 +19,7 @@ class PerfilPreInversionPlanNegocioEntity {
   String unidadId;
   String productoId;
   String tipoCalidadId;
-  String recordStatus;
+  String? recordStatus;
 
   PerfilPreInversionPlanNegocioEntity copyWith(
       {String? perfilPreInversionId,

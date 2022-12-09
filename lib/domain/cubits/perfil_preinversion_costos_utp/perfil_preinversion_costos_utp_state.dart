@@ -1,7 +1,7 @@
 part of 'perfil_preinversion_costos_utp_cubit.dart';
 
 abstract class PerfilPreInversionCostosUPTState extends Equatable {
-  final PerfilPreInversionPlanNegocioEntity perfilPreInversionCostosUPT;
+  final VPerfilPreInversionPlanNegocioEntity perfilPreInversionCostosUPT;
 
   const PerfilPreInversionCostosUPTState(
       {required this.perfilPreInversionCostosUPT});
@@ -24,7 +24,7 @@ class PerfilPreInversionCostosUPTLoading
 
 class PerfilPreInversionCostosUPTLoaded
     extends PerfilPreInversionCostosUPTState {
-  final PerfilPreInversionPlanNegocioEntity perfilPreInversionCostosUPTLoaded;
+  final VPerfilPreInversionPlanNegocioEntity perfilPreInversionCostosUPTLoaded;
 
   const PerfilPreInversionCostosUPTLoaded(
       this.perfilPreInversionCostosUPTLoaded)
@@ -33,7 +33,7 @@ class PerfilPreInversionCostosUPTLoaded
 
 class PerfilPreInversionCostosUPTChanged
     extends PerfilPreInversionCostosUPTState {
-  final PerfilPreInversionPlanNegocioEntity perfilPreInversionCostosUPTChanged;
+  final VPerfilPreInversionPlanNegocioEntity perfilPreInversionCostosUPTChanged;
 
   const PerfilPreInversionCostosUPTChanged(
       this.perfilPreInversionCostosUPTChanged)
@@ -56,14 +56,17 @@ class PerfilPreInversionCostosUPTError
   List<Object?> get props => [message];
 }
 
-PerfilPreInversionPlanNegocioEntity initObject() =>
-    PerfilPreInversionPlanNegocioEntity(
-        perfilPreInversionId: '',
+VPerfilPreInversionPlanNegocioEntity initObject() =>
+    VPerfilPreInversionPlanNegocioEntity(
+        actividadFinancieraId: '',
+        actividadFinanciera: '',
         rubroId: '',
-        year: '',
-        valor: '',
-        cantidad: '',
+        rubro: '',
         unidadId: '',
+        unidad: '',
+        year: '',
+        cantidad: '',
+        valor: '',
         productoId: '',
         tipoCalidadId: '',
-        recordStatus: '');
+        porcentaje: '');

@@ -41,7 +41,9 @@ class PerfilPreInversionBeneficiarioCubit
     result.fold(
         (failure) =>
             emit(PerfilPreInversionBeneficiarioError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionBeneficiarioSaved()));
+        (data) => emit(PerfilPreInversionBeneficiarioSaved(
+            perfilPreInversionBeneficiario:
+                perfilPreInversionBeneficiarioEntity)));
   }
 
   void selectPerfilPreinversionBeneficiario(

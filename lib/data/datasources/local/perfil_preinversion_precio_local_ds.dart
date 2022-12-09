@@ -5,16 +5,24 @@ import '../../../domain/entities/perfil_preinversion_precio_entity.dart';
 import '../../models/perfil_preinversion_precio_model.dart';
 
 abstract class PerfilPreInversionPrecioLocalDataSource {
-  Future<List<PerfilPreInversionPrecioModel>> getPerfilPreInversionPreciosDB();
-  Future<PerfilPreInversionPrecioModel?> getPerfilPreInversionPrecioDB(
-      String perfilPreInversionId, String productoId, String tipoCalidadId);
+  Future<List<PerfilPreInversionPrecioModel>> getPerfilPreInversionPrecios();
+
+  Future<List<PerfilPreInversionPrecioModel>> getPerfilesPreInversionesPrecios(
+      String perfilPreInversionId);
+
+  Future<PerfilPreInversionPrecioModel?> getPerfilPreInversionPrecio(
+      String perfilPreInversionId);
+
   Future<int> savePerfilPreInversionPrecios(
       List<PerfilPreInversionPrecioEntity> perfilPreInversionPrecioEntity);
-  Future<int> savePerfilPreInversionPrecioDB(
+
+  Future<int> savePerfilPreInversionPrecio(
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity);
+
   Future<List<PerfilPreInversionPrecioModel>>
-      getPerfilesPreInversionesPreciosProduccionDB();
-  Future<int> updatePerfilesPreInversionesPreciosProduccionDB(
+      getPerfilesPreInversionesPreciosProduccion();
+
+  Future<int> updatePerfilesPreInversionesPreciosProduccion(
       List<PerfilPreInversionPrecioEntity>
           perfilesPreInversionesPreciosProduccionEntity);
 }
@@ -40,7 +48,7 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionPrecioModel>>
-      getPerfilPreInversionPreciosDB() async {
+      getPerfilPreInversionPrecios() async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionPrecio');
@@ -52,16 +60,44 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
   }
 
   @override
-  Future<PerfilPreInversionPrecioModel?> getPerfilPreInversionPrecioDB(
-      String perfilPreInversionId,
-      String productoId,
-      String tipoCalidadId) async {
+  Future<List<PerfilPreInversionPrecioModel>> getPerfilesPreInversionesPrecios(
+      String perfilPreInversionId) async {
+    final db = await DBConfig.database;
+
+    String sql = '''
+      select 
+      PerfilPreInversionPrecio.PerfilPreInversionId,
+      PerfilPreInversionPrecio.ProductoId,
+      PerfilPreInversionPrecio.UnidadId,
+      PerfilPreInversionPrecio.TipoCalidadId,
+      PerfilPreInversionPrecio.Precio,
+      Producto.Nombre as Producto,
+      Unidad.Nombre as Unidad,
+      TipoCalidad.Nombre as TipoCalidad
+      from PerfilPreInversionPrecio
+      left join Producto on (Producto.ProductoId=PerfilPreInversionPrecio.ProductoId)
+      left join Unidad on (Unidad.UnidadId=PerfilPreInversionPrecio.UnidadId)
+      left join TipoCalidad on (TipoCalidad.TipoCalidadId=PerfilPreInversionPrecio.TipoCalidadId)
+      where PerfilPreInversionPrecio.PerfilPreInversionId = $perfilPreInversionId
+      ''';
+
+    final res = await db.rawQuery(sql);
+
+    if (res.isEmpty) return [];
+
+    final perfilPreInversionPrecio = List<PerfilPreInversionPrecioModel>.from(
+        res.map((m) => PerfilPreInversionPrecioModel.fromJson(m))).toList();
+
+    return perfilPreInversionPrecio;
+  }
+
+  @override
+  Future<PerfilPreInversionPrecioModel?> getPerfilPreInversionPrecio(
+      String perfilPreInversionId) async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionPrecio',
-        where:
-            'PerfilPreInversionId = ? AND ProductoId = ? AND TipoCalidadId = ?',
-        whereArgs: [perfilPreInversionId, productoId, tipoCalidadId]);
+        where: 'PerfilPreInversionId = ?', whereArgs: [perfilPreInversionId]);
 
     if (res.isEmpty) return null;
     final perfilPreInversionPrecioMap = {
@@ -94,7 +130,7 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
   }
 
   @override
-  Future<int> savePerfilPreInversionPrecioDB(
+  Future<int> savePerfilPreInversionPrecio(
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
     final db = await DBConfig.database;
     var batch = db.batch();
@@ -132,7 +168,7 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionPrecioModel>>
-      getPerfilesPreInversionesPreciosProduccionDB() async {
+      getPerfilesPreInversionesPreciosProduccion() async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionPrecio',
@@ -148,7 +184,7 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
   }
 
   @override
-  Future<int> updatePerfilesPreInversionesPreciosProduccionDB(
+  Future<int> updatePerfilesPreInversionesPreciosProduccion(
       List<PerfilPreInversionPrecioEntity>
           perfilesPreInversionesPreciosProduccionEntity) async {
     final db = await DBConfig.database;

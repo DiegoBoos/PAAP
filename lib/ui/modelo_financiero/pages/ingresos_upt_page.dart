@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/perfil_preinversion_planes_negocios/perfil_preinversion_planes_negocios_bloc.dart';
-import '../../../domain/entities/perfil_preinversion_plan_negocio_entity.dart';
+import '../../../domain/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
+import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../domain/cubits/v_perfiles_preinversiones_plan_negocios/v_perfiles_preinversiones_plan_negocios_cubit.dart';
+import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart';
+import '../../utils/custom_snack_bar.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
-import '../widgets/perfil_preinversion_planes_negocios_rows.dart';
+import '../widgets/perfiles_preinversiones_plan_negocios_rows.dart';
 
 class IngresosUPTPage extends StatefulWidget {
   const IngresosUPTPage({super.key});
@@ -15,33 +19,68 @@ class IngresosUPTPage extends StatefulWidget {
   State<IngresosUPTPage> createState() => _IngresosUPTPageState();
 }
 
+const String tipoMovimiento = '2';
+
 class _IngresosUPTPageState extends State<IngresosUPTPage> {
   @override
+  void initState() {
+    super.initState();
+    final vPerfilesPreInversionesPlanNegociosCubit =
+        BlocProvider.of<VPerfilesPreInversionesPlanNegociosCubit>(context);
+
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    vPerfilesPreInversionesPlanNegociosCubit
+        .getVPerfilesPreInversionesPlanNegociosDB(
+            vPerfilPreInversionCubit
+                .state.vPerfilPreInversion!.perfilPreInversionId,
+            tipoMovimiento);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PerfilPreInversionPlanesNegociosBloc,
-        PerfilPreInversionPlanesNegociosState>(
+    final vPerfilesPreInversionesPlanNegociosCubit =
+        BlocProvider.of<VPerfilesPreInversionesPlanNegociosCubit>(context);
+
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    return BlocListener<PerfilPreInversionIngresosUPTCubit,
+        PerfilPreInversionIngresosUPTState>(listener: (context, state) {
+      if (state is PerfilPreInversionIngresosUPTSaved) {
+        CustomSnackBar.showSnackBar(
+            context, 'Datos guardados satisfactoriamente', Colors.green);
+
+        vPerfilesPreInversionesPlanNegociosCubit
+            .getVPerfilesPreInversionesPlanNegociosDB(
+                vPerfilPreInversionCubit
+                    .state.vPerfilPreInversion!.perfilPreInversionId,
+                tipoMovimiento);
+      }
+    }, child: BlocBuilder<VPerfilesPreInversionesPlanNegociosCubit,
+        VPerfilesPreInversionesPlanNegociosState>(
       builder: (context, state) {
         if (state is PerfilPreInversionPlanesNegociosLoading) {
           return const CustomCircularProgress(alignment: Alignment.center);
-        } else if (state is PerfilPreInversionPlanesNegociosLoaded) {
-          List<PerfilPreInversionPlanNegocioEntity>
-              perfilPreInversionPlanesNegocios =
-              state.perfilPreInversionPlanesNegociosLoaded!;
-          if (perfilPreInversionPlanesNegocios.isEmpty) {
+        } else if (state is VPerfilesPreInversionesPlanNegociosLoaded) {
+          List<VPerfilPreInversionPlanNegocioEntity>
+              vPerfilesPreInversionesPlanNegocios =
+              state.vPerfilesPreInversionesPlanNegociosLoaded;
+          if (vPerfilesPreInversionesPlanNegocios.isEmpty) {
             return const SizedBox(
                 child: Center(child: NoDataSvg(title: 'No hay resultados')));
           }
           return PerfilPreInversionPlanesNegociosRows(
-            perfilPreInversionPlanesNegocios: perfilPreInversionPlanesNegocios,
-            subtitleStyle: Styles.subtitleStyle,
-            isCostosUPT: false,
-            isIngresosUPT: true,
-          );
+              vPerfilesPreInversionesPlanNegocios:
+                  vPerfilesPreInversionesPlanNegocios,
+              subtitleStyle: Styles.subtitleStyle,
+              tipoMovimiento: tipoMovimiento);
         }
         return const NoDataSvg(
           title: 'No hay resultados',
         );
       },
-    );
+    ));
   }
 }

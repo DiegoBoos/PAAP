@@ -62,7 +62,7 @@ class PerfilPreInversionAliadosRows extends StatelessWidget {
 
                 final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
                 await aliadoCubit
-                    .selectAliado(perfilPreInversionAliado.aliadoId)
+                    .getAliado(perfilPreInversionAliado.aliadoId)
                     .whenComplete(() {
                   Navigator.pushNamed(context, 'NewEditAliadoPreInversion');
                 });

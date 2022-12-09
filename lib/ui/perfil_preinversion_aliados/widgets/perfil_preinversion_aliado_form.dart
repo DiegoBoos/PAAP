@@ -1,5 +1,7 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../data/models/municipio_model.dart';
 import '../../../domain/cubits/aliado/aliado_cubit.dart';
@@ -42,6 +44,7 @@ class _PerfilPreInversionAliadoFormState
   String? sitioEntregaId;
 
   final aliadoIdCtrl = TextEditingController();
+  final nombreCtrl = TextEditingController();
   final experienciaCtrl = TextEditingController();
   final nombreContactoCtrl = TextEditingController();
   final direccionCtrl = TextEditingController();
@@ -104,6 +107,7 @@ class _PerfilPreInversionAliadoFormState
     }
 
     aliadoIdCtrl.text = aliadoLoaded.aliadoId;
+    nombreCtrl.text = aliadoLoaded.nombre;
     experienciaCtrl.text = aliadoLoaded.experiencia;
     nombreContactoCtrl.text = aliadoLoaded.nombreContacto;
     direccionCtrl.text = aliadoLoaded.direccion;
@@ -120,6 +124,7 @@ class _PerfilPreInversionAliadoFormState
   ) {
     volumenCompraCtrl.text = perfilPreInversionAliadoLoaded.volumenCompra;
     porcentajeCompraCtrl.text = perfilPreInversionAliadoLoaded.porcentajeCompra;
+    productoId = perfilPreInversionAliadoLoaded.productoId;
     unidadId = perfilPreInversionAliadoLoaded.unidadId;
     frecuenciaId = perfilPreInversionAliadoLoaded.frecuenciaId;
     sitioEntregaId = perfilPreInversionAliadoLoaded.sitioEntregaId;
@@ -129,6 +134,8 @@ class _PerfilPreInversionAliadoFormState
 
   @override
   Widget build(BuildContext context) {
+    final dateFormat = DateFormat('yyyy-MM-dd');
+
     final perfilPreInversionAliadoCubit =
         BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
     final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
@@ -169,18 +176,23 @@ class _PerfilPreInversionAliadoFormState
                 children: [
                   Expanded(
                     child: TextFormField(
-                        controller: aliadoIdCtrl,
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'ID Aliado', labelText: 'ID Aliado'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Campo Requerido*';
-                          }
-                          return null;
-                        },
-                        onFieldSubmitted: (String? newValue) {
-                          aliadoCubit.selectAliado(newValue!);
-                        }),
+                      controller: aliadoIdCtrl,
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'ID Aliado', labelText: 'ID Aliado'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Campo Requerido*';
+                        }
+                        return null;
+                      },
+                      onFieldSubmitted: (String? newValue) {
+                        aliadoCubit.getAliado(newValue!);
+                      },
+                      onSaved: (String? newValue) {
+                        aliadoCubit.changeAliadoId(newValue);
+                        perfilPreInversionAliadoCubit.changeAliadoId(newValue);
+                      },
+                    ),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
@@ -202,11 +214,27 @@ class _PerfilPreInversionAliadoFormState
                 ],
               ),
               const SizedBox(height: 20),
+              TextFormField(
+                  controller: nombreCtrl,
+                  decoration: CustomInputDecoration.inputDecoration(
+                      hintText: 'Nombre', labelText: 'Nombre'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo Requerido*';
+                    }
+                    return null;
+                  },
+                  onSaved: (String? newValue) {
+                    aliadoCubit.changeNombre(newValue);
+                  }),
+              const SizedBox(height: 20),
               BlocBuilder<DepartamentoCubit, DepartamentoState>(
                 builder: (context, state) {
                   if (state is DepartamentosLoaded) {
                     return DropdownButtonFormField(
                         isExpanded: true,
+                        decoration:
+                            const InputDecoration(label: Text('Departamento')),
                         value: departamentoId,
                         items: state.departamentosLoaded!
                             .map<DropdownMenuItem<String>>(
@@ -245,6 +273,8 @@ class _PerfilPreInversionAliadoFormState
                     return DropdownButtonFormField(
                         isExpanded: true,
                         value: municipioId,
+                        decoration:
+                            const InputDecoration(label: Text('Municipio')),
                         items: municipiosFiltered.map<DropdownMenuItem<String>>(
                             (MunicipioEntity value) {
                           return DropdownMenuItem<String>(
@@ -262,6 +292,9 @@ class _PerfilPreInversionAliadoFormState
                           setState(() {
                             municipioId = value;
                           });
+                        },
+                        onSaved: (String? newValue) {
+                          aliadoCubit.changeMunicipio(newValue);
                         },
                         hint: const Text('Municipio'));
                   },
@@ -305,6 +338,9 @@ class _PerfilPreInversionAliadoFormState
                     if (value == null || value.isEmpty) {
                       return 'Campo Requerido*';
                     }
+                    if (!EmailValidator.validate(value)) {
+                      return 'Email no válido';
+                    }
                     return null;
                   },
                   onSaved: (String? newValue) {
@@ -317,6 +353,7 @@ class _PerfilPreInversionAliadoFormState
                   Expanded(
                     child: TextFormField(
                         controller: telefonoFijoCtrl,
+                        keyboardType: TextInputType.number,
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Teléfono Fijo',
                             labelText: 'Teléfono Fijo'),
@@ -334,6 +371,7 @@ class _PerfilPreInversionAliadoFormState
                   Expanded(
                     child: TextFormField(
                         controller: telefonoMovilCtrl,
+                        keyboardType: TextInputType.number,
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Teléfono Móvil',
                             labelText: 'Teléfono Móvil'),
@@ -351,19 +389,37 @@ class _PerfilPreInversionAliadoFormState
               ),
               const SizedBox(height: 20),
               TextFormField(
-                  controller: fechaDesactivacionCtrl,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Fecha Desactivación',
-                      labelText: 'Fecha Desactivación'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo Requerido*';
-                    }
-                    return null;
-                  },
-                  onSaved: (String? newValue) {
-                    aliadoCubit.changeFechaDesactivacion(newValue);
-                  }),
+                controller: fechaDesactivacionCtrl,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Campo Requerido';
+                  }
+                  if (DateTime.tryParse(value) == null) {
+                    return 'No es una fecha válida';
+                  }
+                  return null;
+                },
+                onSaved: (String? newValue) {
+                  aliadoCubit.changeFechaDesactivacion(newValue);
+                },
+                decoration: CustomInputDecoration.inputDecoration(
+                    hintText: 'Fecha Desactivacion',
+                    labelText: 'Fecha Desactivacion',
+                    suffixIcon: IconButton(
+                        onPressed: () async {
+                          DateTime? newDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2050));
+
+                          if (newDate == null) return;
+
+                          fechaDesactivacionCtrl.text =
+                              dateFormat.format(newDate);
+                        },
+                        icon: const Icon(Icons.calendar_today))),
+              ),
               const SizedBox(height: 20),
               BlocBuilder<PerfilPreInversionAliadoCubit,
                   PerfilPreInversionAliadoState>(
@@ -375,6 +431,8 @@ class _PerfilPreInversionAliadoFormState
                           if (state is ProductosLoaded) {
                             return DropdownButtonFormField(
                                 value: productoId != '' ? productoId : null,
+                                decoration: const InputDecoration(
+                                    label: Text('Producto')),
                                 items: state.productosLoaded!
                                     .map<DropdownMenuItem<String>>(
                                         (ProductoEntity value) {
@@ -405,6 +463,7 @@ class _PerfilPreInversionAliadoFormState
                           Expanded(
                             child: TextFormField(
                                 controller: volumenCompraCtrl,
+                                keyboardType: TextInputType.number,
                                 decoration:
                                     CustomInputDecoration.inputDecoration(
                                         hintText: 'Volumen Compra',
@@ -427,6 +486,8 @@ class _PerfilPreInversionAliadoFormState
                                 if (state is UnidadesLoaded) {
                                   return DropdownButtonFormField(
                                       value: unidadId != '' ? unidadId : null,
+                                      decoration: const InputDecoration(
+                                          label: Text('Unidad')),
                                       items: state.unidadesLoaded!
                                           .map<DropdownMenuItem<String>>(
                                               (UnidadEntity value) {
@@ -460,6 +521,7 @@ class _PerfilPreInversionAliadoFormState
                           Expanded(
                             child: TextFormField(
                                 controller: porcentajeCompraCtrl,
+                                keyboardType: TextInputType.number,
                                 decoration:
                                     CustomInputDecoration.inputDecoration(
                                         hintText: 'Porcentaje de compra',
@@ -485,6 +547,8 @@ class _PerfilPreInversionAliadoFormState
                                       value: frecuenciaId != ''
                                           ? frecuenciaId
                                           : null,
+                                      decoration: const InputDecoration(
+                                          label: Text('Frecuencia')),
                                       items: state.frecuenciasLoaded!
                                           .map<DropdownMenuItem<String>>(
                                               (FrecuenciaEntity value) {
@@ -519,6 +583,8 @@ class _PerfilPreInversionAliadoFormState
                                 value: sitioEntregaId != ''
                                     ? sitioEntregaId
                                     : null,
+                                decoration: const InputDecoration(
+                                    label: Text('Sitio de entrega')),
                                 items: state.sitiosEntregasLoaded!
                                     .map<DropdownMenuItem<String>>(
                                         (SitioEntregaEntity value) {

@@ -22,7 +22,13 @@ class PerfilPreInversionConsultorCubit
     result.fold(
         (failure) =>
             emit(PerfilPreInversionConsultorError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionConsultorLoaded(data)));
+        (data) {
+      if (data != null) {
+        emit(PerfilPreInversionConsultorLoaded(data));
+      } else {
+        emit(PerfilPreInversionConsultorInitial());
+      }
+    });
   }
 
   Future<void> savePerfilPreInversionConsultorDB(

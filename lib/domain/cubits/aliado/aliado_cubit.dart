@@ -18,7 +18,7 @@ class AliadoCubit extends Cubit<AliadoState> {
         (data) => emit(AliadoSaved(aliado: aliadoEntity)));
   }
 
-  Future<void> selectAliado(String aliadoId) async {
+  Future<void> getAliado(String aliadoId) async {
     final result = await aliadoUsecaseDB.getAliadoUsecaseDB(aliadoId);
     result.fold((failure) => emit(AliadoError(failure.properties.first)),
         (data) {
@@ -28,6 +28,16 @@ class AliadoCubit extends Cubit<AliadoState> {
         emit(AliadoLoaded(data));
       }
     });
+  }
+
+  void changeAliadoId(String? newValue) {
+    final aliadoIdChanged = state.aliado.copyWith(aliadoId: newValue);
+    emit(AliadoChanged(aliadoIdChanged));
+  }
+
+  void changeNombre(String? newValue) {
+    final nombreChanged = state.aliado.copyWith(nombre: newValue);
+    emit(AliadoChanged(nombreChanged));
   }
 
   void changeExperiencia(String? newValue) {
@@ -65,5 +75,10 @@ class AliadoCubit extends Cubit<AliadoState> {
     final fechaDesactivacionChanged =
         state.aliado.copyWith(fechaDesactivacion: newValue);
     emit(AliadoChanged(fechaDesactivacionChanged));
+  }
+
+  void changeMunicipio(String? newValue) {
+    final municipioChanged = state.aliado.copyWith(municipioId: newValue);
+    emit(AliadoChanged(municipioChanged));
   }
 }

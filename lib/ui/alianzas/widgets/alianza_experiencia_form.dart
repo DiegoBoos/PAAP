@@ -169,30 +169,32 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
                         builder: (context, state) {
                           if (state is TiposActividadesProductivasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaAgricolaTipoActividadProductivaId !=
-                                        ''
-                                    ? experienciaAgricolaTipoActividadProductivaId
-                                    : null,
-                                items: state.tiposActividadesProductivas!
-                                    .map<DropdownMenuItem<String>>(
-                                        (TipoActividadProductivaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.tipoActividadProductivaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaAgricolaCubit
-                                      .changeTipoActividadProductiva(value);
-                                },
-                                hint:
-                                    const Text('Tipo de Actividad Productiva'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Tipo de Actividad Productiva',
+                                  labelText: 'Tipo de Actividad Productiva'),
+                              value: experienciaAgricolaTipoActividadProductivaId !=
+                                      ''
+                                  ? experienciaAgricolaTipoActividadProductivaId
+                                  : null,
+                              items: state.tiposActividadesProductivas!
+                                  .map<DropdownMenuItem<String>>(
+                                      (TipoActividadProductivaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.tipoActividadProductivaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                experienciaAgricolaCubit
+                                    .changeTipoActividadProductiva(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -202,28 +204,31 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
                         builder: (context, state) {
                           if (state is FrecuenciasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaAgricolaFrecuenciaId != ''
-                                    ? experienciaAgricolaFrecuenciaId
-                                    : null,
-                                items: state.frecuencias!
-                                    .map<DropdownMenuItem<String>>(
-                                        (FrecuenciaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.frecuenciaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaAgricolaCubit
-                                      .changeFrecuencia(value);
-                                },
-                                hint: const Text('Frecuencia'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Frecuencia',
+                                  labelText: 'Frecuencia'),
+                              value: experienciaAgricolaFrecuenciaId != ''
+                                  ? experienciaAgricolaFrecuenciaId
+                                  : null,
+                              items: state.frecuencias!
+                                  .map<DropdownMenuItem<String>>(
+                                      (FrecuenciaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.frecuenciaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                experienciaAgricolaCubit
+                                    .changeFrecuencia(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -444,30 +449,32 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
                         builder: (context, state) {
                           if (state is TiposActividadesProductivasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaPecuariaTipoActividadProductivaId !=
-                                        ''
-                                    ? experienciaPecuariaTipoActividadProductivaId
-                                    : null,
-                                items: state.tiposActividadesProductivas!
-                                    .map<DropdownMenuItem<String>>(
-                                        (TipoActividadProductivaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.tipoActividadProductivaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaPecuariaCubit
-                                      .changeTipoActividadProductiva(value);
-                                },
-                                hint:
-                                    const Text('Tipo de Actividad Productiva'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Tipo de Actividad Productiva',
+                                  labelText: 'Tipo de Actividad Productiva'),
+                              value: experienciaPecuariaTipoActividadProductivaId !=
+                                      ''
+                                  ? experienciaPecuariaTipoActividadProductivaId
+                                  : null,
+                              items: state.tiposActividadesProductivas!
+                                  .map<DropdownMenuItem<String>>(
+                                      (TipoActividadProductivaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.tipoActividadProductivaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                experienciaPecuariaCubit
+                                    .changeTipoActividadProductiva(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -477,28 +484,31 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
                         builder: (context, state) {
                           if (state is FrecuenciasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaPecuariaFrecuenciaId != ''
-                                    ? experienciaPecuariaFrecuenciaId
-                                    : null,
-                                items: state.frecuencias!
-                                    .map<DropdownMenuItem<String>>(
-                                        (FrecuenciaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.frecuenciaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaPecuariaCubit
-                                      .changeFrecuencia(value);
-                                },
-                                hint: const Text('Frecuencia'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Frecuencia',
+                                  labelText: 'Frecuencia'),
+                              value: experienciaPecuariaFrecuenciaId != ''
+                                  ? experienciaPecuariaFrecuenciaId
+                                  : null,
+                              items: state.frecuencias!
+                                  .map<DropdownMenuItem<String>>(
+                                      (FrecuenciaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.frecuenciaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                experienciaPecuariaCubit
+                                    .changeFrecuencia(value);
+                              },
+                            );
                           }
                           return Container();
                         },

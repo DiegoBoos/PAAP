@@ -153,25 +153,27 @@ class _PerfilPreInversionBeneficiarioFormState
                 builder: (context, state) {
                   if (state is ResidenciasLoaded) {
                     return DropdownButtonFormField(
-                        value: residenciaId != '' ? residenciaId : null,
-                        items: state.residencias?.map<DropdownMenuItem<String>>(
-                            (ResidenciaEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.residenciaId,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          perfilPreInversionBeneficiarioCubit
-                              .changeResidencia(value);
-                        },
-                        hint: const Text('Residencia'));
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Residencia', labelText: 'Residencia'),
+                      value: residenciaId != '' ? residenciaId : null,
+                      items: state.residencias?.map<DropdownMenuItem<String>>(
+                          (ResidenciaEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.residenciaId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        perfilPreInversionBeneficiarioCubit
+                            .changeResidencia(value);
+                      },
+                    );
                   }
 
                   return Container();
@@ -182,30 +184,32 @@ class _PerfilPreInversionBeneficiarioFormState
                 builder: (context, state) {
                   if (state is EstadosCivilesLoaded) {
                     return DropdownButtonFormField(
-                        value: estadoCivilId != '' ? estadoCivilId : null,
-                        items: state.estadosCiviles
-                            ?.map<DropdownMenuItem<String>>(
-                                (EstadoCivilEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.estadoCivilId,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          if (value == '1' || value == '3' || value == '4') {
-                            perfilPreInversionBeneficiarioCubit.initConyuge();
-                          }
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Estado Civil', labelText: 'Estado Civil'),
+                      value: estadoCivilId != '' ? estadoCivilId : null,
+                      items: state.estadosCiviles
+                          ?.map<DropdownMenuItem<String>>(
+                              (EstadoCivilEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.estadoCivilId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        if (value == '1' || value == '3' || value == '4') {
+                          perfilPreInversionBeneficiarioCubit.initConyuge();
+                        }
 
-                          perfilPreInversionBeneficiarioCubit
-                              .changeEstadoCivil(value);
-                        },
-                        hint: const Text('Estado Civil'));
+                        perfilPreInversionBeneficiarioCubit
+                            .changeEstadoCivil(value);
+                      },
+                    );
                   }
                   return Container();
                 },
@@ -215,26 +219,29 @@ class _PerfilPreInversionBeneficiarioFormState
                 builder: (context, state) {
                   if (state is NivelesEscolaresLoaded) {
                     return DropdownButtonFormField(
-                        value: nivelEscolarId != '' ? nivelEscolarId : null,
-                        items: state.nivelesEscolares
-                            ?.map<DropdownMenuItem<String>>(
-                                (NivelEscolarEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.nivelEscolarId,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          perfilPreInversionBeneficiarioCubit
-                              .changeNivelEscolar(value);
-                        },
-                        hint: const Text('Nivel Escolar'));
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Nivel Escolar',
+                          labelText: 'Nivel Escolar'),
+                      value: nivelEscolarId != '' ? nivelEscolarId : null,
+                      items: state.nivelesEscolares
+                          ?.map<DropdownMenuItem<String>>(
+                              (NivelEscolarEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.nivelEscolarId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        perfilPreInversionBeneficiarioCubit
+                            .changeNivelEscolar(value);
+                      },
+                    );
                   }
                   return Container();
                 },
@@ -244,28 +251,31 @@ class _PerfilPreInversionBeneficiarioFormState
                 builder: (context, state) {
                   if (state is ActividadesEconomicasLoaded) {
                     return DropdownButtonFormField(
-                        value: actividadEconomicaId != ''
-                            ? actividadEconomicaId
-                            : null,
-                        items: state.actividadesEconomicas
-                            ?.map<DropdownMenuItem<String>>(
-                                (ActividadEconomicaEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.actividadEconomicaId,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          perfilPreInversionBeneficiarioCubit
-                              .changeActividadEconomica(value);
-                        },
-                        hint: const Text('Actividad Económica'));
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Actividad Económica',
+                          labelText: 'Actividad Económica'),
+                      value: actividadEconomicaId != ''
+                          ? actividadEconomicaId
+                          : null,
+                      items: state.actividadesEconomicas
+                          ?.map<DropdownMenuItem<String>>(
+                              (ActividadEconomicaEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.actividadEconomicaId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        perfilPreInversionBeneficiarioCubit
+                            .changeActividadEconomica(value);
+                      },
+                    );
                   }
                   return Container();
                 },
@@ -275,22 +285,23 @@ class _PerfilPreInversionBeneficiarioFormState
                 builder: (context, state) {
                   if (state is TiposDiscapacidadesLoaded) {
                     return DropdownButtonFormField(
-                        value: tipoDiscapacidadId != ''
-                            ? tipoDiscapacidadId
-                            : null,
-                        items: state.tiposDiscapacidades
-                            ?.map<DropdownMenuItem<String>>(
-                                (TipoDiscapacidadEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.tipoDiscapacidadId,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        onChanged: (String? value) {
-                          perfilPreInversionBeneficiarioCubit
-                              .changeDiscapacidad(value);
-                        },
-                        hint: const Text('Discapacidad'));
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Discapacidad', labelText: 'Discapacidad'),
+                      value:
+                          tipoDiscapacidadId != '' ? tipoDiscapacidadId : null,
+                      items: state.tiposDiscapacidades
+                          ?.map<DropdownMenuItem<String>>(
+                              (TipoDiscapacidadEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.tipoDiscapacidadId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) {
+                        perfilPreInversionBeneficiarioCubit
+                            .changeDiscapacidad(value);
+                      },
+                    );
                   }
                   return Container();
                 },
@@ -301,6 +312,7 @@ class _PerfilPreInversionBeneficiarioFormState
                 children: [
                   Expanded(
                     child: TextFormField(
+                        keyboardType: TextInputType.number,
                         controller: ingresosDiariosCtrl,
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Ingresos Diarios',
@@ -319,6 +331,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   const SizedBox(width: 20),
                   Expanded(
                     child: TextFormField(
+                        keyboardType: TextInputType.number,
                         controller: diasTrabajoCtrl,
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Días Trabajados/mes',
@@ -338,6 +351,7 @@ class _PerfilPreInversionBeneficiarioFormState
               ),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: calificacionSisbenCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Puntaje Sisben', labelText: 'Puntaje Sisben'),
@@ -353,6 +367,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: latitudCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Ubicación - Latitud',
@@ -368,6 +383,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: longitudCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Ubicación Longitud',
@@ -384,6 +400,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: cedulaCatastralCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Cédula Catastral',
@@ -400,6 +417,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: miembrosHogarCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Miembros del hogar',
@@ -416,6 +434,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: miembrosEcoActivosCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Miembros Economicamente Activos',
@@ -432,6 +451,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: ingresosMensualesCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Ingresos Mensuales',
@@ -448,6 +468,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: gastosMensualesCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Gastos Mensuales',
@@ -464,6 +485,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: activoInmobiliarioCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Activo Inmobiliario',
@@ -480,6 +502,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: activoFinancieroCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Activo Financiero',
@@ -496,6 +519,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: activoProductivoCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Activo Productivo',
@@ -512,6 +536,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: activoCorrienteCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Activo Corriente',
@@ -528,6 +553,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: activoCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Total Activo', labelText: 'Total Activo'),
@@ -573,6 +599,7 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: mesesAsociadoCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Meses en la Asociación',

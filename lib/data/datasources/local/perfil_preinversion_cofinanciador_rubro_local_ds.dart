@@ -6,26 +6,35 @@ import '../../models/perfil_preinversion_cofinanciador_rubro_model.dart';
 
 abstract class PerfilPreInversionCofinanciadorRubroLocalDataSource {
   Future<List<PerfilPreInversionCofinanciadorRubroModel>>
-      getPerfilPreInversionCofinanciadorRubrosDB();
+      getPerfilPreInversionCofinanciadorRubros();
+
   Future<PerfilPreInversionCofinanciadorRubroModel?>
-      getPerfilPreInversionCofinanciadorRubroDB(
+      getPerfilPreInversionCofinanciadorRubro(
           String perfilPreInversionId,
           String cofinanciadorId,
           String desembolsoId,
           String actividadFinancieraId);
+
+  Future<List<PerfilPreInversionCofinanciadorRubroModel>>
+      getPerfilPreInversionCofinanciadorRubrosByCofinanciador(
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String desembolsoId,
+          String actividadFinancieraId,
+          String rubroId);
+
   Future<int> savePerfilPreInversionCofinanciadorRubros(
       List<PerfilPreInversionCofinanciadorRubroEntity>
           perfilPreInversionCofinanciadorRubroEntity);
 
-  Future<List<PerfilPreInversionCofinanciadorRubroModel>>
-      getPerfilPreInversionCofinanciadorRubrosByCofinanciadorDB(
-          String perfilPreInversionId, String cofinanciadorId);
-  Future<int> savePerfilPreInversionCofinanciadorRubroDB(
+  Future<int> savePerfilPreInversionCofinanciadorRubro(
       PerfilPreInversionCofinanciadorRubroEntity
           perfilPreInversionCofinanciadorRubroEntity);
+
   Future<List<PerfilPreInversionCofinanciadorRubroModel>>
-      getPerfilesPreInversionesCofinanciadoresRubrosProduccionDB();
-  Future<int> updatePerfilesPreInversionesCofinanciadoresRubrosProduccionDB(
+      getPerfilesPreInversionesCofinanciadoresRubrosProduccion();
+
+  Future<int> updatePerfilesPreInversionesCofinanciadoresRubrosProduccion(
       List<PerfilPreInversionCofinanciadorRubroEntity>
           perfilesPreInversionesCofinanciadoresRubrosProduccionEntity);
 }
@@ -52,7 +61,7 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionCofinanciadorRubroModel>>
-      getPerfilPreInversionCofinanciadorRubrosDB() async {
+      getPerfilPreInversionCofinanciadorRubros() async {
     final db = await DBConfig.database;
 
     String sql = '''
@@ -84,7 +93,7 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
 
   @override
   Future<PerfilPreInversionCofinanciadorRubroModel?>
-      getPerfilPreInversionCofinanciadorRubroDB(
+      getPerfilPreInversionCofinanciadorRubro(
           String perfilPreInversionId,
           String cofinanciadorId,
           String desembolsoId,
@@ -113,6 +122,35 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
   }
 
   @override
+  Future<List<PerfilPreInversionCofinanciadorRubroModel>>
+      getPerfilPreInversionCofinanciadorRubrosByCofinanciador(
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String desembolsoId,
+          String actividadFinancieraId,
+          String rubroId) async {
+    final db = await DBConfig.database;
+
+    final res = await db.query('PerfilPreInversionCofinanciadorRubro',
+        where:
+            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ? AND ActividadFinancieraId = ? AND RubroId = ?',
+        whereArgs: [
+          perfilPreInversionId,
+          cofinanciadorId,
+          desembolsoId,
+          actividadFinancieraId,
+          rubroId
+        ]);
+
+    final perfilPreInversionCofinanciadorRubro =
+        List<PerfilPreInversionCofinanciadorRubroModel>.from(res.map(
+                (m) => PerfilPreInversionCofinanciadorRubroModel.fromJson(m)))
+            .toList();
+
+    return perfilPreInversionCofinanciadorRubro;
+  }
+
+  @override
   Future<int> savePerfilPreInversionCofinanciadorRubros(
       List<PerfilPreInversionCofinanciadorRubroEntity>
           perfilPreInversionCofinanciadorRubroEntity) async {
@@ -134,27 +172,7 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
   }
 
   @override
-  Future<List<PerfilPreInversionCofinanciadorRubroModel>>
-      getPerfilPreInversionCofinanciadorRubrosByCofinanciadorDB(
-    String perfilPreInversionId,
-    String cofinanciadorId,
-  ) async {
-    final db = await DBConfig.database;
-
-    final res = await db.query('PerfilPreInversionCofinanciadorRubro',
-        where: 'PerfilPreInversionId = ? AND CofinanciadorId = ?',
-        whereArgs: [perfilPreInversionId, cofinanciadorId]);
-
-    final perfilPreInversionCofinanciadorRubro =
-        List<PerfilPreInversionCofinanciadorRubroModel>.from(res.map(
-                (m) => PerfilPreInversionCofinanciadorRubroModel.fromJson(m)))
-            .toList();
-
-    return perfilPreInversionCofinanciadorRubro;
-  }
-
-  @override
-  Future<int> savePerfilPreInversionCofinanciadorRubroDB(
+  Future<int> savePerfilPreInversionCofinanciadorRubro(
       PerfilPreInversionCofinanciadorRubroEntity
           perfilPreInversionCofinanciadorRubroEntity) async {
     final db = await DBConfig.database;
@@ -193,7 +211,7 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionCofinanciadorRubroModel>>
-      getPerfilesPreInversionesCofinanciadoresRubrosProduccionDB() async {
+      getPerfilesPreInversionesCofinanciadoresRubrosProduccion() async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionCofinanciadorRubro',
@@ -210,7 +228,7 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
   }
 
   @override
-  Future<int> updatePerfilesPreInversionesCofinanciadoresRubrosProduccionDB(
+  Future<int> updatePerfilesPreInversionesCofinanciadoresRubrosProduccion(
       List<PerfilPreInversionCofinanciadorRubroEntity>
           perfilesPreInversionesCofinanciadoresRubrosProduccionEntity) async {
     final db = await DBConfig.database;

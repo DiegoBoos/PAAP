@@ -71,11 +71,14 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
   Widget build(BuildContext context) {
     final perfilPreInversionCofinanciadorCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
+
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
+
     final perfilPreInversionCofinanciadorDesembolsoCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
             context);
+
     final perfilPreInversionCofinanciadorDesembolsosBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsosBloc>(context,
             listen: true);
@@ -170,17 +173,11 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                                   .perfilPreInversionCofinanciador
                                   .cofinanciadorId;
 
-                          /*   final desembolsoId =
-                              perfilPreInversionCofinanciadorDesembolsoCubit
-                                  .state
-                                  .perfilPreInversionCofinanciadorDesembolso
-                                  .cofinanciadorId; */
-
                           perfilPreInversionCofinanciadorDesembolsoCubit
                               .changePerfilPreInversion(vPerfilPreInversionId);
+
                           perfilPreInversionCofinanciadorDesembolsoCubit
-                              .changePerfilPreInversionCofinanciador(
-                                  cofinanciadorId);
+                              .changeCofinanciador(cofinanciadorId);
 
                           perfilPreInversionCofinanciadorDesembolsoCubit
                               .savePerfilPreInversionCofinanciadorDesembolsoDB(
@@ -188,11 +185,17 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                                       .state
                                       .perfilPreInversionCofinanciadorDesembolso);
 
-                          /*  perfilPreInversionCofinanciadorDesembolsosBloc.add(
+                          final desembolsoId =
+                              perfilPreInversionCofinanciadorDesembolsoCubit
+                                  .state
+                                  .perfilPreInversionCofinanciadorDesembolso
+                                  .desembolsoId;
+
+                          perfilPreInversionCofinanciadorDesembolsosBloc.add(
                               GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
                                   perfilPreInversionId: vPerfilPreInversionId,
                                   cofinanciadorId: cofinanciadorId,
-                                  desembolsoId: desembolsoId)); */
+                                  desembolsoId: desembolsoId));
 
                           if (perfilPreInversionCofinanciadorDesembolsosBloc
                                   .state
@@ -219,8 +222,6 @@ class PerfilPreInversionCofinanciadorDesembolsosRows extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('yyyy-MM-dd');
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: BlocBuilder<PerfilPreInversionCofinanciadorDesembolsosBloc,
@@ -271,13 +272,6 @@ class PerfilPreInversionCofinanciadorDesembolsosRows extends StatelessWidget {
                 PerfilPreInversionCofinanciadorDesembolsoEntity
                     perfilPreInversionCofinanciadorDesembolso =
                     perfilPreInversionCofinanciadorDesembolsos[index];
-
-                /*  final date = DateTime.tryParse(
-                    perfilPreInversionCofinanciadorDesembolso.fecha);
-
-                if (date != null) {
-                  fecha = dateFormat.format(date);
-                } */
 
                 return DataRow(cells: <DataCell>[
                   DataCell(Text(

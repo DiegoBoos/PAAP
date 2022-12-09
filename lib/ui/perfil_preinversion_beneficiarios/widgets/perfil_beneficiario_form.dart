@@ -137,133 +137,144 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                 builder: (context, state) {
                   if (state is DepartamentosLoaded) {
                     return DropdownButtonFormField(
-                        isExpanded: true,
-                        value: departamentoId,
-                        items: state.departamentos
-                            ?.map<DropdownMenuItem<String>>(
-                                (DepartamentoEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.id,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          setState(() {
-                            municipiosFiltered = municipioCubit
-                                .state.municipios!
-                                .where(((municipio) =>
-                                    municipio.departamentoid == value))
-                                .toList();
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Departamento', labelText: 'Departamento'),
+                      isExpanded: true,
+                      value: departamentoId,
+                      items: state.departamentos?.map<DropdownMenuItem<String>>(
+                          (DepartamentoEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.id,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        setState(() {
+                          municipiosFiltered = municipioCubit.state.municipios!
+                              .where(((municipio) =>
+                                  municipio.departamentoid == value))
+                              .toList();
 
-                            departamentoId = value;
-                            municipioId = null;
-                            veredaId = null;
-                          });
-                        },
-                        hint: const Text('Departamento'));
+                          departamentoId = value;
+                          municipioId = null;
+                          veredaId = null;
+                        });
+                      },
+                    );
                   }
                   return Container();
                 },
               ),
+              const SizedBox(height: 20),
               if (departamentoId != null)
                 BlocBuilder<MunicipioCubit, MunicipioState>(
                   builder: (context, state) {
                     return DropdownButtonFormField(
-                        isExpanded: true,
-                        value: municipioId,
-                        items: municipiosFiltered.map<DropdownMenuItem<String>>(
-                            (MunicipioEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.id,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          veredaCubit.getVeredasByMunicipioDB(value!);
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Municipio', labelText: 'Municipio'),
+                      isExpanded: true,
+                      value: municipioId,
+                      items: municipiosFiltered.map<DropdownMenuItem<String>>(
+                          (MunicipioEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.id,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) async {
+                        await veredaCubit.getVeredasByMunicipioDB(value!);
 
-                          setState(() {
-                            municipioId = value;
-                            veredaId = null;
-                          });
+                        setState(() {
+                          municipioId = value;
+                          veredaId = null;
+                        });
 
-                          perfilBeneficiarioCubit
-                              .changeMunicipioId(municipioId!);
-                        },
-                        hint: const Text('Municipio'));
+                        perfilBeneficiarioCubit.changeMunicipioId(municipioId!);
+                      },
+                    );
                   },
                 ),
+              if (municipioId != null) const SizedBox(height: 20),
               if (municipioId != null)
                 BlocBuilder<VeredaCubit, VeredaState>(
                   builder: (context, state) {
                     if (state is VeredasLoaded) {
                       return DropdownButtonFormField(
-                          isExpanded: true,
-                          value: veredaId,
-                          items: state.veredasLoaded!
-                              .map<DropdownMenuItem<String>>(
-                                  (VeredaEntity value) {
-                            return DropdownMenuItem<String>(
-                              value: value.veredaId,
-                              child: Text(value.nombre),
-                            );
-                          }).toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              veredaId = value;
-                            });
+                        decoration: CustomInputDecoration.inputDecoration(
+                            hintText: 'Vereda', labelText: 'Vereda'),
+                        isExpanded: true,
+                        value: veredaId,
+                        items: state.veredasLoaded!
+                            .map<DropdownMenuItem<String>>(
+                                (VeredaEntity value) {
+                          return DropdownMenuItem<String>(
+                            value: value.veredaId,
+                            child: Text(value.nombre),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            veredaId = value;
+                          });
 
-                            perfilBeneficiarioCubit.changeVeredaId(veredaId!);
-                          },
-                          hint: const Text('Vereda'));
+                          perfilBeneficiarioCubit.changeVeredaId(veredaId!);
+                        },
+                      );
                     }
                     return Container();
                   },
                 ),
+              const SizedBox(height: 20),
               BlocBuilder<TipoTenenciaCubit, TipoTenenciaState>(
                 builder: (context, state) {
                   if (state is TiposTenenciasLoaded) {
                     return DropdownButtonFormField(
-                        isExpanded: true,
-                        value: tipoTenenciaId != '' ? tipoTenenciaId : null,
-                        items: state.tiposTenencias
-                            ?.map<DropdownMenuItem<String>>(
-                                (TipoTenenciaEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.tipoTenenciaId,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          perfilBeneficiarioCubit.changeTipoTenencia(value);
-                        },
-                        hint: const Text('Tipo de tenencia'));
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Tipo Tenencia',
+                          labelText: 'Tipo Tenencia'),
+                      isExpanded: true,
+                      value: tipoTenenciaId != '' ? tipoTenenciaId : null,
+                      items: state.tiposTenencias!
+                          .map<DropdownMenuItem<String>>(
+                              (TipoTenenciaEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.tipoTenenciaId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        perfilBeneficiarioCubit.changeTipoTenencia(value);
+                      },
+                    );
                   }
                   return Container();
                 },
               ),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: areaFincaCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Área Finca', labelText: 'Área Finca'),
+                      hintText: 'Área Finca (Hectáreas)',
+                      labelText: 'Área Finca (Hectáreas)'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Campo Requerido';
@@ -275,9 +286,11 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: areaProyectoCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Área Proyecto', labelText: 'Área Proyecto'),
+                      hintText: 'Área Proyecto (Hectáreas)',
+                      labelText: 'Área Proyecto (Hectáreas)'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Campo Requerido';
@@ -324,10 +337,11 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                   }),
               const SizedBox(height: 20),
               TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: experienciaCtrl,
                   decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Experiencia producto',
-                      labelText: 'Experiencia producto'),
+                      hintText: 'Experiencia producto (Años)',
+                      labelText: 'Experiencia producto (Años)'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Campo Requerido';

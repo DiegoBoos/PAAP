@@ -19,6 +19,13 @@ class PerfilPreInversionPrecioLoading extends PerfilPreInversionPrecioState {
       {required super.perfilPreInversionPrecio});
 }
 
+class PerfilPreInversionPrecioLoaded extends PerfilPreInversionPrecioState {
+  final PerfilPreInversionPrecioEntity perfilPreInversionPrecioLoaded;
+
+  const PerfilPreInversionPrecioLoaded(this.perfilPreInversionPrecioLoaded)
+      : super(perfilPreInversionPrecio: perfilPreInversionPrecioLoaded);
+}
+
 class PerfilPreInversionPrecioChanged extends PerfilPreInversionPrecioState {
   final PerfilPreInversionPrecioEntity perfilPreInversionPrecioChanged;
 
@@ -27,8 +34,8 @@ class PerfilPreInversionPrecioChanged extends PerfilPreInversionPrecioState {
 }
 
 class PerfilPreInversionPrecioSaved extends PerfilPreInversionPrecioState {
-  PerfilPreInversionPrecioSaved()
-      : super(perfilPreInversionPrecio: initObject());
+  const PerfilPreInversionPrecioSaved(
+      {required super.perfilPreInversionPrecio});
 }
 
 class PerfilPreInversionPrecioError extends PerfilPreInversionPrecioState {

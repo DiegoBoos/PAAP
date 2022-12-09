@@ -18,12 +18,6 @@ class PerfilPreInversionCofinanciadorDesembolsoInitial
       : super(perfilPreInversionCofinanciadorDesembolso: initObject());
 }
 
-class PerfilPreInversionCofinanciadorDesembolsoLoading
-    extends PerfilPreInversionCofinanciadorDesembolsoState {
-  const PerfilPreInversionCofinanciadorDesembolsoLoading(
-      {required super.perfilPreInversionCofinanciadorDesembolso});
-}
-
 class PerfilPreInversionCofinanciadorDesembolsoLoaded
     extends PerfilPreInversionCofinanciadorDesembolsoState {
   final PerfilPreInversionCofinanciadorDesembolsoEntity
@@ -50,8 +44,8 @@ class PerfilPreInversionCofinanciadorDesembolsoChanged
 
 class PerfilPreInversionCofinanciadorDesembolsoSaved
     extends PerfilPreInversionCofinanciadorDesembolsoState {
-  PerfilPreInversionCofinanciadorDesembolsoSaved()
-      : super(perfilPreInversionCofinanciadorDesembolso: initObject());
+  const PerfilPreInversionCofinanciadorDesembolsoSaved(
+      {required super.perfilPreInversionCofinanciadorDesembolso});
 }
 
 class PerfilPreInversionCofinanciadorDesembolsoError

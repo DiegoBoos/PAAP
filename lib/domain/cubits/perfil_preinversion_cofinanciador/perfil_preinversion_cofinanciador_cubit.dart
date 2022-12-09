@@ -41,12 +41,6 @@ class PerfilPreInversionCofinanciadorCubit
     emit(PerfilPreInversionCofinanciadorChanged(perfilPreInversionIdChanged));
   }
 
-  void changeCofinanciador(String? newValue) {
-    final cofinanciadorIdChanged = state.perfilPreInversionCofinanciador
-        .copyWith(cofinanciadorId: newValue);
-    emit(PerfilPreInversionCofinanciadorChanged(cofinanciadorIdChanged));
-  }
-
   void changeMonto(String? newValue) {
     final montoChanged =
         state.perfilPreInversionCofinanciador.copyWith(monto: newValue);
@@ -59,10 +53,16 @@ class PerfilPreInversionCofinanciadorCubit
     emit(PerfilPreInversionCofinanciadorChanged(participacionChanged));
   }
 
+  void changeCofinanciador(String? newValue) {
+    final cofinanciadorIdLoaded = state.perfilPreInversionCofinanciador
+        .copyWith(cofinanciadorId: newValue);
+    emit(PerfilPreInversionCofinanciadorLoaded(cofinanciadorIdLoaded));
+  }
+
   void isEditing() {
     final isEditing =
         state.perfilPreInversionCofinanciador.copyWith(isEditing: true);
-    emit(PerfilPreInversionCofinanciadorChanged(isEditing));
+    emit(PerfilPreInversionCofinanciadorLoaded(isEditing));
   }
 
   void canCreateDesembolso() {

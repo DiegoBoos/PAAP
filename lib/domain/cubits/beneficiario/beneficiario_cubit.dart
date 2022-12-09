@@ -32,6 +32,12 @@ class BeneficiarioCubit extends Cubit<BeneficiarioState> {
         (data) => emit(BeneficiarioSaved()));
   }
 
+  void changeBeneficiarioId(String? newValue) {
+    final beneficiarioIdChanged =
+        state.beneficiario.copyWith(beneficiarioId: newValue);
+    emit(BeneficiarioChanged(beneficiarioIdChanged));
+  }
+
   void changeTipoDocumento(String value) {
     final tipoIdentificacionChanged =
         state.beneficiario.copyWith(tipoIdentificacionId: value);

@@ -17,6 +17,22 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
 
   void initState() => emit(PerfilPreInversionCofinanciadorDesembolsoInitial());
 
+  Future<PerfilPreInversionCofinanciadorDesembolsoEntity?>
+      getPerfilPreInversionCofinanciadorDesembolso(
+          String perfilPreInversionId, String cofinanciadorId) async {
+    final result = await perfilPreInversionCofinanciadorDesembolsoDB
+        .getPerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
+            perfilPreInversionId, cofinanciadorId);
+    return result.fold((failure) => null, (data) {
+      if (data != null) {
+        emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(data));
+      } else {
+        emit(PerfilPreInversionCofinanciadorDesembolsoInitial());
+      }
+      return data;
+    });
+  }
+
   void savePerfilPreInversionCofinanciadorDesembolsoDB(
       PerfilPreInversionCofinanciadorDesembolsoEntity
           perfilPreInversionCofinanciadorDesembolsoEntity) async {
@@ -26,24 +42,9 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
     result.fold(
         (failure) => emit(PerfilPreInversionCofinanciadorDesembolsoError(
             failure.properties.first)),
-        (data) => emit(PerfilPreInversionCofinanciadorDesembolsoSaved()));
-  }
-
-  void selectPerfilPreInversionCofinanciadorDesembolso(
-      String perfilPreInversionId, String cofinanciadorId) async {
-    final result = await perfilPreInversionCofinanciadorDesembolsoDB
-        .getPerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
-            perfilPreInversionId, cofinanciadorId);
-    result.fold(
-        (failure) => emit(PerfilPreInversionCofinanciadorDesembolsoError(
-            failure.properties.first)), (data) {
-      if (data == null) {
-        emit(PerfilPreInversionCofinanciadorDesembolsoError(
-            'No se pudo cargar la información del desembolso del confinanciador de preinversion'));
-      } else {
-        emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(data));
-      }
-    });
+        (data) => emit(PerfilPreInversionCofinanciadorDesembolsoSaved(
+            perfilPreInversionCofinanciadorDesembolso:
+                perfilPreInversionCofinanciadorDesembolsoEntity)));
   }
 
   void changePerfilPreInversion(String value) {
@@ -53,7 +54,7 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
         PerfilPreInversionCofinanciadorDesembolsoChanged(perfilPreInversionId));
   }
 
-  void changePerfilPreInversionCofinanciador(String value) {
+  void changeCofinanciador(String value) {
     final cofinanciadorId = state.perfilPreInversionCofinanciadorDesembolso
         .copyWith(cofinanciadorId: value);
     emit(PerfilPreInversionCofinanciadorDesembolsoChanged(cofinanciadorId));

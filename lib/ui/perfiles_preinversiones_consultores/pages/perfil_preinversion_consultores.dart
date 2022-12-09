@@ -126,7 +126,7 @@ class _PerfilPreInversionConsultoresPageState
                                             .perfilPreInversionId,
                                         perfilPreInversionConsultoresLoaded[0]
                                             .consultorId,
-                                        '1'));
+                                        '2'));
                               },
                               icon: const Icon(Icons.delete_forever))),
                           DataCell(Container(

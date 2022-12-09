@@ -3,20 +3,26 @@ import 'package:sqflite/sqflite.dart';
 import '../../../domain/db/db_config.dart';
 import '../../../domain/entities/perfil_preinversion_plan_negocio_entity.dart';
 import '../../models/perfil_preinversion_plan_negocio_model.dart';
+import '../../models/v_perfil_preinversion_plan_negocio_model.dart';
 
 abstract class PerfilPreInversionPlanNegocioLocalDataSource {
   Future<List<PerfilPreInversionPlanNegocioModel>>
       getPerfilPreInversionPlanesNegociosDB();
-  Future<PerfilPreInversionPlanNegocioModel?>
-      getPerfilPreInversionPlanNegocioDB(
-          String perfilPreInversionId, String rubroId, String year);
+
+  Future<List<VPerfilPreInversionPlanNegocioModel>>
+      getVPerfilesPreInversionesPlanNegociosDB(
+          String perfilPreInversionId, String tipoMovimientoId);
+
   Future<int> savePerfilPreInversionPlanesNegocios(
       List<PerfilPreInversionPlanNegocioEntity>
           perfilPreInversionPlanNegocioEntity);
+
   Future<int> savePerfilPreInversionPlanNegocioDB(
       PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity);
+
   Future<List<PerfilPreInversionPlanNegocioModel>>
       getPerfilesPreInversionesPlanesNegociosProduccionDB();
+
   Future<int> updatePerfilesPreInversionesPlanesNegociosProduccionDB(
       List<PerfilPreInversionPlanNegocioEntity>
           perfilesPreInversionesPlanesNegociosProduccionEntity);
@@ -56,24 +62,48 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
   }
 
   @override
-  Future<PerfilPreInversionPlanNegocioModel?>
-      getPerfilPreInversionPlanNegocioDB(
-          String perfilPreInversionId, String rubroId, String year) async {
+  Future<List<VPerfilPreInversionPlanNegocioModel>>
+      getVPerfilesPreInversionesPlanNegociosDB(
+          String perfilPreInversionId, String tipoMovimientoId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionPlanNegocio',
-        where: 'PerfilPreInversionId = ? AND RubroId = ? AND Year = ?',
-        whereArgs: [perfilPreInversionId, rubroId, year]);
+    String sql = ''' 
+    select 
+    ActividadFinanciera.ActividadFinancieraId as ActividadFinancieraId,
+    ActividadFinanciera.Nombre as ActividadFinanciera,
+    PerfilPreInversionPlanNegocio.RubroId,
+    Rubro.Nombre as Rubro,
+    Unidad.UnidadId as UnidadId,
+    Unidad.Nombre as Unidad,
+    Year,
+    Cantidad,
+    Valor,
+    Producto.productoId as ProductoId,
+    TipoCalidad.tipoCalidadId as TipoCalidadId,
+    round(PerfilPreInversionPlanNegocio.Valor / ( SELECT  SUM(Valor)
+    FROM  PerfilPreInversionPlanNegocio
+    WHERE TipoMovimiento.TipoMovimientoId = $tipoMovimientoId) * 100, 3)
+    as Porcentaje
+    from PerfilPreInversionPlanNegocio
+    inner join Rubro on (PerfilPreInversionPlanNegocio.RubroId=Rubro.RubroId)
+    inner join ActividadFinanciera on(rubro.ActividadFinancieraId=ActividadFinanciera.ActividadFinancieraId)
+    inner join TipoMovimiento on(TipoMovimiento.TipoMovimientoId=ActividadFinanciera.TipoMovimientoId)
+    inner join Unidad on(unidad.UnidadId=PerfilPreInversionPlanNegocio.UnidadId)
+    left join Producto on(Producto.ProductoId=PerfilPreInversionPlanNegocio.ProductoId)
+    left join TipoCalidad on(TipoCalidad.TipoCalidadId=PerfilPreInversionPlanNegocio.TipoCalidadId)
+    where TipoMovimiento.TipoMovimientoId = $tipoMovimientoId AND PerfilPreInversionPlanNegocio.PerfilPreInversionId = $perfilPreInversionId
+    ''';
 
-    if (res.isEmpty) return null;
-    final perfilPreInversionPlanNegocioMap = {
-      for (var e in res[0].entries) e.key: e.value
-    };
-    final perfilPreInversionPlanNegocioModel =
-        PerfilPreInversionPlanNegocioModel.fromJson(
-            perfilPreInversionPlanNegocioMap);
+    final res = await db.rawQuery(sql);
 
-    return perfilPreInversionPlanNegocioModel;
+    if (res.isEmpty) return [];
+
+    final perfilesPreInversionesPlanesNegociosModel =
+        List<VPerfilPreInversionPlanNegocioModel>.from(
+                res.map((m) => VPerfilPreInversionPlanNegocioModel.fromJson(m)))
+            .toList();
+
+    return perfilesPreInversionesPlanesNegociosModel;
   }
 
   @override

@@ -35,6 +35,18 @@ class PerfilPreInversionCofinanciadorRubroLoaded
                 perfilPreInversionCofinanciadorRubroLoaded);
 }
 
+class PerfilPreInversionCofinanciadorRubroChanged
+    extends PerfilPreInversionCofinanciadorRubroState {
+  final PerfilPreInversionCofinanciadorRubroEntity
+      perfilPreInversionCofinanciadorRubroChanged;
+
+  const PerfilPreInversionCofinanciadorRubroChanged(
+      this.perfilPreInversionCofinanciadorRubroChanged)
+      : super(
+            perfilPreInversionCofinanciadorRubro:
+                perfilPreInversionCofinanciadorRubroChanged);
+}
+
 class PerfilPreInversionCofinanciadorRubroSaved
     extends PerfilPreInversionCofinanciadorRubroState {
   PerfilPreInversionCofinanciadorRubroSaved()

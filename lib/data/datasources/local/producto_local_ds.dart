@@ -5,7 +5,7 @@ import '../../../domain/db/db_config.dart';
 import '../../models/producto_model.dart';
 
 abstract class ProductoLocalDataSource {
-  Future<List<ProductoModel>> getProductosDB();
+  Future<List<ProductoModel>> getProductosDB(String perfilPreInversionId);
   Future<int> saveProductos(List<ProductoEntity> productoEntity);
 }
 
@@ -25,10 +25,33 @@ class ProductoLocalDataSourceImpl implements ProductoLocalDataSource {
   }
 
   @override
-  Future<List<ProductoModel>> getProductosDB() async {
+  Future<List<ProductoModel>> getProductosDB(
+      String perfilPreInversionId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('Producto');
+    String sql = ''' select 
+    Producto.ProductoId,
+    Producto.Nombre,
+    Producto.Unidad,
+    Producto.Simbolo,
+    Producto.EsProducto,
+    Producto.EsAsociado
+    from PerfilPreInversion
+    inner join Producto  on (Producto.ProductoId = PerfilPreInversion.ProductoId)
+    where PerfilPreInversion.PerfilPreInversionId = $perfilPreInversionId
+    union all
+    select 
+    Producto.ProductoId,
+    Producto.Nombre,
+    Producto.Unidad,
+    Producto.Simbolo,
+    Producto.EsProducto,
+    Producto.EsAsociado
+    from PerfilPreInversion
+    inner join Producto  on (Producto.ProductoId = PerfilPreInversion.ProductoAsociadoId)
+    where PerfilPreInversion.PerfilPreInversionId = $perfilPreInversionId ''';
+
+    final res = await db.rawQuery(sql);
 
     final productosDB =
         List<ProductoModel>.from(res.map((m) => ProductoModel.fromJson(m)))

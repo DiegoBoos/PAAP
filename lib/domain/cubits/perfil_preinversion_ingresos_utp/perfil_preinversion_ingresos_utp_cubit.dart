@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../entities/perfil_preinversion_plan_negocio_entity.dart';
+import '../../entities/v_perfil_preinversion_plan_negocio_entity.dart';
 import '../../usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_db_usecase.dart';
 
 part 'perfil_preinversion_ingresos_utp_state.dart';
@@ -14,21 +15,11 @@ class PerfilPreInversionIngresosUPTCubit
       {required this.perfilPreInversionPlanNegocioDB})
       : super(PerfilPreInversionIngresosUPTInitial());
 
-  void getPerfilPreInversionIngresosUPTDB(
-      String perfilPreInversionId, String rubro, String year) async {
-    final result = await perfilPreInversionPlanNegocioDB
-        .getPerfilPreInversionPlanNegocioUsecaseDB(
-            perfilPreInversionId, rubro, year);
-    result.fold(
-        (failure) =>
-            emit(PerfilPreInversionIngresosUPTError(failure.properties.first)),
-        (data) {
-      if (data == null) {
-        emit(PerfilPreInversionIngresosUPTError('message'));
-      } else {
-        emit(PerfilPreInversionIngresosUPTLoaded(data));
-      }
-    });
+  void initState() => emit(PerfilPreInversionIngresosUPTInitial());
+
+  selectPerfilPreInversionIngresosUPT(
+      VPerfilPreInversionPlanNegocioEntity vPerfilPreInversionPlanNegocio) {
+    emit(PerfilPreInversionIngresosUPTLoaded(vPerfilPreInversionPlanNegocio));
   }
 
   void savePerfilPreInversionIngresosUPTDB(
@@ -41,13 +32,6 @@ class PerfilPreInversionIngresosUPTCubit
         (failure) =>
             emit(PerfilPreInversionIngresosUPTError(failure.properties.first)),
         (data) => emit(PerfilPreInversionIngresosUPTSaved()));
-  }
-
-  void initState() => emit(PerfilPreInversionIngresosUPTInitial());
-
-  selectPerfilPreInversionIngresosUPT(
-      PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocio) {
-    emit(PerfilPreInversionIngresosUPTLoaded(perfilPreInversionPlanNegocio));
   }
 
   void changeRubro(String? value) {

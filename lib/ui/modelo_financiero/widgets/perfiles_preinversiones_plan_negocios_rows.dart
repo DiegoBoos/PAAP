@@ -3,29 +3,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubits/perfil_preinversion_costos_utp/perfil_preinversion_costos_utp_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
-import '../../../domain/entities/perfil_preinversion_plan_negocio_entity.dart';
+import '../../../domain/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
+import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart';
 
 class PerfilPreInversionPlanesNegociosRows extends StatelessWidget {
   const PerfilPreInversionPlanesNegociosRows(
       {Key? key,
-      required this.perfilPreInversionPlanesNegocios,
+      required this.vPerfilesPreInversionesPlanNegocios,
       required this.subtitleStyle,
-      required this.isCostosUPT,
-      required this.isIngresosUPT})
+      required this.tipoMovimiento})
       : super(key: key);
 
-  final List<PerfilPreInversionPlanNegocioEntity>
-      perfilPreInversionPlanesNegocios;
+  final List<VPerfilPreInversionPlanNegocioEntity>
+      vPerfilesPreInversionesPlanNegocios;
   final TextStyle subtitleStyle;
-  final bool isCostosUPT;
-  final bool isIngresosUPT;
+  final String tipoMovimiento;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: DataTable(
           headingRowColor: MaterialStateProperty.all(
               Theme.of(context).colorScheme.secondary),
@@ -44,12 +44,12 @@ class PerfilPreInversionPlanesNegociosRows extends StatelessWidget {
                     style: subtitleStyle.copyWith(color: Colors.white)),
               ),
             ),
-            /*  DataColumn(
+            DataColumn(
               label: Expanded(
-                child:
-                    Text('Actividad', style: subtitleStyle.copyWith(color: Colors.white)),
+                child: Text('Actividad',
+                    style: subtitleStyle.copyWith(color: Colors.white)),
               ),
-            ), */
+            ),
             DataColumn(
               label: Expanded(
                 child: Text('Rubro',
@@ -80,57 +80,67 @@ class PerfilPreInversionPlanesNegociosRows extends StatelessWidget {
                     style: subtitleStyle.copyWith(color: Colors.white)),
               ),
             ),
-
-            /* DataColumn(
+            DataColumn(
               label: Expanded(
-                child:
-                    Text('Porcentaje %', style: subtitleStyle.copyWith(color: Colors.white)),
+                child: Text('Porcentaje %',
+                    style: subtitleStyle.copyWith(color: Colors.white)),
               ),
-            ), */
+            ),
           ],
-          rows: List.generate(perfilPreInversionPlanesNegocios.length, (index) {
-            PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocio =
-                perfilPreInversionPlanesNegocios[index];
+          rows: List.generate(vPerfilesPreInversionesPlanNegocios.length,
+              (index) {
+            VPerfilPreInversionPlanNegocioEntity
+                vPerfilPreInversionPlanNegocio =
+                vPerfilesPreInversionesPlanNegocios[index];
 
             return DataRow(cells: <DataCell>[
               DataCell(IconButton(
-                  onPressed: () async {
-                    if (isCostosUPT) {
+                  onPressed: () {
+                    if (tipoMovimiento == '3') {
                       final perfilPreInversionCostosUPTCubit =
                           BlocProvider.of<PerfilPreInversionCostosUPTCubit>(
                               context);
-                      await perfilPreInversionCostosUPTCubit
+                      perfilPreInversionCostosUPTCubit
                           .selectPerfilPreInversionCostosUPT(
-                              perfilPreInversionPlanNegocio)
-                          .whenComplete(() {
-                        Navigator.pushNamed(
-                            context, 'NewEditPerfilPreInversionCostosUPT');
-                      });
-                    } else if (isIngresosUPT) {
+                              vPerfilPreInversionPlanNegocio);
+
+                      Navigator.pushNamed(
+                          context, 'NewEditPerfilPreInversionCostosUPT');
+                    } else if (tipoMovimiento == '2') {
+                      final vPerfilPreInversionCubit =
+                          BlocProvider.of<VPerfilPreInversionCubit>(context);
+                      final perfilPreInversionPrecioCubit =
+                          BlocProvider.of<PerfilPreInversionPrecioCubit>(
+                              context);
                       final perfilPreInversionIngresosUPTCubit =
                           BlocProvider.of<PerfilPreInversionIngresosUPTCubit>(
                               context);
-                      await perfilPreInversionIngresosUPTCubit
+
+                      perfilPreInversionPrecioCubit
+                          .getPerfilPreInversionPrecioCubit(
+                              vPerfilPreInversionCubit.state
+                                  .vPerfilPreInversion!.perfilPreInversionId);
+
+                      perfilPreInversionIngresosUPTCubit
                           .selectPerfilPreInversionIngresosUPT(
-                              perfilPreInversionPlanNegocio)
-                          .whenComplete(() {
-                        Navigator.pushNamed(
-                            context, 'NewEditPerfilPreInversionIngresosUPT');
-                      });
+                              vPerfilPreInversionPlanNegocio);
+
+                      Navigator.pushNamed(
+                          context, 'NewEditPerfilPreInversionIngresosUPT');
                     }
                   },
                   icon: const Icon(
                     Icons.edit,
                   ))),
+              DataCell(Text(vPerfilPreInversionPlanNegocio.rubroId)),
               DataCell(
-                  Text(perfilPreInversionPlanNegocio.perfilPreInversionId)),
-              //DataCell(Text(perfilPreInversionPlanNegocio.actividadFinanciera)),
-              DataCell(Text(perfilPreInversionPlanNegocio.rubroId)),
-              DataCell(Text(perfilPreInversionPlanNegocio.unidadId)),
-              DataCell(Text(perfilPreInversionPlanNegocio.year)),
-              DataCell(Text(perfilPreInversionPlanNegocio.cantidad)),
-              DataCell(Text(perfilPreInversionPlanNegocio.valor)),
-              //DataCell(Text(perfilPreInversionPlanNegocio.porcentaje)),
+                  Text(vPerfilPreInversionPlanNegocio.actividadFinanciera)),
+              DataCell(Text(vPerfilPreInversionPlanNegocio.rubro)),
+              DataCell(Text(vPerfilPreInversionPlanNegocio.unidad)),
+              DataCell(Text(vPerfilPreInversionPlanNegocio.year)),
+              DataCell(Text(vPerfilPreInversionPlanNegocio.cantidad)),
+              DataCell(Text(vPerfilPreInversionPlanNegocio.valor)),
+              DataCell(Text(vPerfilPreInversionPlanNegocio.porcentaje)),
             ]);
           }),
         ),

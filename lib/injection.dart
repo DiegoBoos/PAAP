@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/blocs/upload_sync/upload_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
+import 'domain/cubits/v_alianza/v_alianza_cubit.dart';
 import 'domain/usecases/actividad/actividad_exports.dart';
 import 'domain/usecases/actividad_economica/actividad_economica_exports.dart';
 import 'domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
@@ -260,6 +261,9 @@ aliadoInit() {
 alianzaInit() {
   // bloc
   locator.registerFactory(() => AlianzasBloc(alianzasDB: locator()));
+
+  // cubit
+  locator.registerFactory(() => VAlianzaCubit());
 
   // remote usecase
   locator.registerLazySingleton(() => AlianzaUsecase(locator()));
@@ -1237,7 +1241,7 @@ void init() {
   experienciaPecuariaInit();
   alianzaExperienciaAgricolaInit();
   alianzaExperienciaPecuariaInit();
-  perfilPreInversionplanesNegociosInit();
+  perfilPreInversionPlanesNegociosInit();
 
   downloadSyncInit();
   uploadSyncInit();
@@ -1919,6 +1923,10 @@ perfilPreInversionConsultoresInit() {
 }
 
 perfilPreInversionPreciosInit() {
+  // bloc
+  locator.registerFactory(() => PerfilesPreInversionesPreciosBloc(
+      perfilPreInversionPrecioUsecaseDB: locator()));
+
   // cubit
   locator.registerFactory(() =>
       PerfilPreInversionPrecioCubit(perfilPreInversionPrecioDB: locator()));
@@ -1958,10 +1966,14 @@ perfilPreInversionPreciosInit() {
   );
 }
 
-perfilPreInversionplanesNegociosInit() {
+perfilPreInversionPlanesNegociosInit() {
   // bloc
   locator.registerFactory(() => PerfilPreInversionPlanesNegociosBloc(
       perfilPreInversionPlanNegocioUsecaseDB: locator()));
+
+  // bloc
+  locator.registerFactory(() => VPerfilesPreInversionesPlanNegociosCubit(
+      vPerfilesPreInversionesPlanNegociosDB: locator()));
 
   // cubit
   locator.registerFactory(() => PerfilPreInversionCostosUPTCubit(

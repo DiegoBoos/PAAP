@@ -75,9 +75,8 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
         BlocProvider.of<VPerfilPreInversionCubit>(context);
 
     final perfilPreInversionCofinanciadorCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
-      context,
-    );
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context,
+            listen: true);
 
     final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
         .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
@@ -91,138 +90,156 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
     final montoCofinanciador = perfilPreInversionCofinanciadorCubit
         .state.perfilPreInversionCofinanciador.monto;
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-        child: Column(children: [
-          BlocBuilder<ActividadFinancieraCubit, ActividadFinancieraState>(
-            builder: (context, state) {
-              if (state is ActividadesFinancierasLoaded) {
-                return DropdownButtonFormField(
-                    isExpanded: true,
-                    value: actividadFinancieraId != ''
-                        ? actividadFinancieraId
-                        : null,
-                    items: state.actividadesFinancieras!
-                        .map<DropdownMenuItem<String>>(
-                            (ActividadFinancieraEntity value) {
-                      return DropdownMenuItem<String>(
-                        value: value.actividadFinancieraId,
-                        child: Text(value.nombre),
-                      );
-                    }).toList(),
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Debe seleccionar una actividad financiera';
-                      }
-                      return null;
-                    },
-                    onChanged: (String? value) {
-                      perfilPreInversionCofinanciadorActividadFinancieraCubit
-                          .changeActividadFinanciera(value);
-                    },
-                    hint: const Text('Actividad Financiera'));
-              }
-              return Container();
-            },
-          ),
-          const SizedBox(height: 20),
-          BlocBuilder<DesembolsoCubit, DesembolsoState>(
-            builder: (context, state) {
-              if (state is DesembolsosLoaded) {
-                return DropdownButtonFormField(
-                    isExpanded: true,
-                    value: desembolsoId != '' ? desembolsoId : null,
-                    items: state.desembolsos!.map<DropdownMenuItem<String>>(
-                        (DesembolsoEntity value) {
-                      return DropdownMenuItem<String>(
-                        value: value.desembolsoId,
-                        child: Text(value.nombre),
-                      );
-                    }).toList(),
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Debe seleccionar un desembolso';
-                      }
-                      return null;
-                    },
-                    onChanged: (String? value) {
-                      perfilPreInversionCofinanciadorActividadFinancieraCubit
-                          .changeDesembolso(value);
-                    },
-                    hint: const Text('Desembolso'));
-              }
-              return Container();
-            },
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            controller: valorCtrl,
-            decoration: CustomInputDecoration.inputDecoration(
-              hintText: 'Valor',
-              labelText: 'Valor',
+    return Form(
+      key: formKeyActividadFinanciera,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          child: Column(children: [
+            BlocBuilder<ActividadFinancieraCubit, ActividadFinancieraState>(
+              builder: (context, state) {
+                if (state is ActividadesFinancierasLoaded) {
+                  return DropdownButtonFormField(
+                      isExpanded: true,
+                      value: actividadFinancieraId != ''
+                          ? actividadFinancieraId
+                          : null,
+                      items: state.actividadesFinancieras!
+                          .map<DropdownMenuItem<String>>(
+                              (ActividadFinancieraEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.actividadFinancieraId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Debe seleccionar una actividad financiera';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .changeActividadFinanciera(value);
+                      },
+                      hint: const Text('Actividad Financiera'));
+                }
+                return Container();
+              },
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Debe seleccionar un valor';
-              }
-              if (int.parse(value) > int.parse(montoCofinanciador)) {
-                return 'El valor no puede ser mayor al monto';
-              }
-              return null;
-            },
-            onSaved: (String? newValue) {
-              perfilPreInversionCofinanciadorActividadFinancieraCubit
-                  .changeValor(newValue);
-            },
-          ),
-          const SizedBox(height: 20),
-          Align(
-              alignment: Alignment.centerRight,
-              child: FloatingActionButton(
-                  heroTag: 'actividadFinancieraBtn',
-                  onPressed: () {
-                    if (!formKeyActividadFinanciera.currentState!.validate()) {
-                      return;
-                    }
+            const SizedBox(height: 20),
+            BlocBuilder<DesembolsoCubit, DesembolsoState>(
+              builder: (context, state) {
+                if (state is DesembolsosLoaded) {
+                  return DropdownButtonFormField(
+                      isExpanded: true,
+                      value: desembolsoId != '' ? desembolsoId : null,
+                      items: state.desembolsos!.map<DropdownMenuItem<String>>(
+                          (DesembolsoEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.desembolsoId,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Debe seleccionar un desembolso';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .changeDesembolso(value);
+                      },
+                      hint: const Text('Desembolso'));
+                }
+                return Container();
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: valorCtrl,
+              decoration: CustomInputDecoration.inputDecoration(
+                hintText: 'Valor',
+                labelText: 'Valor',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Debe seleccionar un valor';
+                }
+                if (int.parse(value) > int.parse(montoCofinanciador)) {
+                  return 'El valor no puede ser mayor al monto';
+                }
+                return null;
+              },
+              onSaved: (String? newValue) {
+                perfilPreInversionCofinanciadorActividadFinancieraCubit
+                    .changeValor(newValue);
+              },
+            ),
+            const SizedBox(height: 20),
+            Align(
+                alignment: Alignment.centerRight,
+                child: FloatingActionButton(
+                    heroTag: 'actividadFinancieraBtn',
+                    onPressed: () {
+                      if (!formKeyActividadFinanciera.currentState!
+                          .validate()) {
+                        return;
+                      }
 
-                    formKeyActividadFinanciera.currentState!.save();
+                      formKeyActividadFinanciera.currentState!.save();
 
-                    final vPerfilPreInversionId = vPerfilPreInversionCubit
-                        .state.vPerfilPreInversion!.perfilPreInversionId;
+                      final vPerfilPreInversionId = vPerfilPreInversionCubit
+                          .state.vPerfilPreInversion!.perfilPreInversionId;
 
-                    final cofinanciadorId = perfilPreInversionCofinanciadorCubit
-                        .state.perfilPreInversionCofinanciador.cofinanciadorId;
+                      final cofinanciadorId =
+                          perfilPreInversionCofinanciadorCubit.state
+                              .perfilPreInversionCofinanciador.cofinanciadorId;
 
-                    perfilPreInversionCofinanciadorActividadFinancieraCubit
-                        .changePerfilPreInversion(vPerfilPreInversionId);
-                    perfilPreInversionCofinanciadorActividadFinancieraCubit
-                        .changeCofinanciador(cofinanciadorId);
-
-                    perfilPreInversionCofinanciadorActividadFinancieraCubit
-                        .perfilPreInversionCofinanciadorActividadFinancieraDB
-                        .savePerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
-                            perfilPreInversionCofinanciadorActividadFinancieraCubit
-                                .state
-                                .perfilPreInversionCofinanciadorActividadFinanciera);
-
-                    /*  perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
-                        GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
-                            perfilPreInversionId: vPerfilPreInversionId,
-                            cofinanciadorId: cofinanciadorId,
-                            actividadFinancieraId: actividadFinancieraId,
-                            desembolsoId: desembolsoId)); */
-
-                    if (perfilPreInversionCofinanciadorActividadesFinancierasBloc
-                            .state
-                        is PerfilPreInversionCofinanciadorActividadesFinancierasLoaded) {
                       perfilPreInversionCofinanciadorActividadFinancieraCubit
-                          .canCreateRubro();
-                    }
-                  },
-                  child: const Icon(Icons.add))),
-          const PerfilPreInversionCofinanciadorActividadesFinancierasRows()
-        ]),
+                          .changePerfilPreInversion(vPerfilPreInversionId);
+
+                      perfilPreInversionCofinanciadorActividadFinancieraCubit
+                          .changeCofinanciador(cofinanciadorId);
+
+                      perfilPreInversionCofinanciadorActividadFinancieraCubit
+                          .perfilPreInversionCofinanciadorActividadFinancieraDB
+                          .savePerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
+                              perfilPreInversionCofinanciadorActividadFinancieraCubit
+                                  .state
+                                  .perfilPreInversionCofinanciadorActividadFinanciera);
+
+                      final actividadFinancieraId =
+                          perfilPreInversionCofinanciadorActividadFinancieraCubit
+                              .state
+                              .perfilPreInversionCofinanciadorActividadFinanciera
+                              .actividadFinancieraId;
+
+                      final desembolsoId =
+                          perfilPreInversionCofinanciadorActividadFinancieraCubit
+                              .state
+                              .perfilPreInversionCofinanciadorActividadFinanciera
+                              .desembolsoId;
+
+                      perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
+                          GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
+                              perfilPreInversionId: vPerfilPreInversionId,
+                              cofinanciadorId: cofinanciadorId,
+                              actividadFinancieraId: actividadFinancieraId,
+                              desembolsoId: desembolsoId));
+
+                      if (perfilPreInversionCofinanciadorActividadesFinancierasBloc
+                              .state
+                          is PerfilPreInversionCofinanciadorActividadesFinancierasLoaded) {
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .canCreateRubro();
+                      }
+                    },
+                    child: const Icon(Icons.add))),
+            const PerfilPreInversionCofinanciadorActividadesFinancierasRows()
+          ]),
+        ),
       ),
     );
   }

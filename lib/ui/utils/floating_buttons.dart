@@ -49,11 +49,9 @@ class SaveBackButtons extends StatelessWidget {
   const SaveBackButtons({
     Key? key,
     required this.onSaved,
-    required this.routeName,
   }) : super(key: key);
 
   final Function()? onSaved;
-  final String routeName;
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +65,7 @@ class SaveBackButtons extends StatelessWidget {
       const SizedBox(width: 5),
       FloatingActionButton(
         heroTag: 'btn-back',
-        onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context, routeName, (route) => false),
+        onPressed: () => Navigator.pop(context),
         backgroundColor: Colors.grey,
         child: const Icon(Icons.arrow_back),
       ),

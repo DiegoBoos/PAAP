@@ -52,7 +52,7 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
       PerfilPreInversionConsultor.RevisionId,
       PerfilPreInversionConsultor.FechaRevision,
       Revision.Nombre as Revision,
-      Consultor.Consultor as consultor
+      Consultor.Consultor as Consultor
       from PerfilPreInversionConsultor
       left join Consultor on (Consultor.ConsultorId=PerfilPreInversionConsultor.ConsultorId)
       left join Revision on (Revision.RevisionId=PerfilPreInversionConsultor.RevisionId)

@@ -29,9 +29,9 @@ class PerfilPreInversionCofinanciadorModel
         cofinanciadorId: json["CofinanciadorId"],
         monto: json["Monto"],
         participacion: json["Participacion"],
-        cofinanciador: json["cofinanciador"],
-        telefonoMovil: json["telefonoMovil"],
-        correo: json["correo"],
+        cofinanciador: json["Cofinanciador"],
+        telefonoMovil: json["TelefonoMovil"],
+        correo: json["Correo"],
         recordStatus: json["RecordStatus"],
       );
 

@@ -17,7 +17,7 @@ class ExperienciaAgricolaModel extends ExperienciaAgricolaEntity {
     required String areaReservaConservacion,
     required String areaImplementacion,
     required String totalAreaPredio,
-    required String recordStatus,
+    String? recordStatus,
   }) : super(
           tipoActividadProductivaId: tipoActividadProductivaId ?? '',
           beneficiarioId: beneficiarioId ?? '',
@@ -34,7 +34,7 @@ class ExperienciaAgricolaModel extends ExperienciaAgricolaEntity {
           areaReservaConservacion: areaReservaConservacion,
           areaImplementacion: areaImplementacion,
           totalAreaPredio: totalAreaPredio,
-          recordStatus: recordStatus,
+          recordStatus: recordStatus ?? '',
         );
 
   factory ExperienciaAgricolaModel.fromJson(Map<String, dynamic> json) =>

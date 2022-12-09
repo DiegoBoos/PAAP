@@ -89,8 +89,6 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
                   perfilBeneficiarioCubit.selectPerfilBeneficiario(
                       perfilId, beneficiarioId);
 
-                  //TODO: Tipo actividad productiva, por defecto 1?
-
                   if (tipoProyecto == 'Agrícola') {
                     experienciaAgricolaCubit.selectExperienciaAgricola(
                         '1', beneficiarioId);

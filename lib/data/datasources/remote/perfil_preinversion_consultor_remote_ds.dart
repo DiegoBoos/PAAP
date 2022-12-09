@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_consultor_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
 import '../../../domain/core/error/exception.dart';
 import '../../models/perfil_preinversion_consultor_model.dart';
+import '../../models/perfiles_preinversion_model.dart';
 import '../../utils.dart';
 
 abstract class PerfilPreInversionConsultorRemoteDataSource {
@@ -31,6 +33,98 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
+    final perfilesPreInversionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+          </usuario>
+          <rol>
+            <RolId>400</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <parametros>
+            <string>TablaPerfilesPreInversiones</string> 
+          </parametros>
+        </ObtenerDatos>
+      </soap:Body>
+    </soap:Envelope>''';
+
+    final perfilesPreInversionResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+        },
+        body: perfilesPreInversionSOAP);
+
+    if (perfilesPreInversionResp.statusCode == 200) {
+      final perfilesPreInversionDoc =
+          xml.XmlDocument.parse(perfilesPreInversionResp.body);
+
+      final respuesta = perfilesPreInversionDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      final mensaje = perfilesPreInversionDoc
+          .findAllElements('mensaje')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        final xmlString = perfilesPreInversionDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilesPreInversionRaw =
+            decodedResp.entries.first.value['Table'];
+
+        List<PerfilPreInversionConsultorModel> listPerfilPreInversionConsultor =
+            [];
+        if (perfilesPreInversionRaw is List) {
+          final perfilesPreInversion = List.from(perfilesPreInversionRaw)
+              .map((e) => PerfilesPreInversionModel.fromJson(e))
+              .toList();
+          for (var perfilPreInversion in perfilesPreInversion) {
+            final dsPerfilPreInversionConsultor =
+                await getPerfilPreInversionConsultorTable(
+                    usuario, perfilPreInversion.id);
+            if (dsPerfilPreInversionConsultor.isNotEmpty) {
+              for (var perfilPreInversionConsultor
+                  in dsPerfilPreInversionConsultor) {
+                listPerfilPreInversionConsultor
+                    .add(perfilPreInversionConsultor);
+              }
+            }
+          }
+        } else {
+          listPerfilPreInversionConsultor.add(
+              PerfilPreInversionConsultorModel.fromJson(
+                  perfilesPreInversionRaw));
+        }
+
+        return listPerfilPreInversionConsultor;
+      } else {
+        throw ServerFailure([mensaje]);
+      }
+    } else {
+      throw ServerException();
+    }
+  }
+
+  Future<List<PerfilPreInversionConsultorModel>>
+      getPerfilPreInversionConsultorTable(
+          UsuarioEntity usuario, String perfilPreInversionId) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
     final perfilPreInversionConsultoresSOAP =
         '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -46,7 +140,7 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
           </rol>
           <parametros>
             <string>TablaPerfilesPreInversionesConsultores</string>      
-            <string>1</string>
+            <string>$perfilPreInversionId</string>
           </parametros>
         </ObtenerDatos>
       </soap:Body>

@@ -18,6 +18,24 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
   void initState() =>
       emit(PerfilPreInversionCofinanciadorActividadFinancieraInitial());
 
+  Future<PerfilPreInversionCofinanciadorActividadFinancieraEntity?>
+      getPerfilPreInversionCofinanciadorActividadFinanciera(
+          String perfilPreInversionId,
+          String cofinanciadorId,
+          String desembolsoId) async {
+    final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
+        .getPerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
+            perfilPreInversionId, cofinanciadorId, desembolsoId);
+    return result.fold((failure) => null, (data) {
+      if (data != null) {
+        emit(PerfilPreInversionCofinanciadorActividadFinancieraLoaded(data));
+      } else {
+        emit(PerfilPreInversionCofinanciadorActividadFinancieraInitial());
+      }
+      return data;
+    });
+  }
+
   void savePerfilPreInversionCofinanciadorActividadFinancieraDB(
       PerfilPreInversionCofinanciadorActividadFinancieraEntity
           perfilPreInversionCofinanciadorActividadFinancieraEntity) async {
@@ -30,26 +48,6 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
                 failure.properties.first)),
         (data) =>
             emit(PerfilPreInversionCofinanciadorActividadFinancieraSaved()));
-  }
-
-  void selectPerfilPreInversionCofinanciadorActividadFinanciera(
-      String perfilPreInversionId,
-      String cofinanciadorId,
-      String desembolsoId) async {
-    final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
-        .getPerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
-            perfilPreInversionId, cofinanciadorId, desembolsoId);
-    result.fold(
-        (failure) => emit(
-            PerfilPreInversionCofinanciadorActividadFinancieraError(
-                failure.properties.first)), (data) {
-      if (data == null) {
-        emit(PerfilPreInversionCofinanciadorActividadFinancieraError(
-            'No se pudo cargar la información de la actividad financiera del confinanciador de preinversion'));
-      } else {
-        emit(PerfilPreInversionCofinanciadorActividadFinancieraLoaded(data));
-      }
-    });
   }
 
   void changePerfilPreInversion(String value) {

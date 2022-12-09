@@ -9,12 +9,10 @@ part 'producto_state.dart';
 class ProductoCubit extends Cubit<ProductoState> {
   final ProductoUsecaseDB productoDB;
 
-  ProductoCubit({required this.productoDB}) : super(ProductosInitial()) {
-    getProductosDB();
-  }
+  ProductoCubit({required this.productoDB}) : super(ProductosInitial());
 
-  void getProductosDB() async {
-    final result = await productoDB.getProductosUsecaseDB();
+  Future<void> getProductosDB(String perfilPreInversionId) async {
+    final result = await productoDB.getProductosUsecaseDB(perfilPreInversionId);
     result.fold((failure) => emit(ProductosError(failure.properties.first)),
         (data) => emit(ProductosLoaded(data)));
   }

@@ -5,18 +5,21 @@ import '../../entities/perfil_preinversion_cofinanciador_entity.dart';
 
 abstract class PerfilPreInversionCofinanciadorRepositoryDB {
   Future<Either<Failure, List<PerfilPreInversionCofinanciadorEntity>>>
-      getPerfilPreInversionCofinanciadoresRepositoryDB();
+      getPerfilesPreInversionesCofinanciadoresRepositoryDB(
+          String perfilPreInversionId);
 
   Future<Either<Failure, List<PerfilPreInversionCofinanciadorEntity>>>
       getPerfilesPreInversionesCofinanciadoresProduccionRepositoryDB();
 
   Future<Either<Failure, PerfilPreInversionCofinanciadorEntity?>>
-      getPerfilPreInversionCofinanciadorRepositoryDB(String id);
+      getPerfilPreInversionCofinanciadorRepositoryDB(
+          String perfilPreInversionId);
 
   Future<Either<Failure, int>>
       savePerfilesPreInversionesCofinanciadoresRepositoryDB(
           List<PerfilPreInversionCofinanciadorEntity>
               perfilPreInversionCofinanciadorEntity);
+
   Future<Either<Failure, int>> savePerfilPreInversionCofinanciadorRepositoryDB(
       PerfilPreInversionCofinanciadorEntity
           perfilPreInversionCofinanciadorEntity);

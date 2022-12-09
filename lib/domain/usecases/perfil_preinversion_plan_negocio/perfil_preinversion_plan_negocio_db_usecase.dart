@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../core/error/failure.dart';
 import '../../entities/perfil_preinversion_plan_negocio_entity.dart';
+import '../../entities/v_perfil_preinversion_plan_negocio_entity.dart';
 import '../../repositories/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_repository_db.dart';
 
 class PerfilPreInversionPlanNegocioUsecaseDB {
@@ -13,11 +14,11 @@ class PerfilPreInversionPlanNegocioUsecaseDB {
     return repositoryDB.getPerfilPreInversionPlanesNegociosRepositoryDB();
   }
 
-  Future<Either<Failure, PerfilPreInversionPlanNegocioEntity?>>
-      getPerfilPreInversionPlanNegocioUsecaseDB(
-          String perfilPreInversionId, String rubroId, String year) {
-    return repositoryDB.getPerfilPreInversionPlanNegocioRepositoryDB(
-        perfilPreInversionId, rubroId, year);
+  Future<Either<Failure, List<VPerfilPreInversionPlanNegocioEntity>>>
+      getVPerfilesPreInversionesPlanNegociosUsecaseDB(
+          String perfilPreInversionId, String tipoMovimientoId) {
+    return repositoryDB.getVPerfilesPreInversionesPlanNegociosRepositoryDB(
+        perfilPreInversionId, tipoMovimientoId);
   }
 
   Future<Either<Failure, int>> savePerfilPreInversionPlanesNegociosUsecaseDB(

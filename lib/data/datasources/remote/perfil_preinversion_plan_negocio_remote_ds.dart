@@ -47,7 +47,7 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
             <Nombre>string</Nombre>
           </rol>
           <parametros>
-            <string>TablaPerfilesPreInversionesPlanesNegocios</string>              
+            <string>TablaPerfilesPreInversionesPlanNegocios</string>              
           </parametros>
         </ObtenerDatos>
       </soap:Body>

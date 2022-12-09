@@ -171,30 +171,32 @@ class _BeneficiarioExperienciaFormState
                         builder: (context, state) {
                           if (state is TiposActividadesProductivasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaAgricolaTipoActividadProductivaId !=
-                                        ''
-                                    ? experienciaAgricolaTipoActividadProductivaId
-                                    : null,
-                                items: state.tiposActividadesProductivas!
-                                    .map<DropdownMenuItem<String>>(
-                                        (TipoActividadProductivaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.tipoActividadProductivaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaAgricolaCubit
-                                      .changeTipoActividadProductiva(value);
-                                },
-                                hint:
-                                    const Text('Tipo de Actividad Productiva'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Tipo de Actividad Productiva',
+                                  labelText: 'Tipo de Actividad Productiva'),
+                              value: experienciaAgricolaTipoActividadProductivaId !=
+                                      ''
+                                  ? experienciaAgricolaTipoActividadProductivaId
+                                  : null,
+                              items: state.tiposActividadesProductivas!
+                                  .map<DropdownMenuItem<String>>(
+                                      (TipoActividadProductivaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.tipoActividadProductivaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                experienciaAgricolaCubit
+                                    .changeTipoActividadProductiva(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -204,34 +206,38 @@ class _BeneficiarioExperienciaFormState
                         builder: (context, state) {
                           if (state is FrecuenciasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaAgricolaFrecuenciaId != ''
-                                    ? experienciaAgricolaFrecuenciaId
-                                    : null,
-                                items: state.frecuencias!
-                                    .map<DropdownMenuItem<String>>(
-                                        (FrecuenciaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.frecuenciaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaAgricolaCubit
-                                      .changeFrecuencia(value);
-                                },
-                                hint: const Text('Frecuencia'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Frecuencia',
+                                  labelText: 'Frecuencia'),
+                              value: experienciaAgricolaFrecuenciaId != ''
+                                  ? experienciaAgricolaFrecuenciaId
+                                  : null,
+                              items: state.frecuencias!
+                                  .map<DropdownMenuItem<String>>(
+                                      (FrecuenciaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.frecuenciaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                experienciaAgricolaCubit
+                                    .changeFrecuencia(value);
+                              },
+                            );
                           }
                           return Container();
                         },
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: areaCultivoCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Área del Cultivo Hectárea',
@@ -248,6 +254,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: cantidadProducidaCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Cantidad Producida',
@@ -264,6 +271,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: cantidadVendidaCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Cantidad Vendida',
@@ -280,6 +288,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: cantidadAutoconsumoCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Cantidad Autoconsumo',
@@ -296,6 +305,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: costoImplementacionCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Costo de implementación',
@@ -312,6 +322,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: experienciaAgricolaValorJornalCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Valor Jornal',
@@ -328,6 +339,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: totalIngresoNetoCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Ingreso Total Neto',
@@ -344,6 +356,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: areaPastoCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Área de Pastos',
@@ -359,6 +372,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: areaSinUsoCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Área sin uso',
@@ -374,6 +388,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: areaReservaConservacionCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Área de Reserva',
@@ -390,6 +405,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: areaImplementacionCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Área Implementación',
@@ -406,6 +422,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: totalAreaPredioCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Total Área Predio',
@@ -446,30 +463,32 @@ class _BeneficiarioExperienciaFormState
                         builder: (context, state) {
                           if (state is TiposActividadesProductivasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaPecuariaTipoActividadProductivaId !=
-                                        ''
-                                    ? experienciaPecuariaTipoActividadProductivaId
-                                    : null,
-                                items: state.tiposActividadesProductivas!
-                                    .map<DropdownMenuItem<String>>(
-                                        (TipoActividadProductivaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.tipoActividadProductivaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaPecuariaCubit
-                                      .changeTipoActividadProductiva(value);
-                                },
-                                hint:
-                                    const Text('Tipo de Actividad Productiva'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Tipo de Actividad Productiva',
+                                  labelText: 'Tipo de Actividad Productiva'),
+                              value: experienciaPecuariaTipoActividadProductivaId !=
+                                      ''
+                                  ? experienciaPecuariaTipoActividadProductivaId
+                                  : null,
+                              items: state.tiposActividadesProductivas!
+                                  .map<DropdownMenuItem<String>>(
+                                      (TipoActividadProductivaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.tipoActividadProductivaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                experienciaPecuariaCubit
+                                    .changeTipoActividadProductiva(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -479,34 +498,38 @@ class _BeneficiarioExperienciaFormState
                         builder: (context, state) {
                           if (state is FrecuenciasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaPecuariaFrecuenciaId != ''
-                                    ? experienciaPecuariaFrecuenciaId
-                                    : null,
-                                items: state.frecuencias!
-                                    .map<DropdownMenuItem<String>>(
-                                        (FrecuenciaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.frecuenciaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaPecuariaCubit
-                                      .changeFrecuencia(value);
-                                },
-                                hint: const Text('Frecuencia'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Frecuencia',
+                                  labelText: 'Frecuencia'),
+                              value: experienciaPecuariaFrecuenciaId != ''
+                                  ? experienciaPecuariaFrecuenciaId
+                                  : null,
+                              items: state.frecuencias!
+                                  .map<DropdownMenuItem<String>>(
+                                      (FrecuenciaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.frecuenciaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                experienciaPecuariaCubit
+                                    .changeFrecuencia(value);
+                              },
+                            );
                           }
                           return Container();
                         },
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: cantidadAnimalesCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Cantidad de animales',
@@ -523,6 +546,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: cantidadCriaCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Cantidad Cría',
@@ -539,6 +563,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: cantidadLevanteCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Cantidad Levante',
@@ -555,6 +580,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: cantidadCebaCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Cantidad Ceba',
@@ -571,6 +597,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: cantidadLecheCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Cantidad Leche',
@@ -587,6 +614,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: experienciaPecuariaValorJornalCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Valor Jornal',
@@ -603,6 +631,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: costosInsumosCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Costo Insumos',
@@ -619,6 +648,7 @@ class _BeneficiarioExperienciaFormState
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: ingresosCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Ingresos', labelText: 'Ingresos'),

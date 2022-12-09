@@ -98,7 +98,6 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
                             saveAlianzaBeneficiario(context);
                             saveExperiencia(context);
                           },
-                          routeName: 'VBeneficiarioPreInversion',
                         ),
                         const SizedBox(height: 10)
                       ],

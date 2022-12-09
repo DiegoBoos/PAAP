@@ -8,8 +8,9 @@ class ProductoUsecaseDB {
 
   ProductoUsecaseDB(this.repositoryDB);
 
-  Future<Either<Failure, List<ProductoEntity>?>> getProductosUsecaseDB() {
-    return repositoryDB.getProductosRepositoryDB();
+  Future<Either<Failure, List<ProductoEntity>>> getProductosUsecaseDB(
+      String perfilPreInversionId) {
+    return repositoryDB.getProductosRepositoryDB(perfilPreInversionId);
   }
 
   Future<Either<Failure, int>> saveProductoUsecaseDB(

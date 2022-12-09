@@ -10,11 +10,14 @@ abstract class PerfilPreInversionAliadoLocalDataSource {
 
   Future<int> savePerfilPreInversionAliados(
       List<PerfilPreInversionAliadoEntity> perfilPreInversionAliadoEntity);
-  Future<int> savePerfilPreInversionAliadoDB(
+
+  Future<int> savePerfilPreInversionAliado(
       PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity);
+
   Future<List<PerfilPreInversionAliadoModel>>
-      getPerfilesPreInversionesAliadosProduccionDB();
-  Future<int> updatePerfilesPreInversionesAliadosProduccionDB(
+      getPerfilesPreInversionesAliadosProduccion();
+
+  Future<int> updatePerfilesPreInversionesAliadosProduccion(
       List<PerfilPreInversionAliadoEntity>
           perfilesPreInversionesAliadosProduccionEntity);
 }
@@ -82,6 +85,7 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
     batch.delete('PerfilPreInversionAliado');
 
     for (var perfilPreInversionAliado in perfilPreInversionAliadoEntity) {
+      perfilPreInversionAliado.recordStatus = 'R';
       batch.insert(
           'PerfilPreInversionAliado', perfilPreInversionAliado.toJson());
     }
@@ -92,14 +96,17 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
   }
 
   @override
-  Future<int> savePerfilPreInversionAliadoDB(
+  Future<int> savePerfilPreInversionAliado(
       PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity) async {
     final db = await DBConfig.database;
     var batch = db.batch();
 
     final resQuery = await db.query('PerfilPreInversionAliado',
-        where: 'AliadoId = ?',
-        whereArgs: [perfilPreInversionAliadoEntity.aliadoId]);
+        where: 'PerfilPreInversionId = ? AND AliadoId = ?',
+        whereArgs: [
+          perfilPreInversionAliadoEntity.perfilPreInversionId,
+          perfilPreInversionAliadoEntity.aliadoId
+        ]);
 
     if (resQuery.isEmpty) {
       perfilPreInversionAliadoEntity.recordStatus = 'N';
@@ -109,8 +116,11 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
       perfilPreInversionAliadoEntity.recordStatus = 'E';
       batch.update(
           'PerfilPreInversionAliado', perfilPreInversionAliadoEntity.toJson(),
-          where: 'AliadoId = ?',
-          whereArgs: [perfilPreInversionAliadoEntity.aliadoId]);
+          where: 'PerfilPreInversionId = ? AND AliadoId = ?',
+          whereArgs: [
+            perfilPreInversionAliadoEntity.perfilPreInversionId,
+            perfilPreInversionAliadoEntity.aliadoId
+          ]);
     }
 
     final res = await batch.commit();
@@ -120,7 +130,7 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionAliadoModel>>
-      getPerfilesPreInversionesAliadosProduccionDB() async {
+      getPerfilesPreInversionesAliadosProduccion() async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionAliado',
@@ -136,7 +146,7 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
   }
 
   @override
-  Future<int> updatePerfilesPreInversionesAliadosProduccionDB(
+  Future<int> updatePerfilesPreInversionesAliadosProduccion(
       List<PerfilPreInversionAliadoEntity>
           perfilesPreInversionesAliadosProduccionEntity) async {
     final db = await DBConfig.database;

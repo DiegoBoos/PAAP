@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../domain/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
 import '../../../domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
@@ -26,57 +27,61 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final menuCubit = BlocProvider.of<MenuCubit>(context);
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+    final perfilPreInversionBeneficiariosBloc =
+        BlocProvider.of<PerfilPreInversionBeneficiariosBloc>(context);
 
-    return Scaffold(
-        drawer: BlocBuilder<MenuCubit, MenuState>(
-          builder: (context, state) {
-            final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
-            return PerfilPreInversionDrawer(
-              menuHijo: menuHijo,
-            );
-          },
-        ),
-        appBar:
-            AppBar(title: const Text('Detalle Beneficiario'), actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: NetworkIcon(),
-          )
-        ]),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            child: Form(
-              key: formKey,
-              child: Column(children: [
-                const Text('BENEFICIARIOS', style: Styles.titleStyle),
-                const SizedBox(height: 10),
-                BlocConsumer<PerfilPreInversionBeneficiarioCubit,
-                    PerfilPreInversionBeneficiarioState>(
-                  listener: (context, state) {
-                    if (state is PerfilPreInversionBeneficiarioError) {
-                      CustomSnackBar.showSnackBar(
-                          context, 'Error al guardar datos', Colors.red);
-                    }
-                    if (state is PerfilPreInversionBeneficiarioSaved) {
-                      CustomSnackBar.showSnackBar(context,
-                          'Datos guardados satisfactoriamente', Colors.green);
+    return BlocConsumer<PerfilPreInversionBeneficiarioCubit,
+        PerfilPreInversionBeneficiarioState>(
+      listener: (context, state) {
+        if (state is PerfilPreInversionBeneficiarioError) {
+          CustomSnackBar.showSnackBar(
+              context, 'Error al guardar datos', Colors.red);
+        }
+        if (state is PerfilPreInversionBeneficiarioSaved) {
+          CustomSnackBar.showSnackBar(
+              context, 'Datos guardados satisfactoriamente', Colors.green);
 
-                      Navigator.pushNamedAndRemoveUntil(context,
-                          'VBeneficiarioPreInversion', (route) => false);
-                    }
-                  },
-                  builder: (context, state) {
-                    final perfilPreInversionBeneficiario =
-                        state.perfilPreInversionBeneficiario;
+          perfilPreInversionBeneficiariosBloc.add(
+              GetPerfilPreInversionBeneficiarios(vPerfilPreInversionCubit
+                  .state.vPerfilPreInversion!.perfilPreInversionId));
+        }
+      },
+      builder: (context, state) {
+        final perfilPreInversionBeneficiario =
+            state.perfilPreInversionBeneficiario;
 
-                    final beneficiarioId =
-                        perfilPreInversionBeneficiario.beneficiarioId;
+        final beneficiarioId = perfilPreInversionBeneficiario.beneficiarioId;
 
-                    final estadoCivilId =
-                        perfilPreInversionBeneficiario.estadoCivilId;
-
-                    return Column(
+        final estadoCivilId = perfilPreInversionBeneficiario.estadoCivilId;
+        return Scaffold(
+            drawer: BlocBuilder<MenuCubit, MenuState>(
+              builder: (context, state) {
+                final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
+                return PerfilPreInversionDrawer(
+                  menuHijo: menuHijo,
+                );
+              },
+            ),
+            appBar: AppBar(
+                title: const Text('Detalle Beneficiario'),
+                actions: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.0),
+                    child: NetworkIcon(),
+                  )
+                ]),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                child: Form(
+                  key: formKey,
+                  child: Column(children: [
+                    const Text('BENEFICIARIOS', style: Styles.titleStyle),
+                    const SizedBox(height: 10),
+                    Column(
                       children: [
                         Text(beneficiarioId == '' ? 'Creación' : 'Editar',
                             style: Styles.subtitleStyle),
@@ -101,17 +106,16 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
                             savePerfilPreInversionBeneficiario(context);
                             saveExperiencia(context);
                           },
-                          routeName: 'VBeneficiarioPreInversion',
                         ),
                         const SizedBox(height: 10)
                       ],
-                    );
-                  },
+                    ),
+                  ]),
                 ),
-              ]),
-            ),
-          ),
-        ));
+              ),
+            ));
+      },
+    );
   }
 
   void saveBeneficiario(BuildContext context) {
@@ -136,6 +140,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
 
     perfilBeneficiarioCubit.changePerfilId(perfilId);
     perfilBeneficiarioCubit.changeBeneficiarioId(beneficiarioId);
+
     if (perfilBeneficiario.asociado == '') {
       perfilBeneficiarioCubit.changeAsociado(false);
     }

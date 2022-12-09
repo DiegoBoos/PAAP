@@ -71,4 +71,10 @@ class PerfilPreInversionAliadoCubit
         state.perfilPreInversionAliado.copyWith(porcentajeCompra: newValue);
     emit(PerfilPreInversionAliadoChanged(porcentajeCompraChanged));
   }
+
+  void changeAliadoId(String? newValue) {
+    final aliadoIdChanged =
+        state.perfilPreInversionAliado.copyWith(aliadoId: newValue);
+    emit(PerfilPreInversionAliadoChanged(aliadoIdChanged));
+  }
 }

@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../domain/core/error/exception.dart';
 import '../../../domain/core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_plan_negocio_entity.dart';
+import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_repository_db.dart';
 import '../../datasources/local/perfil_preinversion_plan_negocio_local_ds.dart';
 
@@ -31,14 +32,14 @@ class PerfilPreInversionPlanNegocioRepositoryDBImpl
   }
 
   @override
-  Future<Either<Failure, PerfilPreInversionPlanNegocioEntity?>>
-      getPerfilPreInversionPlanNegocioRepositoryDB(
-          String perfilPreInversionId, String rubroId, String year) async {
+  Future<Either<Failure, List<VPerfilPreInversionPlanNegocioEntity>>>
+      getVPerfilesPreInversionesPlanNegociosRepositoryDB(
+          String perfilPreInversionId, String tipoMovimientoId) async {
     try {
       final perfilPreInversionPlanNegocioDB =
           await perfilPreInversionPlanNegocioLocalDataSource
-              .getPerfilPreInversionPlanNegocioDB(
-                  perfilPreInversionId, rubroId, year);
+              .getVPerfilesPreInversionesPlanNegociosDB(
+                  perfilPreInversionId, tipoMovimientoId);
 
       return Right(perfilPreInversionPlanNegocioDB);
     } on ServerFailure catch (e) {
@@ -113,36 +114,5 @@ class PerfilPreInversionPlanNegocioRepositoryDBImpl
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
     }
-  }
-
-  @override
-  Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilPreInversionplanesNegociosRepositoryDB() {
-    // TODO: implement getPerfilPreInversionplanesNegociosRepositoryDB
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilesPreInversionesplanesNegociosProduccionRepositoryDB() {
-    // TODO: implement getPerfilesPreInversionesplanesNegociosProduccionRepositoryDB
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, int>> savePerfilPreInversionplanesNegociosRepositoryDB(
-      List<PerfilPreInversionPlanNegocioEntity>
-          perfilPreInversionPlanNegocioEntity) {
-    // TODO: implement savePerfilPreInversionplanesNegociosRepositoryDB
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, int>>
-      updatePerfilesPreInversionesplanesNegociosProduccionDBRepositoryDB(
-          List<PerfilPreInversionPlanNegocioEntity>
-              perfilesPreInversionesplanesNegociosEntity) {
-    // TODO: implement updatePerfilesPreInversionesplanesNegociosProduccionDBRepositoryDB
-    throw UnimplementedError();
   }
 }

@@ -13,10 +13,11 @@ class ProductoRepositoryDBImpl implements ProductoRepositoryDB {
   ProductoRepositoryDBImpl({required this.productoLocalDataSource});
 
   @override
-  Future<Either<Failure, List<ProductoEntity>>>
-      getProductosRepositoryDB() async {
+  Future<Either<Failure, List<ProductoEntity>>> getProductosRepositoryDB(
+      String perfilPreInversionId) async {
     try {
-      final productosDB = await productoLocalDataSource.getProductosDB();
+      final productosDB =
+          await productoLocalDataSource.getProductosDB(perfilPreInversionId);
 
       return Right(productosDB);
     } on ServerFailure catch (e) {

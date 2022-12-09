@@ -16,19 +16,20 @@ class PerfilPreInversionCofinanciadoresBloc extends Bloc<
   PerfilPreInversionCofinanciadoresBloc({
     required this.perfilPreInversionCofinanciadoresDB,
   }) : super(PerfilPreInversionCofinanciadoresInitial()) {
-    /*  on<GetPerfilPreInversionCofinanciadores>((event, emit) async {
+    on<GetPerfilPreInversionCofinanciadores>((event, emit) async {
       emit(PerfilPreInversionCofinanciadoresLoading());
       await _getPerfilPreInversionCofinanciadores(event, emit);
-    }); */
+    });
   }
 
-  /* _getPerfilPreInversionCofinanciadores(event, emit) async {
+  _getPerfilPreInversionCofinanciadores(event, emit) async {
     final result = await perfilPreInversionCofinanciadoresDB
-        .getPerfilPreInversionCofinanciadoresUsecaseDB();
+        .getPerfilesPreInversionesCofinanciadoresUsecaseDB(
+            event.perfilPreInversionId);
     result.fold(
         (failure) => emit(
             PerfilPreInversionCofinanciadoresError(failure.properties.first)),
         (data) => emit(PerfilPreInversionCofinanciadoresLoaded(
             perfilPreInversionCofinanciadoresLoaded: data)));
-  } */
+  }
 }
