@@ -137,9 +137,7 @@ class _NewEditPerfilPreInversionCostosUPTState
                                           hintText: 'Actividad Financiera',
                                           labelText: 'Actividad Financiera'),
                                   isExpanded: true,
-                                  value: actividadFinancieraId != ''
-                                      ? actividadFinancieraId
-                                      : null,
+                                  value: actividadFinancieraId,
                                   items: state.actividadesFinancierasLoaded!
                                       .where((actividadFinanciera) =>
                                           actividadFinanciera
@@ -212,7 +210,7 @@ class _NewEditPerfilPreInversionCostosUPTState
                                           hintText: 'Unidad',
                                           labelText: 'Unidad'),
                                   isExpanded: true,
-                                  value: unidadId != '' ? unidadId : null,
+                                  value: unidadId,
                                   items: state.unidades!
                                       .map<DropdownMenuItem<String>>(
                                           (UnidadEntity value) {
@@ -243,10 +241,11 @@ class _NewEditPerfilPreInversionCostosUPTState
                               decoration: CustomInputDecoration.inputDecoration(
                                   hintText: 'Año', labelText: 'Año'),
                               validator: ((value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Campo Requerido';
+                                final intNumber = int.tryParse(value ?? '');
+                                if (intNumber != null && intNumber <= 10) {
+                                  return null;
                                 }
-                                return null;
+                                return '¡Para el Año debe ingresar del Cero al Diez!';
                               }),
                               onSaved: (String? newValue) {
                                 perfilPreInversionCostosUPTCubit

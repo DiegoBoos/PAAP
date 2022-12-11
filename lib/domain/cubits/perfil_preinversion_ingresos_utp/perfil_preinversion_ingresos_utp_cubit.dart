@@ -31,7 +31,29 @@ class PerfilPreInversionIngresosUPTCubit
     result.fold(
         (failure) =>
             emit(PerfilPreInversionIngresosUPTError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionIngresosUPTSaved()));
+        (data) {
+      //TODO: devolver vista
+      final vPerfilPreInversionPlanNegocioEntity =
+          VPerfilPreInversionPlanNegocioEntity(
+              actividadFinancieraId:
+                  'perfilPreInversionPlanNegocioEntity.actividadFinancieraId',
+              actividadFinanciera:
+                  'perfilPreInversionPlanNegocioEntity.actividadFinanciera',
+              rubroId: perfilPreInversionPlanNegocioEntity.rubroId,
+              rubro: 'perfilPreInversionPlanNegocioEntity.rubro',
+              unidadId: perfilPreInversionPlanNegocioEntity.unidadId,
+              unidad: 'perfilPreInversionPlanNegocioEntity.unidad',
+              year: perfilPreInversionPlanNegocioEntity.year,
+              cantidad: perfilPreInversionPlanNegocioEntity.cantidad,
+              valor: perfilPreInversionPlanNegocioEntity.valor,
+              productoId: 'perfilPreInversionPlanNegocioEntity.productoId',
+              tipoCalidadId:
+                  'perfilPreInversionPlanNegocioEntity.tipoCalidadId',
+              porcentaje: 'perfilPreInversionPlanNegocioEntity.porcentaje');
+
+      emit(PerfilPreInversionIngresosUPTSaved(
+          perfilPreInversionIngresosUPT: vPerfilPreInversionPlanNegocioEntity));
+    });
   }
 
   void changeRubro(String? value) {

@@ -26,9 +26,9 @@ class BeneficiarioForm extends StatefulWidget {
 
 class _BeneficiarioFormState extends State<BeneficiarioForm> {
   final dateFormat = DateFormat('yyyy-MM-dd');
-  String tipoIdentificacionId = '';
-  String generoId = '';
-  String grupoEspecialId = '';
+  String? tipoIdentificacionId;
+  String? generoId;
+  String? grupoEspecialId;
 
   final beneficiarioIdCtrl = TextEditingController();
   final fechaExpedicionDocumentoCtrl = TextEditingController();
@@ -84,9 +84,11 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   }
 
   void calcularEdad(String fechaNacimiento) {
-    DateTime edadDt = DateTime.parse(fechaNacimiento);
-    var currentYear = DateTime.now().year;
-    var edad = currentYear - edadDt.year;
+    final fechaNac = DateTime.parse(fechaNacimiento);
+    final now = DateTime.now();
+
+    var edad = now.difference(fechaNac).inDays ~/ 365;
+
     edadCtrl.text = edad.toString();
   }
 
@@ -158,9 +160,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     decoration: CustomInputDecoration.inputDecoration(
                         hintText: 'Tipo de identificación',
                         labelText: 'Tipo de identificación'),
-                    value: tipoIdentificacionId != ''
-                        ? tipoIdentificacionId
-                        : null,
+                    value: tipoIdentificacionId,
                     items: state.tiposIdentificaciones
                         ?.map<DropdownMenuItem<String>>(
                             (TipoIdentificacionEntity value) {
@@ -375,7 +375,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                         return DropdownButtonFormField(
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Género', labelText: 'Género'),
-                          value: generoId != '' ? generoId : null,
+                          value: generoId,
                           items: state.generos?.map<DropdownMenuItem<String>>(
                               (GeneroEntity value) {
                             return DropdownMenuItem<String>(
@@ -408,7 +408,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     decoration: CustomInputDecoration.inputDecoration(
                         hintText: 'Grupo Especial',
                         labelText: 'Grupo Especial'),
-                    value: grupoEspecialId != '' ? grupoEspecialId : null,
+                    value: grupoEspecialId,
                     items: state.gruposEspeciales
                         ?.map<DropdownMenuItem<String>>(
                             (GrupoEspecialEntity value) {

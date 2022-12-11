@@ -210,24 +210,10 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
                                   .state
                                   .perfilPreInversionCofinanciadorActividadFinanciera);
 
-                      final actividadFinancieraId =
-                          perfilPreInversionCofinanciadorActividadFinancieraCubit
-                              .state
-                              .perfilPreInversionCofinanciadorActividadFinanciera
-                              .actividadFinancieraId;
-
-                      final desembolsoId =
-                          perfilPreInversionCofinanciadorActividadFinancieraCubit
-                              .state
-                              .perfilPreInversionCofinanciadorActividadFinanciera
-                              .desembolsoId;
-
                       perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
                           GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
                               perfilPreInversionId: vPerfilPreInversionId,
-                              cofinanciadorId: cofinanciadorId,
-                              actividadFinancieraId: actividadFinancieraId,
-                              desembolsoId: desembolsoId));
+                              cofinanciadorId: cofinanciadorId));
 
                       if (perfilPreInversionCofinanciadorActividadesFinancierasBloc
                               .state

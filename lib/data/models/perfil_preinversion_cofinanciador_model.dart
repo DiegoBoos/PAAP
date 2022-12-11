@@ -3,35 +3,34 @@ import '../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 class PerfilPreInversionCofinanciadorModel
     extends PerfilPreInversionCofinanciadorEntity {
   PerfilPreInversionCofinanciadorModel({
-    required String perfilPreInversionId,
+    String? perfilPreInversionId,
     required String cofinanciadorId,
-    String? monto,
-    String? participacion,
-    String? cofinanciador,
+    String? nombre,
     String? telefonoMovil,
     String? correo,
+    String? monto,
+    String? participacion,
     String? recordStatus,
   }) : super(
-          perfilPreInversionId: perfilPreInversionId,
+          perfilPreInversionId: perfilPreInversionId ?? '',
           cofinanciadorId: cofinanciadorId,
-          monto: monto ?? '',
-          participacion: participacion ?? '',
-          cofinanciador: cofinanciador ?? '',
+          nombre: nombre ?? '',
           telefonoMovil: telefonoMovil ?? '',
           correo: correo ?? '',
+          monto: monto ?? '',
+          participacion: participacion ?? '',
           recordStatus: recordStatus ?? '',
         );
 
   factory PerfilPreInversionCofinanciadorModel.fromJson(
           Map<String, dynamic> json) =>
       PerfilPreInversionCofinanciadorModel(
-        perfilPreInversionId: json["PerfilPreInversionId"],
         cofinanciadorId: json["CofinanciadorId"],
-        monto: json["Monto"],
-        participacion: json["Participacion"],
-        cofinanciador: json["Cofinanciador"],
+        nombre: json["Nombre"],
         telefonoMovil: json["TelefonoMovil"],
         correo: json["Correo"],
+        monto: json["Monto"].toString(),
+        participacion: json["Participacion"].toString(),
         recordStatus: json["RecordStatus"],
       );
 

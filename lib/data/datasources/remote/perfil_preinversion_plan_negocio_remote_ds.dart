@@ -130,6 +130,15 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
+    String ingresosElements = '';
+
+    if (perfilPreInversionPlanNegocioEntity.productoId != '') {
+      ingresosElements = '''  
+        <ProductoId>${perfilPreInversionPlanNegocioEntity.productoId}</ProductoId>
+        <TipoCalidadId>${perfilPreInversionPlanNegocioEntity.tipoCalidadId}</TipoCalidadId>
+      ''';
+    }
+
     final perfilPreInversionPlanesNegociosOAP =
         '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -150,8 +159,7 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
             <Valor>${perfilPreInversionPlanNegocioEntity.valor}</Valor>
             <Cantidad>${perfilPreInversionPlanNegocioEntity.cantidad}</Cantidad>
             <UnidadId>${perfilPreInversionPlanNegocioEntity.unidadId}</UnidadId>
-            <ProductoId>${perfilPreInversionPlanNegocioEntity.productoId}</ProductoId>
-            <TipoCalidadId>${perfilPreInversionPlanNegocioEntity.tipoCalidadId}</TipoCalidadId>
+            $ingresosElements
           </objeto>
         </GuardarPerfilPreInversionPlanNegocio>
       </soap:Body>

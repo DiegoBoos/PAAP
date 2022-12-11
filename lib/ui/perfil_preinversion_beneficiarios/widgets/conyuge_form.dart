@@ -23,9 +23,9 @@ class ConyugeForm extends StatefulWidget {
 class _ConyugeFormState extends State<ConyugeForm> {
   final dateFormat = DateFormat('yyyy-MM-dd');
 
-  String conyugeTipoIdentificacionId = '';
-  String conyugeGeneroId = '';
-  String conyugeGrupoEspecialId = '';
+  String? conyugeTipoIdentificacionId;
+  String? conyugeGeneroId;
+  String? conyugeGrupoEspecialId;
 
   final conyugeIdCtrl = TextEditingController();
   final conyugeFechaExpedicionDocumentoCtrl = TextEditingController();
@@ -64,7 +64,9 @@ class _ConyugeFormState extends State<ConyugeForm> {
 
     conyugeTipoIdentificacionId =
         perfilPreInversionBeneficiarioLoaded.conyugeTipoIdentificacionId;
+
     conyugeGeneroId = perfilPreInversionBeneficiarioLoaded.conyugeGeneroId;
+
     conyugeGrupoEspecialId =
         perfilPreInversionBeneficiarioLoaded.conyugeGrupoEspecialId;
 
@@ -130,9 +132,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Tipo de identificación',
                           labelText: 'Tipo de identificación'),
-                      value: conyugeTipoIdentificacionId != ''
-                          ? conyugeTipoIdentificacionId
-                          : null,
+                      value: conyugeTipoIdentificacionId,
                       items: state.tiposIdentificaciones
                           ?.map<DropdownMenuItem<String>>(
                               (TipoIdentificacionEntity value) {
@@ -264,12 +264,6 @@ class _ConyugeFormState extends State<ConyugeForm> {
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Conyuge Nombre 2',
                             labelText: 'Conyuge Nombre 2'),
-                        validator: ((value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        }),
                         onSaved: (String? newValue) {
                           perfilPreInversionBeneficiarioCubit
                               .changeConyugeNombre2(newValue);
@@ -282,12 +276,6 @@ class _ConyugeFormState extends State<ConyugeForm> {
                         decoration: CustomInputDecoration.inputDecoration(
                             hintText: 'Conyuge Apellido 2',
                             labelText: 'Conyuge Apellido 2'),
-                        validator: ((value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        }),
                         onSaved: (String? newValue) {
                           perfilPreInversionBeneficiarioCubit
                               .changeConyugeApellido2(newValue);
@@ -302,7 +290,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                     return DropdownButtonFormField(
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Género', labelText: 'Género'),
-                      value: conyugeGeneroId != '' ? conyugeGeneroId : null,
+                      value: conyugeGeneroId,
                       items: state.generos
                           ?.map<DropdownMenuItem<String>>((GeneroEntity value) {
                         return DropdownMenuItem<String>(
@@ -389,9 +377,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Grupo Especial',
                           labelText: 'Grupo Especial'),
-                      value: conyugeGrupoEspecialId != ''
-                          ? conyugeGrupoEspecialId
-                          : null,
+                      value: conyugeGrupoEspecialId,
                       items: state.gruposEspeciales!
                           .map<DropdownMenuItem<String>>(
                               (GrupoEspecialEntity value) {

@@ -50,17 +50,35 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
     final db = await DBConfig.database;
 
     String sql = '''
-      select 
-      PerfilPreInversionCofinanciador.PerfilPreInversionId,
-      PerfilPreInversionCofinanciador.CofinanciadorId,
-      Monto as Monto,
-      Participacion as Participacion,
-      Cofinanciador.Nombre as Cofinanciador,
+      Select 
+      Cofinanciador.ID as CofinanciadorId,
+      Cofinanciador.Nombre as Nombre,
       Cofinanciador.Teléfono_x0020_Móvil as TelefonoMovil,
-      Cofinanciador.Correo as Correo
-      from PerfilPreInversionCofinanciador
-      left join Cofinanciador on (Cofinanciador.ID=PerfilPreInversionCofinanciador.CofinanciadorId)
-      where PerfilPreInversionId = $perfilPreInversionId
+      Cofinanciador.Correo as Correo,
+      PerfilPreInversionCofinanciador.Monto as Monto,
+      CASE  
+      WHEN Cast(PerfilPreInversionCofinanciador.Monto as decimal) = 0  
+      THEN 0 
+      ELSE ((Cast(PerfilPreInversionCofinanciador.Monto as decimal)*100)/Cast(PerfilPreInversion.ValorTotalProyecto as decimal)) 
+      END as Participacion
+      From  Cofinanciador
+      INNER JOIN PerfilPreInversionCofinanciador  ON Cofinanciador.ID = PerfilPreInversionCofinanciador.CofinanciadorId
+      INNER JOIN PerfilPreInversion  ON PerfilPreInversionCofinanciador.PerfilPreInversionId = PerfilPreInversion.PerfilPreInversionId
+      UNION ALL
+      Select 
+      '' as CofinanciadorId,
+      '' as Nombre,
+      '' as TelefonoMovil,
+      'TOTAL' as Correo,
+      SUM (Cast(PerfilPreInversionCofinanciador.Monto as decimal)) + MAX( Cast(PerfilPreInversion.IncentivoModular as decimal)) as Monto,
+      CASE  
+      WHEN (SUM (Cast(PerfilPreInversionCofinanciador.Monto as decimal)) + MAX(Cast(PerfilPreInversion.IncentivoModular as decimal))) = 0  
+      THEN 0 
+      ELSE (((SUM(Cast(PerfilPreInversionCofinanciador.Monto as decimal))  + MAX (Cast(PerfilPreInversion.IncentivoModular as decimal)))*100)/Cast(PerfilPreInversion.ValorTotalProyecto as decimal)) 
+      END as Participacion
+      FROM PerfilPreInversion
+      INNER JOIN PerfilPreInversionCofinanciador ON PerfilPreInversion.PerfilPreInversionId = PerfilPreInversionCofinanciador.PerfilPreInversionId
+      GROUP BY PerfilPreInversion.PerfilId, PerfilPreInversion.IncentivoModular, PerfilPreInversion.ValorTotalProyecto
       ''';
 
     final res = await db.rawQuery(sql);

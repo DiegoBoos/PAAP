@@ -54,20 +54,12 @@ class PerfilPreInversionCofinanciadorRubroRepositoryDBImpl
   @override
   Future<Either<Failure, List<PerfilPreInversionCofinanciadorRubroEntity>>>
       getPerfilPreInversionCofinanciadorRubrosByCofinanciadorRepositoryDB(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId,
-          String actividadFinancieraId,
-          String rubroId) async {
+          String perfilPreInversionId, String cofinanciadorId) async {
     try {
       final perfilPreInversionCofinanciadorRubrosByCofinanciador =
           await perfilPreInversionCofinanciadorRubroLocalDataSource
               .getPerfilPreInversionCofinanciadorRubrosByCofinanciador(
-                  perfilPreInversionId,
-                  cofinanciadorId,
-                  desembolsoId,
-                  actividadFinancieraId,
-                  rubroId);
+                  perfilPreInversionId, cofinanciadorId);
 
       return Right(perfilPreInversionCofinanciadorRubrosByCofinanciador);
     } on ServerFailure catch (e) {

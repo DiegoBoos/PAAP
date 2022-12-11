@@ -65,6 +65,8 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
     } else {
       fechaCtrl.text = dateFormat.format(DateTime.now());
     }
+
+    setState(() {});
   }
 
   @override
@@ -97,7 +99,7 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                     if (state is DesembolsosLoaded) {
                       return DropdownButtonFormField(
                           isExpanded: true,
-                          value: desembolsoId != '' ? desembolsoId : null,
+                          value: desembolsoId,
                           items: state.desembolsos!
                               .map<DropdownMenuItem<String>>(
                                   (DesembolsoEntity value) {
@@ -185,17 +187,11 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                                       .state
                                       .perfilPreInversionCofinanciadorDesembolso);
 
-                          final desembolsoId =
-                              perfilPreInversionCofinanciadorDesembolsoCubit
-                                  .state
-                                  .perfilPreInversionCofinanciadorDesembolso
-                                  .desembolsoId;
-
                           perfilPreInversionCofinanciadorDesembolsosBloc.add(
                               GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-                                  perfilPreInversionId: vPerfilPreInversionId,
-                                  cofinanciadorId: cofinanciadorId,
-                                  desembolsoId: desembolsoId));
+                            perfilPreInversionId: vPerfilPreInversionId,
+                            cofinanciadorId: cofinanciadorId,
+                          ));
 
                           if (perfilPreInversionCofinanciadorDesembolsosBloc
                                   .state

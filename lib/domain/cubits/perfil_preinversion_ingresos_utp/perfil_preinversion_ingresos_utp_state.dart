@@ -16,12 +16,6 @@ class PerfilPreInversionIngresosUPTInitial
       : super(perfilPreInversionIngresosUPT: _initObject());
 }
 
-class PerfilPreInversionIngresosUPTLoading
-    extends PerfilPreInversionIngresosUPTState {
-  const PerfilPreInversionIngresosUPTLoading(
-      {required super.perfilPreInversionIngresosUPT});
-}
-
 class PerfilPreInversionIngresosUPTLoaded
     extends PerfilPreInversionIngresosUPTState {
   final VPerfilPreInversionPlanNegocioEntity
@@ -47,8 +41,8 @@ class PerfilPreInversionIngresosUPTChanged
 
 class PerfilPreInversionIngresosUPTSaved
     extends PerfilPreInversionIngresosUPTState {
-  PerfilPreInversionIngresosUPTSaved()
-      : super(perfilPreInversionIngresosUPT: _initObject());
+  const PerfilPreInversionIngresosUPTSaved(
+      {required super.perfilPreInversionIngresosUPT});
 }
 
 class PerfilPreInversionIngresosUPTError

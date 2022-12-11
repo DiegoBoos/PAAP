@@ -77,18 +77,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
           Either<Failure,
               List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
       getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorRepositoryDB(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String actividadFinancieraId,
-          String desembolsoId) async {
+          String perfilPreInversionId, String cofinanciadorId) async {
     try {
       final perfilPreInversionCofinanciadorActividadesFinancierasDB =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
               .getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
-                  perfilPreInversionId,
-                  cofinanciadorId,
-                  actividadFinancieraId,
-                  desembolsoId);
+                  perfilPreInversionId, cofinanciadorId);
 
       return Right(perfilPreInversionCofinanciadorActividadesFinancierasDB);
     } on ServerFailure catch (e) {

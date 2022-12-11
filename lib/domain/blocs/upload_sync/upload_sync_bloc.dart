@@ -1178,7 +1178,7 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
     result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)),
         (data) async => await savePerfilesPreInversionesPlanNegociosRemote(
-            usuario, data!, emit));
+            usuario, data, emit));
   }
 
   Future<void> savePerfilesPreInversionesPlanNegociosRemote(

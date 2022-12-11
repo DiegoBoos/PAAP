@@ -16,12 +16,6 @@ class PerfilPreInversionCostosUPTInitial
       : super(perfilPreInversionCostosUPT: initObject());
 }
 
-class PerfilPreInversionCostosUPTLoading
-    extends PerfilPreInversionCostosUPTState {
-  const PerfilPreInversionCostosUPTLoading(
-      {required super.perfilPreInversionCostosUPT});
-}
-
 class PerfilPreInversionCostosUPTLoaded
     extends PerfilPreInversionCostosUPTState {
   final VPerfilPreInversionPlanNegocioEntity perfilPreInversionCostosUPTLoaded;
@@ -42,8 +36,8 @@ class PerfilPreInversionCostosUPTChanged
 
 class PerfilPreInversionCostosUPTSaved
     extends PerfilPreInversionCostosUPTState {
-  PerfilPreInversionCostosUPTSaved()
-      : super(perfilPreInversionCostosUPT: initObject());
+  const PerfilPreInversionCostosUPTSaved(
+      {required super.perfilPreInversionCostosUPT});
 }
 
 class PerfilPreInversionCostosUPTError

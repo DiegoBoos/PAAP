@@ -15,10 +15,7 @@ class GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador
     extends PerfilPreInversionCofinanciadorDesembolsosEvent {
   final String perfilPreInversionId;
   final String cofinanciadorId;
-  final String desembolsoId;
 
   const GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-      {required this.perfilPreInversionId,
-      required this.cofinanciadorId,
-      required this.desembolsoId});
+      {required this.perfilPreInversionId, required this.cofinanciadorId});
 }

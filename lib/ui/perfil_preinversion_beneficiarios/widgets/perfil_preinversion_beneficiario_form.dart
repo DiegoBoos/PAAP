@@ -27,11 +27,11 @@ class PerfilPreInversionBeneficiarioForm extends StatefulWidget {
 
 class _PerfilPreInversionBeneficiarioFormState
     extends State<PerfilPreInversionBeneficiarioForm> {
-  String residenciaId = '';
-  String estadoCivilId = '';
-  String nivelEscolarId = '';
-  String actividadEconomicaId = '';
-  String tipoDiscapacidadId = '';
+  String? residenciaId;
+  String? estadoCivilId;
+  String? nivelEscolarId;
+  String? actividadEconomicaId;
+  String? tipoDiscapacidadId;
 
   final ingresosDiariosCtrl = TextEditingController();
   final diasTrabajoCtrl = TextEditingController();
@@ -47,7 +47,7 @@ class _PerfilPreInversionBeneficiarioFormState
   final activoFinancieroCtrl = TextEditingController();
   final activoProductivoCtrl = TextEditingController();
   final activoCorrienteCtrl = TextEditingController();
-  final activoCtrl = TextEditingController();
+  final totalActivoCtrl = TextEditingController();
   final nombreFincaCtrl = TextEditingController();
   final nombreOrganizacionCtrl = TextEditingController();
   final mesesAsociadoCtrl = TextEditingController();
@@ -85,7 +85,6 @@ class _PerfilPreInversionBeneficiarioFormState
         perfilPreInversionBeneficiarioLoaded.actividadEconomicaId;
     tipoDiscapacidadId =
         perfilPreInversionBeneficiarioLoaded.tipoDiscapacidadId;
-
     ingresosDiariosCtrl.text =
         perfilPreInversionBeneficiarioLoaded.ingresosDiarios;
     diasTrabajoCtrl.text = perfilPreInversionBeneficiarioLoaded.diasTrabajo;
@@ -110,12 +109,12 @@ class _PerfilPreInversionBeneficiarioFormState
         perfilPreInversionBeneficiarioLoaded.activoProductivo;
     activoCorrienteCtrl.text =
         perfilPreInversionBeneficiarioLoaded.activoCorriente;
-    activoCtrl.text = perfilPreInversionBeneficiarioLoaded.activo;
     nombreFincaCtrl.text = perfilPreInversionBeneficiarioLoaded.nombreFinca;
     nombreOrganizacionCtrl.text =
         perfilPreInversionBeneficiarioLoaded.nombreOrganizacion;
     mesesAsociadoCtrl.text = perfilPreInversionBeneficiarioLoaded.mesesAsociado;
     notaCtrl.text = perfilPreInversionBeneficiarioLoaded.nota;
+    calculateTotalActivo(perfilPreInversionBeneficiarioLoaded);
   }
 
   @override
@@ -155,7 +154,7 @@ class _PerfilPreInversionBeneficiarioFormState
                     return DropdownButtonFormField(
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Residencia', labelText: 'Residencia'),
-                      value: residenciaId != '' ? residenciaId : null,
+                      value: residenciaId,
                       items: state.residencias?.map<DropdownMenuItem<String>>(
                           (ResidenciaEntity value) {
                         return DropdownMenuItem<String>(
@@ -186,7 +185,7 @@ class _PerfilPreInversionBeneficiarioFormState
                     return DropdownButtonFormField(
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Estado Civil', labelText: 'Estado Civil'),
-                      value: estadoCivilId != '' ? estadoCivilId : null,
+                      value: estadoCivilId,
                       items: state.estadosCiviles
                           ?.map<DropdownMenuItem<String>>(
                               (EstadoCivilEntity value) {
@@ -222,7 +221,7 @@ class _PerfilPreInversionBeneficiarioFormState
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Nivel Escolar',
                           labelText: 'Nivel Escolar'),
-                      value: nivelEscolarId != '' ? nivelEscolarId : null,
+                      value: nivelEscolarId,
                       items: state.nivelesEscolares
                           ?.map<DropdownMenuItem<String>>(
                               (NivelEscolarEntity value) {
@@ -254,9 +253,7 @@ class _PerfilPreInversionBeneficiarioFormState
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Actividad Económica',
                           labelText: 'Actividad Económica'),
-                      value: actividadEconomicaId != ''
-                          ? actividadEconomicaId
-                          : null,
+                      value: actividadEconomicaId,
                       items: state.actividadesEconomicas
                           ?.map<DropdownMenuItem<String>>(
                               (ActividadEconomicaEntity value) {
@@ -287,8 +284,7 @@ class _PerfilPreInversionBeneficiarioFormState
                     return DropdownButtonFormField(
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Discapacidad', labelText: 'Discapacidad'),
-                      value:
-                          tipoDiscapacidadId != '' ? tipoDiscapacidadId : null,
+                      value: tipoDiscapacidadId,
                       items: state.tiposDiscapacidades
                           ?.map<DropdownMenuItem<String>>(
                               (TipoDiscapacidadEntity value) {
@@ -553,19 +549,12 @@ class _PerfilPreInversionBeneficiarioFormState
                   }),
               const SizedBox(height: 20),
               TextFormField(
-                  keyboardType: TextInputType.number,
-                  controller: activoCtrl,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Total Activo', labelText: 'Total Activo'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo Requerido';
-                    }
-                    return null;
-                  },
-                  onSaved: (String? newValue) {
-                    perfilPreInversionBeneficiarioCubit.changeActivo(newValue);
-                  }),
+                keyboardType: TextInputType.number,
+                enabled: false,
+                controller: totalActivoCtrl,
+                decoration: CustomInputDecoration.inputDecoration(
+                    hintText: 'Total Activo', labelText: 'Total Activo'),
+              ),
               const SizedBox(height: 20),
               TextFormField(
                   controller: nombreFincaCtrl,
@@ -649,5 +638,17 @@ class _PerfilPreInversionBeneficiarioFormState
         ),
       );
     }));
+  }
+
+  void calculateTotalActivo(
+      PerfilPreInversionBeneficiarioEntity
+          perfilPreInversionBeneficiarioLoaded) {
+    final sum = double.parse(
+            perfilPreInversionBeneficiarioLoaded.activoCorriente) +
+        double.parse(perfilPreInversionBeneficiarioLoaded.activoFinanciero) +
+        double.parse(perfilPreInversionBeneficiarioLoaded.activoInmobiliario) +
+        double.parse(perfilPreInversionBeneficiarioLoaded.activoInmobiliario) +
+        double.parse(perfilPreInversionBeneficiarioLoaded.activoProductivo);
+    totalActivoCtrl.text = sum.toString();
   }
 }

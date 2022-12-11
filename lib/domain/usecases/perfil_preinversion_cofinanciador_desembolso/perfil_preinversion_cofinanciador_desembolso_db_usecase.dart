@@ -24,16 +24,14 @@ class PerfilPreInversionCofinanciadorDesembolsoUsecaseDB {
             perfilPreInversionId, cofinanciadorId);
   }
 
-  Future<
-          Either<Failure,
-              List<PerfilPreInversionCofinanciadorDesembolsoEntity>?>>
+  Future<Either<Failure, List<PerfilPreInversionCofinanciadorDesembolsoEntity>>>
       getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorUsecaseDB(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId) {
+    String perfilPreInversionId,
+    String cofinanciadorId,
+  ) {
     return repositoryDB
         .getPerfilPreInversionCofinanciadorDesembolsosByCofinanciadorRepositoryDB(
-            perfilPreInversionId, cofinanciadorId, desembolsoId);
+            perfilPreInversionId, cofinanciadorId);
   }
 
   Future<Either<Failure, int>>

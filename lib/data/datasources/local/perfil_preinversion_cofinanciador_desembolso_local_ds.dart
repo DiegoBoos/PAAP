@@ -13,7 +13,7 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoLocalDataSource {
           String perfilPreInversionId, String cofinanciadorId);
 
   getPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-      String perfilPreInversionId, String cofinanciadorId, String desembolsoId);
+      String perfilPreInversionId, String cofinanciadorId);
 
   Future<int> savePerfilPreInversionCofinanciadorDesembolsos(
       List<PerfilPreInversionCofinanciadorDesembolsoEntity>
@@ -119,12 +119,9 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
 
   @override
   getPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-      String perfilPreInversionId,
-      String cofinanciadorId,
-      String desembolsoId) async {
+      String perfilPreInversionId, String cofinanciadorId) async {
     final db = await DBConfig.database;
 
-    //TODO: la consulta sólo devuelve un registro
     String sql = '''
       select
       PerfilPreInversionCofinanciadorDesembolso.PerfilPreInversionId,
@@ -136,7 +133,6 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
       left join Desembolso on (Desembolso.DesembolsoId=PerfilPreInversionCofinanciadorDesembolso.DesembolsoId)
       where PerfilPreInversionCofinanciadorDesembolso.PerfilPreInversionId = $perfilPreInversionId 
       AND PerfilPreInversionCofinanciadorDesembolso.CofinanciadorId = $cofinanciadorId
-      AND PerfilPreInversionCofinanciadorDesembolso.DesembolsoId = $desembolsoId
       ''';
 
     final res = await db.rawQuery(sql);

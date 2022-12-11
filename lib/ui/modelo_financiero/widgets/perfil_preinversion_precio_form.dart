@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../domain/blocs/perfiles_preinversiones_precios/perfiles_preinversiones_precios_bloc.dart';
 import '../../../domain/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
@@ -224,6 +225,7 @@ class _PerfilPreInversionPrecioFormState
                                 return;
                               }
 
+                              //TODO: validar cantidad?
                               /*  if (perfilPreInversionIngresosUPTCubit.state
                                       .perfilPreInversionIngresosUPT.cantidad ==
                                   '') {
@@ -376,6 +378,10 @@ class _PerfilesPreInversionesPreciosRowsState
                 PerfilPreInversionPrecioEntity perfilPreInversionPrecio =
                     perfilesPreInversionesPrecios[index];
 
+                final precio = NumberFormat.currency(
+                        locale: 'en_US', decimalDigits: 0, symbol: "\$")
+                    .format(double.parse(perfilPreInversionPrecio.precio));
+
                 return DataRow(cells: <DataCell>[
                   DataCell(IconButton(
                       onPressed: () {
@@ -391,7 +397,7 @@ class _PerfilesPreInversionesPreciosRowsState
                   DataCell(Text(perfilPreInversionPrecio.unidad ?? '')),
                   DataCell(Text(perfilPreInversionPrecio.producto ?? '')),
                   DataCell(Text(perfilPreInversionPrecio.tipoCalidad ?? '')),
-                  DataCell(Text(perfilPreInversionPrecio.precio)),
+                  DataCell(Text(precio)),
                 ]);
               }),
             ),

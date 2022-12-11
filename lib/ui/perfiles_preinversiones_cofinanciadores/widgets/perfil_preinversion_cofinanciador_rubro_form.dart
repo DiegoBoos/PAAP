@@ -235,28 +235,11 @@ class _PerfilPreInversionCofinanciadorRubroFormState
                               perfilPreInversionCofinanciadorRubroCubit
                                   .state.perfilPreInversionCofinanciadorRubro);
 
-                      final actividadFinancieraId =
-                          perfilPreInversionCofinanciadorRubroCubit
-                              .state
-                              .perfilPreInversionCofinanciadorRubro
-                              .actividadFinancieraId;
-
-                      final desembolsoId =
-                          perfilPreInversionCofinanciadorRubroCubit
-                              .state
-                              .perfilPreInversionCofinanciadorRubro
-                              .desembolsoId;
-
-                      final rubroId = perfilPreInversionCofinanciadorRubroCubit
-                          .state.perfilPreInversionCofinanciadorRubro.rubroId;
-
                       perfilPreInversionCofinanciadorRubrosBloc.add(
                           GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
-                              perfilPreInversionId: vPerfilPreInversionId,
-                              cofinanciadorId: cofinanciadorId,
-                              actividadFinancieraId: actividadFinancieraId,
-                              desembolsoId: desembolsoId,
-                              rubroId: rubroId));
+                        perfilPreInversionId: vPerfilPreInversionId,
+                        cofinanciadorId: cofinanciadorId,
+                      ));
                     },
                     child: const Icon(Icons.add))),
             const PerfilPreInversionCofinanciadorRubrosRows()
