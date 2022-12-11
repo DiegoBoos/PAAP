@@ -1174,7 +1174,7 @@ class UploadSyncBloc extends Bloc<UploadSyncEvent, UploadSyncState> {
         counter: 18,
         percent: calculatePercent())));
     final result = await perfilPreInversionPlanNegocioDB
-        .getPerfilPreInversionPlanesNegociosUsecaseDB();
+        .getPerfilesPreInversionesPlanesNegociosProduccionUsecaseDB();
     result.fold(
         (failure) => add(UploadSyncError(failure.properties.first)),
         (data) async => await savePerfilesPreInversionesPlanNegociosRemote(
