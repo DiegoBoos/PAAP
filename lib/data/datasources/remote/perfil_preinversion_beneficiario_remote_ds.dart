@@ -129,6 +129,39 @@ class PerfilPreInversionBeneficiarioRemoteDataSourceImpl
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
+    String dataConyuge = '';
+
+    if (perfilPreInversionBeneficiarioEntity.estadoCivilId != '2' &&
+        perfilPreInversionBeneficiarioEntity.estadoCivilId != '5') {
+      dataConyuge = '''
+            <ConyugeTipoIdentificacionId>1</ConyugeTipoIdentificacionId>
+            <ConyugeId>${perfilPreInversionBeneficiarioEntity.beneficiarioId}</ConyugeId>
+            <ConyugeNombre1></ConyugeNombre1>
+            <ConyugeNombre2></ConyugeNombre2>
+            <ConyugeApellido1></ConyugeApellido1>
+            <ConyugeApellido2></ConyugeApellido2>
+            <ConyugeGeneroId>1</ConyugeGeneroId>
+            <ConyugeFechaExpedicionDocumento>1900-01-01T00:00:00+01:00</ConyugeFechaExpedicionDocumento>
+            <ConyugeGrupoEspecialId>1</ConyugeGrupoEspecialId>
+            <ConyugeFechaNacimiento>1900-01-01T00:00:00+01:00</ConyugeFechaNacimiento>
+            <ConyugeIngresosMensuales>0</ConyugeIngresosMensuales>
+      ''';
+    } else {
+      dataConyuge = '''
+            <ConyugeTipoIdentificacionId>${perfilPreInversionBeneficiarioEntity.conyugeTipoIdentificacionId}</ConyugeTipoIdentificacionId>
+            <ConyugeId>${perfilPreInversionBeneficiarioEntity.conyugeId}</ConyugeId>
+            <ConyugeNombre1>${perfilPreInversionBeneficiarioEntity.conyugeNombre1}</ConyugeNombre1>
+            <ConyugeNombre2>${perfilPreInversionBeneficiarioEntity.conyugeNombre2}</ConyugeNombre2>
+            <ConyugeApellido1>${perfilPreInversionBeneficiarioEntity.conyugeApellido1}</ConyugeApellido1>
+            <ConyugeApellido2>${perfilPreInversionBeneficiarioEntity.conyugeApellido2}</ConyugeApellido2>
+            <ConyugeGeneroId>${perfilPreInversionBeneficiarioEntity.conyugeGeneroId}</ConyugeGeneroId>
+            <ConyugeFechaExpedicionDocumento>${perfilPreInversionBeneficiarioEntity.conyugeFechaExpedicionDocumento}</ConyugeFechaExpedicionDocumento>
+            <ConyugeGrupoEspecialId>${perfilPreInversionBeneficiarioEntity.conyugeGrupoEspecialId}</ConyugeGrupoEspecialId>
+            <ConyugeFechaNacimiento>${perfilPreInversionBeneficiarioEntity.conyugeFechaNacimiento}</ConyugeFechaNacimiento>
+            <ConyugeIngresosMensuales>${perfilPreInversionBeneficiarioEntity.conyugeIngresosMensuales}</ConyugeIngresosMensuales>
+      ''';
+    }
+
     final perfilPreInversionBeneficiarioSOAP =
         '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -175,24 +208,13 @@ class PerfilPreInversionBeneficiarioRemoteDataSourceImpl
             <CalificacionSISBEN>${perfilPreInversionBeneficiarioEntity.calificacionSisben}</CalificacionSISBEN>
             <IngresosMensuales>${perfilPreInversionBeneficiarioEntity.ingresosMensuales}</IngresosMensuales>
             <TipoDiscapacidadId>${perfilPreInversionBeneficiarioEntity.tipoDiscapacidadId}</TipoDiscapacidadId>
-            <ConyugeTipoIdentificacionId>${perfilPreInversionBeneficiarioEntity.conyugeTipoIdentificacionId}</ConyugeTipoIdentificacionId>
-            <ConyugeId>${perfilPreInversionBeneficiarioEntity.conyugeId}</ConyugeId>
-            <ConyugeNombre1>${perfilPreInversionBeneficiarioEntity.conyugeNombre1}</ConyugeNombre1>
-            <ConyugeNombre2>${perfilPreInversionBeneficiarioEntity.conyugeNombre2}</ConyugeNombre2>
-            <ConyugeApellido1>${perfilPreInversionBeneficiarioEntity.conyugeApellido1}</ConyugeApellido1>
-            <ConyugeApellido2>${perfilPreInversionBeneficiarioEntity.conyugeApellido2}</ConyugeApellido2>
-            <ConyugeGeneroId>${perfilPreInversionBeneficiarioEntity.conyugeGeneroId}</ConyugeGeneroId>
-            <ConyugeFechaExpedicionDocumento>${perfilPreInversionBeneficiarioEntity.conyugeFechaExpedicionDocumento}</ConyugeFechaExpedicionDocumento>
-            <ConyugeGrupoEspecialId>${perfilPreInversionBeneficiarioEntity.conyugeGrupoEspecialId}</ConyugeGrupoEspecialId>
-            <ConyugeFechaNacimiento>${perfilPreInversionBeneficiarioEntity.conyugeFechaNacimiento}</ConyugeFechaNacimiento>
-            <ConyugeIngresosMensuales>${perfilPreInversionBeneficiarioEntity.conyugeIngresosMensuales}</ConyugeIngresosMensuales>
             <ActividadEconomicaId>${perfilPreInversionBeneficiarioEntity.actividadEconomicaId}</ActividadEconomicaId>
             <IngresosDiarios>${perfilPreInversionBeneficiarioEntity.ingresosDiarios}</IngresosDiarios>
             <DiasTrabajo>${perfilPreInversionBeneficiarioEntity.diasTrabajo}</DiasTrabajo>
             <Longitud>${perfilPreInversionBeneficiarioEntity.longitud}</Longitud>
             <Latitud>${perfilPreInversionBeneficiarioEntity.latitud}</Latitud>
             <CedulaCatastral>${perfilPreInversionBeneficiarioEntity.cedulaCatastral}</CedulaCatastral>
-            
+            $dataConyuge
           </objeto>
         </GuardarPerfilPreInversionBeneficiario>
       </soap:Body>
