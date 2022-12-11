@@ -22,6 +22,9 @@ abstract class PerfilPreInversionPrecioRepositoryDB {
   Future<Either<Failure, int>> savePerfilPreInversionPrecioRepositoryDB(
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity);
 
+  Future<Either<Failure, int>> deletePerfilesPreInversionesPreciosRepositoryDB(
+      String perfilPreInversionId, String productoId, String tipoCalidadId);
+
   Future<Either<Failure, int>>
       updatePerfilesPreInversionesPreciosProduccionDBRepositoryDB(
           List<PerfilPreInversionPrecioEntity>

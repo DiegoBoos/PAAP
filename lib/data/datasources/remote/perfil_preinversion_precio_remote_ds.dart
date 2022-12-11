@@ -176,4 +176,59 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
       return null;
     }
   }
+
+  Future<PerfilPreInversionPrecioEntity?> deletePerfilPreInversionPrecio(
+      UsuarioEntity usuario,
+      PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
+    final uri = Uri.parse(
+        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+
+    final perfilPreInversionPrecioSOAP =
+        '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <BorrarPerfilPreInversionPrecio xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+          <usuario>
+            <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Contrasena>${usuario.contrasena}</Contrasena>
+          </usuario>
+          <rol>
+            <RolId>100</RolId>
+            <Nombre>string</Nombre>
+          </rol>
+          <objeto>
+            <PerfilPreInversionId>${perfilPreInversionPrecioEntity.perfilPreInversionId}</PerfilPreInversionId>
+            <PrecioId>${perfilPreInversionPrecioEntity.productoId}</PrecioId>
+            <TipoCalidadId>${perfilPreInversionPrecioEntity.tipoCalidadId}</TipoCalidadId>            
+          </objeto>
+        </BorrarPerfilPreInversionPrecio>
+      </soap:Body>
+    </soap:Envelope>
+    ''';
+
+    final perfilPreInversionPrecioResp = await client.post(uri,
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "${Constants.urlSOAP}/BorrarPerfilPreInversionPrecio"
+        },
+        body: perfilPreInversionPrecioSOAP);
+
+    if (perfilPreInversionPrecioResp.statusCode == 200) {
+      final perfilPreInversionPrecioDoc =
+          xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
+
+      final respuesta = perfilPreInversionPrecioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionPrecioEntity;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
 }

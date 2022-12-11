@@ -43,6 +43,12 @@ class PerfilPreInversionPrecioUsecaseDB {
         perfilPreInversionPrecioEntity);
   }
 
+  Future<Either<Failure, int>> deletePerfilesPreInversionesPreciosUsecaseDB(
+      String perfilPreInversionId, String productoId, String tipoCalidadId) {
+    return repositoryDB.deletePerfilesPreInversionesPreciosRepositoryDB(
+        perfilPreInversionId, productoId, tipoCalidadId);
+  }
+
   Future<Either<Failure, int>>
       updatePerfilesPreInversionesPreciosProduccionUsecaseDB(
           List<PerfilPreInversionPrecioEntity> experienciasAgricolasEntity) {

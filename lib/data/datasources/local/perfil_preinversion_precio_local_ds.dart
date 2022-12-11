@@ -22,6 +22,9 @@ abstract class PerfilPreInversionPrecioLocalDataSource {
   Future<List<PerfilPreInversionPrecioModel>>
       getPerfilesPreInversionesPreciosProduccion();
 
+  Future<int> deletePerfilesPreInversionesPreciosDB(
+      String perfilPreInversionId, String productoId, String tipoCalidadId);
+
   Future<int> updatePerfilesPreInversionesPreciosProduccion(
       List<PerfilPreInversionPrecioEntity>
           perfilesPreInversionesPreciosProduccionEntity);
@@ -208,5 +211,48 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
     final res = await batch.commit();
 
     return res.length;
+  }
+
+  @override
+  Future<int> deletePerfilesPreInversionesPreciosDB(String perfilPreInversionId,
+      String productoId, String tipoCalidadId) async {
+    final db = await DBConfig.database;
+
+    final resQuery = await db.query('PerfilPreInversionPrecio',
+        where:
+            'PerfilPreInversionId = ? AND PrecioId = ? AND TipoCalidadId = ?',
+        whereArgs: [perfilPreInversionId, productoId, tipoCalidadId]);
+    if (resQuery.isEmpty) return 0;
+    final perfilPreInversionPrecioMap = {
+      for (var e in resQuery[0].entries) e.key: e.value
+    };
+    final perfilPreInversionPrecioModel =
+        PerfilPreInversionPrecioModel.fromJson(perfilPreInversionPrecioMap);
+
+    if (perfilPreInversionPrecioModel.recordStatus == 'N') {
+      final res = await db.delete('PerfilPreInversionPrecio',
+          where:
+              'PerfilPreInversionId = ? AND PrecioId = ? AND TipoCalidadId = ?',
+          whereArgs: [perfilPreInversionId, productoId, tipoCalidadId]);
+      return res;
+    } else {
+      final objUpdate = {
+        'perfilPreInversionId':
+            perfilPreInversionPrecioModel.perfilPreInversionId,
+        'ProductoId': perfilPreInversionPrecioModel.productoId,
+        'TipoCalidadId': perfilPreInversionPrecioModel.tipoCalidadId,
+        'Precio': perfilPreInversionPrecioModel.precio,
+        'UnidadId': perfilPreInversionPrecioModel.unidadId,
+        'recordStatus': 'D',
+      };
+      final res = await db.update(
+        'PerfilPreInversionPrecio',
+        objUpdate,
+        where:
+            'PerfilPreInversionId = ? AND PrecioId = ? AND TipoCalidadId = ?',
+        whereArgs: [perfilPreInversionId, productoId, tipoCalidadId],
+      );
+      return res;
+    }
   }
 }

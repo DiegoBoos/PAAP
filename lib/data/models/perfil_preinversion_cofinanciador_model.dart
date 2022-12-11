@@ -25,6 +25,7 @@ class PerfilPreInversionCofinanciadorModel
   factory PerfilPreInversionCofinanciadorModel.fromJson(
           Map<String, dynamic> json) =>
       PerfilPreInversionCofinanciadorModel(
+        perfilPreInversionId: json["PerfilPreInversionId"],
         cofinanciadorId: json["CofinanciadorId"],
         nombre: json["Nombre"],
         telefonoMovil: json["TelefonoMovil"],

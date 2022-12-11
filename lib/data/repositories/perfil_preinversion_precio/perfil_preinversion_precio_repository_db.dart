@@ -111,6 +111,24 @@ class PerfilPreInversionPrecioRepositoryDBImpl
   }
 
   @override
+  Future<Either<Failure, int>> deletePerfilesPreInversionesPreciosRepositoryDB(
+      String perfilPreInversionId,
+      String productoId,
+      String tipoCalidadId) async {
+    try {
+      final result = await perfilPreInversionPrecioLocalDataSource
+          .deletePerfilesPreInversionesPreciosDB(
+              perfilPreInversionId, productoId, tipoCalidadId);
+
+      return Right(result);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
   Future<Either<Failure, int>>
       updatePerfilesPreInversionesPreciosProduccionDBRepositoryDB(
           List<PerfilPreInversionPrecioEntity>
