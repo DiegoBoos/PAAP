@@ -161,8 +161,10 @@ class ExperienciaAgricolaLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
+    final query = await db.query('ExperienciaAgricola',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
 
-    return res.length;
+    return query.length;
   }
 }

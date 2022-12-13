@@ -6,6 +6,7 @@ import 'package:paap/ui/utils/custom_snack_bar.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/download_sync/download_sync_bloc.dart';
+import '../../../domain/blocs/sync/sync_bloc.dart';
 import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../utils/all_platform.dart';
@@ -43,7 +44,8 @@ class _SignInPageState extends State<SignInPage> {
     final authBloc = BlocProvider.of<AuthBloc>(context, listen: true);
     final internetCubit = BlocProvider.of<InternetCubit>(context);
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    final downloadSyncBloc = BlocProvider.of<DownloadSyncBloc>(context);
+    //final downloadSyncBloc = BlocProvider.of<DownloadSyncBloc>(context);
+    final syncBloc = BlocProvider.of<SyncBloc>(context);
 
     TextEditingController usuarioIdCtrl =
         TextEditingController(text: 'adamariatorrenegra@hotmail.com');
@@ -67,7 +69,8 @@ class _SignInPageState extends State<SignInPage> {
                       cancelText: 'Continuar Offline',
                       onTapConfirm: () {
                         Navigator.pop(context);
-                        downloadSyncBloc.add(DownloadStarted(usuario));
+                        //downloadSyncBloc.add(DownloadStarted(usuario));
+                        syncBloc.add(SyncStarted(usuario, 'A'));
                       },
                       onTapCancel: () {
                         menuCubit.verificacionDatosLocalesDB().then((value) {
@@ -90,7 +93,20 @@ class _SignInPageState extends State<SignInPage> {
                 content: Text(state.message), backgroundColor: Colors.red));
           }
         }),
-        BlocListener<DownloadSyncBloc, DownloadSyncState>(
+        BlocListener<SyncBloc, SyncState>(listener: (context, state) {
+          if (state is SyncFailure) {
+            CustomSnackBar.showSnackBar(context, state.message, Colors.red);
+            Navigator.pushReplacementNamed(context, 'sign-in');
+            return;
+          }
+          if (state is SyncSuccess) {
+            CustomSnackBar.showSnackBar(
+                context, 'Descarga exitosa', Colors.green);
+
+            Navigator.pushReplacementNamed(context, 'tabs');
+          }
+        }),
+        /* BlocListener<DownloadSyncBloc, DownloadSyncState>(
             listener: (context, state) {
           if (state is DownloadSyncFailure) {
             CustomSnackBar.showSnackBar(context, state.message, Colors.red);
@@ -103,11 +119,11 @@ class _SignInPageState extends State<SignInPage> {
 
             Navigator.pushReplacementNamed(context, 'tabs');
           }
-        }),
+        }), */
       ],
-      child: BlocBuilder<DownloadSyncBloc, DownloadSyncState>(
+      child: BlocBuilder<SyncBloc, SyncState>(
         builder: (context, state) {
-          if (state is DownloadSyncInProgress) {
+          if (state is SyncInProgress) {
             return LoadingPage(
                 title: 'Sincronizando...',
                 percent: state.progress.percent,

@@ -7,6 +7,7 @@ import 'package:paap/ui/perfil_preinversion/pages/perfiles_preinversion_page.dar
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
+import '../../../domain/blocs/sync/sync_bloc.dart';
 import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/entities/menu_entity.dart';
@@ -56,20 +57,20 @@ class _TabsPageState extends State<TabsPage> {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     final internetCubit = BlocProvider.of<InternetCubit>(context);
 
-    return BlocListener<UploadSyncBloc, UploadSyncState>(
+    return BlocListener<SyncBloc, SyncState>(
       listener: (context, state) {
-        if (state is UploadSyncFailure) {
+        if (state is SyncFailure) {
           CustomSnackBar.showSnackBar(context, state.message, Colors.red);
           return;
         }
-        if (state is UploadSyncSuccess) {
+        if (state is SyncSuccess) {
           CustomSnackBar.showSnackBar(
               context, 'Sincronización exitosa', Colors.green);
         }
       },
-      child: BlocBuilder<UploadSyncBloc, UploadSyncState>(
+      child: BlocBuilder<SyncBloc, SyncState>(
         builder: (context, state) {
-          if (state is UploadSyncInProgress) {
+          if (state is SyncInProgress) {
             return LoadingPage(
                 title: 'Sincronizando...',
                 percent: state.progress.percent,
@@ -93,8 +94,10 @@ class _TabsPageState extends State<TabsPage> {
                           cancelText: 'Cancelar',
                           onTapConfirm: () {
                             Navigator.pop(context);
-                            BlocProvider.of<UploadSyncBloc>(context)
-                                .add(UploadStarted(authBloc.state.usuario!));
+                            BlocProvider.of<SyncBloc>(context)
+                                .add(SyncStarted(authBloc.state.usuario!, 'P'));
+                            /* BlocProvider.of<UploadSyncBloc>(context)
+                                .add(UploadStarted(authBloc.state.usuario!)); */
                           },
                           onTapCancel: () {
                             Navigator.pop(context);

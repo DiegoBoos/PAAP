@@ -208,9 +208,10 @@ class PerfilPreInversionPrecioLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    final query = await db.query('PerfilPreInversionPrecio',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
 
-    return res.length;
+    return query.length;
   }
 
   @override

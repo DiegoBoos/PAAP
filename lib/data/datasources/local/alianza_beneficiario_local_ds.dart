@@ -263,8 +263,11 @@ class AlianzaBeneficiarioLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
 
-    return res.length;
+    final query = await db.query('AlianzaBeneficiario',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
+
+    return query.length;
   }
 }

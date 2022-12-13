@@ -228,9 +228,11 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
       }
     }
 
-    final res = await batch.commit();
+    await batch.commit();
+    final query = await db.query('PerfilPreInversionConsultor',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
 
-    return res.length;
+    return query.length;
   }
 
   @override

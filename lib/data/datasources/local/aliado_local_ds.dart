@@ -140,8 +140,10 @@ class AliadosLocalDataSourceImpl implements AliadosLocalDataSource {
           where: 'AliadoId = ?', whereArgs: [aliadoProduccion.aliadoId]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
+    final query =
+        await db.query('Aliado', where: 'RecordStatus <> ?', whereArgs: ['R']);
 
-    return res.length;
+    return query.length;
   }
 }

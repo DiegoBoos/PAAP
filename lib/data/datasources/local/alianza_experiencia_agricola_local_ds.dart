@@ -175,8 +175,11 @@ class AlianzaExperienciaAgricolaLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
 
-    return res.length;
+    final query = await db.query('AlianzaExperienciaAgricola',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
+
+    return query.length;
   }
 }

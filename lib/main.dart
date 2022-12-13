@@ -15,6 +15,7 @@ import 'domain/blocs/perfil_preinversion_consultores/perfil_preinversion_consult
 import 'domain/blocs/perfiles/perfiles_bloc.dart';
 import 'domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
 import 'domain/blocs/perfiles_preinversiones_precios/perfiles_preinversiones_precios_bloc.dart';
+import 'domain/blocs/sync/sync_bloc.dart';
 import 'domain/blocs/upload_sync/upload_sync_bloc.dart';
 import 'domain/cubits/actividad/actividad_cubit.dart';
 import 'domain/cubits/actividad_economica/actividad_economica_cubit.dart';
@@ -366,6 +367,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<PerfilesPreInversionesPreciosBloc>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<SyncBloc>(),
           ),
         ],
         child: MaterialApp(
