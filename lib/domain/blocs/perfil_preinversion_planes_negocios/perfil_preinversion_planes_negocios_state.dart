@@ -1,42 +1,42 @@
 part of 'perfil_preinversion_planes_negocios_bloc.dart';
 
-abstract class PerfilPreInversionPlanesNegociosState extends Equatable {
+abstract class PerfilPreInversionPlanNegociosState extends Equatable {
   final List<PerfilPreInversionPlanNegocioEntity>?
-      perfilPreInversionPlanesNegocios;
+      perfilPreInversionPlanNegocios;
 
-  const PerfilPreInversionPlanesNegociosState(
-      {this.perfilPreInversionPlanesNegocios});
+  const PerfilPreInversionPlanNegociosState(
+      {this.perfilPreInversionPlanNegocios});
 
   @override
-  List<Object?> get props => [perfilPreInversionPlanesNegocios];
+  List<Object?> get props => [perfilPreInversionPlanNegocios];
 }
 
-class PerfilPreInversionPlanesNegociosInitial
-    extends PerfilPreInversionPlanesNegociosState {}
+class PerfilPreInversionPlanNegociosInitial
+    extends PerfilPreInversionPlanNegociosState {}
 
-class PerfilPreInversionPlanesNegociosLoading
-    extends PerfilPreInversionPlanesNegociosState {}
+class PerfilPreInversionPlanNegociosLoading
+    extends PerfilPreInversionPlanNegociosState {}
 
-class PerfilPreInversionPlanesNegociosLoaded
-    extends PerfilPreInversionPlanesNegociosState {
+class PerfilPreInversionPlanNegociosLoaded
+    extends PerfilPreInversionPlanNegociosState {
   final List<PerfilPreInversionPlanNegocioEntity>?
-      perfilPreInversionPlanesNegociosLoaded;
+      perfilPreInversionPlanNegociosLoaded;
 
-  const PerfilPreInversionPlanesNegociosLoaded(
-      this.perfilPreInversionPlanesNegociosLoaded)
+  const PerfilPreInversionPlanNegociosLoaded(
+      this.perfilPreInversionPlanNegociosLoaded)
       : super(
-            perfilPreInversionPlanesNegocios:
-                perfilPreInversionPlanesNegociosLoaded);
+            perfilPreInversionPlanNegocios:
+                perfilPreInversionPlanNegociosLoaded);
 }
 
-class PerfilPreInversionPlanesNegociosSaved
-    extends PerfilPreInversionPlanesNegociosState {}
+class PerfilPreInversionPlanNegociosSaved
+    extends PerfilPreInversionPlanNegociosState {}
 
-class PerfilPreInversionPlanesNegociosError
-    extends PerfilPreInversionPlanesNegociosState {
+class PerfilPreInversionPlanNegociosError
+    extends PerfilPreInversionPlanNegociosState {
   final String message;
 
-  const PerfilPreInversionPlanesNegociosError(this.message);
+  const PerfilPreInversionPlanNegociosError(this.message);
   @override
   List<Object?> get props => [message];
 }

@@ -12,13 +12,13 @@ import '../../utils.dart';
 
 abstract class PerfilPreInversionPlanNegocioRemoteDataSource {
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilPreInversionPlanesNegocios(UsuarioEntity usuario);
+      getPerfilPreInversionPlanNegocios(UsuarioEntity usuario);
 
   Future<List<PerfilPreInversionPlanNegocioEntity>>
-      savePerfilesPreInversionesPlanesNegocios(
+      savePerfilesPreInversionesPlanNegocios(
           UsuarioEntity usuario,
           List<PerfilPreInversionPlanNegocioEntity>
-              perfilesPreInversionesPlanesNegociosEntity);
+              perfilesPreInversionesPlanNegociosEntity);
 }
 
 class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
@@ -29,11 +29,11 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilPreInversionPlanesNegocios(UsuarioEntity usuario) async {
+      getPerfilPreInversionPlanNegocios(UsuarioEntity usuario) async {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilPreInversionPlanesNegociosSOAP =
+    final perfilPreInversionPlanNegociosSOAP =
         '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
@@ -58,7 +58,7 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
           "Content-Type": "text/xml; charset=utf-8",
           "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
         },
-        body: perfilPreInversionPlanesNegociosSOAP);
+        body: perfilPreInversionPlanNegociosSOAP);
 
     if (perfilPreInversionPlanNegocioResp.statusCode == 200) {
       final perfilPreInversionPlanNegocioDoc =
@@ -82,17 +82,17 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
 
         final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final perfilPreInversionPlanesNegociosRaw =
+        final perfilPreInversionPlanNegociosRaw =
             decodedResp.entries.first.value['Table'];
 
-        if (perfilPreInversionPlanesNegociosRaw is List) {
-          return List.from(perfilPreInversionPlanesNegociosRaw)
+        if (perfilPreInversionPlanNegociosRaw is List) {
+          return List.from(perfilPreInversionPlanNegociosRaw)
               .map((e) => PerfilPreInversionPlanNegocioModel.fromJson(e))
               .toList();
         } else {
           return [
             PerfilPreInversionPlanNegocioModel.fromJson(
-                perfilPreInversionPlanesNegociosRaw)
+                perfilPreInversionPlanNegociosRaw)
           ];
         }
       } else {
@@ -105,21 +105,21 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionPlanNegocioEntity>>
-      savePerfilesPreInversionesPlanesNegocios(
+      savePerfilesPreInversionesPlanNegocios(
           UsuarioEntity usuario,
           List<PerfilPreInversionPlanNegocioEntity>
-              perfilesPreInversionesPlanesNegociosEntity) async {
+              perfilesPreInversionesPlanNegociosEntity) async {
     List<PerfilPreInversionPlanNegocioEntity>
-        perfilesPreInversionesPlanesNegociosUpload = [];
+        perfilesPreInversionesPlanNegociosUpload = [];
     for (var perfilPreInversionPlanNegocio
-        in perfilesPreInversionesPlanesNegociosEntity) {
+        in perfilesPreInversionesPlanNegociosEntity) {
       final resp = await savePerfilPreInversionPlanNegocio(
           usuario, perfilPreInversionPlanNegocio);
       if (resp != null) {
-        perfilesPreInversionesPlanesNegociosUpload.add(resp);
+        perfilesPreInversionesPlanNegociosUpload.add(resp);
       }
     }
-    return perfilesPreInversionesPlanesNegociosUpload;
+    return perfilesPreInversionesPlanNegociosUpload;
   }
 
   Future<PerfilPreInversionPlanNegocioEntity?>
@@ -139,7 +139,7 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
       ''';
     }
 
-    final perfilPreInversionPlanesNegociosOAP =
+    final perfilPreInversionPlanNegociosOAP =
         '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
@@ -172,7 +172,7 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
           "SOAPAction":
               "${Constants.urlSOAP}/GuardarPerfilPreInversionPlanNegocio"
         },
-        body: perfilPreInversionPlanesNegociosOAP);
+        body: perfilPreInversionPlanNegociosOAP);
 
     if (perfilPreInversionPlanNegocioResp.statusCode == 200) {
       final perfilPreInversionPlanNegocioDoc =

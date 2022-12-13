@@ -55,6 +55,8 @@ class _PerfilPreInversionAliadoFormState
   final volumenCompraCtrl = TextEditingController();
   final porcentajeCompraCtrl = TextEditingController();
 
+  final dateFormat = DateFormat('yyyy-MM-dd');
+
   @override
   void initState() {
     super.initState();
@@ -95,6 +97,8 @@ class _PerfilPreInversionAliadoFormState
   }
 
   void loadAliado(AliadoEntity aliadoLoaded) {
+    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
+
     final aliadoMunicipioId = aliadoLoaded.municipioId;
 
     final municipio = municipiosFiltered.firstWhere(
@@ -104,6 +108,10 @@ class _PerfilPreInversionAliadoFormState
     if (municipio.id != '') {
       departamentoId = municipio.departamentoid;
       municipioId = aliadoMunicipioId;
+
+      municipiosFiltered = municipioCubit.state.municipios!
+          .where(((municipio) => municipio.departamentoid == departamentoId))
+          .toList();
     }
 
     aliadoIdCtrl.text = aliadoLoaded.aliadoId;
@@ -114,7 +122,8 @@ class _PerfilPreInversionAliadoFormState
     correoCtrl.text = aliadoLoaded.correo;
     telefonoFijoCtrl.text = aliadoLoaded.telefonoFijo;
     telefonoMovilCtrl.text = aliadoLoaded.telefonoMovil;
-    fechaDesactivacionCtrl.text = aliadoLoaded.fechaDesactivacion;
+    fechaDesactivacionCtrl.text =
+        dateFormat.format(DateTime.parse(aliadoLoaded.fechaDesactivacion));
 
     setState(() {});
   }
@@ -232,71 +241,71 @@ class _PerfilPreInversionAliadoFormState
                 builder: (context, state) {
                   if (state is DepartamentosLoaded) {
                     return DropdownButtonFormField(
-                        isExpanded: true,
-                        decoration:
-                            const InputDecoration(label: Text('Departamento')),
-                        value: departamentoId,
-                        items: state.departamentosLoaded!
-                            .map<DropdownMenuItem<String>>(
-                                (DepartamentoEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.id,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido*';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          setState(() {
-                            municipiosFiltered = municipioCubit
-                                .state.municipios!
-                                .where(((municipio) =>
-                                    municipio.departamentoid == value))
-                                .toList();
+                      isExpanded: true,
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Departamento', labelText: 'Departamento'),
+                      value: departamentoId,
+                      items: state.departamentosLoaded!
+                          .map<DropdownMenuItem<String>>(
+                              (DepartamentoEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.id,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido*';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        setState(() {
+                          municipiosFiltered = municipioCubit.state.municipios!
+                              .where(((municipio) =>
+                                  municipio.departamentoid == value))
+                              .toList();
 
-                            departamentoId = value;
-                            municipioId = null;
-                          });
-                        },
-                        hint: const Text('Departamento'));
+                          departamentoId = value;
+                          municipioId = null;
+                        });
+                      },
+                    );
                   }
                   return Container();
                 },
               ),
+              if (departamentoId != null) const SizedBox(height: 20),
               if (departamentoId != null)
                 BlocBuilder<MunicipioCubit, MunicipioState>(
                   builder: (context, state) {
                     return DropdownButtonFormField(
-                        isExpanded: true,
-                        value: municipioId,
-                        decoration:
-                            const InputDecoration(label: Text('Municipio')),
-                        items: municipiosFiltered.map<DropdownMenuItem<String>>(
-                            (MunicipioEntity value) {
-                          return DropdownMenuItem<String>(
-                            value: value.id,
-                            child: Text(value.nombre),
-                          );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Campo Requerido*';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value) {
-                          setState(() {
-                            municipioId = value;
-                          });
-                        },
-                        onSaved: (String? newValue) {
-                          aliadoCubit.changeMunicipio(newValue);
-                        },
-                        hint: const Text('Municipio'));
+                      isExpanded: true,
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Municipio', labelText: 'Municipio'),
+                      value: municipioId,
+                      items: municipiosFiltered.map<DropdownMenuItem<String>>(
+                          (MunicipioEntity value) {
+                        return DropdownMenuItem<String>(
+                          value: value.id,
+                          child: Text(value.nombre),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Campo Requerido*';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) {
+                        setState(() {
+                          municipioId = value;
+                        });
+                      },
+                      onSaved: (String? newValue) {
+                        aliadoCubit.changeMunicipio(newValue);
+                      },
+                    );
                   },
                 ),
               const SizedBox(height: 20),
@@ -430,28 +439,29 @@ class _PerfilPreInversionAliadoFormState
                         builder: (context, state) {
                           if (state is ProductosLoaded) {
                             return DropdownButtonFormField(
-                                value: productoId != '' ? productoId : null,
-                                decoration: const InputDecoration(
-                                    label: Text('Producto')),
-                                items: state.productosLoaded!
-                                    .map<DropdownMenuItem<String>>(
-                                        (ProductoEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.id,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido*';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  perfilPreInversionAliadoCubit
-                                      .changeProducto(value);
-                                },
-                                hint: const Text('Producto'));
+                              isExpanded: true,
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Producto', labelText: 'Producto'),
+                              value: productoId,
+                              items: state.productosLoaded!
+                                  .map<DropdownMenuItem<String>>(
+                                      (ProductoEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.id,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido*';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                perfilPreInversionAliadoCubit
+                                    .changeProducto(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -485,28 +495,31 @@ class _PerfilPreInversionAliadoFormState
                               builder: (context, state) {
                                 if (state is UnidadesLoaded) {
                                   return DropdownButtonFormField(
-                                      value: unidadId != '' ? unidadId : null,
-                                      decoration: const InputDecoration(
-                                          label: Text('Unidad')),
-                                      items: state.unidadesLoaded!
-                                          .map<DropdownMenuItem<String>>(
-                                              (UnidadEntity value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value.unidadId,
-                                          child: Text(value.nombre),
-                                        );
-                                      }).toList(),
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Campo Requerido*';
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (String? value) {
-                                        perfilPreInversionAliadoCubit
-                                            .changeUnidad(value);
-                                      },
-                                      hint: const Text('Unidad'));
+                                    isExpanded: true,
+                                    decoration:
+                                        CustomInputDecoration.inputDecoration(
+                                            hintText: 'Unidad',
+                                            labelText: 'Unidad'),
+                                    value: unidadId,
+                                    items: state.unidadesLoaded!
+                                        .map<DropdownMenuItem<String>>(
+                                            (UnidadEntity value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value.unidadId,
+                                        child: Text(value.nombre),
+                                      );
+                                    }).toList(),
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return 'Campo Requerido*';
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (String? value) {
+                                      perfilPreInversionAliadoCubit
+                                          .changeUnidad(value);
+                                    },
+                                  );
                                 }
                                 return Container();
                               },
@@ -544,30 +557,31 @@ class _PerfilPreInversionAliadoFormState
                               builder: (context, state) {
                                 if (state is FrecuenciasLoaded) {
                                   return DropdownButtonFormField(
-                                      value: frecuenciaId != ''
-                                          ? frecuenciaId
-                                          : null,
-                                      decoration: const InputDecoration(
-                                          label: Text('Frecuencia')),
-                                      items: state.frecuenciasLoaded!
-                                          .map<DropdownMenuItem<String>>(
-                                              (FrecuenciaEntity value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value.frecuenciaId,
-                                          child: Text(value.nombre),
-                                        );
-                                      }).toList(),
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Campo Requerido*';
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (String? value) {
-                                        perfilPreInversionAliadoCubit
-                                            .changeFrecuencia(value);
-                                      },
-                                      hint: const Text('Frecuencia'));
+                                    isExpanded: true,
+                                    decoration:
+                                        CustomInputDecoration.inputDecoration(
+                                            hintText: 'Frecuencia',
+                                            labelText: 'Frecuencia'),
+                                    value: frecuenciaId,
+                                    items: state.frecuenciasLoaded!
+                                        .map<DropdownMenuItem<String>>(
+                                            (FrecuenciaEntity value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value.frecuenciaId,
+                                        child: Text(value.nombre),
+                                      );
+                                    }).toList(),
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return 'Campo Requerido*';
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (String? value) {
+                                      perfilPreInversionAliadoCubit
+                                          .changeFrecuencia(value);
+                                    },
+                                  );
                                 }
                                 return Container();
                               },
@@ -580,30 +594,30 @@ class _PerfilPreInversionAliadoFormState
                         builder: (context, state) {
                           if (state is SitiosEntregasLoaded) {
                             return DropdownButtonFormField(
-                                value: sitioEntregaId != ''
-                                    ? sitioEntregaId
-                                    : null,
-                                decoration: const InputDecoration(
-                                    label: Text('Sitio de entrega')),
-                                items: state.sitiosEntregasLoaded!
-                                    .map<DropdownMenuItem<String>>(
-                                        (SitioEntregaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.sitioEntregaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido*';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  perfilPreInversionAliadoCubit
-                                      .changeSitioEntrega(value);
-                                },
-                                hint: const Text('SitioEntrega'));
+                              isExpanded: true,
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Sitio Entrega',
+                                  labelText: 'Sitio Entrega'),
+                              value: sitioEntregaId,
+                              items: state.sitiosEntregasLoaded!
+                                  .map<DropdownMenuItem<String>>(
+                                      (SitioEntregaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.sitioEntregaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido*';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                perfilPreInversionAliadoCubit
+                                    .changeSitioEntrega(value);
+                              },
+                            );
                           }
                           return Container();
                         },

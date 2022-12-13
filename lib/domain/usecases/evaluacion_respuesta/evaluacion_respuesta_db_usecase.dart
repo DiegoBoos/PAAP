@@ -22,6 +22,13 @@ class EvaluacionRespuestaUsecaseDB {
         criterioId, evaluacionId);
   }
 
+  Future<Either<Failure, EvaluacionRespuestaEntity>>
+      getEvaluacionRespuestaOpcionUsecaseDB(
+          String criterioId, String evaluacionId, String opcionId) {
+    return repositoryDB.getEvaluacionRespuestaOpcionRepositoryDB(
+        criterioId, evaluacionId, opcionId);
+  }
+
   Future<Either<Failure, int>> saveEvaluacionRespuestaUsecaseDB(
       EvaluacionRespuestaEntity evaluacionRespuestaEntity, String perfilId) {
     return repositoryDB.saveEvaluacionRespuestaRepositoryDB(

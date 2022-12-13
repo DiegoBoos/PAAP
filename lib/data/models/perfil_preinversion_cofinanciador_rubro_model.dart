@@ -35,9 +35,9 @@ class PerfilPreInversionCofinanciadorRubroModel
         actividadFinancieraId: json["ActividadFinancieraId"],
         rubroId: json["RubroId"],
         valor: json["Valor"],
-        actividadFinanciera: json["actividadFinanciera"],
-        rubro: json["rubro"],
-        desembolso: json["desembolso"],
+        actividadFinanciera: json["ActividadFinanciera"],
+        rubro: json["Rubro"],
+        desembolso: json["Desembolso"],
         recordStatus: json["RecordStatus"],
       );
 

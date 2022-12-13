@@ -6,30 +6,31 @@ import '../../models/perfil_preinversion_cofinanciador_actividad_financiera_mode
 
 abstract class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSource {
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
-      getPerfilPreInversionCofinanciadorActividadesFinancierasDB();
+      getPerfilPreInversionCofinanciadorActividadesFinancieras();
+
   Future<PerfilPreInversionCofinanciadorActividadFinancieraModel?>
-      getPerfilPreInversionCofinanciadorActividadFinancieraDB(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId);
+      getPerfilPreInversionCofinanciadorActividadFinanciera(
+    String perfilPreInversionId,
+    String cofinanciadorId,
+  );
 
   Future<int> savePerfilPreInversionCofinanciadorActividadesFinancieras(
       List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
           perfilPreInversionCofinanciadorActividadFinancieraEntity);
 
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
-      getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
+      getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
           String perfilPreInversionId, String cofinanciadorId);
 
-  Future<int> savePerfilPreInversionCofinanciadorActividadFinancieraDB(
+  Future<int> savePerfilPreInversionCofinanciadorActividadFinanciera(
       PerfilPreInversionCofinanciadorActividadFinancieraEntity
           perfilPreInversionCofinanciadorActividadFinancieraEntity);
 
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
-      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB();
+      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccion();
 
   Future<int>
-      updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB(
+      updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccion(
           List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
               perfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionEntity);
 }
@@ -57,7 +58,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
-      getPerfilPreInversionCofinanciadorActividadesFinancierasDB() async {
+      getPerfilPreInversionCofinanciadorActividadesFinancieras() async {
     final db = await DBConfig.database;
 
     final res =
@@ -73,17 +74,16 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
 
   @override
   Future<PerfilPreInversionCofinanciadorActividadFinancieraModel?>
-      getPerfilPreInversionCofinanciadorActividadFinancieraDB(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId) async {
+      getPerfilPreInversionCofinanciadorActividadFinanciera(
+    String perfilPreInversionId,
+    String cofinanciadorId,
+  ) async {
     final db = await DBConfig.database;
 
     final res = await db.query(
         'PerfilPreInversionCofinanciadorActividadFinanciera',
-        where:
-            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
-        whereArgs: [perfilPreInversionId, cofinanciadorId, desembolsoId]);
+        where: 'PerfilPreInversionId = ? AND CofinanciadorId = ?',
+        whereArgs: [perfilPreInversionId, cofinanciadorId]);
 
     if (res.isEmpty) return null;
     final perfilPreInversionCofinanciadorActividadFinancieraMap = {
@@ -119,14 +119,27 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
-      getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
+      getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
           String perfilPreInversionId, String cofinanciadorId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query(
-        'PerfilPreInversionCofinanciadorActividadFinanciera',
-        where: 'PerfilPreInversionId = ? AND CofinanciadorId = ?',
-        whereArgs: [perfilPreInversionId, cofinanciadorId]);
+    String sql = '''
+      select
+      PerfilPreInversionCofinanciadorActividadFinanciera.ActividadFinancieraId,
+      PerfilPreInversionCofinanciadorActividadFinanciera.PerfilPreInversionId,
+      PerfilPreInversionCofinanciadorActividadFinanciera.CofinanciadorId,
+      PerfilPreInversionCofinanciadorActividadFinanciera.DesembolsoId,
+      Valor,
+      ActividadFinanciera.Nombre as ActividadFinanciera,
+      Desembolso.Nombre as Desembolso
+      from PerfilPreInversionCofinanciadorActividadFinanciera
+      left join ActividadFinanciera on (ActividadFinanciera.ActividadFinancieraId=PerfilPreInversionCofinanciadorActividadFinanciera.ActividadFinancieraId)
+      left join Desembolso on (Desembolso.DesembolsoId=PerfilPreInversionCofinanciadorActividadFinanciera.DesembolsoId)
+      where PerfilPreInversionCofinanciadorActividadFinanciera.PerfilPreInversionId = $perfilPreInversionId 
+      AND PerfilPreInversionCofinanciadorActividadFinanciera.CofinanciadorId = $cofinanciadorId
+      ''';
+
+    final res = await db.rawQuery(sql);
 
     final perfilPreInversionCofinanciadorActividadFinanciera =
         List<PerfilPreInversionCofinanciadorActividadFinancieraModel>.from(res
@@ -137,7 +150,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
   }
 
   @override
-  Future<int> savePerfilPreInversionCofinanciadorActividadFinancieraDB(
+  Future<int> savePerfilPreInversionCofinanciadorActividadFinanciera(
       PerfilPreInversionCofinanciadorActividadFinancieraEntity
           perfilPreInversionCofinanciadorActividadFinancieraEntity) async {
     final db = await DBConfig.database;
@@ -146,14 +159,14 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
     final resQuery = await db.query(
         'PerfilPreInversionCofinanciadorActividadFinanciera',
         where:
-            'ActividadFinancieraId = ? AND PerfilPreInversionId = ? AND ActividadFinancieraId = ? AND DesembolsoId = ?',
+            'ActividadFinancieraId = ? AND PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
         whereArgs: [
           perfilPreInversionCofinanciadorActividadFinancieraEntity
               .actividadFinancieraId,
           perfilPreInversionCofinanciadorActividadFinancieraEntity
               .perfilPreInversionId,
           perfilPreInversionCofinanciadorActividadFinancieraEntity
-              .actividadFinancieraId,
+              .cofinanciadorId,
           perfilPreInversionCofinanciadorActividadFinancieraEntity.desembolsoId
         ]);
 
@@ -168,14 +181,14 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
       batch.update('PerfilPreInversionCofinanciadorActividadFinanciera',
           perfilPreInversionCofinanciadorActividadFinancieraEntity.toJson(),
           where:
-              'ActividadFinancieraId = ? AND PerfilPreInversionId = ? AND ActividadFinancieraId = ? AND DesembolsoId = ?',
+              'ActividadFinancieraId = ? AND PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
           whereArgs: [
             perfilPreInversionCofinanciadorActividadFinancieraEntity
                 .actividadFinancieraId,
             perfilPreInversionCofinanciadorActividadFinancieraEntity
                 .perfilPreInversionId,
             perfilPreInversionCofinanciadorActividadFinancieraEntity
-                .actividadFinancieraId,
+                .cofinanciadorId,
             perfilPreInversionCofinanciadorActividadFinancieraEntity
                 .desembolsoId
           ]);
@@ -188,7 +201,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
-      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB() async {
+      getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccion() async {
     final db = await DBConfig.database;
 
     final res = await db.query(
@@ -208,7 +221,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
 
   @override
   Future<int>
-      updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB(
+      updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccion(
           List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>
               perfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionEntity) async {
     final db = await DBConfig.database;
@@ -222,7 +235,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
       batch.update('PerfilPreInversionCofinanciadorActividadFinanciera',
           perfilPreInversionCofinanciadorActividadFinancieraProduccion.toJson(),
           where:
-              'ActividadFinancieraId = ? AND PerfilPreInversionId = ? AND ActividadFinancieraId = ? AND DesembolsoId = ?',
+              'ActividadFinancieraId = ? AND PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ?',
           whereArgs: [
             perfilPreInversionCofinanciadorActividadFinancieraProduccion
                 .actividadFinancieraId,
@@ -235,8 +248,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
+    final query = await db.query(
+        'PerfilPreInversionCofinanciadorActividadFinanciera',
+        where: 'RecordStatus <> ?',
+        whereArgs: ['R']);
 
-    return res.length;
+    return query.length;
   }
 }

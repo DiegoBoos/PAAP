@@ -37,7 +37,8 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
         .saveAlianzaBeneficiarioUsecaseDB(alianzaBeneficiarioEntity);
     result.fold(
         (failure) => emit(AlianzaBeneficiarioError(failure.properties.first)),
-        (data) => emit(AlianzaBeneficiarioSaved()));
+        (data) => emit(AlianzaBeneficiarioSaved(
+            alianzaBeneficiario: alianzaBeneficiarioEntity)));
   }
 
   void changeMunicipioId(String value) {
@@ -172,9 +173,8 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
   }
 
   void changeActivo(String? newValue) {
-    final totalActivoChanged =
-        state.alianzaBeneficiario.copyWith(activo: newValue);
-    emit(AlianzaBeneficiarioChanged(totalActivoChanged));
+    final activoChanged = state.alianzaBeneficiario.copyWith(activo: newValue);
+    emit(AlianzaBeneficiarioChanged(activoChanged));
   }
 
   void changeNombreFinca(String? newValue) {
@@ -326,9 +326,9 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     emit(AlianzaBeneficiarioChanged(alianzaIdChanged));
   }
 
-  void changeBeneficiarioId(String value) {
+  void changeBeneficiarioId(String? newValue) {
     final beneficiarioIdChanged =
-        state.alianzaBeneficiario.copyWith(beneficiarioId: value);
+        state.alianzaBeneficiario.copyWith(beneficiarioId: newValue);
     emit(AlianzaBeneficiarioChanged(beneficiarioIdChanged));
   }
 

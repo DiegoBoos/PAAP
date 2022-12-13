@@ -25,7 +25,7 @@ class PerfilPreInversionCofinanciadorDesembolsoModel
         cofinanciadorId: json["CofinanciadorId"],
         desembolsoId: json["DesembolsoId"],
         fecha: json["Fecha"],
-        desembolso: json["desembolso"],
+        desembolso: json["Desembolso"],
         recordStatus: json["RecordStatus"],
       );
 

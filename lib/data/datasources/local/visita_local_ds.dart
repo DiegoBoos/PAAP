@@ -148,6 +148,8 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
           ]);
     }
 
+    await batch.commit();
+
     final query =
         await db.query('Visita', where: 'RecordStatus <> ?', whereArgs: ['R']);
 

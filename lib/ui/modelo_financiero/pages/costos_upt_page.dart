@@ -19,7 +19,7 @@ class CostosUPTPage extends StatefulWidget {
   State<CostosUPTPage> createState() => _CostosUPTPageState();
 }
 
-const String tipoMovimiento = '3';
+const String tipoMovimientoId = '3';
 
 class _CostosUPTPageState extends State<CostosUPTPage> {
   @override
@@ -34,7 +34,7 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
         .getVPerfilesPreInversionesPlanNegociosDB(
             vPerfilPreInversionCubit
                 .state.vPerfilPreInversion!.perfilPreInversionId,
-            tipoMovimiento);
+            tipoMovimientoId);
   }
 
   @override
@@ -54,12 +54,12 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
             .getVPerfilesPreInversionesPlanNegociosDB(
                 vPerfilPreInversionCubit
                     .state.vPerfilPreInversion!.perfilPreInversionId,
-                tipoMovimiento);
+                tipoMovimientoId);
       }
     }, child: BlocBuilder<VPerfilesPreInversionesPlanNegociosCubit,
         VPerfilesPreInversionesPlanNegociosState>(
       builder: (context, state) {
-        if (state is PerfilPreInversionPlanesNegociosLoading) {
+        if (state is PerfilPreInversionPlanNegociosLoading) {
           return const CustomCircularProgress(alignment: Alignment.center);
         } else if (state is VPerfilesPreInversionesPlanNegociosLoaded) {
           List<VPerfilPreInversionPlanNegocioEntity>
@@ -69,11 +69,11 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
             return const SizedBox(
                 child: Center(child: NoDataSvg(title: 'No hay resultados')));
           }
-          return PerfilPreInversionPlanesNegociosRows(
+          return PerfilPreInversionPlanNegociosRows(
               vPerfilesPreInversionesPlanNegocios:
                   vPerfilesPreInversionesPlanNegocios,
               subtitleStyle: Styles.subtitleStyle,
-              tipoMovimiento: tipoMovimiento);
+              tipoMovimientoId: tipoMovimientoId);
         }
         return const NoDataSvg(
           title: 'No hay resultados',

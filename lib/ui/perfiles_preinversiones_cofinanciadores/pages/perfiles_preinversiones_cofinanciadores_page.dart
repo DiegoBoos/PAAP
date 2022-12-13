@@ -30,6 +30,7 @@ class _PerfilesPreInversionesCofinanciadoresPageState
 
     final perfilPreInversionCofinanciadoresBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadoresBloc>(context);
+
     perfilPreInversionCofinanciadoresBloc.add(
         GetPerfilPreInversionCofinanciadores(vPerfilPreInversionCubit
             .state.vPerfilPreInversion!.perfilPreInversionId));

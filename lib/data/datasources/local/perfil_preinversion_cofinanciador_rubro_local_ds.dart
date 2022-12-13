@@ -10,10 +10,7 @@ abstract class PerfilPreInversionCofinanciadorRubroLocalDataSource {
 
   Future<PerfilPreInversionCofinanciadorRubroModel?>
       getPerfilPreInversionCofinanciadorRubro(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId,
-          String actividadFinancieraId);
+          String perfilPreInversionId, String cofinanciadorId);
 
   Future<List<PerfilPreInversionCofinanciadorRubroModel>>
       getPerfilPreInversionCofinanciadorRubrosByCofinanciador(
@@ -61,16 +58,16 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
     final db = await DBConfig.database;
 
     String sql = '''
-      select 
+       select 
       PerfilPreInversionCofinanciadorRubro.PerfilPreInversionId,
       PerfilPreInversionCofinanciadorRubro.CofinanciadorId,
       PerfilPreInversionCofinanciadorRubro.DesembolsoId,
       PerfilPreInversionCofinanciadorRubro.ActividadFinancieraId,
-      Rubro as rubro,
-      Valor as valor,
-      ActividadFinanciera.Nombre as actividadFinanciera,
-      Rubro.Nombre as rubro,
-      Desembolso.Nombre as desembolso
+      RubroId,
+      Valor,
+      ActividadFinanciera.Nombre as ActividadFinanciera,
+      Rubro.Nombre as Rubro,
+      Desembolso.Nombre as Desembolso
       from PerfilPreInversionCofinanciadorRubro
       left join ActividadFinanciera on (ActividadFinanciera.ActividadFinancieraId=PerfilPreInversionCofinanciadorRubro.ActividadFinancieraId)
       left join Rubro on (Rubro.RubroId=PerfilPreInversionCofinanciadorRubro.RubroId)
@@ -90,21 +87,12 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
   @override
   Future<PerfilPreInversionCofinanciadorRubroModel?>
       getPerfilPreInversionCofinanciadorRubro(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId,
-          String actividadFinancieraId) async {
+          String perfilPreInversionId, String cofinanciadorId) async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionCofinanciadorRubro',
-        where:
-            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ? AND ActividadFinancieraId = ?',
-        whereArgs: [
-          perfilPreInversionId,
-          cofinanciadorId,
-          desembolsoId,
-          actividadFinancieraId
-        ]);
+        where: 'PerfilPreInversionId = ? AND CofinanciadorId = ?',
+        whereArgs: [perfilPreInversionId, cofinanciadorId]);
 
     if (res.isEmpty) return null;
     final perfilPreInversionCofinanciadorRubroMap = {
@@ -123,9 +111,25 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
           String perfilPreInversionId, String cofinanciadorId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilPreInversionCofinanciadorRubro',
-        where: 'PerfilPreInversionId = ? AND CofinanciadorId = ?',
-        whereArgs: [perfilPreInversionId, cofinanciadorId]);
+    String sql = '''
+      select 
+      PerfilPreInversionCofinanciadorRubro.PerfilPreInversionId,
+      PerfilPreInversionCofinanciadorRubro.CofinanciadorId,
+      PerfilPreInversionCofinanciadorRubro.DesembolsoId,
+      PerfilPreInversionCofinanciadorRubro.ActividadFinancieraId,
+      PerfilPreInversionCofinanciadorRubro.RubroId,
+      Valor,
+      ActividadFinanciera.Nombre as ActividadFinanciera,
+      Rubro.Nombre as Rubro,
+      Desembolso.Nombre as Desembolso
+      from PerfilPreInversionCofinanciadorRubro
+      left join ActividadFinanciera on (ActividadFinanciera.ActividadFinancieraId=PerfilPreInversionCofinanciadorRubro.ActividadFinancieraId)
+      left join Rubro on (Rubro.RubroId=PerfilPreInversionCofinanciadorRubro.RubroId)
+      left join Desembolso on (Desembolso.DesembolsoId=PerfilPreInversionCofinanciadorRubro.DesembolsoId)
+      where PerfilPreInversionId = $perfilPreInversionId AND CofinanciadorId = $cofinanciadorId
+      ''';
+
+    final res = await db.rawQuery(sql);
 
     final perfilPreInversionCofinanciadorRubro =
         List<PerfilPreInversionCofinanciadorRubroModel>.from(res.map(
@@ -165,10 +169,10 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
 
     final resQuery = await db.query('PerfilPreInversionCofinanciadorRubro',
         where:
-            'RubroId = ? AND PerfilPreInversionId = ? AND DesembolsoId = ? AND ActividadFinancieraId = ? AND RubroId = ?',
+            'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ? AND ActividadFinancieraId = ? AND RubroId = ?',
         whereArgs: [
-          perfilPreInversionCofinanciadorRubroEntity.rubroId,
           perfilPreInversionCofinanciadorRubroEntity.perfilPreInversionId,
+          perfilPreInversionCofinanciadorRubroEntity.cofinanciadorId,
           perfilPreInversionCofinanciadorRubroEntity.desembolsoId,
           perfilPreInversionCofinanciadorRubroEntity.actividadFinancieraId,
           perfilPreInversionCofinanciadorRubroEntity.rubroId,
@@ -182,10 +186,14 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
       perfilPreInversionCofinanciadorRubroEntity.recordStatus = 'E';
       batch.update('PerfilPreInversionCofinanciadorRubro',
           perfilPreInversionCofinanciadorRubroEntity.toJson(),
-          where: 'RubroId = ? AND PerfilPreInversionId = ?',
+          where:
+              'PerfilPreInversionId = ? AND CofinanciadorId = ? AND DesembolsoId = ? AND ActividadFinancieraId = ? AND RubroId = ?',
           whereArgs: [
+            perfilPreInversionCofinanciadorRubroEntity.perfilPreInversionId,
+            perfilPreInversionCofinanciadorRubroEntity.cofinanciadorId,
+            perfilPreInversionCofinanciadorRubroEntity.desembolsoId,
+            perfilPreInversionCofinanciadorRubroEntity.actividadFinancieraId,
             perfilPreInversionCofinanciadorRubroEntity.rubroId,
-            perfilPreInversionCofinanciadorRubroEntity.perfilPreInversionId
           ]);
     }
 
@@ -232,8 +240,10 @@ class PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
+    final query = await db.query('PerfilPreInversionCofinanciadorRubro',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
 
-    return res.length;
+    return query.length;
   }
 }

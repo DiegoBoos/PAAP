@@ -28,6 +28,9 @@ class _NewEditPerfilPreInversionIngresosUPTState
     final perfilPreInversionIngresosUPTCubit =
         BlocProvider.of<PerfilPreInversionIngresosUPTCubit>(context);
 
+    final tipoMovimientoId =
+        ModalRoute.of(context)!.settings.arguments as String;
+
     return Scaffold(
         appBar: AppBar(title: const Text('Ingresos UPT'), actions: const [
           Padding(
@@ -76,7 +79,7 @@ class _NewEditPerfilPreInversionIngresosUPTState
                                 perfilPreInversionIngresosUPT.tipoCalidadId!);
                     perfilPreInversionIngresosUPTCubit
                         .savePerfilPreInversionIngresosUPTDB(
-                            perfilPreInversionPlanNegocio);
+                            perfilPreInversionPlanNegocio, tipoMovimientoId);
                   },
                 )
               ])),

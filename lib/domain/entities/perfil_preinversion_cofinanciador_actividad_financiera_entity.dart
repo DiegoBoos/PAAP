@@ -1,14 +1,14 @@
 class PerfilPreInversionCofinanciadorActividadFinancieraEntity {
-  PerfilPreInversionCofinanciadorActividadFinancieraEntity(
-      {required this.actividadFinancieraId,
-      required this.perfilPreInversionId,
-      required this.cofinanciadorId,
-      required this.desembolsoId,
-      required this.valor,
-      this.actividadFinanciera,
-      this.desembolso,
-      required this.recordStatus,
-      this.canCreateRubro = false});
+  PerfilPreInversionCofinanciadorActividadFinancieraEntity({
+    required this.actividadFinancieraId,
+    required this.perfilPreInversionId,
+    required this.cofinanciadorId,
+    required this.desembolsoId,
+    required this.valor,
+    this.actividadFinanciera,
+    this.desembolso,
+    required this.recordStatus,
+  });
 
   String actividadFinancieraId;
   String perfilPreInversionId;
@@ -18,7 +18,6 @@ class PerfilPreInversionCofinanciadorActividadFinancieraEntity {
   String recordStatus;
   String? actividadFinanciera;
   String? desembolso;
-  bool canCreateRubro;
 
   PerfilPreInversionCofinanciadorActividadFinancieraEntity copyWith({
     String? actividadFinancieraId,
@@ -27,7 +26,6 @@ class PerfilPreInversionCofinanciadorActividadFinancieraEntity {
     String? desembolsoId,
     String? valor,
     String? recordStatus,
-    bool? canCreateRubro,
   }) {
     return PerfilPreInversionCofinanciadorActividadFinancieraEntity(
       actividadFinancieraId:
@@ -37,7 +35,6 @@ class PerfilPreInversionCofinanciadorActividadFinancieraEntity {
       desembolsoId: desembolsoId ?? this.desembolsoId,
       valor: valor ?? this.valor,
       recordStatus: recordStatus ?? this.recordStatus,
-      canCreateRubro: canCreateRubro ?? this.canCreateRubro,
     );
   }
 

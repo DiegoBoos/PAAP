@@ -27,6 +27,7 @@ class PerfilPreInversionCofinanciadorRows extends StatelessWidget {
   Widget build(BuildContext context) {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
+
     final perfilPreInversionCofinanciadorCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
 
@@ -56,137 +57,174 @@ class PerfilPreInversionCofinanciadorRows extends StatelessWidget {
       context,
     );
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          headingRowColor: MaterialStateProperty.all(
-              Theme.of(context).colorScheme.secondary),
-          dividerThickness: 1,
-          columnSpacing: 10,
-          dataRowHeight: 150,
-          columns: <DataColumn>[
-            DataColumn(label: Container()),
-            DataColumn(
-              label: Expanded(
-                child: Text('CofinanciadorId',
-                    style: subtitleStyle.copyWith(color: Colors.white)),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Nombre',
-                    style: subtitleStyle.copyWith(color: Colors.white)),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Teléfono Móvil',
-                    style: subtitleStyle.copyWith(color: Colors.white)),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Correo',
-                    style: subtitleStyle.copyWith(color: Colors.white)),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Monto',
-                    style: subtitleStyle.copyWith(color: Colors.white)),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Participación',
-                    style: subtitleStyle.copyWith(color: Colors.white)),
-              ),
-            ),
-          ],
-          rows:
-              List.generate(perfilPreInversionCofinanciadores.length, (index) {
-            PerfilPreInversionCofinanciadorEntity
-                perfilPreInversionCofinanciador =
-                perfilPreInversionCofinanciadores[index];
+    return MultiBlocListener(
+        listeners: [
+          BlocListener<PerfilPreInversionCofinanciadorDesembolsoCubit,
+              PerfilPreInversionCofinanciadorDesembolsoState>(
+            listener: (context, state) {
+              if (state is PerfilPreInversionCofinanciadorDesembolsoLoaded) {
+                perfilPreInversionCofinanciadorDesembolsosBloc.add(
+                    GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
+                        perfilPreInversionId: vPerfilPreInversionCubit
+                            .state.vPerfilPreInversion!.perfilPreInversionId,
+                        cofinanciadorId: perfilPreInversionCofinanciadorCubit
+                            .state
+                            .perfilPreInversionCofinanciador
+                            .cofinanciadorId));
+              }
+            },
+          ),
+          BlocListener<PerfilPreInversionCofinanciadorActividadFinancieraCubit,
+              PerfilPreInversionCofinanciadorActividadFinancieraState>(
+            listener: (context, state) {
+              if (state
+                  is PerfilPreInversionCofinanciadorActividadFinancieraLoaded) {
+                perfilPreInversionCofinanciadorActividadesFinancierasBloc.add(
+                    GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
+                        perfilPreInversionId: vPerfilPreInversionCubit
+                            .state.vPerfilPreInversion!.perfilPreInversionId,
+                        cofinanciadorId: perfilPreInversionCofinanciadorCubit
+                            .state
+                            .perfilPreInversionCofinanciador
+                            .cofinanciadorId));
+              }
+            },
+          ),
+          BlocListener<PerfilPreInversionCofinanciadorRubroCubit,
+              PerfilPreInversionCofinanciadorRubroState>(
+            listener: (context, state) {
+              if (state is PerfilPreInversionCofinanciadorRubroLoaded) {
+                perfilPreInversionCofinanciadorRubrosBloc.add(
+                    GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
+                        perfilPreInversionId: vPerfilPreInversionCubit
+                            .state.vPerfilPreInversion!.perfilPreInversionId,
+                        cofinanciadorId: perfilPreInversionCofinanciadorCubit
+                            .state
+                            .perfilPreInversionCofinanciador
+                            .cofinanciadorId));
+              }
+            },
+          ),
+        ],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              headingRowColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.secondary),
+              dividerThickness: 1,
+              columnSpacing: 10,
+              dataRowHeight: 200,
+              columns: <DataColumn>[
+                DataColumn(label: Container()),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('CofinanciadorId',
+                        style: subtitleStyle.copyWith(color: Colors.white)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Nombre',
+                        style: subtitleStyle.copyWith(color: Colors.white)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Teléfono Móvil',
+                        style: subtitleStyle.copyWith(color: Colors.white)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Correo',
+                        style: subtitleStyle.copyWith(color: Colors.white)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Monto',
+                        style: subtitleStyle.copyWith(color: Colors.white)),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Participación',
+                        style: subtitleStyle.copyWith(color: Colors.white)),
+                  ),
+                ),
+              ],
+              rows: List.generate(perfilPreInversionCofinanciadores.length,
+                  (index) {
+                PerfilPreInversionCofinanciadorEntity
+                    perfilPreInversionCofinanciador =
+                    perfilPreInversionCofinanciadores[index];
 
-            final monto = NumberFormat.currency(
-                    locale: 'en_US', decimalDigits: 0, symbol: "\$")
-                .format(double.parse(perfilPreInversionCofinanciador.monto));
+                final monto = NumberFormat.currency(
+                        locale: 'en_US', decimalDigits: 0, symbol: "\$")
+                    .format(
+                        double.parse(perfilPreInversionCofinanciador.monto));
 
-            return DataRow(cells: <DataCell>[
-              DataCell(IconButton(
-                  onPressed: perfilPreInversionCofinanciador.correo == 'TOTAL'
-                      ? null
-                      : () async {
-                          final vPerfilPreInversionId = vPerfilPreInversionCubit
-                              .state.vPerfilPreInversion!.perfilPreInversionId;
+                return DataRow(cells: <DataCell>[
+                  DataCell(IconButton(
+                      onPressed: perfilPreInversionCofinanciador.correo ==
+                              'TOTAL'
+                          ? null
+                          : () async {
+                              final navigator = Navigator.of(context);
 
-                          final cofinanciadorId =
-                              perfilPreInversionCofinanciador.cofinanciadorId;
+                              final vPerfilPreInversionId =
+                                  vPerfilPreInversionCubit
+                                      .state
+                                      .vPerfilPreInversion!
+                                      .perfilPreInversionId;
 
-                          perfilPreInversionCofinanciadorCubit
-                              .changeCofinanciador(cofinanciadorId);
+                              final cofinanciadorId =
+                                  perfilPreInversionCofinanciador
+                                      .cofinanciadorId;
 
-                          perfilPreInversionCofinanciadorCubit.isEditing();
+                              perfilPreInversionCofinanciadorCubit
+                                  .changeCofinanciador(cofinanciadorId);
 
-                          perfilPreInversionCofinanciadorDesembolsosBloc.add(
-                              GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-                                  perfilPreInversionId: vPerfilPreInversionId,
-                                  cofinanciadorId: cofinanciadorId));
+                              perfilPreInversionCofinanciadorCubit
+                                  .selectPerfilPreInversionCofinanciador(
+                                      perfilPreInversionCofinanciador);
 
-                          perfilPreInversionCofinanciadorActividadesFinancierasBloc
-                              .add(
-                                  GetPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
-                                      perfilPreInversionId:
-                                          vPerfilPreInversionId,
-                                      cofinanciadorId: cofinanciadorId));
-
-                          perfilPreInversionCofinanciadorRubrosBloc.add(
-                              GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
-                                  perfilPreInversionId: vPerfilPreInversionId,
-                                  cofinanciadorId: cofinanciadorId));
-
-                          final desembolso =
                               await perfilPreInversionCofinanciadorDesembolsoCubit
                                   .getPerfilPreInversionCofinanciadorDesembolso(
                                       vPerfilPreInversionId, cofinanciadorId);
 
-                          final actividadFinanciera =
                               await perfilPreInversionCofinanciadorActividadFinancieraCubit
                                   .getPerfilPreInversionCofinanciadorActividadFinanciera(
-                                      vPerfilPreInversionId,
-                                      cofinanciadorId,
-                                      desembolso?.desembolsoId ?? '');
+                                vPerfilPreInversionId,
+                                cofinanciadorId,
+                              );
 
-                          await perfilPreInversionCofinanciadorRubroCubit
-                              .getPerfilPreInversionCofinanciadorRubro(
-                                  vPerfilPreInversionId,
-                                  cofinanciadorId,
-                                  desembolso?.desembolsoId ?? '',
-                                  actividadFinanciera?.actividadFinancieraId ??
-                                      '')
-                              .whenComplete(() {
-                            Navigator.pushNamed(
-                              context,
-                              'NewEditVCofinanciadorPreInversion',
-                            );
-                          });
-                        },
-                  icon: const Icon(
-                    Icons.edit,
-                  ))),
-              DataCell(Text(perfilPreInversionCofinanciador.cofinanciadorId)),
-              DataCell(Text(perfilPreInversionCofinanciador.nombre!)),
-              DataCell(Text(perfilPreInversionCofinanciador.telefonoMovil!)),
-              DataCell(Text(perfilPreInversionCofinanciador.correo!)),
-              DataCell(Text(monto)),
-              DataCell(Text(perfilPreInversionCofinanciador.participacion)),
-            ]);
-          }),
-        ),
-      ),
-    );
+                              await perfilPreInversionCofinanciadorRubroCubit
+                                  .getPerfilPreInversionCofinanciadorRubro(
+                                vPerfilPreInversionId,
+                                cofinanciadorId,
+                              );
+
+                              navigator.pushNamed(
+                                  'NewEditVCofinanciadorPreInversion');
+                            },
+                      icon: const Icon(
+                        Icons.edit,
+                      ))),
+                  DataCell(
+                      Text(perfilPreInversionCofinanciador.cofinanciadorId)),
+                  DataCell(Text(perfilPreInversionCofinanciador.nombre!)),
+                  DataCell(
+                      Text(perfilPreInversionCofinanciador.telefonoMovil!)),
+                  DataCell(Text(perfilPreInversionCofinanciador.correo!)),
+                  DataCell(Text(monto)),
+                  DataCell(Text(perfilPreInversionCofinanciador.participacion)),
+                ]);
+              }),
+            ),
+          ),
+        ));
   }
 }

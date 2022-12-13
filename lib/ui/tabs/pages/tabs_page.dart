@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paap/domain/blocs/alianzas/alianzas_bloc.dart';
 import 'package:paap/domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
-import 'package:paap/domain/blocs/upload_sync/upload_sync_bloc.dart';
 import 'package:paap/ui/perfil_preinversion/pages/perfiles_preinversion_page.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
@@ -96,8 +95,6 @@ class _TabsPageState extends State<TabsPage> {
                             Navigator.pop(context);
                             BlocProvider.of<SyncBloc>(context)
                                 .add(SyncStarted(authBloc.state.usuario!, 'P'));
-                            /* BlocProvider.of<UploadSyncBloc>(context)
-                                .add(UploadStarted(authBloc.state.usuario!)); */
                           },
                           onTapCancel: () {
                             Navigator.pop(context);

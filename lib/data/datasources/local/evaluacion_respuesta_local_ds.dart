@@ -6,20 +6,28 @@ import '../../../domain/entities/evaluacion_respuesta_entity.dart';
 import '../../../domain/db/db_config.dart';
 
 abstract class EvaluacionRespuestaLocalDataSource {
-  Future<List<EvaluacionRespuestaModel>> getEvaluacionesRespuestasDB(
+  Future<List<EvaluacionRespuestaModel>> getEvaluacionesRespuestas(
       String criterioId, String evaluacionId);
-  Future<EvaluacionRespuestaModel?> getEvaluacionRespuestaDB(
+
+  Future<EvaluacionRespuestaModel?> getEvaluacionRespuesta(
       String criterioId, String evaluacionId);
-  Future<List<EvaluacionRespuestaModel>>
-      getEvaluacionesRespuestasProduccionDB();
-  Future<int> saveEvaluacionRespuestaDB(
+
+  Future<EvaluacionRespuestaModel> getEvaluacionRespuestaOpcion(
+      String criterioId, String evaluacionId, String opcionId);
+
+  Future<int> saveEvaluacionRespuesta(
       EvaluacionRespuestaEntity evaluacionRespuestaEntity, String perfilId);
-  Future<int> saveEvaluacionesRespuestasDB(
+
+  Future<int> saveEvaluacionesRespuestas(
       List<EvaluacionRespuestaEntity> evaluacionRespuestaEntity);
-  Future<int> updateEvaluacionesRespuestasProduccionDB(
+
+  Future<List<EvaluacionRespuestaModel>> getEvaluacionesRespuestasProduccion();
+
+  Future<int> updateEvaluacionesRespuestasProduccion(
       List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity);
-  Future<int> clearEvaluacionesRespuestasDB();
-  updateRespuestaRemoteEvaluacionIdDB(List<EvaluacionEntity> evaluaciones);
+
+  Future<int> clearEvaluacionesRespuestas();
+  updateRespuestaRemoteEvaluacionId(List<EvaluacionEntity> evaluaciones);
 }
 
 class EvaluacionRespuestaLocalDataSourceImpl
@@ -38,7 +46,7 @@ class EvaluacionRespuestaLocalDataSourceImpl
   }
 
   @override
-  Future<List<EvaluacionRespuestaModel>> getEvaluacionesRespuestasDB(
+  Future<List<EvaluacionRespuestaModel>> getEvaluacionesRespuestas(
       String criterioId, String evaluacionId) async {
     final db = await DBConfig.database;
 
@@ -55,7 +63,7 @@ class EvaluacionRespuestaLocalDataSourceImpl
   }
 
   @override
-  Future<EvaluacionRespuestaModel?> getEvaluacionRespuestaDB(
+  Future<EvaluacionRespuestaModel?> getEvaluacionRespuesta(
       String criterioId, String evaluacionId) async {
     final db = await DBConfig.database;
     final res = await db.query('EvaluacionRespuesta',
@@ -80,7 +88,33 @@ class EvaluacionRespuestaLocalDataSourceImpl
   }
 
   @override
-  Future<int> updateRespuestaRemoteEvaluacionIdDB(
+  Future<EvaluacionRespuestaModel> getEvaluacionRespuestaOpcion(
+      String criterioId, String evaluacionId, String opcionId) async {
+    final db = await DBConfig.database;
+    final res = await db.query('EvaluacionRespuesta',
+        where: 'CriterioId = ? AND EvaluacionId = ? AND OpcionId = ?',
+        whereArgs: [criterioId, evaluacionId, opcionId]);
+
+    if (res.isEmpty) {
+      return EvaluacionRespuestaModel(
+          criterioId: criterioId,
+          evaluacionId: evaluacionId,
+          opcionId: '',
+          observacion: '',
+          recordStatus: 'N');
+    }
+
+    final evaluacionRespuestaMap = {
+      for (var e in res[0].entries) e.key: e.value
+    };
+    final evaluacionRespuestaModel =
+        EvaluacionRespuestaModel.fromJson(evaluacionRespuestaMap);
+
+    return evaluacionRespuestaModel;
+  }
+
+  @override
+  Future<int> updateRespuestaRemoteEvaluacionId(
       List<EvaluacionEntity> evaluaciones) async {
     final db = await DBConfig.database;
     var batch = db.batch();
@@ -101,7 +135,7 @@ class EvaluacionRespuestaLocalDataSourceImpl
   }
 
   @override
-  Future<int> saveEvaluacionRespuestaDB(
+  Future<int> saveEvaluacionRespuesta(
       EvaluacionRespuestaEntity evaluacionRespuestaEntity,
       String perfilId) async {
     final db = await DBConfig.database;
@@ -135,7 +169,7 @@ class EvaluacionRespuestaLocalDataSourceImpl
   }
 
   @override
-  Future<int> saveEvaluacionesRespuestasDB(
+  Future<int> saveEvaluacionesRespuestas(
       List<EvaluacionRespuestaEntity> evaluacionRespuestaEntity) async {
     final db = await DBConfig.database;
 
@@ -156,7 +190,7 @@ class EvaluacionRespuestaLocalDataSourceImpl
 
   @override
   Future<List<EvaluacionRespuestaModel>>
-      getEvaluacionesRespuestasProduccionDB() async {
+      getEvaluacionesRespuestasProduccion() async {
     final db = await DBConfig.database;
 
     final res = await db.query('EvaluacionRespuesta',
@@ -177,7 +211,7 @@ class EvaluacionRespuestaLocalDataSourceImpl
   }
 
   @override
-  Future<int> updateEvaluacionesRespuestasProduccionDB(
+  Future<int> updateEvaluacionesRespuestasProduccion(
       List<EvaluacionRespuestaEntity>
           evaluacionesRespuestasProduccionEntity) async {
     final db = await DBConfig.database;
@@ -204,7 +238,7 @@ class EvaluacionRespuestaLocalDataSourceImpl
   }
 
   @override
-  Future<int> clearEvaluacionesRespuestasDB() async {
+  Future<int> clearEvaluacionesRespuestas() async {
     final db = await DBConfig.database;
 
     var batch = db.batch();

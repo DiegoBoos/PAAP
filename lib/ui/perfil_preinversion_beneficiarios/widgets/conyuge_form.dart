@@ -133,8 +133,8 @@ class _ConyugeFormState extends State<ConyugeForm> {
                           hintText: 'Tipo de identificación',
                           labelText: 'Tipo de identificación'),
                       value: conyugeTipoIdentificacionId,
-                      items: state.tiposIdentificaciones
-                          ?.map<DropdownMenuItem<String>>(
+                      items: state.tiposIdentificaciones!
+                          .map<DropdownMenuItem<String>>(
                               (TipoIdentificacionEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.tipoIdentificacionId,

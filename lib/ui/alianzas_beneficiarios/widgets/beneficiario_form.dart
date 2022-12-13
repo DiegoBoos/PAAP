@@ -1,14 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../domain/cubits/genero/genero_cubit.dart';
 import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
-import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
-import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';
 import '../../../domain/entities/tipo_identificacion_entity.dart';
@@ -26,9 +28,11 @@ class BeneficiarioForm extends StatefulWidget {
 
 class _BeneficiarioFormState extends State<BeneficiarioForm> {
   final dateFormat = DateFormat('yyyy-MM-dd');
-  String tipoIdentificacionId = '';
-  String generoId = '';
-  String grupoEspecialId = '';
+  File? image;
+
+  String? tipoIdentificacionId;
+  String? generoId;
+  String? grupoEspecialId;
 
   final beneficiarioIdCtrl = TextEditingController();
   final fechaExpedicionDocumentoCtrl = TextEditingController();
@@ -84,18 +88,17 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   }
 
   void calcularEdad(String fechaNacimiento) {
-    DateTime edadDt = DateTime.parse(fechaNacimiento);
-    var currentYear = DateTime.now().year;
-    var edad = currentYear - edadDt.year;
+    final fechaNac = DateTime.parse(fechaNacimiento);
+    final now = DateTime.now();
+
+    var edad = now.difference(fechaNac).inDays ~/ 365;
+
     edadCtrl.text = edad.toString();
   }
 
   @override
   Widget build(BuildContext context) {
-    final vAlianzaCubit = BlocProvider.of<VAlianzaCubit>(context);
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
-    final perfilBeneficiarioCubit =
-        BlocProvider.of<PerfilBeneficiarioCubit>(context);
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
@@ -121,6 +124,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
             ),
             const SizedBox(height: 20),
             TextFormField(
+              keyboardType: TextInputType.number,
               controller: beneficiarioIdCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Documento de identificación',
@@ -132,45 +136,45 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                 return null;
               },
               onFieldSubmitted: (String value) {
-                final alianzaId = vAlianzaCubit.state.vAlianza!.alianzaId;
+                final alianzaId = alianzaBeneficiarioCubit
+                    .state.alianzaBeneficiario.alianzaId;
 
                 beneficiarioCubit.loadBeneficiario(value);
-
-                perfilBeneficiarioCubit.loadPerfilBeneficiario(
-                    alianzaId, value);
-
                 alianzaBeneficiarioCubit.loadAlianzaBeneficiario(
                     alianzaId, value);
               },
+              onSaved: ((String? newValue) {
+                beneficiarioCubit.changeBeneficiarioId(newValue);
+                alianzaBeneficiarioCubit.changeBeneficiarioId(newValue);
+              }),
             ),
             const SizedBox(height: 20),
             BlocBuilder<TipoIdentificacionCubit, TipoIdentificacionState>(
               builder: (context, state) {
                 if (state is TiposIdentificacionesLoaded) {
                   return DropdownButtonFormField(
-                      value: tipoIdentificacionId != ''
-                          ? tipoIdentificacionId
-                          : null,
-                      items: state.tiposIdentificaciones
-                          ?.map<DropdownMenuItem<String>>(
-                              (TipoIdentificacionEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.tipoIdentificacionId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        beneficiarioCubit.changeTipoDocumento(value!);
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido';
-                        }
-                        return null;
-                      },
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Tipo de documento',
-                          labelText: 'Tipo de documento'));
+                    decoration: CustomInputDecoration.inputDecoration(
+                        hintText: 'Tipo de identificación',
+                        labelText: 'Tipo de identificación'),
+                    value: tipoIdentificacionId,
+                    items: state.tiposIdentificaciones!
+                        .map<DropdownMenuItem<String>>(
+                            (TipoIdentificacionEntity value) {
+                      return DropdownMenuItem<String>(
+                        value: value.tipoIdentificacionId,
+                        child: Text(value.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      beneficiarioCubit.changeTipoDocumento(value!);
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Campo Requerido';
+                      }
+                      return null;
+                    },
+                  );
                 }
                 return Container();
               },
@@ -203,8 +207,11 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
 
                         if (newDate == null) return;
 
-                        beneficiarioCubit
-                            .changeFechaExpedicion(dateFormat.format(newDate));
+                        fechaExpedicionDocumentoCtrl.text =
+                            dateFormat.format(newDate);
+
+                        beneficiarioCubit.changeFechaExpedicion(
+                            fechaExpedicionDocumentoCtrl.text);
                       },
                       icon: const Icon(Icons.calendar_today))),
             ),
@@ -235,10 +242,10 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
 
                         if (newDate == null) return;
 
-                        beneficiarioCubit
-                            .changeFechaNacimiento(dateFormat.format(newDate));
-
                         fechaNacimientoCtrl.text = dateFormat.format(newDate);
+
+                        beneficiarioCubit
+                            .changeFechaNacimiento(fechaNacimientoCtrl.text);
 
                         calcularEdad(fechaNacimientoCtrl.text);
                       },
@@ -258,6 +265,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                 const SizedBox(width: 20),
                 Expanded(
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: telefonoMovilCtrl,
                     decoration: CustomInputDecoration.inputDecoration(
                         hintText: 'Teléfono', labelText: 'Teléfono'),
@@ -361,24 +369,26 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     builder: (context, state) {
                       if (state is GenerosLoaded) {
                         return DropdownButtonFormField(
-                            value: generoId != '' ? generoId : null,
-                            items: state.generos?.map<DropdownMenuItem<String>>(
-                                (GeneroEntity value) {
-                              return DropdownMenuItem<String>(
-                                value: value.generoId,
-                                child: Text(value.nombre),
-                              );
-                            }).toList(),
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Campo Requerido';
-                              }
-                              return null;
-                            },
-                            onChanged: (String? value) {
-                              beneficiarioCubit.changeGenero(value);
-                            },
-                            hint: const Text('Género'));
+                          decoration: CustomInputDecoration.inputDecoration(
+                              hintText: 'Género', labelText: 'Género'),
+                          value: generoId,
+                          items: state.generos!.map<DropdownMenuItem<String>>(
+                              (GeneroEntity value) {
+                            return DropdownMenuItem<String>(
+                              value: value.generoId,
+                              child: Text(value.nombre),
+                            );
+                          }).toList(),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Campo Requerido';
+                            }
+                            return null;
+                          },
+                          onChanged: (String? value) {
+                            beneficiarioCubit.changeGenero(value);
+                          },
+                        );
                       }
                       return Container();
                     },
@@ -391,34 +401,84 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
               builder: (context, state) {
                 if (state is GruposEspecialesLoaded) {
                   return DropdownButtonFormField(
-                      value: grupoEspecialId != '' ? grupoEspecialId : null,
-                      items: state.gruposEspeciales
-                          ?.map<DropdownMenuItem<String>>(
-                              (GrupoEspecialEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.grupoEspecialId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        beneficiarioCubit.changeGrupoEspecial(value!);
-                      },
-                      hint: const Text('Grupo Especial'));
+                    decoration: CustomInputDecoration.inputDecoration(
+                        hintText: 'Grupo Especial',
+                        labelText: 'Grupo Especial'),
+                    value: grupoEspecialId,
+                    items: state.gruposEspeciales!
+                        .map<DropdownMenuItem<String>>(
+                            (GrupoEspecialEntity value) {
+                      return DropdownMenuItem<String>(
+                        value: value.grupoEspecialId,
+                        child: Text(value.nombre),
+                      );
+                    }).toList(),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Campo Requerido';
+                      }
+                      return null;
+                    },
+                    onChanged: (String? value) {
+                      beneficiarioCubit.changeGrupoEspecial(value!);
+                    },
+                  );
                 }
                 return Container();
               },
             ),
-            const SizedBox(width: 20),
             const SizedBox(height: 20),
+            if (image != null)
+              Image.file(
+                image!,
+                width: 160,
+                height: 160,
+                fit: BoxFit.cover,
+              ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(56),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    textStyle: const TextStyle(fontSize: 20)),
+                onPressed: () => pickImage(ImageSource.gallery),
+                child: Row(children: const [
+                  Icon(Icons.image_outlined),
+                  SizedBox(width: 16),
+                  Text('Seleccionar de Galería')
+                ])),
+            const SizedBox(height: 20),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(56),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    textStyle: const TextStyle(fontSize: 20)),
+                onPressed: () => pickImage(ImageSource.camera),
+                child: Row(
+                  children: const [
+                    Icon(Icons.camera_alt_outlined),
+                    SizedBox(width: 16),
+                    Text('Seleccionar de Cámara')
+                  ],
+                )),
           ]),
         ),
       );
     }));
+  }
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+      setState(() => this.image = imageTemporary);
+      print(this.image);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
   }
 }

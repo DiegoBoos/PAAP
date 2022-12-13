@@ -5,7 +5,6 @@ import 'package:paap/ui/utils/custom_general_dialog.dart';
 import 'package:paap/ui/utils/custom_snack_bar.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
-import '../../../domain/blocs/download_sync/download_sync_bloc.dart';
 import '../../../domain/blocs/sync/sync_bloc.dart';
 import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/entities/usuario_entity.dart';

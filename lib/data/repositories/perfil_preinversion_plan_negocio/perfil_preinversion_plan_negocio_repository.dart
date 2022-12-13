@@ -18,14 +18,13 @@ class PerfilPreInversionPlanNegocioRepositoryImpl
 
   @override
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilPreInversionPlanesNegociosRepository(
-          UsuarioEntity usuario) async {
+      getPerfilPreInversionPlanNegociosRepository(UsuarioEntity usuario) async {
     try {
-      final perfilPreInversionPlanesNegocios =
+      final perfilPreInversionPlanNegocios =
           await perfilPreInversionPlanNegocioRemoteDataSource
-              .getPerfilPreInversionPlanesNegocios(usuario);
+              .getPerfilPreInversionPlanNegocios(usuario);
 
-      return Right(perfilPreInversionPlanesNegocios);
+      return Right(perfilPreInversionPlanNegocios);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -35,14 +34,14 @@ class PerfilPreInversionPlanNegocioRepositoryImpl
 
   @override
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      savePerfilesPreInversionesPlanesNegociosRepository(
+      savePerfilesPreInversionesPlanNegociosRepository(
           UsuarioEntity usuario,
           List<PerfilPreInversionPlanNegocioEntity>
-              perfilesPreInversionesPlanesNegociosEntity) async {
+              perfilesPreInversionesPlanNegociosEntity) async {
     try {
       final result = await perfilPreInversionPlanNegocioRemoteDataSource
-          .savePerfilesPreInversionesPlanesNegocios(
-              usuario, perfilesPreInversionesPlanesNegociosEntity);
+          .savePerfilesPreInversionesPlanNegocios(
+              usuario, perfilesPreInversionesPlanNegociosEntity);
 
       return Right(result);
     } on ServerFailure catch (e) {

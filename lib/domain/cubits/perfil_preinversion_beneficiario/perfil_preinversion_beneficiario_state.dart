@@ -15,12 +15,6 @@ class PerfilPreInversionBeneficiarioInitial
       : super(perfilPreInversionBeneficiario: initObject());
 }
 
-class PerfilPreInversionBeneficiarioLoading
-    extends PerfilPreInversionBeneficiarioState {
-  const PerfilPreInversionBeneficiarioLoading(
-      {required super.perfilPreInversionBeneficiario});
-}
-
 class PerfilPreInversionBeneficiarioLoaded
     extends PerfilPreInversionBeneficiarioState {
   final PerfilPreInversionBeneficiarioEntity

@@ -6,8 +6,7 @@ import '../../../domain/cubits/alianza_experiencia_agricola/alianza_experiencia_
 import '../../../domain/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../alianzas/widgets/alianza_drawer.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/floating_buttons.dart';
@@ -49,7 +48,7 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
             child: Form(
               key: formKey,
               child: Column(children: [
-                const Text('BENEFICIARIOS', style: Styles.titleStyle),
+                const Text('BENEFICIARIOS ALIANZA', style: Styles.titleStyle),
                 const SizedBox(height: 10),
                 BlocConsumer<AlianzaBeneficiarioCubit,
                     AlianzaBeneficiarioState>(
@@ -61,9 +60,6 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
                     if (state is AlianzaBeneficiarioSaved) {
                       CustomSnackBar.showSnackBar(context,
                           'Datos guardados satisfactoriamente', Colors.green);
-
-                      Navigator.pushNamedAndRemoveUntil(context,
-                          'VBeneficiarioPreInversion', (route) => false);
                     }
                   },
                   builder: (context, state) {
@@ -94,7 +90,6 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
                             formKey.currentState!.save();
 
                             saveBeneficiario(context);
-                            savePerfilBeneficiario(context);
                             saveAlianzaBeneficiario(context);
                             saveExperiencia(context);
                           },
@@ -118,69 +113,23 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
     beneficiarioCubit.saveBeneficiarioDB(beneficiario);
   }
 
-  void savePerfilBeneficiario(BuildContext context) {
-    final vPerfilPreInversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
-    final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
-    final perfilBeneficiarioCubit =
-        BlocProvider.of<PerfilBeneficiarioCubit>(context);
-
-    final perfilId =
-        vPerfilPreInversionCubit.state.vPerfilPreInversion!.perfilId;
-    final beneficiarioId = beneficiarioCubit.state.beneficiario.beneficiarioId;
-    final perfilBeneficiario = perfilBeneficiarioCubit.state.perfilBeneficiario;
-
-    perfilBeneficiarioCubit.changePerfilId(perfilId);
-    perfilBeneficiarioCubit.changeBeneficiarioId(beneficiarioId);
-    if (perfilBeneficiario.asociado == '') {
-      perfilBeneficiarioCubit.changeAsociado(false);
-    }
-    if (perfilBeneficiario.activo == '') {
-      perfilBeneficiarioCubit.changeActivo(false);
-    }
-    if (perfilBeneficiario.fueBeneficiado == '') {
-      perfilBeneficiarioCubit.changeFueBeneficiado(false);
-    }
-
-    perfilBeneficiarioCubit.savePerfilBeneficiarioDB(
-        perfilBeneficiarioCubit.state.perfilBeneficiario);
-  }
-
   void saveAlianzaBeneficiario(BuildContext context) {
-    final vPerfilPreInversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
-    final perfilBeneficiarioCubit =
-        BlocProvider.of<PerfilBeneficiarioCubit>(context);
+    final vAlianzaCubit = BlocProvider.of<VAlianzaCubit>(context);
+
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
-    final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId;
-
-    final perfilBeneficiario = perfilBeneficiarioCubit.state.perfilBeneficiario;
+    final alianzaId = vAlianzaCubit.state.vAlianza!.alianzaId;
 
     final alianzaBeneficiario =
         alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
-    alianzaBeneficiarioCubit.changeAlianzaId(perfilPreInversionId);
-    alianzaBeneficiarioCubit
-        .changeBeneficiarioId(perfilBeneficiario.beneficiarioId);
-    alianzaBeneficiarioCubit.changeMunicipioId(perfilBeneficiario.municipioId);
-    alianzaBeneficiarioCubit.changeVeredaId(perfilBeneficiario.veredaId);
-    alianzaBeneficiarioCubit.changeAreaFinca(perfilBeneficiario.areaFinca);
-    alianzaBeneficiarioCubit
-        .changeAreaProyecto(perfilBeneficiario.areaProyecto);
-    alianzaBeneficiarioCubit
-        .changeTipoTenencia(perfilBeneficiario.tipoTenenciaId);
-    alianzaBeneficiarioCubit.changeExperiencia(perfilBeneficiario.experiencia);
-    alianzaBeneficiarioCubit.changeAsociado(perfilBeneficiario.asociado);
-    alianzaBeneficiarioCubit
-        .changeConocePerfil(perfilBeneficiario.conocePerfil);
-    alianzaBeneficiarioCubit
-        .changeFueBeneficiado(perfilBeneficiario.fueBeneficiado);
-    alianzaBeneficiarioCubit
-        .changeCualBeneficio(perfilBeneficiario.cualBeneficio);
+    alianzaBeneficiarioCubit.changeAlianzaId(alianzaId);
+    alianzaBeneficiarioCubit.changeConocePerfil('true');
 
+    if (alianzaBeneficiario.activo == '') {
+      alianzaBeneficiarioCubit.changeActivo('false');
+    }
     if (alianzaBeneficiario.cotizanteBeps == '') {
       alianzaBeneficiarioCubit.changeCotizanteBeps(false);
     }
@@ -188,20 +137,17 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
       alianzaBeneficiarioCubit.changeAccesoExplotacionTierra(false);
     }
 
-    alianzaBeneficiarioCubit.saveAlianzaBeneficiarioDB(
-        alianzaBeneficiarioCubit.state.alianzaBeneficiario);
+    alianzaBeneficiarioCubit.saveAlianzaBeneficiarioDB(alianzaBeneficiario);
   }
 
   void saveExperiencia(BuildContext context) {
-    final vPerfilPreInversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
+    final vAlianzaCubit = BlocProvider.of<VAlianzaCubit>(context);
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
     final alianzaExperienciaAgricolaCubit =
         BlocProvider.of<AlianzaExperienciaAgricolaCubit>(context);
     final alianzaExperienciaPecuariaCubit =
         BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context);
-    final tipoProyecto =
-        vPerfilPreInversionCubit.state.vPerfilPreInversion!.tipoProyecto;
+    final tipoProyecto = vAlianzaCubit.state.vAlianza!.tipoProyecto;
 
     final beneficiarioId = beneficiarioCubit.state.beneficiario.beneficiarioId;
 

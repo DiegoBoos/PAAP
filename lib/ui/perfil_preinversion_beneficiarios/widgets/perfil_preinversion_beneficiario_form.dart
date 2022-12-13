@@ -155,7 +155,7 @@ class _PerfilPreInversionBeneficiarioFormState
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Residencia', labelText: 'Residencia'),
                       value: residenciaId,
-                      items: state.residencias?.map<DropdownMenuItem<String>>(
+                      items: state.residencias!.map<DropdownMenuItem<String>>(
                           (ResidenciaEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.residenciaId,
@@ -186,8 +186,8 @@ class _PerfilPreInversionBeneficiarioFormState
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Estado Civil', labelText: 'Estado Civil'),
                       value: estadoCivilId,
-                      items: state.estadosCiviles
-                          ?.map<DropdownMenuItem<String>>(
+                      items: state.estadosCiviles!
+                          .map<DropdownMenuItem<String>>(
                               (EstadoCivilEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.estadoCivilId,
@@ -222,8 +222,8 @@ class _PerfilPreInversionBeneficiarioFormState
                           hintText: 'Nivel Escolar',
                           labelText: 'Nivel Escolar'),
                       value: nivelEscolarId,
-                      items: state.nivelesEscolares
-                          ?.map<DropdownMenuItem<String>>(
+                      items: state.nivelesEscolares!
+                          .map<DropdownMenuItem<String>>(
                               (NivelEscolarEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.nivelEscolarId,
@@ -254,8 +254,8 @@ class _PerfilPreInversionBeneficiarioFormState
                           hintText: 'Actividad Económica',
                           labelText: 'Actividad Económica'),
                       value: actividadEconomicaId,
-                      items: state.actividadesEconomicas
-                          ?.map<DropdownMenuItem<String>>(
+                      items: state.actividadesEconomicas!
+                          .map<DropdownMenuItem<String>>(
                               (ActividadEconomicaEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.actividadEconomicaId,
@@ -285,8 +285,8 @@ class _PerfilPreInversionBeneficiarioFormState
                       decoration: CustomInputDecoration.inputDecoration(
                           hintText: 'Discapacidad', labelText: 'Discapacidad'),
                       value: tipoDiscapacidadId,
-                      items: state.tiposDiscapacidades
-                          ?.map<DropdownMenuItem<String>>(
+                      items: state.tiposDiscapacidades!
+                          .map<DropdownMenuItem<String>>(
                               (TipoDiscapacidadEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.tipoDiscapacidadId,

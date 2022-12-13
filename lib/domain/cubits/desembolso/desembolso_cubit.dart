@@ -13,7 +13,7 @@ class DesembolsoCubit extends Cubit<DesembolsoState> {
     getDesembolsosDB();
   }
 
-  void getDesembolsosDB() async {
+  Future<void> getDesembolsosDB() async {
     final result = await desembolsoDB.getDesembolsosUsecaseDB();
     result.fold((failure) => emit(DesembolsosError(failure.properties.first)),
         (data) => emit(DesembolsosLoaded(data)));

@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 class SaveFinishCancelButtons extends StatelessWidget {
   const SaveFinishCancelButtons({
     Key? key,
-    //required this.onCanceled,
     required this.onFinished,
     required this.finalizado,
     required this.onSaved,
   }) : super(key: key);
 
-  //final Function()? onCanceled;
   final Function()? onFinished;
   final String finalizado;
   final Function()? onSaved;
@@ -17,13 +15,6 @@ class SaveFinishCancelButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-      /*   FloatingActionButton(
-        heroTag: 'btn-cancel',
-        backgroundColor: Colors.red,
-        onPressed: onCanceled,
-        child: const Icon(Icons.cancel),
-      ), */
-      const SizedBox(width: 5),
       FloatingActionButton(
         heroTag: 'btn-finish',
         onPressed: onFinished,
@@ -40,6 +31,13 @@ class SaveFinishCancelButtons extends StatelessWidget {
             ? Colors.grey
             : Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.save),
+      ),
+      const SizedBox(width: 5),
+      FloatingActionButton(
+        heroTag: 'btn-back',
+        backgroundColor: const Color(0XFF757575),
+        onPressed: () => Navigator.pop(context),
+        child: const Icon(Icons.arrow_back),
       ),
     ]);
   }
@@ -66,7 +64,7 @@ class SaveBackButtons extends StatelessWidget {
       FloatingActionButton(
         heroTag: 'btn-back',
         onPressed: () => Navigator.pop(context),
-        backgroundColor: Colors.grey,
+        backgroundColor: const Color(0XFF757575),
         child: const Icon(Icons.arrow_back),
       ),
     ]);
@@ -85,7 +83,7 @@ class BackFloatingButton extends StatelessWidget {
       child: FloatingActionButton(
         heroTag: 'btn-back',
         onPressed: () => Navigator.popUntil(context, (route) => route.isFirst),
-        backgroundColor: Colors.grey,
+        backgroundColor: const Color(0XFF757575),
         child: const Icon(Icons.arrow_back),
       ),
     );

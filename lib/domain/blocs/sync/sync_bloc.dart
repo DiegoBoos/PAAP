@@ -2196,7 +2196,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionPlanNegocioDB
-        .getPerfilesPreInversionesPlanesNegociosProduccionUsecaseDB();
+        .getPerfilesPreInversionesPlanNegociosProduccionUsecaseDB();
     result.fold(
         (failure) => add(SyncError(failure.properties.first)),
         (data) async => await savePerfilesPreInversionesPlanNegociosRemote(
@@ -2208,7 +2208,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       List<PerfilPreInversionPlanNegocioEntity> data,
       Emitter<SyncState> emit) async {
     final result = await perfilPreInversionPlanNegocio
-        .savePerfilesPreInversionesPlanesNegociosUsecase(usuario, data);
+        .savePerfilesPreInversionesPlanNegociosUsecase(usuario, data);
     return result.fold(
         (failure) => add(SyncError(failure.properties.first)),
         (data) async =>
@@ -2221,7 +2221,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       List<PerfilPreInversionPlanNegocioEntity> data,
       Emitter<SyncState> emit) async {
     final result = await perfilPreInversionPlanNegocioDB
-        .updatePerfilesPreInversionesPlanesNegociosProduccionUsecaseDB(data);
+        .updatePerfilesPreInversionesPlanNegociosProduccionUsecaseDB(data);
     result.fold(
         (failure) => add(SyncError(failure.properties.first)),
         (data) async =>
@@ -2232,7 +2232,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       UsuarioEntity usuario, Emitter<SyncState> emit, int result) async {
     if (result == 0) {
       final result = await perfilPreInversionPlanNegocio
-          .getPerfilPreInversionPlanesNegociosUsecase(usuario);
+          .getPerfilPreInversionPlanNegociosUsecase(usuario);
       return result.fold(
           (failure) => add(SyncError(failure.properties.first)),
           (data) async => await saveSyncPerfilesPreInversionesPlanNegocios(
@@ -2247,7 +2247,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       Emitter<SyncState> emit,
       UsuarioEntity usuario) async {
     final result = await perfilPreInversionPlanNegocioDB
-        .savePerfilPreInversionPlanesNegociosUsecaseDB(data);
+        .savePerfilPreInversionPlanNegociosUsecaseDB(data);
     return result.fold((failure) => add(SyncError(failure.properties.first)),
         (_) async => await uploadPerfilPreInversionPrecio(usuario, emit));
   }

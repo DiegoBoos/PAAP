@@ -20,11 +20,11 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
               List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
       getPerfilPreInversionCofinanciadorActividadesFinancierasRepositoryDB() async {
     try {
-      final perfilPreInversionCofinanciadorActividadesFinancierasDB =
+      final perfilPreInversionCofinanciadorActividadesFinancieras =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
-              .getPerfilPreInversionCofinanciadorActividadesFinancierasDB();
+              .getPerfilPreInversionCofinanciadorActividadesFinancieras();
 
-      return Right(perfilPreInversionCofinanciadorActividadesFinancierasDB);
+      return Right(perfilPreInversionCofinanciadorActividadesFinancieras);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -38,11 +38,11 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
               List<PerfilPreInversionCofinanciadorActividadFinancieraEntity>>>
       getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionRepositoryDB() async {
     try {
-      final perfilPreInversionCofinanciadorActividadFinancierasDB =
+      final perfilPreInversionCofinanciadorActividadFinancieras =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
-              .getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB();
+              .getPerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccion();
 
-      return Right(perfilPreInversionCofinanciadorActividadFinancierasDB);
+      return Right(perfilPreInversionCofinanciadorActividadFinancieras);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -55,16 +55,18 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
           Either<Failure,
               PerfilPreInversionCofinanciadorActividadFinancieraEntity?>>
       getPerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId) async {
+    String perfilPreInversionId,
+    String cofinanciadorId,
+  ) async {
     try {
-      final perfilPreInversionCofinanciadorActividadFinancieraDB =
+      final perfilPreInversionCofinanciadorActividadFinanciera =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
-              .getPerfilPreInversionCofinanciadorActividadFinancieraDB(
-                  perfilPreInversionId, cofinanciadorId, desembolsoId);
+              .getPerfilPreInversionCofinanciadorActividadFinanciera(
+        perfilPreInversionId,
+        cofinanciadorId,
+      );
 
-      return Right(perfilPreInversionCofinanciadorActividadFinancieraDB);
+      return Right(perfilPreInversionCofinanciadorActividadFinanciera);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -79,12 +81,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
       getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorRepositoryDB(
           String perfilPreInversionId, String cofinanciadorId) async {
     try {
-      final perfilPreInversionCofinanciadorActividadesFinancierasDB =
+      final perfilPreInversionCofinanciadorActividadesFinancieras =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
-              .getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciadorDB(
+              .getPerfilPreInversionCofinanciadorActividadesFinancierasByCofinanciador(
                   perfilPreInversionId, cofinanciadorId);
 
-      return Right(perfilPreInversionCofinanciadorActividadesFinancierasDB);
+      return Right(perfilPreInversionCofinanciadorActividadesFinancieras);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -116,11 +118,11 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
           PerfilPreInversionCofinanciadorActividadFinancieraEntity
               perfilPreInversionCofinanciadorActividadFinancieraEntity) async {
     try {
-      final perfilPreInversionCofinanciadorActividadFinancieraDB =
+      final perfilPreInversionCofinanciadorActividadFinanciera =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
-              .savePerfilPreInversionCofinanciadorActividadFinancieraDB(
+              .savePerfilPreInversionCofinanciadorActividadFinanciera(
                   perfilPreInversionCofinanciadorActividadFinancieraEntity);
-      return Right(perfilPreInversionCofinanciadorActividadFinancieraDB);
+      return Right(perfilPreInversionCofinanciadorActividadFinanciera);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -136,7 +138,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRepositoryDBImpl
     try {
       final result =
           await perfilPreInversionCofinanciadorActividadFinancieraLocalDataSource
-              .updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccionDB(
+              .updatePerfilesPreInversionesCofinanciadoresActividadesFinancierasProduccion(
                   perfilesPreInversionesCofinanciadoresActividadesFinancierasEntity);
 
       return Right(result);

@@ -7,12 +7,10 @@ import '../../../domain/cubits/perfil_preinversion_ingresos_utp/perfil_preinvers
 import '../../../domain/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
 import '../../../domain/cubits/producto/producto_cubit.dart';
 import '../../../domain/cubits/tipo_calidad/tipo_calidad_cubit.dart';
-import '../../../domain/cubits/unidad/unidad_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_precio_entity.dart';
 import '../../../domain/entities/producto_entity.dart';
 import '../../../domain/entities/tipo_calidad_entity.dart';
-import '../../../domain/entities/unidad_entity.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/styles.dart';
@@ -30,7 +28,6 @@ class PerfilPreInversionPrecioForm extends StatefulWidget {
 class _PerfilPreInversionPrecioFormState
     extends State<PerfilPreInversionPrecioForm> {
   final formKeyPerfilPreInversionPrecio = GlobalKey<FormState>();
-  String? unidadId;
   String? productoId;
   String? tipoCalidadId;
   final precioCtrl = TextEditingController();
@@ -67,7 +64,6 @@ class _PerfilPreInversionPrecioFormState
 
   void loadPerfilPreInversionPrecio(
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioLoaded) {
-    unidadId = perfilPreInversionPrecioLoaded.unidadId;
     productoId = perfilPreInversionPrecioLoaded.productoId;
     tipoCalidadId = perfilPreInversionPrecioLoaded.tipoCalidadId;
     precioCtrl.text = perfilPreInversionPrecioLoaded.precio;
@@ -98,36 +94,6 @@ class _PerfilPreInversionPrecioFormState
                 style: Styles.titleStyle,
               ),
               const SizedBox(height: 20),
-              BlocBuilder<UnidadCubit, UnidadState>(
-                builder: (context, state) {
-                  if (state is UnidadesLoaded) {
-                    return DropdownButtonFormField(
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Unidad', labelText: 'Unidad'),
-                      isExpanded: true,
-                      value: unidadId,
-                      items: state.unidades!
-                          .map<DropdownMenuItem<String>>((UnidadEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.unidadId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        perfilPreInversionIngresosUPTCubit.changeUnidad(value);
-                        perfilPreInversionPrecioCubit.changeUnidad(value);
-                      },
-                    );
-                  }
-                  return Container();
-                },
-              ),
               const SizedBox(height: 20),
               BlocBuilder<ProductoCubit, ProductoState>(
                 builder: (context, state) {
@@ -319,6 +285,7 @@ class _PerfilesPreInversionesPreciosRowsState
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<PerfilesPreInversionesPreciosBloc>(context, listen: true);
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: BlocBuilder<PerfilesPreInversionesPreciosBloc,
@@ -336,7 +303,7 @@ class _PerfilesPreInversionesPreciosRowsState
               headingRowColor: MaterialStateProperty.all(
                   Theme.of(context).colorScheme.secondary),
               columns: <DataColumn>[
-                DataColumn(label: Container()),
+                //DataColumn(label: Container()),
                 DataColumn(
                   label: Expanded(
                     child: Text('Id',
@@ -383,16 +350,15 @@ class _PerfilesPreInversionesPreciosRowsState
                     .format(double.parse(perfilPreInversionPrecio.precio));
 
                 return DataRow(cells: <DataCell>[
-                  DataCell(IconButton(
+                  /*  DataCell(IconButton(
                       onPressed: () {
-                        /*  final perfilPreInversionPrecioCubit =
+                         final perfilPreInversionPrecioCubit =
                             BlocProvider.of<PerfilPreInversionPrecioCubit>(
-                                context); */
+                                context);
 
-                        //TODO: Eliminar perfilPreInversionPrecio
-                        //perfilPreInversionPrecioCubit.deletePerfilPreInversionPrecioDB();
+                        perfilPreInversionPrecioCubit.deletePerfilPreInversionPrecioDB();
                       },
-                      icon: const Icon(Icons.cancel))),
+                      icon: const Icon(Icons.cancel))), */
                   DataCell(Text(perfilPreInversionPrecio.perfilPreInversionId)),
                   DataCell(Text(perfilPreInversionPrecio.unidad ?? '')),
                   DataCell(Text(perfilPreInversionPrecio.producto ?? '')),

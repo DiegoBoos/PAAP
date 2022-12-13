@@ -19,13 +19,10 @@ class PerfilPreInversionCofinanciadorRubroCubit
 
   Future<PerfilPreInversionCofinanciadorRubroEntity?>
       getPerfilPreInversionCofinanciadorRubro(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId,
-          String actividadFinancieraId) async {
+          String perfilPreInversionId, String cofinanciadorId) async {
     final result = await perfilPreInversionCofinanciadorRubroDB
-        .getPerfilPreInversionCofinanciadorRubroUsecaseDB(perfilPreInversionId,
-            cofinanciadorId, desembolsoId, actividadFinancieraId);
+        .getPerfilPreInversionCofinanciadorRubroUsecaseDB(
+            perfilPreInversionId, cofinanciadorId);
     return result.fold((failure) => null, (data) {
       if (data != null) {
         emit(PerfilPreInversionCofinanciadorRubroLoaded(data));
@@ -45,10 +42,12 @@ class PerfilPreInversionCofinanciadorRubroCubit
     result.fold(
         (failure) => emit(PerfilPreInversionCofinanciadorRubroError(
             failure.properties.first)),
-        (data) => emit(PerfilPreInversionCofinanciadorRubroSaved()));
+        (data) => emit(PerfilPreInversionCofinanciadorRubroSaved(
+            perfilPreInversionCofinanciadorRubro:
+                perfilPreInversionCofinanciadorRubroEntity)));
   }
 
-  void changePerfilPreInversion(String value) {
+  void changePerfilPreInversionId(String value) {
     final perfilPreInversionId = state.perfilPreInversionCofinanciadorRubro
         .copyWith(perfilPreInversionId: value);
     emit(PerfilPreInversionCofinanciadorRubroChanged(perfilPreInversionId));
@@ -70,6 +69,12 @@ class PerfilPreInversionCofinanciadorRubroCubit
     final valorChanged =
         state.perfilPreInversionCofinanciadorRubro.copyWith(valor: newValue);
     emit(PerfilPreInversionCofinanciadorRubroChanged(valorChanged));
+  }
+
+  void changeDesembolso(String? value) {
+    final desembolsoChanged = state.perfilPreInversionCofinanciadorRubro
+        .copyWith(desembolsoId: value);
+    emit(PerfilPreInversionCofinanciadorRubroChanged(desembolsoChanged));
   }
 
   void changeActividadFinanciera(String? value) {

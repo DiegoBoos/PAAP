@@ -47,7 +47,7 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
                 perfilPreInversionCofinanciadorDesembolsoEntity)));
   }
 
-  void changePerfilPreInversion(String value) {
+  void changePerfilPreInversionId(String value) {
     final perfilPreInversionId = state.perfilPreInversionCofinanciadorDesembolso
         .copyWith(perfilPreInversionId: value);
     emit(
@@ -70,13 +70,5 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
     final fechaChanged =
         state.perfilPreInversionCofinanciadorDesembolso.copyWith(fecha: text);
     emit(PerfilPreInversionCofinanciadorDesembolsoChanged(fechaChanged));
-  }
-
-  void canCreateActividadFinanciera() {
-    final canCreateActividadFinanciera = state
-        .perfilPreInversionCofinanciadorDesembolso
-        .copyWith(canCreateActividadFinanciera: true);
-    emit(PerfilPreInversionCofinanciadorDesembolsoChanged(
-        canCreateActividadFinanciera));
   }
 }

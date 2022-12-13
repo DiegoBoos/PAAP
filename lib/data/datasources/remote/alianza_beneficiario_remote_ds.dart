@@ -117,6 +117,39 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
+    String dataConyuge = '';
+
+    if (alianzaBeneficiarioEntity.estadoCivilId != '2' &&
+        alianzaBeneficiarioEntity.estadoCivilId != '5') {
+      dataConyuge = '''
+            <ConyugeTipoIdentificacionId>1</ConyugeTipoIdentificacionId>
+            <ConyugeId>${alianzaBeneficiarioEntity.conyugeId}</ConyugeId>
+            <ConyugeNombre1></ConyugeNombre1>
+            <ConyugeNombre2></ConyugeNombre2>
+            <ConyugeApellido1></ConyugeApellido1>
+            <ConyugeApellido2></ConyugeApellido2>
+            <ConyugeGeneroId>1</ConyugeGeneroId>
+            <ConyugeFechaExpedicionDocumento>1900-01-01T00:00:00+01:00</ConyugeFechaExpedicionDocumento>
+            <ConyugeGrupoEspecialId>1</ConyugeGrupoEspecialId>
+            <ConyugeFechaNacimiento>1900-01-01T00:00:00+01:00</ConyugeFechaNacimiento>
+            <ConyugeIngresosMensuales>0</ConyugeIngresosMensuales>
+      ''';
+    } else {
+      dataConyuge = '''
+            <ConyugeTipoIdentificacionId>${alianzaBeneficiarioEntity.conyugeTipoIdentificacionId}</ConyugeTipoIdentificacionId>
+            <ConyugeId>${alianzaBeneficiarioEntity.conyugeId}</ConyugeId>
+            <ConyugeNombre1>${alianzaBeneficiarioEntity.conyugeNombre1}</ConyugeNombre1>
+            <ConyugeNombre2>${alianzaBeneficiarioEntity.conyugeNombre2}</ConyugeNombre2>
+            <ConyugeApellido1>${alianzaBeneficiarioEntity.conyugeApellido1}</ConyugeApellido1>
+            <ConyugeApellido2>${alianzaBeneficiarioEntity.conyugeApellido2}</ConyugeApellido2>
+            <ConyugeGeneroId>${alianzaBeneficiarioEntity.conyugeGeneroId}</ConyugeGeneroId>
+            <ConyugeFechaExpedicionDocumento>${alianzaBeneficiarioEntity.conyugeFechaExpedicionDocumento}</ConyugeFechaExpedicionDocumento>
+            <ConyugeGrupoEspecialId>${alianzaBeneficiarioEntity.conyugeGrupoEspecialId}</ConyugeGrupoEspecialId>
+            <ConyugeFechaNacimiento>${alianzaBeneficiarioEntity.conyugeFechaNacimiento}</ConyugeFechaNacimiento>
+            <ConyugeIngresosMensuales>${alianzaBeneficiarioEntity.conyugeIngresosMensuales}</ConyugeIngresosMensuales>
+      ''';
+    }
+
     final alianzaBeneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
@@ -162,24 +195,13 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
             <CalificacionSISBEN>${alianzaBeneficiarioEntity.calificacionSisben}</CalificacionSISBEN>
             <IngresosMensuales>${alianzaBeneficiarioEntity.ingresosMensuales}</IngresosMensuales>
             <TipoDiscapacidadId>${alianzaBeneficiarioEntity.tipoDiscapacidadId}</TipoDiscapacidadId>
-            <ConyugeTipoIdentificacionId>${alianzaBeneficiarioEntity.conyugeTipoIdentificacionId}</ConyugeTipoIdentificacionId>
-            <ConyugeId>${alianzaBeneficiarioEntity.conyugeId}</ConyugeId>
-            <ConyugeNombre1>${alianzaBeneficiarioEntity.conyugeNombre1}</ConyugeNombre1>
-            <ConyugeNombre2>${alianzaBeneficiarioEntity.conyugeNombre2}</ConyugeNombre2>
-            <ConyugeApellido1>${alianzaBeneficiarioEntity.conyugeApellido1}</ConyugeApellido1>
-            <ConyugeApellido2>${alianzaBeneficiarioEntity.conyugeApellido2}</ConyugeApellido2>
-            <ConyugeGeneroId>${alianzaBeneficiarioEntity.conyugeGeneroId}</ConyugeGeneroId>
-            <ConyugeFechaExpedicionDocumento>${alianzaBeneficiarioEntity.conyugeFechaExpedicionDocumento}</ConyugeFechaExpedicionDocumento>
-            <ConyugeGrupoEspecialId>${alianzaBeneficiarioEntity.conyugeGrupoEspecialId}</ConyugeGrupoEspecialId>
-            <ConyugeFechaNacimiento>${alianzaBeneficiarioEntity.conyugeFechaNacimiento}</ConyugeFechaNacimiento>
-            <ConyugeIngresosMensuales>${alianzaBeneficiarioEntity.conyugeIngresosMensuales}</ConyugeIngresosMensuales>
             <ActividadEconomicaId>${alianzaBeneficiarioEntity.actividadEconomicaId}</ActividadEconomicaId>
             <IngresosDiarios>${alianzaBeneficiarioEntity.ingresosDiarios}</IngresosDiarios>
             <DiasTrabajo>${alianzaBeneficiarioEntity.diasTrabajo}</DiasTrabajo>
             <Longitud>${alianzaBeneficiarioEntity.longitud}</Longitud>
             <Latitud>${alianzaBeneficiarioEntity.latitud}</Latitud>
             <CedulaCatastral>${alianzaBeneficiarioEntity.cedulaCatastral}</CedulaCatastral>
-            
+            $dataConyuge
           </objeto>
         </GuardarAlianzaBeneficiario>
       </soap:Body>

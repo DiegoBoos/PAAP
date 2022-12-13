@@ -35,76 +35,122 @@ class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
     final experienciaPecuariaCubit =
         BlocProvider.of<ExperienciaPecuariaCubit>(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: DataTable(
-        headingRowColor:
-            MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-        dividerThickness: 1,
-        columnSpacing: 10,
-        dataRowHeight: 150,
-        columns: <DataColumn>[
-          DataColumn(
-            label: Expanded(
-              child: Text('ID',
-                  style: subtitleStyle.copyWith(color: Colors.white)),
-            ),
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: DataTable(
+            headingRowColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.secondary),
+            dividerThickness: 1,
+            columnSpacing: 10,
+            dataRowHeight: 200,
+            columns: <DataColumn>[
+              DataColumn(label: Container()),
+              DataColumn(
+                label: Expanded(
+                  child: Text('Documento',
+                      style: subtitleStyle.copyWith(color: Colors.white)),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text('Tipo Documento',
+                      style: subtitleStyle.copyWith(color: Colors.white)),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text('Nombre',
+                      style: subtitleStyle.copyWith(color: Colors.white)),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text('Edad',
+                      style: subtitleStyle.copyWith(color: Colors.white)),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text('Género',
+                      style: subtitleStyle.copyWith(color: Colors.white)),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text('Grupo Especial',
+                      style: subtitleStyle.copyWith(color: Colors.white)),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text('Ubicación',
+                      style: subtitleStyle.copyWith(color: Colors.white)),
+                ),
+              ),
+            ],
+            rows:
+                List.generate(perfilPreInversionBeneficiarios.length, (index) {
+              PerfilPreInversionBeneficiarioEntity
+                  perfilPreInversionBeneficiario =
+                  perfilPreInversionBeneficiarios[index];
+
+              return DataRow(cells: <DataCell>[
+                DataCell(IconButton(
+                    onPressed: () {
+                      final tipoProyecto = vPerfilPreinversionCubit
+                          .state.vPerfilPreInversion!.tipoProyecto;
+                      final perfilId = vPerfilPreinversionCubit
+                          .state.vPerfilPreInversion!.perfilId;
+                      final beneficiarioId =
+                          perfilPreInversionBeneficiario.beneficiarioId;
+
+                      perfilPreinversionBeneficiarioCubit
+                          .selectPerfilPreinversionBeneficiario(
+                              perfilPreInversionBeneficiario);
+
+                      beneficiarioCubit.loadBeneficiario(beneficiarioId);
+                      perfilBeneficiarioCubit.selectPerfilBeneficiario(
+                          perfilId, beneficiarioId);
+                      if (tipoProyecto == 'Agrícola') {
+                        experienciaAgricolaCubit.selectExperienciaAgricola(
+                            '1', beneficiarioId);
+                      } else if (tipoProyecto == 'Pecuario') {
+                        experienciaPecuariaCubit.selectExperienciaPecuaria(
+                            '1', beneficiarioId);
+                      }
+
+                      Navigator.pushNamed(
+                          context, 'NewEditVBeneficiarioPreInversion');
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                    ))),
+                DataCell(Center(
+                    child:
+                        Text(perfilPreInversionBeneficiario.beneficiarioId))),
+                DataCell(Center(
+                    child: Text(
+                        perfilPreInversionBeneficiario.tipoDocumento ?? ''))),
+                DataCell(Center(
+                    child: Text(perfilPreInversionBeneficiario.nombre ?? ''))),
+                DataCell(Center(
+                    child: Text(perfilPreInversionBeneficiario.edad ?? ''))),
+                DataCell(Center(
+                    child: Text(perfilPreInversionBeneficiario.genero ?? ''))),
+                DataCell(Center(
+                    child: Text(
+                        perfilPreInversionBeneficiario.grupoEspecial ?? ''))),
+                DataCell(Center(
+                    child:
+                        Text(perfilPreInversionBeneficiario.ubicacion ?? ''))),
+              ]);
+            }),
           ),
-          DataColumn(
-            label: Expanded(
-              child: Text('Nombre',
-                  style: subtitleStyle.copyWith(color: Colors.white)),
-            ),
-          ),
-          const DataColumn(
-            label: Expanded(
-              child: Text(''),
-            ),
-          ),
-        ],
-        rows: List.generate(perfilPreInversionBeneficiarios.length, (index) {
-          PerfilPreInversionBeneficiarioEntity perfilPreInversionBeneficiario =
-              perfilPreInversionBeneficiarios[index];
-
-          return DataRow(cells: <DataCell>[
-            DataCell(Text(perfilPreInversionBeneficiario.beneficiarioId)),
-            DataCell(Text(perfilPreInversionBeneficiario.beneficiario!)),
-            DataCell(IconButton(
-                onPressed: () {
-                  final tipoProyecto = vPerfilPreinversionCubit
-                      .state.vPerfilPreInversion!.tipoProyecto;
-
-                  final perfilId = vPerfilPreinversionCubit
-                      .state.vPerfilPreInversion!.perfilId;
-
-                  final beneficiarioId =
-                      perfilPreInversionBeneficiario.beneficiarioId;
-
-                  perfilPreinversionBeneficiarioCubit
-                      .selectPerfilPreinversionBeneficiario(
-                          perfilPreInversionBeneficiario);
-
-                  beneficiarioCubit.loadBeneficiario(beneficiarioId);
-
-                  perfilBeneficiarioCubit.selectPerfilBeneficiario(
-                      perfilId, beneficiarioId);
-
-                  if (tipoProyecto == 'Agrícola') {
-                    experienciaAgricolaCubit.selectExperienciaAgricola(
-                        '1', beneficiarioId);
-                  } else if (tipoProyecto == 'Pecuario') {
-                    experienciaPecuariaCubit.selectExperienciaPecuaria(
-                        '1', beneficiarioId);
-                  }
-
-                  Navigator.pushNamed(
-                      context, 'NewEditVBeneficiarioPreInversion');
-                },
-                icon: const Icon(
-                  Icons.keyboard_arrow_right,
-                ))),
-          ]);
-        }),
+        ),
       ),
     );
   }

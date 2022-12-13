@@ -3,8 +3,6 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:paap/domain/blocs/sync/sync_bloc.dart';
 
-import 'domain/blocs/download_sync/download_sync_bloc.dart';
-import 'domain/blocs/upload_sync/upload_sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
 import 'domain/cubits/v_alianza/v_alianza_cubit.dart';
 import 'domain/usecases/actividad/actividad_exports.dart';
@@ -719,138 +717,6 @@ syncInit() {
       ));
 }
 
-downloadSyncInit() {
-  // bloc
-  locator.registerFactory(() => DownloadSyncBloc(
-        actividad: locator(),
-        actividadDB: locator(),
-        actividadEconomica: locator(),
-        actividadEconomicaDB: locator(),
-        actividadFinanciera: locator(),
-        actividadFinancieraDB: locator(),
-        agrupacion: locator(),
-        agrupacionDB: locator(),
-        aliado: locator(),
-        aliadoDB: locator(),
-        alianza: locator(),
-        alianzaDB: locator(),
-        alianzaBeneficiario: locator(),
-        alianzaBeneficiarioDB: locator(),
-        beneficiario: locator(),
-        beneficiarioDB: locator(),
-        cofinanciador: locator(),
-        cofinanciadorDB: locator(),
-        consultor: locator(),
-        consultorDB: locator(),
-        convocatoria: locator(),
-        convocatoriaDB: locator(),
-        criterio: locator(),
-        criterioDB: locator(),
-        departamentos: locator(),
-        departamentosDB: locator(),
-        desembolso: locator(),
-        desembolsoDB: locator(),
-        estadoCivil: locator(),
-        estadoCivilDB: locator(),
-        estadoVisita: locator(),
-        estadoVisitaDB: locator(),
-        evaluacion: locator(),
-        evaluacionDB: locator(),
-        evaluacionRespuesta: locator(),
-        evaluacionRespuestaDB: locator(),
-        experienciaAgricola: locator(),
-        experienciaAgricolaDB: locator(),
-        experienciaPecuaria: locator(),
-        experienciaPecuariaDB: locator(),
-        alianzaExperienciaAgricola: locator(),
-        alianzaExperienciaAgricolaDB: locator(),
-        alianzaExperienciaPecuaria: locator(),
-        alianzaExperienciaPecuariaDB: locator(),
-        frecuencia: locator(),
-        frecuenciaDB: locator(),
-        generos: locator(),
-        generosDB: locator(),
-        grupoEspecial: locator(),
-        grupoEspecialDB: locator(),
-        indicador: locator(),
-        indicadorDB: locator(),
-        menu: locator(),
-        menuDB: locator(),
-        metaIndicador: locator(),
-        metaIndicadorDB: locator(),
-        municipios: locator(),
-        municipiosDB: locator(),
-        nivelEscolar: locator(),
-        nivelEscolarDB: locator(),
-        objetivo: locator(),
-        objetivoDB: locator(),
-        opcion: locator(),
-        opcionDB: locator(),
-        perfilBeneficiario: locator(),
-        perfilBeneficiarioDB: locator(),
-        perfiles: locator(),
-        perfilesDB: locator(),
-        perfilesPreInversion: locator(),
-        perfilesPreInversionDB: locator(),
-        perfilPreInversionAliados: locator(),
-        perfilPreInversionAliadosDB: locator(),
-        perfilPreInversionBeneficiario: locator(),
-        perfilPreInversionBeneficiarioDB: locator(),
-        perfilPreInversionCofinanciador: locator(),
-        perfilPreInversionCofinanciadorActividadFinanciera: locator(),
-        perfilPreInversionCofinanciadorActividadFinancieraDB: locator(),
-        perfilPreInversionCofinanciadorDB: locator(),
-        perfilPreInversionCofinanciadorDesembolso: locator(),
-        perfilPreInversionCofinanciadorDesembolsoDB: locator(),
-        perfilPreInversionCofinanciadorRubro: locator(),
-        perfilPreInversionCofinanciadorRubroDB: locator(),
-        perfilPreInversionConsultor: locator(),
-        perfilPreInversionConsultorDB: locator(),
-        perfilPreInversionPrecio: locator(),
-        perfilPreInversionPrecioDB: locator(),
-        productoObjetivo: locator(),
-        productoObjetivoDB: locator(),
-        productos: locator(),
-        productosDB: locator(),
-        proyecto: locator(),
-        proyectoDB: locator(),
-        residencia: locator(),
-        residenciaDB: locator(),
-        revision: locator(),
-        revisionDB: locator(),
-        rubro: locator(),
-        rubroDB: locator(),
-        sitioEntrega: locator(),
-        sitioEntregaDB: locator(),
-        tipoActividadProductiva: locator(),
-        tipoActividadProductivaDB: locator(),
-        tipoCalidad: locator(),
-        tipoCalidadDB: locator(),
-        tipoDiscapacidad: locator(),
-        tipoDiscapacidadDB: locator(),
-        tipoEntidad: locator(),
-        tipoEntidadDB: locator(),
-        tipoIdentificacion: locator(),
-        tipoIdentificacionDB: locator(),
-        tipoMovimiento: locator(),
-        tipoMovimientoDB: locator(),
-        tipoProyecto: locator(),
-        tipoProyectoDB: locator(),
-        tipoTenencia: locator(),
-        tipoTenenciaDB: locator(),
-        tipoVisita: locator(),
-        tipoVisitaDB: locator(),
-        unidad: locator(),
-        unidadDB: locator(),
-        vereda: locator(),
-        veredaDB: locator(),
-        visita: locator(),
-        visitaDB: locator(),
-        perfilPreInversionPlanNegocio: locator(),
-        perfilPreInversionPlanNegocioDB: locator(),
-      ));
-}
-
 estadoCivilInit() {
   // cubit
   locator.registerFactory(() => EstadoCivilCubit(estadoCivilDB: locator()));
@@ -1367,9 +1233,6 @@ void init() {
   alianzaExperienciaAgricolaInit();
   alianzaExperienciaPecuariaInit();
   perfilPreInversionPlanesNegociosInit();
-
-  downloadSyncInit();
-  uploadSyncInit();
 
   syncInit();
   // external
@@ -2094,7 +1957,7 @@ perfilPreInversionPreciosInit() {
 
 perfilPreInversionPlanesNegociosInit() {
   // bloc
-  locator.registerFactory(() => PerfilPreInversionPlanesNegociosBloc(
+  locator.registerFactory(() => PerfilPreInversionPlanNegociosBloc(
       perfilPreInversionPlanNegocioUsecaseDB: locator()));
 
   // bloc
@@ -2808,51 +2671,6 @@ unidadInit() {
   locator.registerLazySingleton<UnidadLocalDataSource>(
     () => UnidadLocalDataSourceImpl(),
   );
-}
-
-uploadSyncInit() {
-  locator.registerFactory(() => UploadSyncBloc(
-        visita: locator(),
-        visitaDB: locator(),
-        evaluacion: locator(),
-        evaluacionDB: locator(),
-        evaluacionRespuesta: locator(),
-        evaluacionRespuestaDB: locator(),
-        beneficiario: locator(),
-        beneficiarioDB: locator(),
-        experienciaAgricola: locator(),
-        experienciaAgricolaDB: locator(),
-        experienciaPecuaria: locator(),
-        experienciaPecuariaDB: locator(),
-        perfilBeneficiario: locator(),
-        perfilBeneficiarioDB: locator(),
-        perfilPreInversionBeneficiario: locator(),
-        perfilPreInversionBeneficiarioDB: locator(),
-        aliado: locator(),
-        aliadoDB: locator(),
-        perfilPreInversionAliado: locator(),
-        perfilPreInversionAliadoDB: locator(),
-        perfilPreInversionCofinanciador: locator(),
-        perfilPreInversionCofinanciadorDB: locator(),
-        perfilPreInversionCofinanciadorActividadFinanciera: locator(),
-        perfilPreInversionCofinanciadorActividadFinancieraDB: locator(),
-        perfilPreInversionCofinanciadorDesembolso: locator(),
-        perfilPreInversionCofinanciadorDesembolsoDB: locator(),
-        perfilPreInversionCofinanciadorRubro: locator(),
-        perfilPreInversionCofinanciadorRubroDB: locator(),
-        perfilPreInversionConsultor: locator(),
-        perfilPreInversionConsultorDB: locator(),
-        perfilPreInversionPrecio: locator(),
-        perfilPreInversionPrecioDB: locator(),
-        perfilPreInversionPlanNegocio: locator(),
-        perfilPreInversionPlanNegocioDB: locator(),
-        alianzaBeneficiario: locator(),
-        alianzaBeneficiarioDB: locator(),
-        alianzaExperienciaAgricola: locator(),
-        alianzaExperienciaAgricolaDB: locator(),
-        alianzaExperienciaPecuaria: locator(),
-        alianzaExperienciaPecuariaDB: locator(),
-      ));
 }
 
 veredaInit() {

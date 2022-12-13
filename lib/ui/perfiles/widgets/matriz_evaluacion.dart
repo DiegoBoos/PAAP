@@ -43,23 +43,25 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
     return Column(
       children: [
         DropdownButtonFormField(
-            isExpanded: true,
-            items: agrupacionCubit.state.agrupaciones!
-                .map<DropdownMenuItem<String>>((AgrupacionEntity value) {
-              return DropdownMenuItem<String>(
-                value: value.agrupacionId,
-                child: Text(value.nombre),
-              );
-            }).toList(),
-            onChanged: (String? value) async {
-              showOpciones = false;
-              setState(() {
-                agrupacion = agrupacionCubit.state.agrupaciones!
-                    .firstWhere(((element) => element.agrupacionId == value));
-              });
-              await criterioCubit.getCriteriosDB(agrupacion.agrupacionId);
-            },
-            hint: const Text('Agrupación')),
+          decoration: CustomInputDecoration.inputDecoration(
+              hintText: 'Agrupación', labelText: 'Agrupación'),
+          isExpanded: true,
+          items: agrupacionCubit.state.agrupaciones!
+              .map<DropdownMenuItem<String>>((AgrupacionEntity value) {
+            return DropdownMenuItem<String>(
+              value: value.agrupacionId,
+              child: Text(value.nombre),
+            );
+          }).toList(),
+          onChanged: (String? value) async {
+            showOpciones = false;
+            setState(() {
+              agrupacion = agrupacionCubit.state.agrupaciones!
+                  .firstWhere(((element) => element.agrupacionId == value));
+            });
+            await criterioCubit.getCriteriosDB(agrupacion.agrupacionId);
+          },
+        ),
         if (agrupacion.agrupacionId != '')
           Column(
             children: [
@@ -99,74 +101,109 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                               child: NoDataSvg(title: 'No hay criterios'));
                         }
                         return DropdownButtonFormField(
-                            isExpanded: true,
-                            items: criterioCubit.state.criterios!
-                                .map<DropdownMenuItem<String>>(
-                                    (CriterioEntity value) {
-                              return DropdownMenuItem<String>(
-                                value: value.criterioId,
-                                child: Text(value.nombre),
-                              );
-                            }).toList(),
-                            onChanged: (String? value) async {
-                              opcionId = null;
+                          decoration: CustomInputDecoration.inputDecoration(
+                              hintText: 'Criterios', labelText: 'Criterios'),
+                          isExpanded: true,
+                          items: criterioCubit.state.criterios!
+                              .map<DropdownMenuItem<String>>(
+                                  (CriterioEntity value) {
+                            return DropdownMenuItem<String>(
+                              value: value.criterioId,
+                              child: Text(value.nombre),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) async {
+                            evaluacionRespuestaCubit
+                                .changeEvaluacion(evaluacion.evaluacionId);
+                            evaluacionRespuestaCubit.changeCriterio(value!);
 
-                              final evaluacionRespuesta =
-                                  await evaluacionRespuestaCubit
-                                      .getEvaluacionRespuestaDB(
-                                          value!, evaluacion.evaluacionId);
+                            final evaluacionRespuesta =
+                                await evaluacionRespuestaCubit
+                                    .getEvaluacionRespuestaDB(
+                                        value,
+                                        evaluacionRespuestaCubit.state
+                                            .evaluacionRespuesta.evaluacionId);
 
-                              if (evaluacionRespuesta != null) {
-                                observacionCtrl.text =
-                                    evaluacionRespuesta.observacion;
-                                opcionId = evaluacionRespuesta.opcionId;
-                              }
+                            if (evaluacionRespuesta != null) {
+                              observacionCtrl.text =
+                                  evaluacionRespuesta.observacion;
+                              opcionId = evaluacionRespuesta.opcionId;
+                              evaluacionRespuestaCubit
+                                  .getEvaluacionRespuestaOpcionDB(
+                                      evaluacionRespuestaCubit
+                                          .state.evaluacionRespuesta.criterioId,
+                                      evaluacionRespuestaCubit.state
+                                          .evaluacionRespuesta.evaluacionId,
+                                      opcionId!);
+                            }
 
-                              opciones = await opcionCubit.getOpcionesDB(value);
-                              evaluacionRespuestaCubit.changeCriterio(value);
+                            opciones = await opcionCubit.getOpcionesDB(value);
 
-                              showOpciones = true;
+                            showOpciones = true;
 
-                              setState(() {});
-                            },
-                            hint: const Text('Criterios'));
+                            setState(() {});
+                          },
+                        );
                       }
                       return Container();
                     },
                   );
                 },
               ),
+              const SizedBox(height: 20),
               if (showOpciones)
                 opciones.isEmpty
                     ? const Center(child: NoDataSvg(title: 'No hay opciones'))
                     : Column(
                         children: [
                           DropdownButtonFormField(
-                              isExpanded: true,
-                              value: opcionId != '' ? opcionId : null,
-                              items: opciones.map<DropdownMenuItem<String>>(
-                                  (OpcionEntity value) {
-                                return DropdownMenuItem<String>(
-                                  value: value.opcionId,
-                                  child: Text(value.nombre),
-                                );
-                              }).toList(),
-                              onChanged: (String? value) {
-                                evaluacionRespuestaCubit.changeOpcion(value!);
-                                setState(() {
-                                  opcionId = value;
-                                });
-                              },
-                              hint: const Text('Opciones')),
-                          const SizedBox(height: 20),
-                          TextFormField(
-                            controller: observacionCtrl,
                             decoration: CustomInputDecoration.inputDecoration(
-                                hintText: 'Observaciones',
-                                labelText: 'Observaciones'),
-                            onSaved: (String? newValue) {
+                                hintText: 'Opciones', labelText: 'Opciones'),
+                            isExpanded: true,
+                            value: opcionId != '' ? opcionId : null,
+                            items: opciones.map<DropdownMenuItem<String>>(
+                                (OpcionEntity value) {
+                              return DropdownMenuItem<String>(
+                                value: value.opcionId,
+                                child: Text(value.nombre),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              evaluacionRespuestaCubit.changeOpcion(value!);
+                              setState(() {
+                                opcionId = value;
+                              });
+
                               evaluacionRespuestaCubit
-                                  .changeObservacion(newValue!);
+                                  .getEvaluacionRespuestaOpcionDB(
+                                      evaluacionRespuestaCubit
+                                          .state.evaluacionRespuesta.criterioId,
+                                      evaluacionRespuestaCubit.state
+                                          .evaluacionRespuesta.evaluacionId,
+                                      opcionId!);
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          BlocConsumer<EvaluacionRespuestaCubit,
+                              EvaluacionRespuestaState>(
+                            listener: (context, state) {
+                              if (state is EvaluacionRespuestaLoaded) {
+                                observacionCtrl.text =
+                                    state.evaluacionRespuestaLoaded.observacion;
+                              }
+                            },
+                            builder: (context, state) {
+                              return TextFormField(
+                                controller: observacionCtrl,
+                                decoration:
+                                    CustomInputDecoration.inputDecoration(
+                                        hintText: 'Observaciones',
+                                        labelText: 'Observaciones'),
+                                onSaved: (String? newValue) {
+                                  evaluacionRespuestaCubit
+                                      .changeObservacion(newValue!);
+                                },
+                              );
                             },
                           )
                         ],

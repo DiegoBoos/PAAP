@@ -23,6 +23,13 @@ class EvaluacionRespuestaLoaded extends EvaluacionRespuestaState {
       : super(evaluacionRespuesta: evaluacionRespuestaLoaded);
 }
 
+class EvaluacionRespuestaChanged extends EvaluacionRespuestaState {
+  final EvaluacionRespuestaEntity evaluacionRespuestaChanged;
+
+  const EvaluacionRespuestaChanged(this.evaluacionRespuestaChanged)
+      : super(evaluacionRespuesta: evaluacionRespuestaChanged);
+}
+
 class EvaluacionRespuestaSaved extends EvaluacionRespuestaState {
   const EvaluacionRespuestaSaved({required super.evaluacionRespuesta});
 }

@@ -14,6 +14,12 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
 
   void initState() => emit(EvaluacionRespuestaInitial());
 
+  selectEvaluacionRespuestaDB(
+    EvaluacionRespuestaEntity evaluacionRespuesta,
+  ) {
+    emit(EvaluacionRespuestaLoaded(evaluacionRespuesta));
+  }
+
   Future<EvaluacionRespuestaEntity?> getEvaluacionRespuestaDB(
       String criterioId, String evaluacionId) async {
     final result = await evaluacionRespuestaDB.getEvaluacionRespuestaUsecaseDB(
@@ -21,10 +27,14 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
     return result.fold((failure) => null, (data) => data);
   }
 
-  selectEvaluacionRespuestaDB(
-    EvaluacionRespuestaEntity evaluacionRespuesta,
-  ) {
-    emit(EvaluacionRespuestaLoaded(evaluacionRespuesta));
+  void getEvaluacionRespuestaOpcionDB(
+      String criterioId, String evaluacionId, String opcionId) async {
+    final result =
+        await evaluacionRespuestaDB.getEvaluacionRespuestaOpcionUsecaseDB(
+            criterioId, evaluacionId, opcionId);
+    result.fold(
+        (failure) => emit(EvaluacionRespuestaError(failure.properties.first)),
+        (data) => emit(EvaluacionRespuestaLoaded(data)));
   }
 
   void saveEvaluacionRespuestaDB(
@@ -41,23 +51,23 @@ class EvaluacionRespuestaCubit extends Cubit<EvaluacionRespuestaState> {
   void changeCriterio(String criterioId) {
     final changeCriterio =
         state.evaluacionRespuesta.copyWith(criterioId: criterioId);
-    emit(EvaluacionRespuestaLoaded(changeCriterio));
+    emit(EvaluacionRespuestaChanged(changeCriterio));
   }
 
   void changeOpcion(String opcionId) {
     final changeOpcion = state.evaluacionRespuesta.copyWith(opcionId: opcionId);
-    emit(EvaluacionRespuestaLoaded(changeOpcion));
+    emit(EvaluacionRespuestaChanged(changeOpcion));
   }
 
   void changeObservacion(String observacion) {
     final changeObservacion =
         state.evaluacionRespuesta.copyWith(observacion: observacion);
-    emit(EvaluacionRespuestaLoaded(changeObservacion));
+    emit(EvaluacionRespuestaChanged(changeObservacion));
   }
 
   void changeEvaluacion(String evaluacionId) {
     final changeEvaluacion =
         state.evaluacionRespuesta.copyWith(evaluacionId: evaluacionId);
-    emit(EvaluacionRespuestaLoaded(changeEvaluacion));
+    emit(EvaluacionRespuestaChanged(changeEvaluacion));
   }
 }

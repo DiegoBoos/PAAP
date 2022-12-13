@@ -135,7 +135,7 @@ class PerfilPreInversionBeneficiarioRemoteDataSourceImpl
         perfilPreInversionBeneficiarioEntity.estadoCivilId != '5') {
       dataConyuge = '''
             <ConyugeTipoIdentificacionId>1</ConyugeTipoIdentificacionId>
-            <ConyugeId>${perfilPreInversionBeneficiarioEntity.beneficiarioId}</ConyugeId>
+            <ConyugeId>${perfilPreInversionBeneficiarioEntity.conyugeId}</ConyugeId>
             <ConyugeNombre1></ConyugeNombre1>
             <ConyugeNombre2></ConyugeNombre2>
             <ConyugeApellido1></ConyugeApellido1>

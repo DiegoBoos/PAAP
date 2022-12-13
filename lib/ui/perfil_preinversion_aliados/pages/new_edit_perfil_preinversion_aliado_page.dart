@@ -99,7 +99,8 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
                                     perfilPreInversionAliadoCubit
                                         .state.perfilPreInversionAliado);
                           },
-                        )
+                        ),
+                        const SizedBox(height: 20),
                       ],
                     );
                   },

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../../domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
-import '../../../domain/usecases/desembolso/desembolso_exports.dart';
 import '../../../domain/usecases/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_exports.dart';
 import '../../../domain/usecases/rubro/rubro_exports.dart';
+import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/styles.dart';
@@ -23,6 +25,8 @@ class PerfilPreInversionCofinanciadorRubroForm extends StatefulWidget {
 class _PerfilPreInversionCofinanciadorRubroFormState
     extends State<PerfilPreInversionCofinanciadorRubroForm> {
   final formKeyRubro = GlobalKey<FormState>();
+
+  List<RubroEntity> rubrosFiltered = [];
 
   String? actividadFinancieraId;
   String? desembolsoId;
@@ -58,11 +62,20 @@ class _PerfilPreInversionCofinanciadorRubroFormState
   void loadPerfilPreInversionCofinanciadorRubro(
       PerfilPreInversionCofinanciadorRubroEntity
           perfilPreInversionCofinanciadorRubroLoaded) {
+    final rubroCubit = BlocProvider.of<RubroCubit>(context);
+
     actividadFinancieraId =
         perfilPreInversionCofinanciadorRubroLoaded.actividadFinancieraId;
     desembolsoId = perfilPreInversionCofinanciadorRubroLoaded.desembolsoId;
     rubroId = perfilPreInversionCofinanciadorRubroLoaded.rubroId;
     valorCtrl.text = perfilPreInversionCofinanciadorRubroLoaded.valor;
+
+    rubrosFiltered = rubroCubit.state.rubros!
+        .where(
+            ((rubro) => rubro.actividadFinancieraId == actividadFinancieraId))
+        .toList();
+
+    setState(() {});
   }
 
   @override
@@ -70,67 +83,60 @@ class _PerfilPreInversionCofinanciadorRubroFormState
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
 
+    final rubroCubit = BlocProvider.of<RubroCubit>(context);
+
     final perfilPreInversionCofinanciadorCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
 
     final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
-        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context,
-            listen: true);
+        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
 
     final perfilPreInversionCofinanciadorRubroCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorRubroCubit>(context);
+        BlocProvider.of<PerfilPreInversionCofinanciadorRubroCubit>(context,
+            listen: true);
 
     final perfilPreInversionCofinanciadorRubrosBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadorRubrosBloc>(context,
+            listen: true);
+
+    final perfilPreInversionCofinanciadorDesembolsosBloc =
+        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsosBloc>(context,
             listen: true);
 
     final valorActividad =
         perfilPreInversionCofinanciadorActividadFinancieraCubit
             .state.perfilPreInversionCofinanciadorActividadFinanciera.valor;
 
-    return Form(
-      key: formKeyRubro,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-          child: Column(children: [
-            BlocBuilder<RubroCubit, RubroState>(
-              builder: (context, state) {
-                if (state is RubrosLoaded) {
-                  return DropdownButtonFormField(
+    return BlocListener<PerfilPreInversionCofinanciadorRubroCubit,
+        PerfilPreInversionCofinanciadorRubroState>(
+      listener: (context, state) {
+        if (state is PerfilPreInversionCofinanciadorRubroSaved) {
+          CustomSnackBar.showSnackBar(
+              context, 'Datos guardados satisfactoriamente', Colors.green);
+
+          perfilPreInversionCofinanciadorRubrosBloc.add(
+              GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
+                  perfilPreInversionId: vPerfilPreInversionCubit
+                      .state.vPerfilPreInversion!.perfilPreInversionId,
+                  cofinanciadorId: state
+                      .perfilPreInversionCofinanciadorRubro.cofinanciadorId));
+        }
+      },
+      child: Form(
+        key: formKeyRubro,
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+            child: Column(children: [
+              BlocBuilder<ActividadFinancieraCubit, ActividadFinancieraState>(
+                builder: (context, state) {
+                  if (state is ActividadesFinancierasLoaded) {
+                    return DropdownButtonFormField(
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Actividad Financiera',
+                          labelText: 'Actividad Financiera'),
                       isExpanded: true,
-                      value: rubroId != '' ? rubroId : null,
-                      items: state.rubros!
-                          .map<DropdownMenuItem<String>>((RubroEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.rubroId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Debe seleccionar un rubro';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        perfilPreInversionCofinanciadorRubroCubit
-                            .changeRubro(value);
-                      },
-                      hint: const Text('Rubro'));
-                }
-                return Container();
-              },
-            ),
-            const SizedBox(height: 20),
-            BlocBuilder<ActividadFinancieraCubit, ActividadFinancieraState>(
-              builder: (context, state) {
-                if (state is ActividadesFinancierasLoaded) {
-                  return DropdownButtonFormField(
-                      isExpanded: true,
-                      value: actividadFinancieraId != ''
-                          ? actividadFinancieraId
-                          : null,
+                      value: actividadFinancieraId,
                       items: state.actividadesFinancieras!
                           .map<DropdownMenuItem<String>>(
                               (ActividadFinancieraEntity value) {
@@ -148,24 +154,66 @@ class _PerfilPreInversionCofinanciadorRubroFormState
                       onChanged: (String? value) {
                         perfilPreInversionCofinanciadorRubroCubit
                             .changeActividadFinanciera(value);
+
+                        setState(() {
+                          rubrosFiltered = rubroCubit.state.rubros!
+                              .where(((rubro) =>
+                                  rubro.actividadFinancieraId == value))
+                              .toList();
+
+                          rubroId = null;
+                        });
                       },
-                      hint: const Text('Actividad Financiera'));
-                }
-                return Container();
-              },
-            ),
-            const SizedBox(height: 20),
-            BlocBuilder<DesembolsoCubit, DesembolsoState>(
-              builder: (context, state) {
-                if (state is DesembolsosLoaded) {
-                  return DropdownButtonFormField(
+                    );
+                  }
+                  return Container();
+                },
+              ),
+              const SizedBox(height: 20),
+              DropdownButtonFormField(
+                decoration: CustomInputDecoration.inputDecoration(
+                    hintText: 'Rubro', labelText: 'Rubro'),
+                isExpanded: true,
+                value: rubroId,
+                items: rubrosFiltered
+                    .map<DropdownMenuItem<String>>((RubroEntity value) {
+                  return DropdownMenuItem<String>(
+                    value: value.rubroId,
+                    child: Text(value.nombre),
+                  );
+                }).toList(),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Debe seleccionar un rubro';
+                  }
+                  return null;
+                },
+                onChanged: (String? value) {
+                  perfilPreInversionCofinanciadorRubroCubit.changeRubro(value);
+                  setState(() {
+                    rubroId = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              BlocBuilder<PerfilPreInversionCofinanciadorDesembolsosBloc,
+                  PerfilPreInversionCofinanciadorDesembolsosState>(
+                builder: (context, state) {
+                  if (state
+                      is PerfilPreInversionCofinanciadorDesembolsosLoaded) {
+                    return DropdownButtonFormField(
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Desembolso', labelText: 'Desembolso'),
                       isExpanded: true,
-                      value: desembolsoId != '' ? desembolsoId : null,
-                      items: state.desembolsos!.map<DropdownMenuItem<String>>(
-                          (DesembolsoEntity value) {
+                      value: desembolsoId,
+                      items: perfilPreInversionCofinanciadorDesembolsosBloc
+                          .state.perfilPreInversionCofinanciadorDesembolsos!
+                          .map<DropdownMenuItem<String>>(
+                              (PerfilPreInversionCofinanciadorDesembolsoEntity
+                                  value) {
                         return DropdownMenuItem<String>(
                           value: value.desembolsoId,
-                          child: Text(value.nombre),
+                          child: Text(value.desembolso!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -176,74 +224,71 @@ class _PerfilPreInversionCofinanciadorRubroFormState
                       },
                       onChanged: (String? value) {
                         perfilPreInversionCofinanciadorRubroCubit
-                            .changeActividadFinanciera(value);
+                            .changeDesembolso(value);
                       },
-                      hint: const Text('Desembolso'));
-                }
-                return Container();
-              },
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: valorCtrl,
-              decoration: CustomInputDecoration.inputDecoration(
-                hintText: 'Valor',
-                labelText: 'Valor',
+                    );
+                  }
+                  return Container();
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Debe seleccionar un valor';
-                }
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: valorCtrl,
+                decoration: CustomInputDecoration.inputDecoration(
+                  hintText: 'Valor',
+                  labelText: 'Valor',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Debe seleccionar un valor';
+                  }
 
-                if (int.parse(value) > int.parse(valorActividad)) {
-                  return 'El valor no puede ser mayor al de la actividad';
-                }
-                return null;
-              },
-              onSaved: (String? newValue) {
-                perfilPreInversionCofinanciadorRubroCubit.changeValor(newValue);
-              },
-            ),
-            const SizedBox(height: 20),
-            Align(
-                alignment: Alignment.centerRight,
-                child: FloatingActionButton(
-                    heroTag: 'rubroBtn',
-                    onPressed: () {
-                      if (!formKeyRubro.currentState!.validate()) {
-                        return;
-                      }
+                  if (double.parse(value) > double.parse(valorActividad)) {
+                    return 'El valor no puede ser mayor al de la actividad';
+                  }
+                  return null;
+                },
+                onSaved: (String? newValue) {
+                  perfilPreInversionCofinanciadorRubroCubit
+                      .changeValor(newValue);
+                },
+              ),
+              const SizedBox(height: 20),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: FloatingActionButton(
+                      heroTag: 'rubroBtn',
+                      onPressed: () {
+                        if (!formKeyRubro.currentState!.validate()) {
+                          return;
+                        }
 
-                      formKeyRubro.currentState!.save();
+                        formKeyRubro.currentState!.save();
 
-                      final vPerfilPreInversionId = vPerfilPreInversionCubit
-                          .state.vPerfilPreInversion!.perfilPreInversionId;
+                        final vPerfilPreInversionId = vPerfilPreInversionCubit
+                            .state.vPerfilPreInversion!.perfilPreInversionId;
 
-                      final cofinanciadorId =
-                          perfilPreInversionCofinanciadorCubit.state
-                              .perfilPreInversionCofinanciador.cofinanciadorId;
+                        final cofinanciadorId =
+                            perfilPreInversionCofinanciadorCubit
+                                .state
+                                .perfilPreInversionCofinanciador
+                                .cofinanciadorId;
 
-                      perfilPreInversionCofinanciadorRubroCubit
-                          .changePerfilPreInversion(vPerfilPreInversionId);
+                        perfilPreInversionCofinanciadorRubroCubit
+                            .changePerfilPreInversionId(vPerfilPreInversionId);
 
-                      perfilPreInversionCofinanciadorRubroCubit
-                          .changeCofinanciador(cofinanciadorId);
+                        perfilPreInversionCofinanciadorRubroCubit
+                            .changeCofinanciador(cofinanciadorId);
 
-                      perfilPreInversionCofinanciadorRubroCubit
-                          .perfilPreInversionCofinanciadorRubroDB
-                          .savePerfilPreInversionCofinanciadorRubroUsecaseDB(
-                              perfilPreInversionCofinanciadorRubroCubit
-                                  .state.perfilPreInversionCofinanciadorRubro);
-
-                      perfilPreInversionCofinanciadorRubrosBloc.add(
-                          GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
-                        perfilPreInversionId: vPerfilPreInversionId,
-                        cofinanciadorId: cofinanciadorId,
-                      ));
-                    },
-                    child: const Icon(Icons.add))),
-            const PerfilPreInversionCofinanciadorRubrosRows()
-          ]),
+                        perfilPreInversionCofinanciadorRubroCubit
+                            .savePerfilPreInversionCofinanciadorRubroDB(
+                                perfilPreInversionCofinanciadorRubroCubit.state
+                                    .perfilPreInversionCofinanciadorRubro);
+                      },
+                      child: const Icon(Icons.add))),
+              const PerfilPreInversionCofinanciadorRubrosRows()
+            ]),
+          ),
         ),
       ),
     );
@@ -272,9 +317,7 @@ class PerfilPreInversionCofinanciadorRubrosRows extends StatelessWidget {
             child: DataTable(
               headingRowColor: MaterialStateProperty.all(
                   Theme.of(context).colorScheme.secondary),
-              dividerThickness: 1,
-              columnSpacing: 10,
-              dataRowHeight: 150,
+              columnSpacing: 30,
               columns: <DataColumn>[
                 DataColumn(
                   label: Expanded(

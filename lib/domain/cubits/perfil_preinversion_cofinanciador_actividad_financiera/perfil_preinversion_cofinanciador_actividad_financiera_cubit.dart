@@ -20,12 +20,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
 
   Future<PerfilPreInversionCofinanciadorActividadFinancieraEntity?>
       getPerfilPreInversionCofinanciadorActividadFinanciera(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId) async {
+    String perfilPreInversionId,
+    String cofinanciadorId,
+  ) async {
     final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
         .getPerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
-            perfilPreInversionId, cofinanciadorId, desembolsoId);
+            perfilPreInversionId, cofinanciadorId);
     return result.fold((failure) => null, (data) {
       if (data != null) {
         emit(PerfilPreInversionCofinanciadorActividadFinancieraLoaded(data));
@@ -46,11 +46,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
         (failure) => emit(
             PerfilPreInversionCofinanciadorActividadFinancieraError(
                 failure.properties.first)),
-        (data) =>
-            emit(PerfilPreInversionCofinanciadorActividadFinancieraSaved()));
+        (data) => emit(PerfilPreInversionCofinanciadorActividadFinancieraSaved(
+            perfilPreInversionCofinanciadorActividadFinanciera:
+                perfilPreInversionCofinanciadorActividadFinancieraEntity)));
   }
 
-  void changePerfilPreInversion(String value) {
+  void changePerfilPreInversionId(String value) {
     final perfilPreInversion = state
         .perfilPreInversionCofinanciadorActividadFinanciera
         .copyWith(perfilPreInversionId: value);
@@ -88,13 +89,5 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
         .copyWith(desembolsoId: value);
     emit(PerfilPreInversionCofinanciadorActividadFinancieraChanged(
         desembolsoChanged));
-  }
-
-  void canCreateRubro() {
-    final canCreateRubro = state
-        .perfilPreInversionCofinanciadorActividadFinanciera
-        .copyWith(canCreateRubro: true);
-    emit(PerfilPreInversionCofinanciadorActividadFinancieraChanged(
-        canCreateRubro));
   }
 }

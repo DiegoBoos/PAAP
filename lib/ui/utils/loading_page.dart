@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:paap/domain/cubits/internet/internet_cubit.dart';
 
-import '../../domain/blocs/download_sync/download_sync_bloc.dart';
+import '../../domain/blocs/sync/sync_bloc.dart';
 import 'network_icon.dart';
 
 class LoadingPage extends StatelessWidget {
@@ -29,10 +29,9 @@ class LoadingPage extends StatelessWidget {
             child: BlocListener<InternetCubit, InternetState>(
               listener: (context, state) {
                 if (state is InternetDisconnected) {
-                  final downloadSyncBloc =
-                      BlocProvider.of<DownloadSyncBloc>(context);
+                  final syncBloc = BlocProvider.of<SyncBloc>(context);
 
-                  downloadSyncBloc.add(const DownloadSyncError(
+                  syncBloc.add(const SyncError(
                       'Error en la sincronización, no hay conexión a internet'));
                 }
               },

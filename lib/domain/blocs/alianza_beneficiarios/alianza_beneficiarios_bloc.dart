@@ -24,7 +24,7 @@ class AlianzasBeneficiariosBloc
 
   _getAlianzasBeneficiarios(event, emit) async {
     final result = await alianzaBeneficiarioUsecaseDB
-        .getAlianzasBeneficiariosUsecaseDB(event.alinzaId);
+        .getAlianzasBeneficiariosUsecaseDB(event.alianzaId);
     result.fold(
         (failure) => emit(AlianzasBeneficiariosError(failure.properties.first)),
         (data) => emit(AlianzasBeneficiariosLoaded(data!)));

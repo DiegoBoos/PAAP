@@ -7,25 +7,24 @@ import '../../usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan
 part 'perfil_preinversion_planes_negocios_event.dart';
 part 'perfil_preinversion_planes_negocios_state.dart';
 
-class PerfilPreInversionPlanesNegociosBloc extends Bloc<
-    PerfilPreInversionPlanesNegociosEvent,
-    PerfilPreInversionPlanesNegociosState> {
+class PerfilPreInversionPlanNegociosBloc extends Bloc<
+    PerfilPreInversionPlanNegociosEvent, PerfilPreInversionPlanNegociosState> {
   final PerfilPreInversionPlanNegocioUsecaseDB
       perfilPreInversionPlanNegocioUsecaseDB;
-  PerfilPreInversionPlanesNegociosBloc(
+  PerfilPreInversionPlanNegociosBloc(
       {required this.perfilPreInversionPlanNegocioUsecaseDB})
-      : super(PerfilPreInversionPlanesNegociosInitial()) {
-    on<GetPerfilPreInversionPlanesNegocios>((event, emit) async {
-      emit(PerfilPreInversionPlanesNegociosLoading());
-      await _getPerfilPreInversionPlanesNegocios(event, emit);
+      : super(PerfilPreInversionPlanNegociosInitial()) {
+    on<GetPerfilPreInversionPlanNegocios>((event, emit) async {
+      emit(PerfilPreInversionPlanNegociosLoading());
+      await _getPerfilPreInversionPlanNegocios(event, emit);
     });
   }
-  _getPerfilPreInversionPlanesNegocios(event, emit) async {
+  _getPerfilPreInversionPlanNegocios(event, emit) async {
     final result = await perfilPreInversionPlanNegocioUsecaseDB
-        .getPerfilPreInversionPlanesNegociosUsecaseDB();
+        .getPerfilPreInversionPlanNegociosUsecaseDB();
     result.fold(
-        (failure) => emit(
-            PerfilPreInversionPlanesNegociosError(failure.properties.first)),
-        (data) => emit(PerfilPreInversionPlanesNegociosLoaded(data)));
+        (failure) =>
+            emit(PerfilPreInversionPlanNegociosError(failure.properties.first)),
+        (data) => emit(PerfilPreInversionPlanNegociosLoaded(data)));
   }
 }

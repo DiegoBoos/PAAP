@@ -20,10 +20,26 @@ class EvaluacionRespuestaRepositoryDBImpl
       getEvaluacionesRespuestasRepositoryDB(
           String criterioId, String evaluacionId) async {
     try {
-      final evaluacionesRespuestasDB = await evaluacionRespuestaLocalDataSource
-          .getEvaluacionesRespuestasDB(criterioId, evaluacionId);
+      final evaluacionesRespuestas = await evaluacionRespuestaLocalDataSource
+          .getEvaluacionesRespuestas(criterioId, evaluacionId);
 
-      return Right(evaluacionesRespuestasDB);
+      return Right(evaluacionesRespuestas);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.properties));
+    } on ServerException {
+      return const Left(ServerFailure(['Excepción no controlada']));
+    }
+  }
+
+  @override
+  Future<Either<Failure, EvaluacionRespuestaEntity>>
+      getEvaluacionRespuestaOpcionRepositoryDB(
+          String criterioId, String evaluacionId, String opcionId) async {
+    try {
+      final evaluacionRespuesta = await evaluacionRespuestaLocalDataSource
+          .getEvaluacionRespuestaOpcion(criterioId, evaluacionId, opcionId);
+
+      return Right(evaluacionRespuesta);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -35,10 +51,10 @@ class EvaluacionRespuestaRepositoryDBImpl
   Future<Either<Failure, List<EvaluacionRespuestaEntity>>>
       getEvaluacionesRespuestasProduccionRepositoryDB() async {
     try {
-      final evaluacionesRespuestasDB = await evaluacionRespuestaLocalDataSource
-          .getEvaluacionesRespuestasProduccionDB();
+      final evaluacionesRespuestas = await evaluacionRespuestaLocalDataSource
+          .getEvaluacionesRespuestasProduccion();
 
-      return Right(evaluacionesRespuestasDB);
+      return Right(evaluacionesRespuestas);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -51,10 +67,10 @@ class EvaluacionRespuestaRepositoryDBImpl
       getEvaluacionRespuestaRepositoryDB(
           String criterioId, String evaluacionId) async {
     try {
-      final result = await evaluacionRespuestaLocalDataSource
-          .getEvaluacionRespuestaDB(criterioId, evaluacionId);
+      final evaluacionRespuesta = await evaluacionRespuestaLocalDataSource
+          .getEvaluacionRespuesta(criterioId, evaluacionId);
 
-      return Right(result);
+      return Right(evaluacionRespuesta);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -68,7 +84,7 @@ class EvaluacionRespuestaRepositoryDBImpl
       String perfilId) async {
     try {
       final result = await evaluacionRespuestaLocalDataSource
-          .saveEvaluacionRespuestaDB(evaluacionRespuestaEntity, perfilId);
+          .saveEvaluacionRespuesta(evaluacionRespuestaEntity, perfilId);
 
       return Right(result);
     } on ServerFailure catch (e) {
@@ -82,9 +98,9 @@ class EvaluacionRespuestaRepositoryDBImpl
   Future<Either<Failure, int>> saveEvaluacionesRespuestasRepositoryDB(
       List<EvaluacionRespuestaEntity> evaluacionEntity) async {
     try {
-      final evaluacionRespuestaDB = await evaluacionRespuestaLocalDataSource
-          .saveEvaluacionesRespuestasDB(evaluacionEntity);
-      return Right(evaluacionRespuestaDB);
+      final result = await evaluacionRespuestaLocalDataSource
+          .saveEvaluacionesRespuestas(evaluacionEntity);
+      return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {
@@ -98,8 +114,7 @@ class EvaluacionRespuestaRepositoryDBImpl
           List<EvaluacionRespuestaEntity> evaluacionesRespuestasEntity) async {
     try {
       final result = await evaluacionRespuestaLocalDataSource
-          .updateEvaluacionesRespuestasProduccionDB(
-              evaluacionesRespuestasEntity);
+          .updateEvaluacionesRespuestasProduccion(evaluacionesRespuestasEntity);
 
       return Right(result);
     } on ServerFailure catch (e) {
@@ -114,7 +129,7 @@ class EvaluacionRespuestaRepositoryDBImpl
       List<EvaluacionEntity> evaluacionesEntity) async {
     try {
       final result = await evaluacionRespuestaLocalDataSource
-          .updateRespuestaRemoteEvaluacionIdDB(evaluacionesEntity);
+          .updateRespuestaRemoteEvaluacionId(evaluacionesEntity);
 
       return Right(result);
     } on ServerFailure catch (e) {
@@ -128,7 +143,7 @@ class EvaluacionRespuestaRepositoryDBImpl
   Future<Either<Failure, int>> clearEvaluacionesRespuestasRepositoryDB() async {
     try {
       final result = await evaluacionRespuestaLocalDataSource
-          .clearEvaluacionesRespuestasDB();
+          .clearEvaluacionesRespuestas();
       return Right(result);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));

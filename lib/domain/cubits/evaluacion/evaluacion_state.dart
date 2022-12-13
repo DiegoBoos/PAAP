@@ -19,6 +19,13 @@ class EvaluacionLoaded extends EvaluacionState {
       : super(evaluacion: evaluacionLoaded);
 }
 
+class EvaluacionChanged extends EvaluacionState {
+  final EvaluacionEntity evaluacionChanged;
+
+  const EvaluacionChanged(this.evaluacionChanged)
+      : super(evaluacion: evaluacionChanged);
+}
+
 class EvaluacionSaved extends EvaluacionState {
   const EvaluacionSaved({required super.evaluacion});
 }

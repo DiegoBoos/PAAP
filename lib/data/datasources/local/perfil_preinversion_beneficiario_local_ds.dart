@@ -150,10 +150,22 @@ class PerfilPreInversionBeneficiarioLocalDataSourceImpl
       PerfilPreInversionBeneficiario.Longitud,
       PerfilPreInversionBeneficiario.Latitud,
       PerfilPreInversionBeneficiario.CedulaCatastral,
-      Beneficiario.Nombre1 as beneficiario
+      PerfilPreInversionBeneficiario.BeneficiarioId as Documento,
+      TipoIdentificacion.Nombre as TipoDocumento,
+      Beneficiario.Nombre1 || " " || Beneficiario.Nombre2 || " " || Beneficiario.Apellido1 || " " || Beneficiario.Apellido2 as Nombre,
+      cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', Beneficiario.FechaNacimiento ) as int) as Edad,
+      Genero.Nombre as Genero,
+      GrupoEspecial.Nombre as GrupoEspecial,
+      Departamento.Nombre || " / " || Municipio.Nombre || " / "  || Vereda.Nombre as Ubicacion
       from PerfilPreInversionBeneficiario
-      left join Beneficiario on (Beneficiario.BeneficiarioId=PerfilPreInversionBeneficiario.BeneficiarioId)
-      where PerfilPreInversionId = $perfilPreInversionId;
+      inner join Beneficiario  on PerfilPreInversionBeneficiario.BeneficiarioId = Beneficiario.BeneficiarioId
+      left join TipoIdentificacion on TipoIdentificacion.TipoIdentificacionId=Beneficiario.TipoIdentificacionId
+      left join Genero on Genero.GeneroId=Beneficiario.GeneroId
+      left join GrupoEspecial on GrupoEspecial.GrupoEspecialId=Beneficiario.GrupoEspecialId
+      left join Municipio on Municipio.MunicipioId=PerfilPreInversionBeneficiario.MunicipioId
+      left join Departamento on Departamento.DepartamentoId=Municipio.DepartamentoId
+      left join Vereda on Vereda.VeredaId=PerfilPreInversionBeneficiario.VeredaId
+      where PerfilPreInversionId = $perfilPreInversionId
     ''';
 
     final res = await db.rawQuery(sql);
@@ -280,8 +292,10 @@ class PerfilPreInversionBeneficiarioLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
+    final query = await db.query('PerfilPreInversionBeneficiario',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
 
-    return res.length;
+    return query.length;
   }
 }

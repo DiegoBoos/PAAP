@@ -6,24 +6,27 @@ import '../../entities/v_perfil_preinversion_plan_negocio_entity.dart';
 
 abstract class PerfilPreInversionPlanNegocioRepositoryDB {
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilPreInversionPlanesNegociosRepositoryDB();
+      getPerfilPreInversionPlanNegociosRepositoryDB();
 
   Future<Either<Failure, List<VPerfilPreInversionPlanNegocioEntity>>>
       getVPerfilesPreInversionesPlanNegociosRepositoryDB(
           String perfilPreInversionId, String tipoMovimientoId);
 
-  Future<Either<Failure, int>> savePerfilPreInversionPlanesNegociosRepositoryDB(
+  Future<Either<Failure, int>> savePerfilPreInversionPlanNegociosRepositoryDB(
       List<PerfilPreInversionPlanNegocioEntity>
           perfilPreInversionPlanNegocioEntity);
 
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilesPreInversionesPlanesNegociosProduccionRepositoryDB();
+      getPerfilesPreInversionesPlanNegociosProduccionRepositoryDB();
 
-  Future<Either<Failure, int>> savePerfilPreInversionPlanNegocioRepositoryDB(
-      PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity);
+  Future<Either<Failure, VPerfilPreInversionPlanNegocioEntity>>
+      savePerfilPreInversionPlanNegocioRepositoryDB(
+          PerfilPreInversionPlanNegocioEntity
+              perfilPreInversionPlanNegocioEntity,
+          String tipoMovimientoId);
 
   Future<Either<Failure, int>>
-      updatePerfilesPreInversionesPlanesNegociosProduccionDBRepositoryDB(
+      updatePerfilesPreInversionesPlanNegociosProduccionDBRepositoryDB(
           List<PerfilPreInversionPlanNegocioEntity>
-              perfilesPreInversionesplanesNegociosEntity);
+              perfilesPreInversionesplanNegociosEntity);
 }

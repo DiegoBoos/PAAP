@@ -5,20 +5,26 @@ import 'package:intl/intl.dart';
 import '../../../domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
 import '../../../domain/cubits/desembolso/desembolso_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/desembolso_entity.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
+import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorDesembolsoForm extends StatefulWidget {
   const PerfilPreInversionCofinanciadorDesembolsoForm({super.key});
+
   @override
   State<PerfilPreInversionCofinanciadorDesembolsoForm> createState() =>
       _PerfilPreInversionCofinanciadorDesembolsoFormState();
 }
+
+final dateFormat = DateFormat('yyyy-MM-dd');
 
 class _PerfilPreInversionCofinanciadorDesembolsoFormState
     extends State<PerfilPreInversionCofinanciadorDesembolsoForm> {
@@ -26,7 +32,6 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
 
   String? desembolsoId;
 
-  final dateFormat = DateFormat('yyyy-MM-dd');
   final fechaCtrl = TextEditingController();
 
   @override
@@ -71,11 +76,11 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
 
   @override
   Widget build(BuildContext context) {
-    final perfilPreInversionCofinanciadorCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
-
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
 
     final perfilPreInversionCofinanciadorDesembolsoCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
@@ -85,129 +90,145 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsosBloc>(context,
             listen: true);
 
-    return BlocBuilder<PerfilPreInversionCofinanciadorDesembolsoCubit,
-        PerfilPreInversionCofinanciadorDesembolsoState>(
-      builder: (context, state) {
-        return Form(
-          key: formKeyDesembolso,
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-              child: Column(children: [
-                BlocBuilder<DesembolsoCubit, DesembolsoState>(
-                  builder: (context, state) {
-                    if (state is DesembolsosLoaded) {
-                      return DropdownButtonFormField(
-                          isExpanded: true,
-                          value: desembolsoId,
-                          items: state.desembolsos!
-                              .map<DropdownMenuItem<String>>(
-                                  (DesembolsoEntity value) {
-                            return DropdownMenuItem<String>(
-                              value: value.desembolsoId,
-                              child: Text(value.nombre),
-                            );
-                          }).toList(),
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Debe seleccionar un desembolso';
-                            }
-                            return null;
-                          },
-                          onChanged: (String? value) {
-                            perfilPreInversionCofinanciadorDesembolsoCubit
-                                .changeDesembolso(value);
-                          },
-                          hint: const Text('Desembolso'));
-                    }
-                    return Container();
-                  },
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: fechaCtrl,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Debe seleccionar una fecha';
-                    }
-                    if (DateTime.tryParse(value) == null) {
-                      return 'No es una fecha válida';
-                    }
-                    return null;
-                  },
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Fecha',
-                      labelText: 'Fecha',
-                      suffixIcon: IconButton(
-                          onPressed: () async {
-                            DateTime? newDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.parse(fechaCtrl.text),
-                                firstDate: DateTime(1000),
-                                lastDate: DateTime(3000));
+    final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
+        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
 
-                            if (newDate == null) return;
+    final perfilPreInversionCofinanciadorRubroCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorRubroCubit>(context);
 
-                            fechaCtrl.text = dateFormat.format(newDate);
+    return BlocListener<PerfilPreInversionCofinanciadorDesembolsoCubit,
+            PerfilPreInversionCofinanciadorDesembolsoState>(
+        listener: (context, state) {
+          if (state is PerfilPreInversionCofinanciadorDesembolsoSaved) {
+            CustomSnackBar.showSnackBar(
+                context, 'Datos guardados satisfactoriamente', Colors.green);
 
-                            perfilPreInversionCofinanciadorDesembolsoCubit
-                                .changeFecha(fechaCtrl.text);
-                          },
-                          icon: const Icon(Icons.calendar_today))),
-                ),
-                const SizedBox(height: 20),
-                Align(
-                    alignment: Alignment.centerRight,
-                    child: FloatingActionButton(
-                        heroTag: 'desembolsoBtn',
-                        onPressed: () {
-                          if (!formKeyDesembolso.currentState!.validate()) {
-                            return;
-                          }
-                          formKeyDesembolso.currentState!.save();
+            perfilPreInversionCofinanciadorDesembolsosBloc.add(
+                GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
+              perfilPreInversionId: vPerfilPreInversionCubit
+                  .state.vPerfilPreInversion!.perfilPreInversionId,
+              cofinanciadorId: perfilPreInversionCofinanciadorCubit
+                  .state.perfilPreInversionCofinanciador.cofinanciadorId,
+            ));
+          }
+        },
+        child: Form(
+            key: formKeyDesembolso,
+            child: Card(
+              child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                  child: Column(children: [
+                    BlocBuilder<DesembolsoCubit, DesembolsoState>(
+                      builder: (context, state) {
+                        if (state is DesembolsosLoaded) {
+                          return DropdownButtonFormField(
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Desembolso',
+                                labelText: 'Desembolso'),
+                            isExpanded: true,
+                            value: desembolsoId,
+                            items: state.desembolsos!
+                                .map<DropdownMenuItem<String>>(
+                                    (DesembolsoEntity value) {
+                              return DropdownMenuItem<String>(
+                                value: value.desembolsoId,
+                                child: Text(value.nombre),
+                              );
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Debe seleccionar un desembolso';
+                              }
+                              return null;
+                            },
+                            onChanged: (String? value) {
+                              perfilPreInversionCofinanciadorDesembolsoCubit
+                                  .changeDesembolso(value);
+                              perfilPreInversionCofinanciadorActividadFinancieraCubit
+                                  .changeDesembolso(value);
+                              perfilPreInversionCofinanciadorRubroCubit
+                                  .changeDesembolso(value);
+                            },
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: fechaCtrl,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Debe seleccionar una fecha';
+                        }
+                        if (DateTime.tryParse(value) == null) {
+                          return 'No es una fecha válida';
+                        }
+                        return null;
+                      },
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Fecha',
+                          labelText: 'Fecha',
+                          suffixIcon: IconButton(
+                              onPressed: () async {
+                                DateTime? newDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: fechaCtrl.text != ''
+                                        ? DateTime.parse(fechaCtrl.text)
+                                        : DateTime.now(),
+                                    firstDate: DateTime(1000),
+                                    lastDate: DateTime(3000));
 
-                          final vPerfilPreInversionId = vPerfilPreInversionCubit
-                              .state.vPerfilPreInversion!.perfilPreInversionId;
+                                if (newDate == null) return;
 
-                          final cofinanciadorId =
-                              perfilPreInversionCofinanciadorCubit
-                                  .state
-                                  .perfilPreInversionCofinanciador
-                                  .cofinanciadorId;
+                                fechaCtrl.text = dateFormat.format(newDate);
 
-                          perfilPreInversionCofinanciadorDesembolsoCubit
-                              .changePerfilPreInversion(vPerfilPreInversionId);
+                                perfilPreInversionCofinanciadorDesembolsoCubit
+                                    .changeFecha(fechaCtrl.text);
+                              },
+                              icon: const Icon(Icons.calendar_today))),
+                    ),
+                    const SizedBox(height: 20),
+                    Align(
+                        alignment: Alignment.centerRight,
+                        child: FloatingActionButton(
+                            heroTag: 'desembolsoBtn',
+                            onPressed: () {
+                              if (!formKeyDesembolso.currentState!.validate()) {
+                                return;
+                              }
+                              formKeyDesembolso.currentState!.save();
 
-                          perfilPreInversionCofinanciadorDesembolsoCubit
-                              .changeCofinanciador(cofinanciadorId);
-
-                          perfilPreInversionCofinanciadorDesembolsoCubit
-                              .savePerfilPreInversionCofinanciadorDesembolsoDB(
-                                  perfilPreInversionCofinanciadorDesembolsoCubit
+                              final vPerfilPreInversionId =
+                                  vPerfilPreInversionCubit
                                       .state
-                                      .perfilPreInversionCofinanciadorDesembolso);
+                                      .vPerfilPreInversion!
+                                      .perfilPreInversionId;
 
-                          perfilPreInversionCofinanciadorDesembolsosBloc.add(
-                              GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-                            perfilPreInversionId: vPerfilPreInversionId,
-                            cofinanciadorId: cofinanciadorId,
-                          ));
+                              final cofinanciadorId =
+                                  perfilPreInversionCofinanciadorCubit
+                                      .state
+                                      .perfilPreInversionCofinanciador
+                                      .cofinanciadorId;
 
-                          if (perfilPreInversionCofinanciadorDesembolsosBloc
-                                  .state
-                              is PerfilPreInversionCofinanciadorDesembolsosLoaded) {
-                            perfilPreInversionCofinanciadorDesembolsoCubit
-                                .canCreateActividadFinanciera();
-                          }
-                        },
-                        child: const Icon(Icons.add))),
-                const PerfilPreInversionCofinanciadorDesembolsosRows()
-              ]),
-            ),
-          ),
-        );
-      },
-    );
+                              perfilPreInversionCofinanciadorDesembolsoCubit
+                                  .changePerfilPreInversionId(
+                                      vPerfilPreInversionId);
+
+                              perfilPreInversionCofinanciadorDesembolsoCubit
+                                  .changeCofinanciador(cofinanciadorId);
+
+                              perfilPreInversionCofinanciadorDesembolsoCubit
+                                  .savePerfilPreInversionCofinanciadorDesembolsoDB(
+                                      perfilPreInversionCofinanciadorDesembolsoCubit
+                                          .state
+                                          .perfilPreInversionCofinanciadorDesembolso);
+                            },
+                            child: const Icon(Icons.add))),
+                    const PerfilPreInversionCofinanciadorDesembolsosRows()
+                  ])),
+            )));
   }
 }
 
@@ -257,11 +278,6 @@ class PerfilPreInversionCofinanciadorDesembolsosRows extends StatelessWidget {
                             Styles.subtitleStyle.copyWith(color: Colors.white)),
                   ),
                 ),
-                const DataColumn(
-                  label: Expanded(
-                    child: Text(''),
-                  ),
-                ),
               ],
               rows: List.generate(
                   perfilPreInversionCofinanciadorDesembolsos.length, (index) {
@@ -274,13 +290,8 @@ class PerfilPreInversionCofinanciadorDesembolsosRows extends StatelessWidget {
                       perfilPreInversionCofinanciadorDesembolso.desembolsoId)),
                   DataCell(Text(
                       perfilPreInversionCofinanciadorDesembolso.desembolso!)),
-                  DataCell(
-                      Text(perfilPreInversionCofinanciadorDesembolso.fecha)),
-                  const DataCell(IconButton(
-                      onPressed: null,
-                      icon: Icon(
-                        Icons.cancel,
-                      ))),
+                  DataCell(Text(dateFormat.format(DateTime.parse(
+                      perfilPreInversionCofinanciadorDesembolso.fecha))))
                 ]);
               }),
             ),

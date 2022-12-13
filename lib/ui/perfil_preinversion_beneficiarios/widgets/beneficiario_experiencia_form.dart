@@ -23,8 +23,8 @@ class BeneficiarioExperienciaForm extends StatefulWidget {
 
 class _BeneficiarioExperienciaFormState
     extends State<BeneficiarioExperienciaForm> {
-  String experienciaAgricolaTipoActividadProductivaId = '';
-  String experienciaAgricolaFrecuenciaId = '';
+  String? experienciaAgricolaTipoActividadProductivaId;
+  String? experienciaAgricolaFrecuenciaId;
 
   final areaCultivoCtrl = TextEditingController();
   final cantidadProducidaCtrl = TextEditingController();
@@ -39,8 +39,8 @@ class _BeneficiarioExperienciaFormState
   final areaImplementacionCtrl = TextEditingController();
   final totalAreaPredioCtrl = TextEditingController();
 
-  String experienciaPecuariaTipoActividadProductivaId = '';
-  String experienciaPecuariaFrecuenciaId = '';
+  String? experienciaPecuariaTipoActividadProductivaId;
+  String? experienciaPecuariaFrecuenciaId;
 
   final cantidadAnimalesCtrl = TextEditingController();
   final cantidadCriaCtrl = TextEditingController();
@@ -174,10 +174,8 @@ class _BeneficiarioExperienciaFormState
                               decoration: CustomInputDecoration.inputDecoration(
                                   hintText: 'Tipo de Actividad Productiva',
                                   labelText: 'Tipo de Actividad Productiva'),
-                              value: experienciaAgricolaTipoActividadProductivaId !=
-                                      ''
-                                  ? experienciaAgricolaTipoActividadProductivaId
-                                  : null,
+                              value:
+                                  experienciaAgricolaTipoActividadProductivaId,
                               items: state.tiposActividadesProductivas!
                                   .map<DropdownMenuItem<String>>(
                                       (TipoActividadProductivaEntity value) {
@@ -209,9 +207,7 @@ class _BeneficiarioExperienciaFormState
                               decoration: CustomInputDecoration.inputDecoration(
                                   hintText: 'Frecuencia',
                                   labelText: 'Frecuencia'),
-                              value: experienciaAgricolaFrecuenciaId != ''
-                                  ? experienciaAgricolaFrecuenciaId
-                                  : null,
+                              value: experienciaAgricolaFrecuenciaId,
                               items: state.frecuencias!
                                   .map<DropdownMenuItem<String>>(
                                       (FrecuenciaEntity value) {
@@ -466,10 +462,8 @@ class _BeneficiarioExperienciaFormState
                               decoration: CustomInputDecoration.inputDecoration(
                                   hintText: 'Tipo de Actividad Productiva',
                                   labelText: 'Tipo de Actividad Productiva'),
-                              value: experienciaPecuariaTipoActividadProductivaId !=
-                                      ''
-                                  ? experienciaPecuariaTipoActividadProductivaId
-                                  : null,
+                              value:
+                                  experienciaPecuariaTipoActividadProductivaId,
                               items: state.tiposActividadesProductivas!
                                   .map<DropdownMenuItem<String>>(
                                       (TipoActividadProductivaEntity value) {
@@ -501,9 +495,7 @@ class _BeneficiarioExperienciaFormState
                               decoration: CustomInputDecoration.inputDecoration(
                                   hintText: 'Frecuencia',
                                   labelText: 'Frecuencia'),
-                              value: experienciaPecuariaFrecuenciaId != ''
-                                  ? experienciaPecuariaFrecuenciaId
-                                  : null,
+                              value: experienciaPecuariaFrecuenciaId,
                               items: state.frecuencias!
                                   .map<DropdownMenuItem<String>>(
                                       (FrecuenciaEntity value) {

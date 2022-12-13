@@ -63,7 +63,7 @@ class AlianzaBeneficiarioLocalDataSourceImpl
         ConyugeApellido2	TEXT,
         ConyugeGeneroId	TEXT NOT NULL,
         ConyugeFechaExpedicionDocumento	TEXT,
-        ConyugeGrupoEspecialId	TEXT NOT NULL,∫
+        ConyugeGrupoEspecialId	TEXT NOT NULL,
         ConyugeFechaNacimiento	TEXT,
         ConyugeIngresosMensuales	TEXT,
         ActividadEconomicaId	TEXT NOT NULL,
@@ -96,6 +96,7 @@ class AlianzaBeneficiarioLocalDataSourceImpl
     final db = await DBConfig.database;
 
     String sql = '''
+      select
       AlianzaBeneficiario.AlianzaId,
       AlianzaBeneficiario.BeneficiarioId,
       AlianzaBeneficiario.MunicipioId,
@@ -144,11 +145,23 @@ class AlianzaBeneficiarioLocalDataSourceImpl
       AlianzaBeneficiario.DiasTrabajo,
       AlianzaBeneficiario.Longitud,
       AlianzaBeneficiario.Latitud,
-      AlianzaBeneficiario.CedulaCatastral
-      Beneficiario.Beneficiario as Beneficiario
-      left join Beneficiario on (Beneficiario.BeneficiarioId=AlianzaBeneficiario.BeneficiarioId)
+      AlianzaBeneficiario.CedulaCatastral,
+      AlianzaBeneficiario.BeneficiarioId as Documento,
+      TipoIdentificacion.Nombre as TipoDocumento,
+      Beneficiario.Nombre1 || " " || Beneficiario.Nombre2 || " " || Beneficiario.Apellido1 || " " || Beneficiario.Apellido2 as Nombre,
+      cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', Beneficiario.FechaNacimiento ) as int) as Edad,
+      Genero.Nombre as Genero,
+      GrupoEspecial.Nombre as GrupoEspecial,
+      Departamento.Nombre || " / " || Municipio.Nombre || " / "  || Vereda.Nombre as Ubicacion
       from AlianzaBeneficiario
-      where PerfilPreInversionId = $alianzaId;
+      inner join Beneficiario  on AlianzaBeneficiario.BeneficiarioId = Beneficiario.BeneficiarioId
+      left join TipoIdentificacion on TipoIdentificacion.TipoIdentificacionId=Beneficiario.TipoIdentificacionId
+      left join Genero on Genero.GeneroId=Beneficiario.GeneroId
+      left join GrupoEspecial on GrupoEspecial.GrupoEspecialId=Beneficiario.GrupoEspecialId
+      left join Municipio on Municipio.MunicipioId=AlianzaBeneficiario.MunicipioId
+      left join Departamento on Departamento.DepartamentoId=Municipio.DepartamentoId
+      left join Vereda on Vereda.VeredaId=AlianzaBeneficiario.VeredaId
+      where AlianzaId = $alianzaId
     ''';
 
     final res = await db.rawQuery(sql);
@@ -203,7 +216,7 @@ class AlianzaBeneficiarioLocalDataSourceImpl
     var batch = db.batch();
 
     final resQuery = await db.query('AlianzaBeneficiario',
-        where: 'PerfilPreinversionId = ? AND BeneficiarioId = ?',
+        where: 'AlianzaId = ? AND BeneficiarioId = ?',
         whereArgs: [
           alianzaBeneficiarioEntity.alianzaId,
           alianzaBeneficiarioEntity.beneficiarioId
@@ -213,9 +226,11 @@ class AlianzaBeneficiarioLocalDataSourceImpl
       alianzaBeneficiarioEntity.recordStatus = 'N';
       batch.insert('AlianzaBeneficiario', alianzaBeneficiarioEntity.toJson());
     } else {
-      alianzaBeneficiarioEntity.recordStatus = 'E';
+      if (alianzaBeneficiarioEntity.recordStatus != 'N') {
+        alianzaBeneficiarioEntity.recordStatus = 'E';
+      }
       batch.update('AlianzaBeneficiario', alianzaBeneficiarioEntity.toJson(),
-          where: 'PerfilPreinversionId = ? AND BeneficiarioId = ?',
+          where: 'AlianzaId = ? AND BeneficiarioId = ?',
           whereArgs: [
             alianzaBeneficiarioEntity.alianzaId,
             alianzaBeneficiarioEntity.beneficiarioId
@@ -256,7 +271,7 @@ class AlianzaBeneficiarioLocalDataSourceImpl
       alianzaBeneficiarioProduccion.recordStatus = 'R';
       batch.update(
           'AlianzaBeneficiario', alianzaBeneficiarioProduccion.toJson(),
-          where: 'PerfilPreinversionId = ? AND BeneficiarioId = ?',
+          where: 'AlianzaId = ? AND BeneficiarioId = ?',
           whereArgs: [
             alianzaBeneficiarioProduccion.alianzaId,
             alianzaBeneficiarioProduccion.beneficiarioId

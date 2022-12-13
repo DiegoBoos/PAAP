@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'domain/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
 import 'domain/blocs/alianzas/alianzas_bloc.dart';
 import 'domain/blocs/auth/auth_bloc.dart';
-import 'domain/blocs/download_sync/download_sync_bloc.dart';
 import 'domain/blocs/perfil_preinversion_aliados/perfil_preinversion_aliados_bloc.dart';
 import 'domain/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
 import 'domain/blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
@@ -16,7 +15,6 @@ import 'domain/blocs/perfiles/perfiles_bloc.dart';
 import 'domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
 import 'domain/blocs/perfiles_preinversiones_precios/perfiles_preinversiones_precios_bloc.dart';
 import 'domain/blocs/sync/sync_bloc.dart';
-import 'domain/blocs/upload_sync/upload_sync_bloc.dart';
 import 'domain/cubits/actividad/actividad_cubit.dart';
 import 'domain/cubits/actividad_economica/actividad_economica_cubit.dart';
 import 'domain/cubits/actividad_financiera/actividad_financiera_cubit.dart';
@@ -206,12 +204,6 @@ class MyApp extends StatelessWidget {
             create: (_) => di.locator<DesembolsoCubit>(),
           ),
           BlocProvider(
-            create: (_) => di.locator<UploadSyncBloc>(),
-          ),
-          BlocProvider(
-            create: (_) => di.locator<DownloadSyncBloc>(),
-          ),
-          BlocProvider(
             create: (_) => di.locator<EstadoCivilCubit>(),
           ),
           BlocProvider(
@@ -359,7 +351,7 @@ class MyApp extends StatelessWidget {
             create: (_) => di.locator<PerfilPreInversionIngresosUPTCubit>(),
           ),
           BlocProvider(
-            create: (_) => di.locator<PerfilPreInversionPlanesNegociosBloc>(),
+            create: (_) => di.locator<PerfilPreInversionPlanNegociosBloc>(),
           ),
           BlocProvider(
             create: (_) =>

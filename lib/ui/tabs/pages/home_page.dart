@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
-import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 
 class HomePage extends StatelessWidget {
@@ -18,10 +17,13 @@ class HomePage extends StatelessWidget {
               leading: const Icon(Icons.person_pin),
               title: Text('${usuario.nombre} ${usuario.apellido}',
                   style: const TextStyle(color: Colors.white))),
-          actions: const [
+          actions: [
             Padding(
-              padding: EdgeInsets.only(right: 70.0),
-              child: NetworkIcon(),
+              padding: const EdgeInsets.only(right: 60.0),
+              child: IconButton(
+                  onPressed: () =>
+                      Navigator.pushReplacementNamed(context, 'sign-in'),
+                  icon: const Icon(Icons.logout)),
             ),
           ],
         ),

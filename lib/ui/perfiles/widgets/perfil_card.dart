@@ -17,7 +17,7 @@ class PerfilCard extends StatelessWidget {
                   child: DataTable(
                       dividerThickness: 1,
                       columnSpacing: 40,
-                      dataRowHeight: 150,
+                      dataRowHeight: 200,
                       columns: const <DataColumn>[
                         DataColumn(
                           label: Expanded(

@@ -19,7 +19,7 @@ class IngresosUPTPage extends StatefulWidget {
   State<IngresosUPTPage> createState() => _IngresosUPTPageState();
 }
 
-const String tipoMovimiento = '2';
+const String tipoMovimientoId = '2';
 
 class _IngresosUPTPageState extends State<IngresosUPTPage> {
   @override
@@ -35,7 +35,7 @@ class _IngresosUPTPageState extends State<IngresosUPTPage> {
         .getVPerfilesPreInversionesPlanNegociosDB(
             vPerfilPreInversionCubit
                 .state.vPerfilPreInversion!.perfilPreInversionId,
-            tipoMovimiento);
+            tipoMovimientoId);
   }
 
   @override
@@ -56,12 +56,12 @@ class _IngresosUPTPageState extends State<IngresosUPTPage> {
             .getVPerfilesPreInversionesPlanNegociosDB(
                 vPerfilPreInversionCubit
                     .state.vPerfilPreInversion!.perfilPreInversionId,
-                tipoMovimiento);
+                tipoMovimientoId);
       }
     }, child: BlocBuilder<VPerfilesPreInversionesPlanNegociosCubit,
         VPerfilesPreInversionesPlanNegociosState>(
       builder: (context, state) {
-        if (state is PerfilPreInversionPlanesNegociosLoading) {
+        if (state is PerfilPreInversionPlanNegociosLoading) {
           return const CustomCircularProgress(alignment: Alignment.center);
         } else if (state is VPerfilesPreInversionesPlanNegociosLoaded) {
           List<VPerfilPreInversionPlanNegocioEntity>
@@ -71,11 +71,11 @@ class _IngresosUPTPageState extends State<IngresosUPTPage> {
             return const SizedBox(
                 child: Center(child: NoDataSvg(title: 'No hay resultados')));
           }
-          return PerfilPreInversionPlanesNegociosRows(
+          return PerfilPreInversionPlanNegociosRows(
               vPerfilesPreInversionesPlanNegocios:
                   vPerfilesPreInversionesPlanNegocios,
               subtitleStyle: Styles.subtitleStyle,
-              tipoMovimiento: tipoMovimiento);
+              tipoMovimientoId: tipoMovimientoId);
         }
         return const NoDataSvg(
           title: 'No hay resultados',

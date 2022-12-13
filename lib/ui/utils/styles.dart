@@ -4,9 +4,9 @@ class Styles {
   static const Color lightGreen = Color(0XFF64DD17);
   static const Color obscureGreen = Color(0xff008E69);
   static const titleStyle =
-      TextStyle(fontSize: 25, fontWeight: FontWeight.w500);
+      TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
   static const subtitleStyle =
-      TextStyle(fontSize: 18, fontWeight: FontWeight.w400);
+      TextStyle(fontSize: 15, fontWeight: FontWeight.w400);
 
   static LinearGradient getColorGradient(Color color) {
     var baseColor = color as dynamic;

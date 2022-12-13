@@ -12,10 +12,6 @@ class PerfilBeneficiarioInitial extends PerfilBeneficiarioState {
   PerfilBeneficiarioInitial() : super(perfilBeneficiario: initObject());
 }
 
-class PerfilBeneficiarioLoading extends PerfilBeneficiarioState {
-  PerfilBeneficiarioLoading() : super(perfilBeneficiario: initObject());
-}
-
 class PerfilBeneficiarioLoaded extends PerfilBeneficiarioState {
   final PerfilBeneficiarioEntity perfilBeneficiarioLoaded;
 
@@ -31,7 +27,7 @@ class PerfilBeneficiarioChanged extends PerfilBeneficiarioState {
 }
 
 class PerfilBeneficiarioSaved extends PerfilBeneficiarioState {
-  PerfilBeneficiarioSaved() : super(perfilBeneficiario: initObject());
+  const PerfilBeneficiarioSaved({required super.perfilBeneficiario});
 }
 
 class PerfilBeneficiarioError extends PerfilBeneficiarioState {

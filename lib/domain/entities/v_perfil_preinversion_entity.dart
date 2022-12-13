@@ -17,6 +17,7 @@ class VPerfilPreInversionEntity {
     required this.productoAsociado,
     required this.valorTotalProyecto,
     required this.incentivoModular,
+    required this.departamento,
   });
 
   final String perfilPreInversionId;
@@ -36,6 +37,7 @@ class VPerfilPreInversionEntity {
   final String productoAsociado;
   final String valorTotalProyecto;
   final String incentivoModular;
+  final String departamento;
 
   factory VPerfilPreInversionEntity.fromJson(Map<String, dynamic> json) =>
       VPerfilPreInversionEntity(
@@ -56,6 +58,7 @@ class VPerfilPreInversionEntity {
         productoAsociado: json["productoAsociado"],
         valorTotalProyecto: json["valorTotalProyecto"],
         incentivoModular: json["incentivoModular"],
+        departamento: json["Departamento"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -76,5 +79,6 @@ class VPerfilPreInversionEntity {
         "productoAsociado": productoAsociado,
         "valorTotalProyecto": valorTotalProyecto,
         "incentivoModular": incentivoModular,
+        "departamento": departamento,
       };
 }

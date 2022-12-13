@@ -24,10 +24,10 @@ class AlianzaExperienciaPecuariaCubit
         (failure) =>
             emit(AlianzaExperienciaPecuariaError(failure.properties.first)),
         (data) {
-      if (data == null) {
-        emit(AlianzaExperienciaPecuariaError('Error'));
-      } else {
+      if (data != null) {
         emit(AlianzaExperienciaPecuariaLoaded(data));
+      } else {
+        emit(AlianzaExperienciaPecuariaInitial());
       }
     });
   }
@@ -40,7 +40,8 @@ class AlianzaExperienciaPecuariaCubit
     result.fold(
         (failure) =>
             emit(AlianzaExperienciaPecuariaError(failure.properties.first)),
-        (data) => emit(AlianzaExperienciaPecuariaSaved()));
+        (data) => emit(AlianzaExperienciaPecuariaSaved(
+            alianzaExperienciaPecuaria: alianzaExperienciaPecuariaEntity)));
   }
 
   void changeTipoActividadProductiva(String? value) {

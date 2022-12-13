@@ -59,8 +59,8 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
       PerfilPreInversionCofinanciadorDesembolso.PerfilPreInversionId,
       PerfilPreInversionCofinanciadorDesembolso.CofinanciadorId,
       PerfilPreInversionCofinanciadorDesembolso.DesembolsoId,
-      Fecha as fecha,
-      Desembolso.Nombre as desembolso
+      Fecha,
+      Desembolso.Nombre as Desembolso
       from PerfilPreInversionCofinanciadorDesembolso
       left join Desembolso on (Desembolso.DesembolsoId=PerfilPreInversionCofinanciadorDesembolso.DesembolsoId)
       ''';
@@ -127,8 +127,8 @@ class PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
       PerfilPreInversionCofinanciadorDesembolso.PerfilPreInversionId,
       PerfilPreInversionCofinanciadorDesembolso.CofinanciadorId,
       PerfilPreInversionCofinanciadorDesembolso.DesembolsoId,
-      Fecha as fecha,
-      Desembolso.Nombre as desembolso
+      Fecha,
+      Desembolso.Nombre as Desembolso
       from PerfilPreInversionCofinanciadorDesembolso
       left join Desembolso on (Desembolso.DesembolsoId=PerfilPreInversionCofinanciadorDesembolso.DesembolsoId)
       where PerfilPreInversionCofinanciadorDesembolso.PerfilPreInversionId = $perfilPreInversionId 

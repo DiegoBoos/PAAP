@@ -10,8 +10,8 @@ class PerfilPreInversionPlanNegocioUsecaseDB {
   PerfilPreInversionPlanNegocioUsecaseDB(this.repositoryDB);
 
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>?>>
-      getPerfilPreInversionPlanesNegociosUsecaseDB() {
-    return repositoryDB.getPerfilPreInversionPlanesNegociosRepositoryDB();
+      getPerfilPreInversionPlanNegociosUsecaseDB() {
+    return repositoryDB.getPerfilPreInversionPlanNegociosRepositoryDB();
   }
 
   Future<Either<Failure, List<VPerfilPreInversionPlanNegocioEntity>>>
@@ -21,31 +21,34 @@ class PerfilPreInversionPlanNegocioUsecaseDB {
         perfilPreInversionId, tipoMovimientoId);
   }
 
-  Future<Either<Failure, int>> savePerfilPreInversionPlanesNegociosUsecaseDB(
+  Future<Either<Failure, int>> savePerfilPreInversionPlanNegociosUsecaseDB(
       List<PerfilPreInversionPlanNegocioEntity>
-          perfilPreInversionPlanesNegociosEntity) {
-    return repositoryDB.savePerfilPreInversionPlanesNegociosRepositoryDB(
-        perfilPreInversionPlanesNegociosEntity);
+          perfilPreInversionPlanNegociosEntity) {
+    return repositoryDB.savePerfilPreInversionPlanNegociosRepositoryDB(
+        perfilPreInversionPlanNegociosEntity);
   }
 
   Future<Either<Failure, List<PerfilPreInversionPlanNegocioEntity>>>
-      getPerfilesPreInversionesPlanesNegociosProduccionUsecaseDB() {
+      getPerfilesPreInversionesPlanNegociosProduccionUsecaseDB() {
     return repositoryDB
-        .getPerfilesPreInversionesPlanesNegociosProduccionRepositoryDB();
+        .getPerfilesPreInversionesPlanNegociosProduccionRepositoryDB();
   }
 
-  Future<Either<Failure, int>> savePerfilPreInversionPlanNegocioUsecaseDB(
-      PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity) {
+  Future<Either<Failure, VPerfilPreInversionPlanNegocioEntity>>
+      savePerfilPreInversionPlanNegocioUsecaseDB(
+          PerfilPreInversionPlanNegocioEntity
+              perfilPreInversionPlanNegocioEntity,
+          String tipoMovimientoId) {
     return repositoryDB.savePerfilPreInversionPlanNegocioRepositoryDB(
-        perfilPreInversionPlanNegocioEntity);
+        perfilPreInversionPlanNegocioEntity, tipoMovimientoId);
   }
 
   Future<Either<Failure, int>>
-      updatePerfilesPreInversionesPlanesNegociosProduccionUsecaseDB(
+      updatePerfilesPreInversionesPlanNegociosProduccionUsecaseDB(
           List<PerfilPreInversionPlanNegocioEntity>
               experienciasAgricolasEntity) {
     return repositoryDB
-        .updatePerfilesPreInversionesPlanesNegociosProduccionDBRepositoryDB(
+        .updatePerfilesPreInversionesPlanNegociosProduccionDBRepositoryDB(
             experienciasAgricolasEntity);
   }
 }

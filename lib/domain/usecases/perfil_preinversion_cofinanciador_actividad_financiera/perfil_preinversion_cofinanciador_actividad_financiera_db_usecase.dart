@@ -32,12 +32,14 @@ class PerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB {
           Either<Failure,
               PerfilPreInversionCofinanciadorActividadFinancieraEntity?>>
       getPerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
-          String perfilPreInversionId,
-          String cofinanciadorId,
-          String desembolsoId) {
+    String perfilPreInversionId,
+    String cofinanciadorId,
+  ) {
     return repositoryDB
         .getPerfilPreInversionCofinanciadorActividadFinancieraRepositoryDB(
-            perfilPreInversionId, cofinanciadorId, desembolsoId);
+      perfilPreInversionId,
+      cofinanciadorId,
+    );
   }
 
   Future<Either<Failure, int>>

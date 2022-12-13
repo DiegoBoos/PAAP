@@ -38,10 +38,12 @@ class _ModeloFinancieroPageState extends State<ModeloFinancieroPage> {
                   onPressed: () {
                     if (tabController.index == 0) {
                       Navigator.pushNamed(
-                          context, 'NewEditPerfilPreInversionCostosUPT');
+                          context, 'NewEditPerfilPreInversionCostosUPT',
+                          arguments: '3');
                     } else {
                       Navigator.pushNamed(
-                          context, 'NewEditPerfilPreInversionIngresosUPT');
+                          context, 'NewEditPerfilPreInversionIngresosUPT',
+                          arguments: '2');
                     }
                   },
                   child: const Icon(Icons.add)),

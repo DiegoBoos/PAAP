@@ -19,6 +19,7 @@ class VPerfilPreInversionModel extends VPerfilPreInversionEntity {
     String? productoAsociado,
     String? valorTotalProyecto,
     String? incentivoModular,
+    String? departamento,
   }) : super(
             perfilPreInversionId: perfilPreInversionId,
             perfilId: perfilId,
@@ -36,7 +37,8 @@ class VPerfilPreInversionModel extends VPerfilPreInversionEntity {
             producto: producto ?? '',
             productoAsociado: productoAsociado ?? '',
             valorTotalProyecto: valorTotalProyecto ?? '',
-            incentivoModular: incentivoModular ?? '');
+            incentivoModular: incentivoModular ?? '',
+            departamento: departamento ?? '');
 
   factory VPerfilPreInversionModel.fromJson(Map<String, dynamic> json) =>
       VPerfilPreInversionModel(
@@ -57,6 +59,7 @@ class VPerfilPreInversionModel extends VPerfilPreInversionEntity {
         productoAsociado: json["productoAsociado"],
         valorTotalProyecto: json["valorTotalProyecto"],
         incentivoModular: json["incentivoModular"],
+        departamento: json["Departamento"],
       );
 
   @override
@@ -78,5 +81,6 @@ class VPerfilPreInversionModel extends VPerfilPreInversionEntity {
         "productoAsociado": productoAsociado,
         "valorTotalProyecto": valorTotalProyecto,
         "incentivoModular": incentivoModular,
+        "departamento": departamento,
       };
 }

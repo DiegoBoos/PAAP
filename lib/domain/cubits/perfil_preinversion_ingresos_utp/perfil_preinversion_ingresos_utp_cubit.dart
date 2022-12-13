@@ -23,37 +23,16 @@ class PerfilPreInversionIngresosUPTCubit
   }
 
   void savePerfilPreInversionIngresosUPTDB(
-      PerfilPreInversionPlanNegocioEntity
-          perfilPreInversionPlanNegocioEntity) async {
+      PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity,
+      String tipoMovimientoId) async {
     final result = await perfilPreInversionPlanNegocioDB
         .savePerfilPreInversionPlanNegocioUsecaseDB(
-            perfilPreInversionPlanNegocioEntity);
+            perfilPreInversionPlanNegocioEntity, tipoMovimientoId);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionIngresosUPTError(failure.properties.first)),
-        (data) {
-      //TODO: devolver vista
-      final vPerfilPreInversionPlanNegocioEntity =
-          VPerfilPreInversionPlanNegocioEntity(
-              actividadFinancieraId:
-                  'perfilPreInversionPlanNegocioEntity.actividadFinancieraId',
-              actividadFinanciera:
-                  'perfilPreInversionPlanNegocioEntity.actividadFinanciera',
-              rubroId: perfilPreInversionPlanNegocioEntity.rubroId,
-              rubro: 'perfilPreInversionPlanNegocioEntity.rubro',
-              unidadId: perfilPreInversionPlanNegocioEntity.unidadId,
-              unidad: 'perfilPreInversionPlanNegocioEntity.unidad',
-              year: perfilPreInversionPlanNegocioEntity.year,
-              cantidad: perfilPreInversionPlanNegocioEntity.cantidad,
-              valor: perfilPreInversionPlanNegocioEntity.valor,
-              productoId: 'perfilPreInversionPlanNegocioEntity.productoId',
-              tipoCalidadId:
-                  'perfilPreInversionPlanNegocioEntity.tipoCalidadId',
-              porcentaje: 'perfilPreInversionPlanNegocioEntity.porcentaje');
-
-      emit(PerfilPreInversionIngresosUPTSaved(
-          perfilPreInversionIngresosUPT: vPerfilPreInversionPlanNegocioEntity));
-    });
+        (data) => emit(PerfilPreInversionIngresosUPTSaved(
+            perfilPreInversionIngresosUPT: data)));
   }
 
   void changeRubro(String? value) {

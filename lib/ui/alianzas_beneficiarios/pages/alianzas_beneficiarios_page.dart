@@ -59,7 +59,7 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
           const SizedBox(height: 30),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text('BENEFICIARIOS', style: Styles.titleStyle),
+            child: Text('BENEFICIARIOS ALIANZA', style: Styles.titleStyle),
           ),
           const SizedBox(height: 20),
           const Padding(

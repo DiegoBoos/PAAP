@@ -29,7 +29,7 @@ class BeneficiarioCubit extends Cubit<BeneficiarioState> {
     final result =
         await beneficiarioDB.saveBeneficiarioUsecaseDB(beneficiarioEntity);
     result.fold((failure) => emit(BeneficiarioError(failure.properties.first)),
-        (data) => emit(BeneficiarioSaved()));
+        (data) => emit(BeneficiarioSaved(beneficiario: beneficiarioEntity)));
   }
 
   void changeBeneficiarioId(String? newValue) {

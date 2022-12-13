@@ -78,6 +78,7 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
       END as Participacion
       FROM PerfilPreInversion
       INNER JOIN PerfilPreInversionCofinanciador ON PerfilPreInversion.PerfilPreInversionId = PerfilPreInversionCofinanciador.PerfilPreInversionId
+      where PerfilPreInversionCofinanciador.PerfilPreInversionId = $perfilPreInversionId
       GROUP BY PerfilPreInversion.PerfilId, PerfilPreInversion.IncentivoModular, PerfilPreInversion.ValorTotalProyecto
       ''';
 
@@ -139,8 +140,11 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
     var batch = db.batch();
 
     final resQuery = await db.query('PerfilPreInversionCofinanciador',
-        where: 'CofinanciadorId = ?',
-        whereArgs: [perfilPreInversionCofinanciadorEntity.cofinanciadorId]);
+        where: 'CofinanciadorId = ? AND PerfilPreInversionId = ?',
+        whereArgs: [
+          perfilPreInversionCofinanciadorEntity.cofinanciadorId,
+          perfilPreInversionCofinanciadorEntity.perfilPreInversionId
+        ]);
 
     if (resQuery.isEmpty) {
       perfilPreInversionCofinanciadorEntity.recordStatus = 'N';
@@ -150,8 +154,11 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
       perfilPreInversionCofinanciadorEntity.recordStatus = 'E';
       batch.update('PerfilPreInversionCofinanciador',
           perfilPreInversionCofinanciadorEntity.toJson(),
-          where: 'CofinanciadorId = ?',
-          whereArgs: [perfilPreInversionCofinanciadorEntity.cofinanciadorId]);
+          where: 'CofinanciadorId = ? AND PerfilPreInversionId = ?',
+          whereArgs: [
+            perfilPreInversionCofinanciadorEntity.cofinanciadorId,
+            perfilPreInversionCofinanciadorEntity.perfilPreInversionId
+          ]);
     }
 
     final res = await batch.commit();
@@ -195,8 +202,10 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
+    final query = await db.query('PerfilPreInversionCofinanciador',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
 
-    return res.length;
+    return query.length;
   }
 }

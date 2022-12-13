@@ -1,36 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/entities/perfil_beneficiario_entity.dart';
 
 import '../../../data/models/municipio_model.dart';
 import '../../../domain/cubits/departamento/departamento_cubit.dart';
 import '../../../domain/cubits/municipio/municipio_cubit.dart';
-import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
+import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../../domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
 import '../../../domain/cubits/vereda/vereda_cubit.dart';
 import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/entities/municipio_entity.dart';
+import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
 import '../../../domain/entities/vereda_entity.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
-class PerfilBeneficiarioForm extends StatefulWidget {
-  const PerfilBeneficiarioForm({super.key});
+class PerfilPreInversionBeneficiarioForm extends StatefulWidget {
+  const PerfilPreInversionBeneficiarioForm({super.key});
 
   @override
-  State<PerfilBeneficiarioForm> createState() => _PerfilBeneficiarioFormState();
+  State<PerfilPreInversionBeneficiarioForm> createState() =>
+      _PerfilPreInversionBeneficiarioFormState();
 }
 
-class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
+class _PerfilPreInversionBeneficiarioFormState
+    extends State<PerfilPreInversionBeneficiarioForm> {
   List<MunicipioEntity> municipiosFiltered = [];
   List<VeredaEntity> veredasFiltered = [];
 
   String? departamentoId;
   String? municipioId;
   String? veredaId;
-  String tipoTenenciaId = '';
+  String? tipoTenenciaId;
 
   final areaFincaCtrl = TextEditingController();
   final areaProyectoCtrl = TextEditingController();
@@ -47,12 +49,12 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
   void deactivate() {
     super.deactivate();
     municipioId = null;
-    BlocProvider.of<PerfilBeneficiarioCubit>(context).initState();
+    BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context).initState();
   }
 
   Future<void> loadAccesories() async {
-    final perfilBeneficiarioCubit =
-        BlocProvider.of<PerfilBeneficiarioCubit>(context);
+    final perfilPreInversionBeneficiarioCubit =
+        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
 
     await municipioCubit.getMunicipiosDB();
@@ -61,68 +63,84 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
       municipiosFiltered = municipioCubit.state.municipios!;
     }
 
-    if (perfilBeneficiarioCubit.state is PerfilBeneficiarioLoaded) {
-      final perfilBeneficiarioLoaded =
-          perfilBeneficiarioCubit.state.perfilBeneficiario;
+    if (perfilPreInversionBeneficiarioCubit.state
+        is PerfilPreInversionBeneficiarioLoaded) {
+      final perfilPreInversionBeneficiarioLoaded =
+          perfilPreInversionBeneficiarioCubit
+              .state.perfilPreInversionBeneficiario;
 
-      loadPerfilBeneficiario(perfilBeneficiarioLoaded);
+      loadPerfilPreInversionBeneficiario(perfilPreInversionBeneficiarioLoaded);
     }
   }
 
-  void loadPerfilBeneficiario(
-      PerfilBeneficiarioEntity perfilBeneficiarioLoaded) {
-    final perfilBeneficiarioMunicipioId = perfilBeneficiarioLoaded.municipioId;
-    final perfilBeneficiarioVeredaId = perfilBeneficiarioLoaded.veredaId;
+  void loadPerfilPreInversionBeneficiario(
+      PerfilPreInversionBeneficiarioEntity
+          perfilPreInversionBeneficiarioLoaded) {
+    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
+    final perfilPreInversionBeneficiarioMunicipioId =
+        perfilPreInversionBeneficiarioLoaded.municipioId;
+    final perfilPreInversionBeneficiarioVeredaId =
+        perfilPreInversionBeneficiarioLoaded.veredaId;
 
     final municipio = municipiosFiltered.firstWhere(
-        (municipio) => municipio.id == perfilBeneficiarioMunicipioId,
+        (municipio) =>
+            municipio.id == perfilPreInversionBeneficiarioMunicipioId,
         orElse: () => MunicipioModel(id: '', nombre: '', departamentoid: ''));
 
     if (municipio.id != '') {
       departamentoId = municipio.departamentoid;
-      municipioId = perfilBeneficiarioMunicipioId;
-      loadVeredasByMunicipio(municipioId!, perfilBeneficiarioVeredaId);
+      municipioId = perfilPreInversionBeneficiarioMunicipioId;
+      municipiosFiltered = municipioCubit.state.municipios!
+          .where((municipio) => municipio.departamentoid == departamentoId)
+          .toList();
+      loadVeredasByMunicipio(
+          municipioId!, perfilPreInversionBeneficiarioVeredaId);
     }
-    experienciaCtrl.text = perfilBeneficiarioLoaded.experiencia;
-    cualBeneficioCtrl.text = perfilBeneficiarioLoaded.cualBeneficio;
-    areaProyectoCtrl.text = perfilBeneficiarioLoaded.areaProyecto;
-    areaFincaCtrl.text = perfilBeneficiarioLoaded.areaFinca;
 
-    tipoTenenciaId = perfilBeneficiarioLoaded.tipoTenenciaId;
+    experienciaCtrl.text = perfilPreInversionBeneficiarioLoaded.experiencia;
+    cualBeneficioCtrl.text = perfilPreInversionBeneficiarioLoaded.cualBeneficio;
+    areaProyectoCtrl.text = perfilPreInversionBeneficiarioLoaded.areaProyecto;
+    areaFincaCtrl.text = perfilPreInversionBeneficiarioLoaded.areaFinca;
+    tipoTenenciaId = perfilPreInversionBeneficiarioLoaded.tipoTenenciaId;
 
     setState(() {});
   }
 
   void loadVeredasByMunicipio(
-      String municipioId, String perfilBeneficiarioVeredaId) async {
+      String municipioId, String perfilPreInversionBeneficiarioVeredaId) async {
     final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
     await veredaCubit.getVeredasByMunicipioDB(municipioId);
-    veredaId =
-        perfilBeneficiarioVeredaId != '' ? perfilBeneficiarioVeredaId : null;
+    veredaId = perfilPreInversionBeneficiarioVeredaId != ''
+        ? perfilPreInversionBeneficiarioVeredaId
+        : null;
   }
 
   @override
   Widget build(BuildContext context) {
-    final perfilBeneficiarioCubit =
-        BlocProvider.of<PerfilBeneficiarioCubit>(context, listen: true);
+    final perfilPreInversionBeneficiarioCubit =
+        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context,
+            listen: true);
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
     final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
-    final perfilBeneficiario = perfilBeneficiarioCubit.state.perfilBeneficiario;
+    final perfilPreInversionBeneficiario = perfilPreInversionBeneficiarioCubit
+        .state.perfilPreInversionBeneficiario;
 
-    return BlocListener<PerfilBeneficiarioCubit, PerfilBeneficiarioState>(
-        listener: (context, state) {
-      if (state is PerfilBeneficiarioError) {
+    return BlocListener<PerfilPreInversionBeneficiarioCubit,
+        PerfilPreInversionBeneficiarioState>(listener: (context, state) {
+      if (state is PerfilPreInversionBeneficiarioError) {
         CustomSnackBar.showSnackBar(context, state.message, Colors.red);
       }
 
-      if (state is PerfilBeneficiarioLoaded) {
-        final perfilBeneficiarioLoaded = state.perfilBeneficiarioLoaded;
-        loadPerfilBeneficiario(perfilBeneficiarioLoaded);
+      if (state is PerfilPreInversionBeneficiarioLoaded) {
+        final perfilPreInversionBeneficiarioLoaded =
+            state.perfilPreInversionBeneficiarioLoaded;
+        loadPerfilPreInversionBeneficiario(
+            perfilPreInversionBeneficiarioLoaded);
       }
-    }, child: BlocBuilder<PerfilBeneficiarioCubit, PerfilBeneficiarioState>(
-            builder: (context, state) {
+    }, child: BlocBuilder<PerfilPreInversionBeneficiarioCubit,
+        PerfilPreInversionBeneficiarioState>(builder: (context, state) {
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -141,7 +159,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                           hintText: 'Departamento', labelText: 'Departamento'),
                       isExpanded: true,
                       value: departamentoId,
-                      items: state.departamentos?.map<DropdownMenuItem<String>>(
+                      items: state.departamentos!.map<DropdownMenuItem<String>>(
                           (DepartamentoEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.id,
@@ -201,7 +219,8 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                           veredaId = null;
                         });
 
-                        perfilBeneficiarioCubit.changeMunicipioId(municipioId!);
+                        perfilPreInversionBeneficiarioCubit
+                            .changeMunicipioId(municipioId!);
                       },
                     );
                   },
@@ -229,7 +248,8 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                             veredaId = value;
                           });
 
-                          perfilBeneficiarioCubit.changeVeredaId(veredaId!);
+                          perfilPreInversionBeneficiarioCubit
+                              .changeVeredaId(veredaId!);
                         },
                       );
                     }
@@ -245,7 +265,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                           hintText: 'Tipo Tenencia',
                           labelText: 'Tipo Tenencia'),
                       isExpanded: true,
-                      value: tipoTenenciaId != '' ? tipoTenenciaId : null,
+                      value: tipoTenenciaId,
                       items: state.tiposTenencias!
                           .map<DropdownMenuItem<String>>(
                               (TipoTenenciaEntity value) {
@@ -261,7 +281,8 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                         return null;
                       },
                       onChanged: (String? value) {
-                        perfilBeneficiarioCubit.changeTipoTenencia(value);
+                        perfilPreInversionBeneficiarioCubit
+                            .changeTipoTenencia(value);
                       },
                     );
                   }
@@ -282,7 +303,8 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                     return null;
                   },
                   onSaved: (String? newValue) {
-                    perfilBeneficiarioCubit.changeAreaFinca(newValue);
+                    perfilPreInversionBeneficiarioCubit
+                        .changeAreaFinca(newValue);
                   }),
               const SizedBox(height: 20),
               TextFormField(
@@ -298,28 +320,36 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                     return null;
                   },
                   onSaved: (String? newValue) {
-                    perfilBeneficiarioCubit.changeAreaProyecto(newValue);
+                    perfilPreInversionBeneficiarioCubit
+                        .changeAreaProyecto(newValue);
                   }),
               const SizedBox(height: 20),
               SwitchListTile(
                   title: const Text('Es asociado'),
-                  value: perfilBeneficiario.asociado == 'true' ? true : false,
-                  onChanged: (bool? value) {
-                    perfilBeneficiarioCubit.changeAsociado(value);
-                  }),
-              SwitchListTile(
-                  title: const Text('Está activo en la alianza'),
-                  value: perfilBeneficiario.activo == 'true' ? true : false,
-                  onChanged: (bool? value) {
-                    perfilBeneficiarioCubit.changeActivo(value);
-                  }),
-              SwitchListTile(
-                  title: const Text('Fue beneficiado'),
-                  value: perfilBeneficiario.fueBeneficiado == 'true'
+                  value: perfilPreInversionBeneficiario.asociado == 'true'
                       ? true
                       : false,
                   onChanged: (bool? value) {
-                    perfilBeneficiarioCubit.changeFueBeneficiado(value);
+                    perfilPreInversionBeneficiarioCubit
+                        .changeAsociado(value.toString());
+                  }),
+              SwitchListTile(
+                  title: const Text('Está activo en la alianza'),
+                  value: perfilPreInversionBeneficiario.activo == 'true'
+                      ? true
+                      : false,
+                  onChanged: (bool? value) {
+                    perfilPreInversionBeneficiarioCubit
+                        .changeActivo(value.toString());
+                  }),
+              SwitchListTile(
+                  title: const Text('Fue beneficiado'),
+                  value: perfilPreInversionBeneficiario.fueBeneficiado == 'true'
+                      ? true
+                      : false,
+                  onChanged: (bool? value) {
+                    perfilPreInversionBeneficiarioCubit
+                        .changeFueBeneficiado(value.toString());
                   }),
               const SizedBox(height: 20),
               TextFormField(
@@ -333,7 +363,8 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                     return null;
                   },
                   onSaved: (String? newValue) {
-                    perfilBeneficiarioCubit.changeCualBeneficio(newValue);
+                    perfilPreInversionBeneficiarioCubit
+                        .changeCualBeneficio(newValue);
                   }),
               const SizedBox(height: 20),
               TextFormField(
@@ -349,7 +380,8 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                     return null;
                   },
                   onSaved: (String? newValue) {
-                    perfilBeneficiarioCubit.changeExperiencia(newValue);
+                    perfilPreInversionBeneficiarioCubit
+                        .changeExperiencia(newValue);
                   }),
             ],
           ),

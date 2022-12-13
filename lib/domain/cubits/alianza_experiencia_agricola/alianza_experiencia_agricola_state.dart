@@ -15,12 +15,6 @@ class AlianzaExperienciaAgricolaInitial
       : super(alianzaExperienciaAgricola: initObject());
 }
 
-class AlianzaExperienciaAgricolaLoading
-    extends AlianzaExperienciaAgricolaState {
-  AlianzaExperienciaAgricolaLoading()
-      : super(alianzaExperienciaAgricola: initObject());
-}
-
 class AlianzaExperienciaAgricolaLoaded extends AlianzaExperienciaAgricolaState {
   final AlianzaExperienciaAgricolaEntity alianzaExperienciaAgricolaLoaded;
 
@@ -37,8 +31,8 @@ class AlianzaExperienciaAgricolaChanged
 }
 
 class AlianzaExperienciaAgricolaSaved extends AlianzaExperienciaAgricolaState {
-  AlianzaExperienciaAgricolaSaved()
-      : super(alianzaExperienciaAgricola: initObject());
+  const AlianzaExperienciaAgricolaSaved(
+      {required super.alianzaExperienciaAgricola});
 }
 
 class AlianzaExperienciaAgricolaError extends AlianzaExperienciaAgricolaState {

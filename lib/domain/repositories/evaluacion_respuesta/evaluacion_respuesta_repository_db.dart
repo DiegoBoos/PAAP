@@ -13,6 +13,10 @@ abstract class EvaluacionRespuestaRepositoryDB {
       getEvaluacionRespuestaRepositoryDB(
           String criterioId, String evaluacionId);
 
+  Future<Either<Failure, EvaluacionRespuestaEntity>>
+      getEvaluacionRespuestaOpcionRepositoryDB(
+          String criterioId, String evaluacionId, String opcionId);
+
   Future<Either<Failure, int>> saveEvaluacionRespuestaRepositoryDB(
       EvaluacionRespuestaEntity evaluacionRespuestaEntity, String perfilId);
 

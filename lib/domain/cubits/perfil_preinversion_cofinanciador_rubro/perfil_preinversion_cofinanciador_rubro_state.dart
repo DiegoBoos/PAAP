@@ -17,12 +17,6 @@ class PerfilPreInversionCofinanciadorRubroInitial
       : super(perfilPreInversionCofinanciadorRubro: initObject());
 }
 
-class PerfilPreInversionCofinanciadorRubroLoading
-    extends PerfilPreInversionCofinanciadorRubroState {
-  const PerfilPreInversionCofinanciadorRubroLoading(
-      {required super.perfilPreInversionCofinanciadorRubro});
-}
-
 class PerfilPreInversionCofinanciadorRubroLoaded
     extends PerfilPreInversionCofinanciadorRubroState {
   final PerfilPreInversionCofinanciadorRubroEntity
@@ -49,8 +43,8 @@ class PerfilPreInversionCofinanciadorRubroChanged
 
 class PerfilPreInversionCofinanciadorRubroSaved
     extends PerfilPreInversionCofinanciadorRubroState {
-  PerfilPreInversionCofinanciadorRubroSaved()
-      : super(perfilPreInversionCofinanciadorRubro: initObject());
+  const PerfilPreInversionCofinanciadorRubroSaved(
+      {required super.perfilPreInversionCofinanciadorRubro});
 }
 
 class PerfilPreInversionCofinanciadorRubroError

@@ -47,7 +47,8 @@ class PerfilBeneficiarioCubit extends Cubit<PerfilBeneficiarioState> {
         .savePerfilBeneficiarioUsecaseDB(perfilBeneficiarioEntity);
     result.fold(
         (failure) => emit(PerfilBeneficiarioError(failure.properties.first)),
-        (data) => emit(PerfilBeneficiarioSaved()));
+        (data) => emit(PerfilBeneficiarioSaved(
+            perfilBeneficiario: perfilBeneficiarioEntity)));
   }
 
   void changeMunicipioId(String value) {
@@ -79,21 +80,19 @@ class PerfilBeneficiarioCubit extends Cubit<PerfilBeneficiarioState> {
     emit(PerfilBeneficiarioChanged(areaProyectoChanged));
   }
 
-  void changeAsociado(bool? value) {
-    final asociadoChanged =
-        state.perfilBeneficiario.copyWith(asociado: value.toString());
+  void changeAsociado(String? value) {
+    final asociadoChanged = state.perfilBeneficiario.copyWith(asociado: value);
     emit(PerfilBeneficiarioChanged(asociadoChanged));
   }
 
-  void changeActivo(bool? value) {
-    final tipoTenenciaChanged =
-        state.perfilBeneficiario.copyWith(activo: value.toString());
-    emit(PerfilBeneficiarioChanged(tipoTenenciaChanged));
+  void changeActivo(String? value) {
+    final activoChanged = state.perfilBeneficiario.copyWith(activo: value);
+    emit(PerfilBeneficiarioChanged(activoChanged));
   }
 
-  void changeFueBeneficiado(bool? value) {
+  void changeFueBeneficiado(String? value) {
     final fueBeneficiadoChanged =
-        state.perfilBeneficiario.copyWith(fueBeneficiado: value.toString());
+        state.perfilBeneficiario.copyWith(fueBeneficiado: value);
     emit(PerfilBeneficiarioChanged(fueBeneficiadoChanged));
   }
 
@@ -109,14 +108,15 @@ class PerfilBeneficiarioCubit extends Cubit<PerfilBeneficiarioState> {
     emit(PerfilBeneficiarioChanged(experienciaChanged));
   }
 
-  void changePerfilId(String value) {
-    final perfilIdChanged = state.perfilBeneficiario.copyWith(perfilId: value);
+  void changePerfilId(String? newValue) {
+    final perfilIdChanged =
+        state.perfilBeneficiario.copyWith(perfilId: newValue);
     emit(PerfilBeneficiarioChanged(perfilIdChanged));
   }
 
-  void changeBeneficiarioId(String value) {
+  void changeBeneficiarioId(String? newValue) {
     final beneficiarioIdChanged =
-        state.perfilBeneficiario.copyWith(beneficiarioId: value);
+        state.perfilBeneficiario.copyWith(beneficiarioId: newValue);
     emit(PerfilBeneficiarioChanged(beneficiarioIdChanged));
   }
 }

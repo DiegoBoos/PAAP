@@ -24,7 +24,7 @@ class AlianzasRows extends StatelessWidget {
             MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
         dividerThickness: 1,
         columnSpacing: 10,
-        dataRowHeight: 150,
+        dataRowHeight: 200,
         columns: <DataColumn>[
           DataColumn(
             label: Expanded(

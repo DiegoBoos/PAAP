@@ -23,33 +23,16 @@ class PerfilPreInversionCostosUPTCubit
   }
 
   void savePerfilPreInversionCostosUPTDB(
-      PerfilPreInversionPlanNegocioEntity
-          perfilPreInversionPlanNegocioEntity) async {
+      PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity,
+      String tipoMovimientoId) async {
     final result = await perfilPreInversionPlanNegocioDB
         .savePerfilPreInversionPlanNegocioUsecaseDB(
-            perfilPreInversionPlanNegocioEntity);
+            perfilPreInversionPlanNegocioEntity, tipoMovimientoId);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionCostosUPTError(failure.properties.first)),
-        (data) {
-      //TODO: devolver vista
-      final vPerfilPreInversionPlanNegocioEntity =
-          VPerfilPreInversionPlanNegocioEntity(
-              actividadFinancieraId:
-                  'perfilPreInversionPlanNegocioEntity.actividadFinancieraId',
-              actividadFinanciera:
-                  'perfilPreInversionPlanNegocioEntity.actividadFinanciera',
-              rubroId: perfilPreInversionPlanNegocioEntity.rubroId,
-              rubro: 'perfilPreInversionPlanNegocioEntity.rubro',
-              unidadId: perfilPreInversionPlanNegocioEntity.unidadId,
-              unidad: 'perfilPreInversionPlanNegocioEntity.unidad',
-              year: perfilPreInversionPlanNegocioEntity.year,
-              cantidad: perfilPreInversionPlanNegocioEntity.cantidad,
-              valor: perfilPreInversionPlanNegocioEntity.valor,
-              porcentaje: 'perfilPreInversionPlanNegocioEntity.porcentaje');
-      emit(PerfilPreInversionCostosUPTSaved(
-          perfilPreInversionCostosUPT: vPerfilPreInversionPlanNegocioEntity));
-    });
+        (data) => emit(PerfilPreInversionCostosUPTSaved(
+            perfilPreInversionCostosUPT: data)));
   }
 
   void changeRubro(String? value) {

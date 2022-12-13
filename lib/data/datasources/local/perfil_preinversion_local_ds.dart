@@ -69,11 +69,13 @@ class PerfilPreInversionLocalDataSourceImpl
     Producto.Nombre as producto,
     ProductoAsociado.Nombre as productoAsociado,
     PerfilPreInversion.ValorTotalProyecto as valorTotalProyecto,
-    PerfilPreInversion.IncentivoModular as incentivoModular
+    PerfilPreInversion.IncentivoModular as incentivoModular,
+    Departamento.Nombre as Departamento
     from PerfilPreInversion
     left join Perfil on (Perfil.PerfilId=PerfilPreInversion.PerfilId)
     left join Convocatoria on (Convocatoria.ConvocatoriaId=PerfilPreInversion.ConvocatoriaId)
     left join Municipio on (Municipio.MunicipioId=PerfilPreInversion.MunicipioId)
+    left join Departamento on (Departamento.DepartamentoId=Municipio.DepartamentoId)
     left join TipoProyecto on (TipoProyecto.TipoProyectoId=PerfilPreInversion.TipoProyectoId)
     left join Producto on (Producto.ProductoId =PerfilPreInversion.ProductoId)
     left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =PerfilPreInversion.ProductoAsociadoId)
@@ -112,11 +114,13 @@ class PerfilPreInversionLocalDataSourceImpl
     Producto.Nombre as producto,
     ProductoAsociado.Nombre as productoAsociado,
     PerfilPreInversion.ValorTotalProyecto as valorTotalProyecto,
-    PerfilPreInversion.IncentivoModular as incentivoModular
+    PerfilPreInversion.IncentivoModular as incentivoModular,
+    Departamento.Nombre as Departamento
     from PerfilPreInversion
     left join Perfil on (Perfil.PerfilId=PerfilPreInversion.PerfilId)
     left join Convocatoria on (Convocatoria.ConvocatoriaId=PerfilPreInversion.ConvocatoriaId)
     left join Municipio on (Municipio.MunicipioId=PerfilPreInversion.MunicipioId)
+    left join Departamento on (Departamento.DepartamentoId=Municipio.DepartamentoId)
     left join TipoProyecto on (TipoProyecto.TipoProyectoId=PerfilPreInversion.TipoProyectoId)
     left join Producto on (Producto.ProductoId =PerfilPreInversion.ProductoId)
     left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =PerfilPreInversion.ProductoAsociadoId)

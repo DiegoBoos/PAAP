@@ -7,25 +7,26 @@ import '../../models/v_perfil_preinversion_plan_negocio_model.dart';
 
 abstract class PerfilPreInversionPlanNegocioLocalDataSource {
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilPreInversionPlanesNegociosDB();
+      getPerfilPreInversionPlanNegocios();
 
   Future<List<VPerfilPreInversionPlanNegocioModel>>
-      getVPerfilesPreInversionesPlanNegociosDB(
+      getVPerfilesPreInversionesPlanNegocios(
           String perfilPreInversionId, String tipoMovimientoId);
 
-  Future<int> savePerfilPreInversionPlanesNegocios(
+  Future<int> savePerfilPreInversionPlanNegocios(
       List<PerfilPreInversionPlanNegocioEntity>
           perfilPreInversionPlanNegocioEntity);
 
-  Future<int> savePerfilPreInversionPlanNegocioDB(
-      PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity);
+  Future<VPerfilPreInversionPlanNegocioModel> savePerfilPreInversionPlanNegocio(
+      PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity,
+      String tipoMovimientoId);
 
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilesPreInversionesPlanesNegociosProduccionDB();
+      getPerfilesPreInversionesPlanNegociosProduccion();
 
-  Future<int> updatePerfilesPreInversionesPlanesNegociosProduccionDB(
+  Future<int> updatePerfilesPreInversionesPlanNegociosProduccion(
       List<PerfilPreInversionPlanNegocioEntity>
-          perfilesPreInversionesPlanesNegociosProduccionEntity);
+          perfilesPreInversionesPlanNegociosProduccionEntity);
 }
 
 class PerfilPreInversionPlanNegocioLocalDataSourceImpl
@@ -48,7 +49,7 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
 
   @override
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilPreInversionPlanesNegociosDB() async {
+      getPerfilPreInversionPlanNegocios() async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionPlanNegocio');
@@ -63,7 +64,7 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
 
   @override
   Future<List<VPerfilPreInversionPlanNegocioModel>>
-      getVPerfilesPreInversionesPlanNegociosDB(
+      getVPerfilesPreInversionesPlanNegocios(
           String perfilPreInversionId, String tipoMovimientoId) async {
     final db = await DBConfig.database;
 
@@ -98,16 +99,16 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
 
     if (res.isEmpty) return [];
 
-    final perfilesPreInversionesPlanesNegociosModel =
+    final perfilesPreInversionesPlanNegociosModel =
         List<VPerfilPreInversionPlanNegocioModel>.from(
                 res.map((m) => VPerfilPreInversionPlanNegocioModel.fromJson(m)))
             .toList();
 
-    return perfilesPreInversionesPlanesNegociosModel;
+    return perfilesPreInversionesPlanNegociosModel;
   }
 
   @override
-  Future<int> savePerfilPreInversionPlanesNegocios(
+  Future<int> savePerfilPreInversionPlanNegocios(
       List<PerfilPreInversionPlanNegocioEntity>
           perfilPreInversionPlanNegocioEntity) async {
     final db = await DBConfig.database;
@@ -128,9 +129,9 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
   }
 
   @override
-  Future<int> savePerfilPreInversionPlanNegocioDB(
-      PerfilPreInversionPlanNegocioEntity
-          perfilPreInversionPlanNegocioEntity) async {
+  Future<VPerfilPreInversionPlanNegocioModel> savePerfilPreInversionPlanNegocio(
+      PerfilPreInversionPlanNegocioEntity perfilPreInversionPlanNegocioEntity,
+      String tipoMovimientoId) async {
     final db = await DBConfig.database;
     var batch = db.batch();
 
@@ -158,14 +159,50 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
 
-    return res.length;
+    String sql = ''' 
+    select 
+    ActividadFinanciera.ActividadFinancieraId as ActividadFinancieraId,
+    ActividadFinanciera.Nombre as ActividadFinanciera,
+    PerfilPreInversionPlanNegocio.RubroId,
+    Rubro.Nombre as Rubro,
+    Unidad.UnidadId as UnidadId,
+    Unidad.Nombre as Unidad,
+    Year,
+    Cantidad,
+    Valor,
+    Producto.productoId as ProductoId,
+    TipoCalidad.tipoCalidadId as TipoCalidadId,
+    round(PerfilPreInversionPlanNegocio.Valor / ( SELECT  SUM(Valor)
+    FROM  PerfilPreInversionPlanNegocio
+    WHERE TipoMovimiento.TipoMovimientoId = $tipoMovimientoId) * 100, 3)
+    as Porcentaje
+    from PerfilPreInversionPlanNegocio
+    inner join Rubro on (PerfilPreInversionPlanNegocio.RubroId=Rubro.RubroId)
+    inner join ActividadFinanciera on(rubro.ActividadFinancieraId=ActividadFinanciera.ActividadFinancieraId)
+    inner join TipoMovimiento on(TipoMovimiento.TipoMovimientoId=ActividadFinanciera.TipoMovimientoId)
+    inner join Unidad on(unidad.UnidadId=PerfilPreInversionPlanNegocio.UnidadId)
+    left join Producto on(Producto.ProductoId=PerfilPreInversionPlanNegocio.ProductoId)
+    left join TipoCalidad on(TipoCalidad.TipoCalidadId=PerfilPreInversionPlanNegocio.TipoCalidadId)
+    where TipoMovimiento.TipoMovimientoId = $tipoMovimientoId AND PerfilPreInversionPlanNegocio.PerfilPreInversionId = ${perfilPreInversionPlanNegocioEntity.perfilPreInversionId}
+    ''';
+
+    final res = await db.rawQuery(sql);
+
+    final vPerfilPreInversionPlanNegocioMap = {
+      for (var e in res[0].entries) e.key: e.value
+    };
+    final vPerfilPreInversionPlanNegocioModel =
+        VPerfilPreInversionPlanNegocioModel.fromJson(
+            vPerfilPreInversionPlanNegocioMap);
+
+    return vPerfilPreInversionPlanNegocioModel;
   }
 
   @override
   Future<List<PerfilPreInversionPlanNegocioModel>>
-      getPerfilesPreInversionesPlanesNegociosProduccionDB() async {
+      getPerfilesPreInversionesPlanNegociosProduccion() async {
     final db = await DBConfig.database;
 
     final res = await db.query('PerfilPreInversionPlanNegocio',
@@ -173,24 +210,24 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
 
     if (res.isEmpty) return [];
 
-    final perfilesPreInversionesPlanesNegociosModel =
+    final perfilesPreInversionesPlanNegociosModel =
         List<PerfilPreInversionPlanNegocioModel>.from(
                 res.map((m) => PerfilPreInversionPlanNegocioModel.fromJson(m)))
             .toList();
 
-    return perfilesPreInversionesPlanesNegociosModel;
+    return perfilesPreInversionesPlanNegociosModel;
   }
 
   @override
-  Future<int> updatePerfilesPreInversionesPlanesNegociosProduccionDB(
+  Future<int> updatePerfilesPreInversionesPlanNegociosProduccion(
       List<PerfilPreInversionPlanNegocioEntity>
-          perfilesPreInversionesPlanesNegociosProduccionEntity) async {
+          perfilesPreInversionesPlanNegociosProduccionEntity) async {
     final db = await DBConfig.database;
 
     var batch = db.batch();
 
     for (var perfilPreInversionPlanNegocioProduccion
-        in perfilesPreInversionesPlanesNegociosProduccionEntity) {
+        in perfilesPreInversionesPlanNegociosProduccionEntity) {
       perfilPreInversionPlanNegocioProduccion.recordStatus = 'R';
       batch.update('PerfilPreInversionPlanNegocio',
           perfilPreInversionPlanNegocioProduccion.toJson(),
@@ -202,8 +239,10 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
           ]);
     }
 
-    final res = await batch.commit();
+    await batch.commit();
+    final query = await db.query('PerfilPreInversionPlanNegocio',
+        where: 'RecordStatus <> ?', whereArgs: ['R']);
 
-    return res.length;
+    return query.length;
   }
 }

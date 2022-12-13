@@ -24,10 +24,10 @@ class AlianzaExperienciaAgricolaCubit
         (failure) =>
             emit(AlianzaExperienciaAgricolaError(failure.properties.first)),
         (data) {
-      if (data == null) {
-        emit(AlianzaExperienciaAgricolaError('Error'));
-      } else {
+      if (data != null) {
         emit(AlianzaExperienciaAgricolaLoaded(data));
+      } else {
+        emit(AlianzaExperienciaAgricolaInitial());
       }
     });
   }
@@ -40,7 +40,8 @@ class AlianzaExperienciaAgricolaCubit
     result.fold(
         (failure) =>
             emit(AlianzaExperienciaAgricolaError(failure.properties.first)),
-        (data) => emit(AlianzaExperienciaAgricolaSaved()));
+        (data) => emit(AlianzaExperienciaAgricolaSaved(
+            alianzaExperienciaAgricola: alianzaExperienciaAgricolaEntity)));
   }
 
   void changeTipoActividadProductiva(String? value) {

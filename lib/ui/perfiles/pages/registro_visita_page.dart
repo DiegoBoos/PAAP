@@ -261,7 +261,10 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                                                     .state
                                                                     .evaluacion);
 
-                                                        Navigator.pop(context);
+                                                        Navigator.popUntil(
+                                                            context,
+                                                            (route) =>
+                                                                route.isFirst);
                                                       },
                                                       onTapCancel: () {
                                                         Navigator.pop(context);

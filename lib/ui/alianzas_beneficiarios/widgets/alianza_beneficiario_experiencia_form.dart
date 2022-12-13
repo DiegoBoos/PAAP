@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
-import '../../../domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
+import '../../../domain/cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
+import '../../../domain/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
 import '../../../domain/cubits/frecuencia/frecuencia_cubit.dart';
 import '../../../domain/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
 import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
+import '../../../domain/entities/alianza_experiencia_agricola_entity.dart';
+import '../../../domain/entities/alianza_experiencia_pecuaria_entity.dart';
 import '../../../domain/entities/frecuencia_entity.dart';
 import '../../../domain/entities/tipo_actividad_productiva_entity.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
-import 'package:paap/domain/entities/experiencia_agricola_entity.dart';
-import 'package:paap/domain/entities/experiencia_pecuaria_entity.dart';
 
 class AlianzaBeneficiarioExperienciaForm extends StatefulWidget {
   const AlianzaBeneficiarioExperienciaForm({super.key});
@@ -23,15 +23,15 @@ class AlianzaBeneficiarioExperienciaForm extends StatefulWidget {
 
 class _AlianzaBeneficiarioExperienciaFormState
     extends State<AlianzaBeneficiarioExperienciaForm> {
-  String experienciaAgricolaTipoActividadProductivaId = '';
-  String experienciaAgricolaFrecuenciaId = '';
+  String? alianzaExperienciaAgricolaTipoActividadProductivaId;
+  String? alianzaExperienciaAgricolaFrecuenciaId;
 
   final areaCultivoCtrl = TextEditingController();
   final cantidadProducidaCtrl = TextEditingController();
   final cantidadVendidaCtrl = TextEditingController();
   final cantidadAutoconsumoCtrl = TextEditingController();
   final costoImplementacionCtrl = TextEditingController();
-  final experienciaAgricolaValorJornalCtrl = TextEditingController();
+  final alianzaExperienciaAgricolaValorJornalCtrl = TextEditingController();
   final totalIngresoNetoCtrl = TextEditingController();
   final areaPastoCtrl = TextEditingController();
   final areaSinUsoCtrl = TextEditingController();
@@ -39,15 +39,15 @@ class _AlianzaBeneficiarioExperienciaFormState
   final areaImplementacionCtrl = TextEditingController();
   final totalAreaPredioCtrl = TextEditingController();
 
-  String experienciaPecuariaTipoActividadProductivaId = '';
-  String experienciaPecuariaFrecuenciaId = '';
+  String? alianzaExperienciaPecuariaTipoActividadProductivaId;
+  String? alianzaExperienciaPecuariaFrecuenciaId;
 
   final cantidadAnimalesCtrl = TextEditingController();
   final cantidadCriaCtrl = TextEditingController();
   final cantidadLevanteCtrl = TextEditingController();
   final cantidadCebaCtrl = TextEditingController();
   final cantidadLecheCtrl = TextEditingController();
-  final experienciaPecuariaValorJornalCtrl = TextEditingController();
+  final alianzaExperienciaPecuariaValorJornalCtrl = TextEditingController();
   final costosInsumosCtrl = TextEditingController();
   final ingresosCtrl = TextEditingController();
 
@@ -55,94 +55,106 @@ class _AlianzaBeneficiarioExperienciaFormState
   void initState() {
     super.initState();
 
-    final experienciaAgricolaCubit =
-        BlocProvider.of<ExperienciaAgricolaCubit>(context);
-    final experienciaPecuariaCubit =
-        BlocProvider.of<ExperienciaPecuariaCubit>(context);
+    final alianzaExperienciaAgricolaCubit =
+        BlocProvider.of<AlianzaExperienciaAgricolaCubit>(context);
+    final alianzaExperienciaPecuariaCubit =
+        BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context);
 
-    if (experienciaAgricolaCubit.state is ExperienciaAgricolaLoaded) {
-      final experienciaAgricolaLoaded =
-          experienciaAgricolaCubit.state.experienciaAgricola;
+    if (alianzaExperienciaAgricolaCubit.state
+        is AlianzaExperienciaAgricolaLoaded) {
+      final alianzaExperienciaAgricolaLoaded =
+          alianzaExperienciaAgricolaCubit.state.alianzaExperienciaAgricola;
 
-      loadExperienciaAgricola(experienciaAgricolaLoaded);
+      loadAlianzaExperienciaAgricola(alianzaExperienciaAgricolaLoaded);
     }
-    if (experienciaPecuariaCubit.state is ExperienciaPecuariaLoaded) {
-      final experienciaPecuariaLoaded =
-          experienciaPecuariaCubit.state.experienciaPecuaria;
+    if (alianzaExperienciaPecuariaCubit.state
+        is AlianzaExperienciaPecuariaLoaded) {
+      final alianzaExperienciaPecuariaLoaded =
+          alianzaExperienciaPecuariaCubit.state.alianzaExperienciaPecuaria;
 
-      loadExperienciaPecuaria(experienciaPecuariaLoaded);
+      loadAlianzaExperienciaPecuaria(alianzaExperienciaPecuariaLoaded);
     }
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    BlocProvider.of<ExperienciaAgricolaCubit>(context).initState();
-    BlocProvider.of<ExperienciaPecuariaCubit>(context).initState();
+    BlocProvider.of<AlianzaExperienciaAgricolaCubit>(context).initState();
+    BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context).initState();
   }
 
-  void loadExperienciaAgricola(
-      ExperienciaAgricolaEntity experienciaAgricolaLoaded) {
-    experienciaAgricolaTipoActividadProductivaId =
-        experienciaAgricolaLoaded.tipoActividadProductivaId;
-    experienciaAgricolaFrecuenciaId = experienciaAgricolaLoaded.frecuenciaId;
-    areaCultivoCtrl.text = experienciaAgricolaLoaded.areaCultivo;
-    cantidadProducidaCtrl.text = experienciaAgricolaLoaded.cantidadProducida;
-    cantidadVendidaCtrl.text = experienciaAgricolaLoaded.cantidadVendida;
+  void loadAlianzaExperienciaAgricola(
+      AlianzaExperienciaAgricolaEntity alianzaExperienciaAgricolaLoaded) {
+    alianzaExperienciaAgricolaTipoActividadProductivaId =
+        alianzaExperienciaAgricolaLoaded.tipoActividadProductivaId;
+    alianzaExperienciaAgricolaFrecuenciaId =
+        alianzaExperienciaAgricolaLoaded.frecuenciaId;
+    areaCultivoCtrl.text = alianzaExperienciaAgricolaLoaded.areaCultivo;
+    cantidadProducidaCtrl.text =
+        alianzaExperienciaAgricolaLoaded.cantidadProducida;
+    cantidadVendidaCtrl.text = alianzaExperienciaAgricolaLoaded.cantidadVendida;
     cantidadAutoconsumoCtrl.text =
-        experienciaAgricolaLoaded.cantidadAutoconsumo;
+        alianzaExperienciaAgricolaLoaded.cantidadAutoconsumo;
     costoImplementacionCtrl.text =
-        experienciaAgricolaLoaded.costoImplementacion;
-    experienciaAgricolaValorJornalCtrl.text =
-        experienciaAgricolaLoaded.valorJornal;
-    totalIngresoNetoCtrl.text = experienciaAgricolaLoaded.totalIngresoNeto;
-    areaPastoCtrl.text = experienciaAgricolaLoaded.areaPasto;
-    areaSinUsoCtrl.text = experienciaAgricolaLoaded.areaSinUso;
+        alianzaExperienciaAgricolaLoaded.costoImplementacion;
+    alianzaExperienciaAgricolaValorJornalCtrl.text =
+        alianzaExperienciaAgricolaLoaded.valorJornal;
+    totalIngresoNetoCtrl.text =
+        alianzaExperienciaAgricolaLoaded.totalIngresoNeto;
+    areaPastoCtrl.text = alianzaExperienciaAgricolaLoaded.areaPasto;
+    areaSinUsoCtrl.text = alianzaExperienciaAgricolaLoaded.areaSinUso;
     areaReservaConservacionCtrl.text =
-        experienciaAgricolaLoaded.areaReservaConservacion;
-    areaImplementacionCtrl.text = experienciaAgricolaLoaded.areaImplementacion;
-    totalAreaPredioCtrl.text = experienciaAgricolaLoaded.totalAreaPredio;
+        alianzaExperienciaAgricolaLoaded.areaReservaConservacion;
+    areaImplementacionCtrl.text =
+        alianzaExperienciaAgricolaLoaded.areaImplementacion;
+    totalAreaPredioCtrl.text = alianzaExperienciaAgricolaLoaded.totalAreaPredio;
   }
 
-  void loadExperienciaPecuaria(
-      ExperienciaPecuariaEntity experienciaPecuariaLoaded) {
-    experienciaPecuariaTipoActividadProductivaId =
-        experienciaPecuariaLoaded.tipoActividadProductivaId;
-    experienciaPecuariaFrecuenciaId = experienciaPecuariaLoaded.frecuenciaId;
-    cantidadAnimalesCtrl.text = experienciaPecuariaLoaded.cantidadAnimales;
-    cantidadCriaCtrl.text = experienciaPecuariaLoaded.cantidadCria;
-    cantidadLevanteCtrl.text = experienciaPecuariaLoaded.cantidadLevante;
-    cantidadCebaCtrl.text = experienciaPecuariaLoaded.cantidadCeba;
-    cantidadLecheCtrl.text = experienciaPecuariaLoaded.cantidadLeche;
-    experienciaPecuariaValorJornalCtrl.text =
-        experienciaPecuariaLoaded.valorJornal;
-    costosInsumosCtrl.text = experienciaPecuariaLoaded.costosInsumos;
-    ingresosCtrl.text = experienciaPecuariaLoaded.ingresos;
+  void loadAlianzaExperienciaPecuaria(
+      AlianzaExperienciaPecuariaEntity alianzaExperienciaPecuariaLoaded) {
+    alianzaExperienciaPecuariaTipoActividadProductivaId =
+        alianzaExperienciaPecuariaLoaded.tipoActividadProductivaId;
+    alianzaExperienciaPecuariaFrecuenciaId =
+        alianzaExperienciaPecuariaLoaded.frecuenciaId;
+    cantidadAnimalesCtrl.text =
+        alianzaExperienciaPecuariaLoaded.cantidadAnimales;
+    cantidadCriaCtrl.text = alianzaExperienciaPecuariaLoaded.cantidadCria;
+    cantidadLevanteCtrl.text = alianzaExperienciaPecuariaLoaded.cantidadLevante;
+    cantidadCebaCtrl.text = alianzaExperienciaPecuariaLoaded.cantidadCeba;
+    cantidadLecheCtrl.text = alianzaExperienciaPecuariaLoaded.cantidadLeche;
+    alianzaExperienciaPecuariaValorJornalCtrl.text =
+        alianzaExperienciaPecuariaLoaded.valorJornal;
+    costosInsumosCtrl.text = alianzaExperienciaPecuariaLoaded.costosInsumos;
+    ingresosCtrl.text = alianzaExperienciaPecuariaLoaded.ingresos;
   }
 
   @override
   Widget build(BuildContext context) {
-    final experienciaAgricolaCubit =
-        BlocProvider.of<ExperienciaAgricolaCubit>(context);
-    final experienciaPecuariaCubit =
-        BlocProvider.of<ExperienciaPecuariaCubit>(context);
+    final alianzaExperienciaAgricolaCubit =
+        BlocProvider.of<AlianzaExperienciaAgricolaCubit>(context);
+    final alianzaExperienciaPecuariaCubit =
+        BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context);
 
     return MultiBlocListener(
       listeners: [
-        BlocListener<ExperienciaAgricolaCubit, ExperienciaAgricolaState>(
+        BlocListener<AlianzaExperienciaAgricolaCubit,
+            AlianzaExperienciaAgricolaState>(
           listener: (context, state) {
-            if (state is ExperienciaAgricolaLoaded) {
-              final experienciaAgricolaLoaded = state.experienciaAgricolaLoaded;
-              loadExperienciaAgricola(experienciaAgricolaLoaded);
+            if (state is AlianzaExperienciaAgricolaLoaded) {
+              final alianzaExperienciaAgricolaLoaded =
+                  state.alianzaExperienciaAgricolaLoaded;
+              loadAlianzaExperienciaAgricola(alianzaExperienciaAgricolaLoaded);
             }
           },
           child: Container(),
         ),
-        BlocListener<ExperienciaPecuariaCubit, ExperienciaPecuariaState>(
+        BlocListener<AlianzaExperienciaPecuariaCubit,
+            AlianzaExperienciaPecuariaState>(
           listener: (context, state) {
-            if (state is ExperienciaPecuariaLoaded) {
-              final experienciaPecuariaLoaded = state.experienciaPecuariaLoaded;
-              loadExperienciaPecuaria(experienciaPecuariaLoaded);
+            if (state is AlianzaExperienciaPecuariaLoaded) {
+              final alianzaExperienciaPecuariaLoaded =
+                  state.alianzaExperienciaPecuariaLoaded;
+              loadAlianzaExperienciaPecuaria(alianzaExperienciaPecuariaLoaded);
             }
           },
           child: Container(),
@@ -152,8 +164,8 @@ class _AlianzaBeneficiarioExperienciaFormState
         builder: (context, state) {
           final vAlianza = state.vAlianza!;
           if (vAlianza.tipoProyecto == 'Agrícola') {
-            return BlocBuilder<ExperienciaAgricolaCubit,
-                ExperienciaAgricolaState>(
+            return BlocBuilder<AlianzaExperienciaAgricolaCubit,
+                AlianzaExperienciaAgricolaState>(
               builder: (context, state) {
                 return Card(
                     child: Padding(
@@ -171,30 +183,30 @@ class _AlianzaBeneficiarioExperienciaFormState
                         builder: (context, state) {
                           if (state is TiposActividadesProductivasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaAgricolaTipoActividadProductivaId !=
-                                        ''
-                                    ? experienciaAgricolaTipoActividadProductivaId
-                                    : null,
-                                items: state.tiposActividadesProductivas!
-                                    .map<DropdownMenuItem<String>>(
-                                        (TipoActividadProductivaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.tipoActividadProductivaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaAgricolaCubit
-                                      .changeTipoActividadProductiva(value);
-                                },
-                                hint:
-                                    const Text('Tipo de Actividad Productiva'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Tipo de Actividad Productiva',
+                                  labelText: 'Tipo de Actividad Productiva'),
+                              value:
+                                  alianzaExperienciaAgricolaTipoActividadProductivaId,
+                              items: state.tiposActividadesProductivas!
+                                  .map<DropdownMenuItem<String>>(
+                                      (TipoActividadProductivaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.tipoActividadProductivaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                alianzaExperienciaAgricolaCubit
+                                    .changeTipoActividadProductiva(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -204,28 +216,29 @@ class _AlianzaBeneficiarioExperienciaFormState
                         builder: (context, state) {
                           if (state is FrecuenciasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaAgricolaFrecuenciaId != ''
-                                    ? experienciaAgricolaFrecuenciaId
-                                    : null,
-                                items: state.frecuencias!
-                                    .map<DropdownMenuItem<String>>(
-                                        (FrecuenciaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.frecuenciaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaAgricolaCubit
-                                      .changeFrecuencia(value);
-                                },
-                                hint: const Text('Frecuencia'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Frecuencia',
+                                  labelText: 'Frecuencia'),
+                              value: alianzaExperienciaAgricolaFrecuenciaId,
+                              items: state.frecuencias!
+                                  .map<DropdownMenuItem<String>>(
+                                      (FrecuenciaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.frecuenciaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                alianzaExperienciaAgricolaCubit
+                                    .changeFrecuencia(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -243,7 +256,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeAreaCultivo(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -259,7 +272,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeCantidadProducida(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -275,7 +288,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeCantidadVendida(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -291,7 +304,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeCantidadAutoconsumo(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -307,12 +320,12 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeCostoImplementacion(newValue);
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
-                          controller: experienciaAgricolaValorJornalCtrl,
+                          controller: alianzaExperienciaAgricolaValorJornalCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Valor Jornal',
                               labelText: 'Valor Jornal'),
@@ -323,7 +336,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeValorJornal(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -339,7 +352,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeTotalIngresoNeto(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -355,7 +368,8 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit.changeAreaPasto(newValue);
+                            alianzaExperienciaAgricolaCubit
+                                .changeAreaPasto(newValue);
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
@@ -370,7 +384,8 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit.changeAreaSinUso(newValue);
+                            alianzaExperienciaAgricolaCubit
+                                .changeAreaSinUso(newValue);
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
@@ -385,7 +400,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeAreaReservaConservacion(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -401,7 +416,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeAreaImplementacion(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -417,7 +432,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaAgricolaCubit
+                            alianzaExperienciaAgricolaCubit
                                 .changeTotalAreaPredio(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -427,8 +442,8 @@ class _AlianzaBeneficiarioExperienciaFormState
               },
             );
           } else if (vAlianza.tipoProyecto == 'Pecuario') {
-            return BlocBuilder<ExperienciaPecuariaCubit,
-                ExperienciaPecuariaState>(
+            return BlocBuilder<AlianzaExperienciaPecuariaCubit,
+                AlianzaExperienciaPecuariaState>(
               builder: (context, state) {
                 return Card(
                     child: Padding(
@@ -446,30 +461,30 @@ class _AlianzaBeneficiarioExperienciaFormState
                         builder: (context, state) {
                           if (state is TiposActividadesProductivasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaPecuariaTipoActividadProductivaId !=
-                                        ''
-                                    ? experienciaPecuariaTipoActividadProductivaId
-                                    : null,
-                                items: state.tiposActividadesProductivas!
-                                    .map<DropdownMenuItem<String>>(
-                                        (TipoActividadProductivaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.tipoActividadProductivaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaPecuariaCubit
-                                      .changeTipoActividadProductiva(value);
-                                },
-                                hint:
-                                    const Text('Tipo de Actividad Productiva'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Tipo de Actividad Productiva',
+                                  labelText: 'Tipo de Actividad Productiva'),
+                              value:
+                                  alianzaExperienciaPecuariaTipoActividadProductivaId,
+                              items: state.tiposActividadesProductivas!
+                                  .map<DropdownMenuItem<String>>(
+                                      (TipoActividadProductivaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.tipoActividadProductivaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                alianzaExperienciaPecuariaCubit
+                                    .changeTipoActividadProductiva(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -479,28 +494,29 @@ class _AlianzaBeneficiarioExperienciaFormState
                         builder: (context, state) {
                           if (state is FrecuenciasLoaded) {
                             return DropdownButtonFormField(
-                                value: experienciaPecuariaFrecuenciaId != ''
-                                    ? experienciaPecuariaFrecuenciaId
-                                    : null,
-                                items: state.frecuencias!
-                                    .map<DropdownMenuItem<String>>(
-                                        (FrecuenciaEntity value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.frecuenciaId,
-                                    child: Text(value.nombre),
-                                  );
-                                }).toList(),
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Campo Requerido';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (String? value) {
-                                  experienciaPecuariaCubit
-                                      .changeFrecuencia(value);
-                                },
-                                hint: const Text('Frecuencia'));
+                              decoration: CustomInputDecoration.inputDecoration(
+                                  hintText: 'Frecuencia',
+                                  labelText: 'Frecuencia'),
+                              value: alianzaExperienciaPecuariaFrecuenciaId,
+                              items: state.frecuencias!
+                                  .map<DropdownMenuItem<String>>(
+                                      (FrecuenciaEntity value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.frecuenciaId,
+                                  child: Text(value.nombre),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Campo Requerido';
+                                }
+                                return null;
+                              },
+                              onChanged: (String? value) {
+                                alianzaExperienciaPecuariaCubit
+                                    .changeFrecuencia(value);
+                              },
+                            );
                           }
                           return Container();
                         },
@@ -518,7 +534,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaPecuariaCubit
+                            alianzaExperienciaPecuariaCubit
                                 .changeCantidadAnimales(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -534,7 +550,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaPecuariaCubit
+                            alianzaExperienciaPecuariaCubit
                                 .changeCantidadCria(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -550,7 +566,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaPecuariaCubit
+                            alianzaExperienciaPecuariaCubit
                                 .changeCantidadLevante(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -566,7 +582,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaPecuariaCubit
+                            alianzaExperienciaPecuariaCubit
                                 .changeCantidadCeba(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -582,12 +598,12 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaPecuariaCubit
+                            alianzaExperienciaPecuariaCubit
                                 .changeCantidadLeche(newValue);
                           }),
                       const SizedBox(height: 20),
                       TextFormField(
-                          controller: experienciaPecuariaValorJornalCtrl,
+                          controller: alianzaExperienciaPecuariaValorJornalCtrl,
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Valor Jornal',
                               labelText: 'Valor Jornal'),
@@ -598,7 +614,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaPecuariaCubit
+                            alianzaExperienciaPecuariaCubit
                                 .changeValorJornal(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -614,7 +630,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaPecuariaCubit
+                            alianzaExperienciaPecuariaCubit
                                 .changeCostosInsumos(newValue);
                           }),
                       const SizedBox(height: 20),
@@ -629,7 +645,8 @@ class _AlianzaBeneficiarioExperienciaFormState
                             return null;
                           },
                           onSaved: (String? newValue) {
-                            experienciaPecuariaCubit.changeIngresos(newValue);
+                            alianzaExperienciaPecuariaCubit
+                                .changeIngresos(newValue);
                           }),
                     ],
                   ),

@@ -12,10 +12,6 @@ class AlianzaBeneficiarioInitial extends AlianzaBeneficiarioState {
   AlianzaBeneficiarioInitial() : super(alianzaBeneficiario: initObject());
 }
 
-class AlianzaBeneficiarioLoading extends AlianzaBeneficiarioState {
-  AlianzaBeneficiarioLoading() : super(alianzaBeneficiario: initObject());
-}
-
 class AlianzaBeneficiarioLoaded extends AlianzaBeneficiarioState {
   final AlianzaBeneficiarioEntity alianzaBeneficiarioLoaded;
 
@@ -31,7 +27,7 @@ class AlianzaBeneficiarioChanged extends AlianzaBeneficiarioState {
 }
 
 class AlianzaBeneficiarioSaved extends AlianzaBeneficiarioState {
-  AlianzaBeneficiarioSaved() : super(alianzaBeneficiario: initObject());
+  const AlianzaBeneficiarioSaved({required super.alianzaBeneficiario});
 }
 
 class AlianzaBeneficiarioError extends AlianzaBeneficiarioState {

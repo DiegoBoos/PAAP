@@ -15,12 +15,6 @@ class PerfilPreInversionCofinanciadorInitial
       : super(perfilPreInversionCofinanciador: initObject());
 }
 
-class PerfilPreInversionCofinanciadorLoading
-    extends PerfilPreInversionCofinanciadorState {
-  const PerfilPreInversionCofinanciadorLoading(
-      {required super.perfilPreInversionCofinanciador});
-}
-
 class PerfilPreInversionCofinanciadorLoaded
     extends PerfilPreInversionCofinanciadorState {
   final PerfilPreInversionCofinanciadorEntity
@@ -47,8 +41,8 @@ class PerfilPreInversionCofinanciadorChanged
 
 class PerfilPreInversionCofinanciadorSaved
     extends PerfilPreInversionCofinanciadorState {
-  PerfilPreInversionCofinanciadorSaved()
-      : super(perfilPreInversionCofinanciador: initObject());
+  const PerfilPreInversionCofinanciadorSaved(
+      {required super.perfilPreInversionCofinanciador});
 }
 
 class PerfilPreInversionCofinanciadorError
@@ -64,10 +58,10 @@ class PerfilPreInversionCofinanciadorError
 
 PerfilPreInversionCofinanciadorEntity initObject() {
   return PerfilPreInversionCofinanciadorEntity(
-      perfilPreInversionId: '',
-      cofinanciadorId: '',
-      monto: '',
-      participacion: '',
-      recordStatus: '',
-      isEditing: false);
+    perfilPreInversionId: '',
+    cofinanciadorId: '',
+    monto: '',
+    participacion: '',
+    recordStatus: '',
+  );
 }

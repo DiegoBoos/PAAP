@@ -12,10 +12,6 @@ class BeneficiarioInitial extends BeneficiarioState {
   BeneficiarioInitial() : super(beneficiario: initObject());
 }
 
-class BeneficiarioLoading extends BeneficiarioState {
-  BeneficiarioLoading() : super(beneficiario: initObject());
-}
-
 class BeneficiarioLoaded extends BeneficiarioState {
   final BeneficiarioEntity beneficiarioLoaded;
 
@@ -31,7 +27,7 @@ class BeneficiarioChanged extends BeneficiarioState {
 }
 
 class BeneficiarioSaved extends BeneficiarioState {
-  BeneficiarioSaved() : super(beneficiario: initObject());
+  const BeneficiarioSaved({required super.beneficiario});
 }
 
 class BeneficiarioError extends BeneficiarioState {

@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../domain/cubits/genero/genero_cubit.dart';
 import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
-import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
@@ -26,6 +29,8 @@ class BeneficiarioForm extends StatefulWidget {
 
 class _BeneficiarioFormState extends State<BeneficiarioForm> {
   final dateFormat = DateFormat('yyyy-MM-dd');
+  File? image;
+
   String? tipoIdentificacionId;
   String? generoId;
   String? grupoEspecialId;
@@ -97,8 +102,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     final vperfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
-    final perfilBeneficiarioCubit =
-        BlocProvider.of<PerfilBeneficiarioCubit>(context);
+
     final perfilPreInversionBeneficiarioCubit =
         BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
 
@@ -141,15 +145,14 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
 
                 beneficiarioCubit.loadBeneficiario(value);
 
-                perfilBeneficiarioCubit.loadPerfilBeneficiario(
-                    perfilPreInversionId, value);
-
                 perfilPreInversionBeneficiarioCubit
                     .loadPerfilPreInversionBeneficiario(
                         perfilPreInversionId, value);
               },
               onSaved: ((String? newValue) {
                 beneficiarioCubit.changeBeneficiarioId(newValue);
+                perfilPreInversionBeneficiarioCubit
+                    .changeBeneficiarioId(newValue);
               }),
             ),
             const SizedBox(height: 20),
@@ -161,8 +164,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                         hintText: 'Tipo de identificación',
                         labelText: 'Tipo de identificación'),
                     value: tipoIdentificacionId,
-                    items: state.tiposIdentificaciones
-                        ?.map<DropdownMenuItem<String>>(
+                    items: state.tiposIdentificaciones!
+                        .map<DropdownMenuItem<String>>(
                             (TipoIdentificacionEntity value) {
                       return DropdownMenuItem<String>(
                         value: value.tipoIdentificacionId,
@@ -376,7 +379,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                           decoration: CustomInputDecoration.inputDecoration(
                               hintText: 'Género', labelText: 'Género'),
                           value: generoId,
-                          items: state.generos?.map<DropdownMenuItem<String>>(
+                          items: state.generos!.map<DropdownMenuItem<String>>(
                               (GeneroEntity value) {
                             return DropdownMenuItem<String>(
                               value: value.generoId,
@@ -409,8 +412,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                         hintText: 'Grupo Especial',
                         labelText: 'Grupo Especial'),
                     value: grupoEspecialId,
-                    items: state.gruposEspeciales
-                        ?.map<DropdownMenuItem<String>>(
+                    items: state.gruposEspeciales!
+                        .map<DropdownMenuItem<String>>(
                             (GrupoEspecialEntity value) {
                       return DropdownMenuItem<String>(
                         value: value.grupoEspecialId,
@@ -431,11 +434,58 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                 return Container();
               },
             ),
-            const SizedBox(width: 20),
             const SizedBox(height: 20),
+            if (image != null)
+              Image.file(
+                image!,
+                width: 160,
+                height: 160,
+                fit: BoxFit.cover,
+              ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(56),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    textStyle: const TextStyle(fontSize: 20)),
+                onPressed: () => pickImage(ImageSource.gallery),
+                child: Row(children: const [
+                  Icon(Icons.image_outlined),
+                  SizedBox(width: 16),
+                  Text('Seleccionar de Galería')
+                ])),
+            const SizedBox(height: 20),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(56),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    textStyle: const TextStyle(fontSize: 20)),
+                onPressed: () => pickImage(ImageSource.camera),
+                child: Row(
+                  children: const [
+                    Icon(Icons.camera_alt_outlined),
+                    SizedBox(width: 16),
+                    Text('Seleccionar de Cámara')
+                  ],
+                )),
           ]),
         ),
       );
     }));
+  }
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+      setState(() => this.image = imageTemporary);
+      print(this.image);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
   }
 }
