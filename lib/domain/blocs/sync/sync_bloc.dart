@@ -12,6 +12,7 @@ import '../../usecases/alianza_beneficiario/alianza_beneficiario_exports.dart';
 import '../../usecases/alianza_experiencia_agricola/alianza_experiencia_agricola_exports.dart';
 import '../../usecases/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_exports.dart';
 import '../../usecases/beneficiario/beneficiario_exports.dart';
+import '../../usecases/beneficio/beneficio_exports.dart';
 import '../../usecases/cofinanciador/cofinanciador_exports.dart';
 import '../../usecases/consultor/consultor_exports.dart';
 import '../../usecases/convocatoria/convocatoria_exports.dart';
@@ -144,6 +145,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   final PerfilPreInversionUsecaseDB perfilPreInversionDB;
   final RubroUsecase rubro;
   final RubroUsecaseDB rubroDB;
+  final BeneficioUsecase beneficio;
+  final BeneficioUsecaseDB beneficioDB;
 
   final AliadoUsecase aliado;
   final AliadoUsecaseDB aliadoDB;
@@ -271,6 +274,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     required this.unidadDB,
     required this.vereda,
     required this.veredaDB,
+    required this.beneficio,
+    required this.beneficioDB,
     required this.perfilPreInversion,
     required this.perfilPreInversionDB,
     required this.rubro,
@@ -319,7 +324,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     on<SyncStarted>((event, emit) async {
       final usuario = event.usuario;
       if (event.mode == 'A') {
-        gTotal = 59;
+        gTotal = 60;
         add(SyncStatusChanged(state.syncProgressModel!.copyWith(
             title: 'Sincronizando Actividades',
             counter: state.syncProgressModel!.counter + 1,
@@ -1152,6 +1157,26 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   Future<void> saveRubros(List<RubroEntity> data, Emitter<SyncState> emit,
       UsuarioEntity usuario) async {
     final result = await rubroDB.saveRubrosUsecaseDB(data);
+    return result.fold((failure) => add(SyncError(failure.properties.first)),
+        (_) async => await syncBeneficios(usuario, emit));
+  }
+
+  // Sync Beneficios
+  Future<void> syncBeneficios(
+      UsuarioEntity usuario, Emitter<SyncState> emit) async {
+    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+        title: 'Sincronizando Beneficios',
+        counter: state.syncProgressModel!.counter + 1,
+        total: gTotal,
+        percent: calculatePercent())));
+    final result = await beneficio.getBeneficiosUsecase(usuario);
+    return result.fold((failure) => add(SyncError(failure.properties.first)),
+        (data) async => await saveBeneficios(data, emit, usuario));
+  }
+
+  Future<void> saveBeneficios(List<BeneficioEntity> data,
+      Emitter<SyncState> emit, UsuarioEntity usuario) async {
+    final result = await beneficioDB.saveBeneficiosUsecaseDB(data);
     return result.fold((failure) => add(SyncError(failure.properties.first)),
         (_) async => await uploadAliado(usuario, emit));
   }

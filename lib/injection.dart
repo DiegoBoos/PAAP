@@ -670,6 +670,8 @@ syncInit() {
         unidadDB: locator(),
         vereda: locator(),
         veredaDB: locator(),
+        beneficio: locator(),
+        beneficioDB: locator(),
         aliado: locator(),
         aliadoDB: locator(),
         alianzaBeneficiario: locator(),

@@ -24,6 +24,7 @@ import 'domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import 'domain/cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
 import 'domain/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
 import 'domain/cubits/beneficiario/beneficiario_cubit.dart';
+import 'domain/cubits/beneficio/beneficio_cubit.dart';
 import 'domain/cubits/cofinanciador/cofinanciador_cubit.dart';
 import 'domain/cubits/consultor/consultor_cubit.dart';
 import 'domain/cubits/convocatoria/convocatoria_cubit.dart';
@@ -362,6 +363,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<SyncBloc>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<BeneficioCubit>(),
           ),
         ],
         child: MaterialApp(
