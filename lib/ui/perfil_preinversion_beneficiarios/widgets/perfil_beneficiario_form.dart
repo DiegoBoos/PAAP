@@ -12,6 +12,7 @@ import '../../../domain/entities/municipio_entity.dart';
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
 import '../../../domain/entities/vereda_entity.dart';
+import '../../../domain/usecases/beneficio/beneficio_exports.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
@@ -31,6 +32,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
   String? municipioId;
   String? veredaId;
   String? tipoTenenciaId;
+  String? beneficioId;
 
   final areaFincaCtrl = TextEditingController();
   final areaProyectoCtrl = TextEditingController();
@@ -100,6 +102,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
     areaProyectoCtrl.text = perfilPreInversionBeneficiarioLoaded.areaProyecto;
     areaFincaCtrl.text = perfilPreInversionBeneficiarioLoaded.areaFinca;
     tipoTenenciaId = perfilPreInversionBeneficiarioLoaded.tipoTenenciaId;
+    beneficioId = perfilPreInversionBeneficiarioLoaded.beneficioId;
 
     setState(() {});
   }
@@ -364,6 +367,45 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                     perfilPreInversionBeneficiarioCubit
                         .changeCualBeneficio(newValue);
                   }),
+              /* const SizedBox(height: 20),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: BlocBuilder<BeneficioCubit, BeneficioState>(
+                      builder: (context, state) {
+                        if (state is BeneficiosLoaded) {
+                          return DropdownButtonFormField(
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Beneficios Obtenidos',
+                                labelText: 'Beneficios Obtenidos'),
+                            value: beneficioId,
+                            items: state.beneficios!
+                                .map<DropdownMenuItem<String>>(
+                                    (BeneficioEntity value) {
+                              return DropdownMenuItem<String>(
+                                value: value.beneficioId,
+                                child: Text(value.nombre),
+                              );
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Campo Requerido';
+                              }
+                              return null;
+                            },
+                            onChanged: (String? value) {
+                              perfilPreInversionBeneficiarioCubit
+                                  .changeBeneficioId(value);
+                            },
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ),
+                ],
+              ), */
               const SizedBox(height: 20),
               TextFormField(
                   keyboardType: TextInputType.number,

@@ -121,11 +121,11 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
 
     final alianzaId = vAlianzaCubit.state.vAlianza!.alianzaId;
 
-    final alianzaBeneficiario =
-        alianzaBeneficiarioCubit.state.alianzaBeneficiario;
-
     alianzaBeneficiarioCubit.changeAlianzaId(alianzaId);
     alianzaBeneficiarioCubit.changeConocePerfil('true');
+
+    final alianzaBeneficiario =
+        alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
     if (alianzaBeneficiario.activo == '') {
       alianzaBeneficiarioCubit.changeActivo('false');

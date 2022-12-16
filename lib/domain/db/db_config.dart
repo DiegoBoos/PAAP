@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:paap/data/datasources/local/beneficio_local_ds.dart';
 import 'package:paap/data/datasources/local/perfil_preinversion_aliado_local_ds.dart';
 import 'package:paap/data/datasources/local/perfil_preinversion_beneficiario_local_ds.dart';
 import 'package:paap/data/datasources/local/tipo_actividad_productiva_local_ds.dart';
@@ -171,6 +172,7 @@ class DBConfig {
       await ObjetivoLocalDataSourceImpl.createObjetivoTable(db);
       await ProductoObjetivoLocalDataSourceImpl.createProductoObjetivoTable(db);
       await ProyectoLocalDataSourceImpl.createProyectoTable(db);
+      await BeneficioLocalDataSourceImpl.createBeneficioTable(db);
     });
 
     return _database!;

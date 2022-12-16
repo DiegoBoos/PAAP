@@ -208,6 +208,7 @@ class PerfilPreInversionBeneficiarioRemoteDataSourceImpl
             <ConocePerfil>${perfilPreInversionBeneficiarioEntity.conocePerfil}</ConocePerfil>
             <FueBeneficiado>${perfilPreInversionBeneficiarioEntity.fueBeneficiado}</FueBeneficiado>
             <CualBeneficio>${perfilPreInversionBeneficiarioEntity.cualBeneficio}</CualBeneficio>
+            <BeneficioId>${perfilPreInversionBeneficiarioEntity.beneficioId}</BeneficioId>
             <Activo>${perfilPreInversionBeneficiarioEntity.activo}</Activo>
             <MiembrosHogar>${perfilPreInversionBeneficiarioEntity.miembrosHogar}</MiembrosHogar>
             <MiembrosEcoActivos>${perfilPreInversionBeneficiarioEntity.miembrosEcoActivos}</MiembrosEcoActivos>

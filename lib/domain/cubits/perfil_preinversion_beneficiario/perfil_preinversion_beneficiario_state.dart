@@ -69,6 +69,7 @@ PerfilPreInversionBeneficiarioEntity initObject() {
       conocePerfil: '',
       fueBeneficiado: '',
       cualBeneficio: '',
+      beneficioId: '',
       activo: '',
       miembrosHogar: '',
       miembrosEcoActivos: '',

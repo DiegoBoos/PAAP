@@ -12,6 +12,7 @@ class AlianzaBeneficiarioEntity {
     required this.conocePerfil,
     required this.fueBeneficiado,
     required this.cualBeneficio,
+    required this.beneficioId,
     required this.activo,
     required this.miembrosHogar,
     required this.miembrosEcoActivos,
@@ -71,6 +72,7 @@ class AlianzaBeneficiarioEntity {
   String conocePerfil;
   String fueBeneficiado;
   String cualBeneficio;
+  String beneficioId;
   String activo;
   String miembrosHogar;
   String miembrosEcoActivos;
@@ -130,6 +132,7 @@ class AlianzaBeneficiarioEntity {
     String? conocePerfil,
     String? fueBeneficiado,
     String? cualBeneficio,
+    String? beneficioId,
     String? activo,
     String? miembrosHogar,
     String? miembrosEcoActivos,
@@ -182,6 +185,7 @@ class AlianzaBeneficiarioEntity {
         conocePerfil: conocePerfil ?? this.conocePerfil,
         fueBeneficiado: fueBeneficiado ?? this.fueBeneficiado,
         cualBeneficio: cualBeneficio ?? this.cualBeneficio,
+        beneficioId: beneficioId ?? this.beneficioId,
         activo: activo ?? this.activo,
         miembrosHogar: miembrosHogar ?? this.miembrosHogar,
         miembrosEcoActivos: miembrosEcoActivos ?? this.miembrosEcoActivos,
@@ -242,6 +246,7 @@ class AlianzaBeneficiarioEntity {
         conocePerfil: json["ConocePerfil"],
         fueBeneficiado: json["FueBeneficiado"],
         cualBeneficio: json["CualBeneficio"],
+        beneficioId: json["BeneficioId"],
         activo: json["Activo"],
         miembrosHogar: json["MiembrosHogar"],
         miembrosEcoActivos: json["MiembrosEcoActivos"],
@@ -296,6 +301,7 @@ class AlianzaBeneficiarioEntity {
         "ConocePerfil": conocePerfil,
         "FueBeneficiado": fueBeneficiado,
         "CualBeneficio": cualBeneficio,
+        "BeneficioId": beneficioId,
         "Activo": activo,
         "MiembrosHogar": miembrosHogar,
         "MiembrosEcoActivos": miembrosEcoActivos,

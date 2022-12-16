@@ -12,6 +12,7 @@ import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/entities/municipio_entity.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
 import '../../../domain/entities/vereda_entity.dart';
+import '../../../domain/usecases/beneficio/beneficio_exports.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
@@ -33,6 +34,7 @@ class _AlianzaPerfilBeneficiarioFormState
   String? municipioId;
   String? veredaId;
   String? tipoTenenciaId;
+  String? beneficioId;
 
   final areaFincaCtrl = TextEditingController();
   final areaProyectoCtrl = TextEditingController();
@@ -98,6 +100,7 @@ class _AlianzaPerfilBeneficiarioFormState
     areaProyectoCtrl.text = alianzaBeneficiarioLoaded.areaProyecto;
     areaFincaCtrl.text = alianzaBeneficiarioLoaded.areaFinca;
     tipoTenenciaId = alianzaBeneficiarioLoaded.tipoTenenciaId;
+    beneficioId = alianzaBeneficiarioLoaded.beneficioId;
 
     setState(() {});
   }
@@ -348,6 +351,44 @@ class _AlianzaPerfilBeneficiarioFormState
                   onSaved: (String? newValue) {
                     alianzaBeneficiarioCubit.changeCualBeneficio(newValue);
                   }),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: BlocBuilder<BeneficioCubit, BeneficioState>(
+                      builder: (context, state) {
+                        if (state is BeneficiosLoaded) {
+                          return DropdownButtonFormField(
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Beneficios Obtenidos',
+                                labelText: 'Beneficios Obtenidos'),
+                            value: beneficioId,
+                            items: state.beneficios!
+                                .map<DropdownMenuItem<String>>(
+                                    (BeneficioEntity value) {
+                              return DropdownMenuItem<String>(
+                                value: value.beneficioId,
+                                child: Text(value.nombre),
+                              );
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Campo Requerido';
+                              }
+                              return null;
+                            },
+                            onChanged: (String? value) {
+                              alianzaBeneficiarioCubit.changeBeneficioId(value);
+                            },
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
               TextFormField(
                   keyboardType: TextInputType.number,

@@ -195,6 +195,7 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
             <ConocePerfil>${alianzaBeneficiarioEntity.conocePerfil}</ConocePerfil>
             <FueBeneficiado>${alianzaBeneficiarioEntity.fueBeneficiado}</FueBeneficiado>
             <CualBeneficio>${alianzaBeneficiarioEntity.cualBeneficio}</CualBeneficio>
+            <BeneficioId>${alianzaBeneficiarioEntity.beneficioId}</BeneficioId>
             <Activo>${alianzaBeneficiarioEntity.activo}</Activo>
             <MiembrosHogar>${alianzaBeneficiarioEntity.miembrosHogar}</MiembrosHogar>
             <MiembrosEcoActivos>${alianzaBeneficiarioEntity.miembrosEcoActivos}</MiembrosEcoActivos>

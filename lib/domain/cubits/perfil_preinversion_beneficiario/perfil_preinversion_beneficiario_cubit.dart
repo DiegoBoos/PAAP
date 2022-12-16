@@ -105,6 +105,12 @@ class PerfilPreInversionBeneficiarioCubit
     emit(PerfilPreInversionBeneficiarioChanged(cualBeneficioChanged));
   }
 
+  void changeBeneficioId(String? newValue) {
+    final beneficioIdChanged =
+        state.perfilPreInversionBeneficiario.copyWith(beneficioId: newValue);
+    emit(PerfilPreInversionBeneficiarioChanged(beneficioIdChanged));
+  }
+
   void changeResidencia(String? value) {
     final residenciaChanged =
         state.perfilPreInversionBeneficiario.copyWith(residenciaId: value);

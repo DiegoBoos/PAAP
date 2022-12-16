@@ -94,6 +94,12 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     emit(AlianzaBeneficiarioChanged(cualBeneficioChanged));
   }
 
+  void changeBeneficioId(String? newValue) {
+    final beneficioIdChanged =
+        state.alianzaBeneficiario.copyWith(beneficioId: newValue);
+    emit(AlianzaBeneficiarioChanged(beneficioIdChanged));
+  }
+
   void changeResidencia(String? value) {
     final residenciaChanged =
         state.alianzaBeneficiario.copyWith(residenciaId: value);
