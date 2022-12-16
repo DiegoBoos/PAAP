@@ -64,6 +64,7 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
       From  Cofinanciador
       INNER JOIN PerfilPreInversionCofinanciador  ON Cofinanciador.ID = PerfilPreInversionCofinanciador.CofinanciadorId
       INNER JOIN PerfilPreInversion  ON PerfilPreInversionCofinanciador.PerfilPreInversionId = PerfilPreInversion.PerfilPreInversionId
+      where PerfilPreInversionCofinanciador.PerfilPreInversionId = $perfilPreInversionId
       UNION ALL
       Select 
       '' as CofinanciadorId,

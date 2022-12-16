@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:xml/xml.dart' as xml;
@@ -21,10 +22,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UsuarioModel> verificacion(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final verificacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final verificacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <Verificacion xmlns="${Constants.urlSOAP}/">
@@ -36,29 +38,35 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final verificacionResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/Verificacion"
-        },
-        body: verificacionSOAP);
+      final verificacionResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/Verificacion"
+          },
+          body: verificacionSOAP);
 
-    if (verificacionResp.statusCode == 200) {
-      final verificacionDoc = xml.XmlDocument.parse(verificacionResp.body);
+      if (verificacionResp.statusCode == 200) {
+        final verificacionDoc = xml.XmlDocument.parse(verificacionResp.body);
 
-      final respuesta =
-          verificacionDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta = verificacionDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
+            .first;
 
-      final mensaje =
-          verificacionDoc.findAllElements('mensaje').map((e) => e.text).first;
+        final mensaje =
+            verificacionDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-      if (respuesta == 'true') {
-        return await consultarUsuario(uri, usuario);
+        if (respuesta == 'true') {
+          return await consultarUsuario(uri, usuario);
+        } else {
+          throw ServerFailure([mensaje]);
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      print(e);
+      throw SocketException(e.toString());
     }
   }
 
@@ -67,10 +75,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ConsultarUsuario xmlns="${Constants.urlSOAP}/">
-        <usuario>
+          <usuario>
             <UsuarioId>${usuario.usuarioId}</UsuarioId>
             <Contrasena>${usuario.contrasena}</Contrasena>
-        </usuario>
+          </usuario>
           <objeto>
             <UsuarioId>${usuario.usuarioId}</UsuarioId>
             <Contrasena>${usuario.contrasena}</Contrasena>

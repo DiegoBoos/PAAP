@@ -42,7 +42,17 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
           <usuario>
             <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Nombre>${usuario.nombre}</Nombre>
+            <Apellido>${usuario.apellido}</Apellido>
+            <Direccion>${usuario.direccion}</Direccion>
+            <TelefonoFijo>${usuario.telefonoFijo}</TelefonoFijo>
+            <TelefonoMovil>${usuario.telefonoMovil}</TelefonoMovil>
+            <Correo>${usuario.correo}</Correo>
             <Contrasena>${usuario.contrasena}</Contrasena>
+            <FechaActivacion>${usuario.fechaActivacion}</FechaActivacion>
+            <FechaDesactivacion>${usuario.fechaDesactivacion}</FechaDesactivacion>
+            <FechaCambio>${usuario.fechaCambio}</FechaCambio>
+            <Activo>${usuario.activo}</Activo>
           </usuario>
           <rol>
             <RolId>100</RolId>
@@ -107,7 +117,17 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
           <usuario>
             <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Nombre>${usuario.nombre}</Nombre>
+            <Apellido>${usuario.apellido}</Apellido>
+            <Direccion>${usuario.direccion}</Direccion>
+            <TelefonoFijo>${usuario.telefonoFijo}</TelefonoFijo>
+            <TelefonoMovil>${usuario.telefonoMovil}</TelefonoMovil>
+            <Correo>${usuario.correo}</Correo>
             <Contrasena>${usuario.contrasena}</Contrasena>
+            <FechaActivacion>${usuario.fechaActivacion}</FechaActivacion>
+            <FechaDesactivacion>${usuario.fechaDesactivacion}</FechaDesactivacion>
+            <FechaCambio>${usuario.fechaCambio}</FechaCambio>
+            <Activo>${usuario.activo}</Activo>
           </usuario>
           <rol>
             <RolId>100</RolId>

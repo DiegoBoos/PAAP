@@ -39,7 +39,17 @@ class AlianzaExperienciaPecuariaRemoteDataSourceImpl
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
           <usuario>
             <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Nombre>${usuario.nombre}</Nombre>
+            <Apellido>${usuario.apellido}</Apellido>
+            <Direccion>${usuario.direccion}</Direccion>
+            <TelefonoFijo>${usuario.telefonoFijo}</TelefonoFijo>
+            <TelefonoMovil>${usuario.telefonoMovil}</TelefonoMovil>
+            <Correo>${usuario.correo}</Correo>
             <Contrasena>${usuario.contrasena}</Contrasena>
+            <FechaActivacion>${usuario.fechaActivacion}</FechaActivacion>
+            <FechaDesactivacion>${usuario.fechaDesactivacion}</FechaDesactivacion>
+            <FechaCambio>${usuario.fechaCambio}</FechaCambio>
+            <Activo>${usuario.activo}</Activo>
           </usuario>
           <rol>
             <RolId>100</RolId>
@@ -134,7 +144,17 @@ class AlianzaExperienciaPecuariaRemoteDataSourceImpl
         <GuardarAlianzaExperienciaPecuaria xmlns="http://alianzasproductivas.minagricultura.gov.co/">
           <usuario>
             <UsuarioId>${usuario.usuarioId}</UsuarioId>
+            <Nombre>${usuario.nombre}</Nombre>
+            <Apellido>${usuario.apellido}</Apellido>
+            <Direccion>${usuario.direccion}</Direccion>
+            <TelefonoFijo>${usuario.telefonoFijo}</TelefonoFijo>
+            <TelefonoMovil>${usuario.telefonoMovil}</TelefonoMovil>
+            <Correo>${usuario.correo}</Correo>
             <Contrasena>${usuario.contrasena}</Contrasena>
+            <FechaActivacion>${usuario.fechaActivacion}</FechaActivacion>
+            <FechaDesactivacion>${usuario.fechaDesactivacion}</FechaDesactivacion>
+            <FechaCambio>${usuario.fechaCambio}</FechaCambio>
+            <Activo>${usuario.activo}</Activo>
           </usuario>
           <rol>
             <RolId>100</RolId>
@@ -152,7 +172,6 @@ class AlianzaExperienciaPecuariaRemoteDataSourceImpl
             <ValorJornal>${alianzaExperienciaPecuariaEntity.valorJornal}</ValorJornal>
             <CostosInsumos>${alianzaExperienciaPecuariaEntity.costosInsumos}</CostosInsumos>
             <Ingresos>${alianzaExperienciaPecuariaEntity.ingresos}</Ingresos>
-            
           </objeto>
         </GuardarAlianzaExperienciaPecuaria>
       </soap:Body>

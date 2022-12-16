@@ -16,16 +16,14 @@ import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
-class PerfilPreInversionBeneficiarioForm extends StatefulWidget {
-  const PerfilPreInversionBeneficiarioForm({super.key});
+class PerfilBeneficiarioForm extends StatefulWidget {
+  const PerfilBeneficiarioForm({super.key});
 
   @override
-  State<PerfilPreInversionBeneficiarioForm> createState() =>
-      _PerfilPreInversionBeneficiarioFormState();
+  State<PerfilBeneficiarioForm> createState() => _PerfilBeneficiarioFormState();
 }
 
-class _PerfilPreInversionBeneficiarioFormState
-    extends State<PerfilPreInversionBeneficiarioForm> {
+class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
   List<MunicipioEntity> municipiosFiltered = [];
   List<VeredaEntity> veredasFiltered = [];
 

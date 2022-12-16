@@ -1,31 +1,31 @@
 class UsuarioEntity {
   UsuarioEntity({
     required this.usuarioId,
-    this.nombre,
-    this.apellido,
-    this.direccion,
-    this.telefonoFijo,
-    this.telefonoMovil,
-    this.correo,
+    required this.nombre,
+    required this.apellido,
+    required this.direccion,
+    required this.telefonoFijo,
+    required this.telefonoMovil,
+    required this.correo,
     required this.contrasena,
-    this.fechaActivacion,
-    this.fechaDesactivacion,
-    this.fechaCambio,
-    this.activo,
+    required this.fechaActivacion,
+    required this.fechaDesactivacion,
+    required this.fechaCambio,
+    required this.activo,
   });
 
   final String usuarioId;
-  final String? nombre;
-  final String? apellido;
-  final String? direccion;
-  final String? telefonoFijo;
-  final String? telefonoMovil;
-  final String? correo;
+  final String nombre;
+  final String apellido;
+  final String direccion;
+  final String telefonoFijo;
+  final String telefonoMovil;
+  final String correo;
   final String contrasena;
-  final String? fechaActivacion;
-  final String? fechaDesactivacion;
-  final String? fechaCambio;
-  final String? activo;
+  final String fechaActivacion;
+  final String fechaDesactivacion;
+  final String fechaCambio;
+  final String activo;
 
   factory UsuarioEntity.fromJson(Map<String, dynamic> json) => UsuarioEntity(
         usuarioId: json["UsuarioId"],

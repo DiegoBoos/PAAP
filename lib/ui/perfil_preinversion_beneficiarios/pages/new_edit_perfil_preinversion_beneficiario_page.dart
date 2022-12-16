@@ -15,6 +15,7 @@ import '../../utils/network_icon.dart';
 import '../../utils/styles.dart';
 import '../widgets/beneficiario_experiencia_form.dart';
 import '../widgets/beneficiario_form.dart';
+import '../widgets/perfil_beneficiario_form.dart';
 import '../widgets/perfil_preinversion_beneficiario_form.dart';
 import '../widgets/conyuge_form.dart';
 
@@ -85,7 +86,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
                             style: Styles.subtitleStyle),
                         const SizedBox(height: 10),
                         const BeneficiarioForm(),
-                        const PerfilPreInversionBeneficiarioForm(),
+                        const PerfilBeneficiarioForm(),
                         const PerfilPreInversionBeneficiarioForm(),
                         if (estadoCivilId == '2' || estadoCivilId == '5')
                           const ConyugeForm(),
