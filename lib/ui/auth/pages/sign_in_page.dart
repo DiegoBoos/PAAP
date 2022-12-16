@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/cubits/menu/menu_cubit.dart';
-import 'package:paap/ui/utils/custom_general_dialog.dart';
-import 'package:paap/ui/utils/custom_snack_bar.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/sync/sync_bloc.dart';
 import '../../../domain/cubits/internet/internet_cubit.dart';
+import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../utils/all_platform.dart';
 
+import '../../utils/custom_general_dialog.dart';
+import '../../utils/custom_snack_bar.dart';
 import '../../utils/loading_page.dart';
 import '../../utils/network_icon.dart';
 import '../widgets/auth_background.dart';
@@ -43,13 +43,11 @@ class _SignInPageState extends State<SignInPage> {
     final authBloc = BlocProvider.of<AuthBloc>(context, listen: true);
     final internetCubit = BlocProvider.of<InternetCubit>(context);
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    //final downloadSyncBloc = BlocProvider.of<DownloadSyncBloc>(context);
     final syncBloc = BlocProvider.of<SyncBloc>(context);
 
     TextEditingController usuarioIdCtrl =
         TextEditingController(text: 'adamariatorrenegra@hotmail.com');
-    TextEditingController contrasenaCtrl =
-        TextEditingController(text: 'UHJvZGVzYXJyb2xsbzIxKg==');
+    TextEditingController contrasenaCtrl = TextEditingController();
 
     return MultiBlocListener(
       listeners: [
@@ -68,7 +66,6 @@ class _SignInPageState extends State<SignInPage> {
                       cancelText: 'Continuar Offline',
                       onTapConfirm: () {
                         Navigator.pop(context);
-                        //downloadSyncBloc.add(DownloadStarted(usuario));
                         syncBloc.add(SyncStarted(usuario, 'A'));
                       },
                       onTapCancel: () {
@@ -105,20 +102,6 @@ class _SignInPageState extends State<SignInPage> {
             Navigator.pushReplacementNamed(context, 'tabs');
           }
         }),
-        /* BlocListener<DownloadSyncBloc, DownloadSyncState>(
-            listener: (context, state) {
-          if (state is DownloadSyncFailure) {
-            CustomSnackBar.showSnackBar(context, state.message, Colors.red);
-            Navigator.pushReplacementNamed(context, 'sign-in');
-            return;
-          }
-          if (state is DownloadSyncSuccess) {
-            CustomSnackBar.showSnackBar(
-                context, 'Descarga exitosa', Colors.green);
-
-            Navigator.pushReplacementNamed(context, 'tabs');
-          }
-        }), */
       ],
       child: BlocBuilder<SyncBloc, SyncState>(
         builder: (context, state) {
@@ -222,6 +205,16 @@ class _SignInPageState extends State<SignInPage> {
                                           final usuario = UsuarioEntity(
                                             usuarioId: usuarioIdCtrl.text,
                                             contrasena: contrasenaCtrl.text,
+                                            activo: '',
+                                            apellido: '',
+                                            correo: '',
+                                            direccion: '',
+                                            fechaActivacion: '',
+                                            fechaCambio: '',
+                                            fechaDesactivacion: '',
+                                            nombre: '',
+                                            telefonoFijo: '',
+                                            telefonoMovil: '',
                                           );
 
                                           if (internetCubit.state

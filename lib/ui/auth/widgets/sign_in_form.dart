@@ -66,7 +66,7 @@ class _SignInFormState extends State<SignInForm> {
                         size: 18,
                       )),
           ),
-          validator: (value) => FormValidators.validatePassword(value),
+          //validator: (value) => FormValidators.validatePassword(value),
         ),
         const SizedBox(height: 20),
       ],

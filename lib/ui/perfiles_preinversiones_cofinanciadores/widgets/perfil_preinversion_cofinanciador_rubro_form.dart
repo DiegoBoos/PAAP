@@ -61,8 +61,10 @@ class _PerfilPreInversionCofinanciadorRubroFormState
 
   void loadPerfilPreInversionCofinanciadorRubro(
       PerfilPreInversionCofinanciadorRubroEntity
-          perfilPreInversionCofinanciadorRubroLoaded) {
+          perfilPreInversionCofinanciadorRubroLoaded) async {
     final rubroCubit = BlocProvider.of<RubroCubit>(context);
+
+    await rubroCubit.getRubrosDB();
 
     actividadFinancieraId =
         perfilPreInversionCofinanciadorRubroLoaded.actividadFinancieraId;
@@ -70,10 +72,12 @@ class _PerfilPreInversionCofinanciadorRubroFormState
     rubroId = perfilPreInversionCofinanciadorRubroLoaded.rubroId;
     valorCtrl.text = perfilPreInversionCofinanciadorRubroLoaded.valor;
 
-    rubrosFiltered = rubroCubit.state.rubros!
-        .where(
-            ((rubro) => rubro.actividadFinancieraId == actividadFinancieraId))
-        .toList();
+    if (rubroCubit.state is RubrosLoaded) {
+      rubrosFiltered = rubroCubit.state.rubros!
+          .where(
+              ((rubro) => rubro.actividadFinancieraId == actividadFinancieraId))
+          .toList();
+    }
 
     setState(() {});
   }

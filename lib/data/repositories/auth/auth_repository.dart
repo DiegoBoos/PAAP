@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 
 import '../../../domain/core/error/exception.dart';
@@ -22,6 +24,8 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(e.properties));
     } on ServerException {
       return const Left(ServerFailure(['Excepción no controlada']));
+    } on SocketException catch (e) {
+      return Left(ConnectionFailure([e.message]));
     }
   }
 }
