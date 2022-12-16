@@ -16,6 +16,7 @@ import 'domain/usecases/alianza_experiencia_agricola/alianza_experiencia_agricol
 import 'domain/usecases/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_exports.dart';
 import 'domain/usecases/auth/auth_exports.dart';
 import 'domain/usecases/beneficiario/beneficiario_exports.dart';
+import 'domain/usecases/beneficio/beneficio_exports.dart';
 import 'domain/usecases/cofinanciador/cofinanciador_exports.dart';
 import 'domain/usecases/consultor/consultor_exports.dart';
 import 'domain/usecases/convocatoria/convocatoria_exports.dart';
@@ -1235,7 +1236,7 @@ void init() {
   alianzaExperienciaAgricolaInit();
   alianzaExperienciaPecuariaInit();
   perfilPreInversionPlanesNegociosInit();
-
+  beneficioInit();
   syncInit();
   // external
   locator.registerLazySingleton(() => http.Client());
@@ -2708,6 +2709,42 @@ veredaInit() {
   // local data source
   locator.registerLazySingleton<VeredaLocalDataSource>(
     () => VeredaLocalDataSourceImpl(),
+  );
+}
+
+beneficioInit() {
+  // cubit
+  locator.registerFactory(() => BeneficioCubit(beneficioDB: locator()));
+  // remote usecase
+  locator.registerLazySingleton(() => BeneficioUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => BeneficioUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<BeneficioRepository>(
+    () => BeneficioRepositoryImpl(
+      beneficioRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<BeneficioRepositoryDB>(
+    () => BeneficioRepositoryDBImpl(
+      beneficioLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<BeneficioRemoteDataSource>(
+    () => BeneficioRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<BeneficioLocalDataSource>(
+    () => BeneficioLocalDataSourceImpl(),
   );
 }
 
