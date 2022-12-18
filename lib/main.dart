@@ -64,6 +64,7 @@ import 'domain/cubits/residencia/residencia_cubit.dart';
 import 'domain/cubits/revision/revision_cubit.dart';
 import 'domain/cubits/rubro/rubro_cubit.dart';
 import 'domain/cubits/sitio_entrega/sitio_entrega_cubit.dart';
+import 'domain/cubits/sync_log/sync_log_cubit.dart';
 import 'domain/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
 import 'domain/cubits/tipo_calidad/tipo_calidad_cubit.dart';
 import 'domain/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
@@ -366,6 +367,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => di.locator<BeneficioCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<SyncLogCubit>(),
           ),
         ],
         child: MaterialApp(

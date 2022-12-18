@@ -58,6 +58,7 @@ import 'domain/usecases/residencia/residencia_exports.dart';
 import 'domain/usecases/revision/revision_exports.dart';
 import 'domain/usecases/rubro/rubro_exports.dart';
 import 'domain/usecases/sitio_entrega/sitio_entrega_exports.dart';
+import 'domain/usecases/sync_log/sync_log_exports.dart';
 import 'domain/usecases/tipo_actividad_productiva/tipo_actividad_productiva_exports.dart';
 import 'domain/usecases/tipo_calidad/tipo_calidad_exports.dart';
 import 'domain/usecases/tipo_discapacidad/tipo_discapacidad_exports.dart';
@@ -717,6 +718,7 @@ syncInit() {
         perfilPreInversionPrecioDB: locator(),
         visita: locator(),
         visitaDB: locator(),
+        syncLogDB: locator(),
       ));
 }
 
@@ -1096,6 +1098,26 @@ generosInit() {
   );
 }
 
+syncLogInit() {
+  // cubit
+  locator.registerFactory(() => SyncLogCubit(syncLogDB: locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => SyncLogUsecaseDB(locator()));
+
+  // repository DB
+  locator.registerLazySingleton<SyncLogRepositoryDB>(
+    () => SyncLogRepositoryDBImpl(
+      syncLogLocalDataSource: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<SyncLogLocalDataSource>(
+    () => SyncLogLocalDataSourceImpl(),
+  );
+}
+
 grupoEspecialInit() {
   // cubit
   locator.registerFactory(() => GrupoEspecialCubit(grupoEspecialDB: locator()));
@@ -1238,6 +1260,7 @@ void init() {
   perfilPreInversionPlanesNegociosInit();
   beneficioInit();
   syncInit();
+  syncLogInit();
   // external
   locator.registerLazySingleton(() => http.Client());
 }

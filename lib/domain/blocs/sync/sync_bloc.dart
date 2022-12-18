@@ -26,7 +26,7 @@ import '../../usecases/evaluacion_respuesta/evaluacion_respuesta_exports.dart';
 import '../../usecases/experiencia_agricola/experiencia_agricola_exports.dart';
 import '../../usecases/experiencia_pecuaria/experiencia_pecuaria_exports.dart';
 import '../../usecases/frecuencia/frecuencia_exports.dart';
-import '../../usecases/genero copy/genero_exports.dart';
+import '../../usecases/genero/genero_exports.dart';
 import '../../usecases/grupo_especial/grupo_especial_exports.dart';
 import '../../usecases/menu/menu_exports.dart';
 import '../../usecases/municipio/municipio_exports.dart';
@@ -50,6 +50,7 @@ import '../../usecases/residencia/residencia_exports.dart';
 import '../../usecases/revision/revision_exports.dart';
 import '../../usecases/rubro/rubro_exports.dart';
 import '../../usecases/sitio_entrega/sitio_entrega_exports.dart';
+import '../../usecases/sync_log/sync_log_exports.dart';
 import '../../usecases/tipo_actividad_productiva/tipo_actividad_productiva_exports.dart';
 import '../../usecases/tipo_calidad/tipo_calidad_exports.dart';
 import '../../usecases/tipo_discapacidad/tipo_discapacidad_exports.dart';
@@ -197,6 +198,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   final VisitaUsecase visita;
   final VisitaUsecaseDB visitaDB;
 
+  final SyncLogUsecaseDB syncLogDB;
+
   int gTotal = 0;
 
   SyncBloc({
@@ -320,6 +323,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     required this.perfilPreInversionPrecioDB,
     required this.visita,
     required this.visitaDB,
+    required this.syncLogDB,
   }) : super(SyncInitial()) {
     on<SyncStarted>((event, emit) async {
       final usuario = event.usuario;
@@ -2385,11 +2389,25 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   Future<void> saveSyncVisitas(List<VisitaEntity> data, Emitter<SyncState> emit,
       UsuarioEntity usuario) async {
     final result = await visitaDB.saveVisitasUsecaseDB(data);
-    return result.fold(
-        (failure) => add(SyncError(failure.properties.first)),
-        (_) async => add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    return result.fold((failure) => add(SyncError(failure.properties.first)),
+        (_) async => verifySync());
+    /*  (_) async => add(SyncStatusChanged(state.syncProgressModel!.copyWith(
             title: 'Sincronización Completada',
             counter: state.syncProgressModel!.counter + 1,
-            percent: calculatePercent()))));
+            percent: calculatePercent())))); */
+  }
+
+  Future<void> verifySync() async {
+    final result = await syncLogDB.getSyncLogsUsecaseDB();
+    return result.fold((failure) => add(SyncError(failure.properties.first)),
+        (data) {
+      if (data!.isNotEmpty) {
+        //TODO: Sacar a pantalla para mostrar tablas con botón de forzar sincronización el cual debe ponerle 'R' a los registros N o E y ejecutar nuevamente la sincronización
+      }
+      add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+          title: 'Sincronización Completada',
+          counter: state.syncProgressModel!.counter + 1,
+          percent: calculatePercent())));
+    });
   }
 }

@@ -187,6 +187,8 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
                         return null;
                       },
                       onChanged: (String? value) {
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .changeDesembolso(value);
                         perfilPreInversionCofinanciadorRubroCubit
                             .changeDesembolso(value);
                       },
