@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class ResidenciaRemoteDataSourceImpl implements ResidenciaRemoteDataSource {
 
   @override
   Future<List<ResidenciaModel>> getResidencias(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final residenciaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final residenciaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -52,44 +54,47 @@ class ResidenciaRemoteDataSourceImpl implements ResidenciaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final residenciaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: residenciaSOAP);
+      final residenciaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: residenciaSOAP);
 
-    if (residenciaResp.statusCode == 200) {
-      final residenciaDoc = xml.XmlDocument.parse(residenciaResp.body);
+      if (residenciaResp.statusCode == 200) {
+        final residenciaDoc = xml.XmlDocument.parse(residenciaResp.body);
 
-      final respuesta =
-          residenciaDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            residenciaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          residenciaDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = residenciaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            residenciaDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = residenciaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final residenciasRaw = decodedResp.entries.first.value['Table'];
+          final residenciasRaw = decodedResp.entries.first.value['Table'];
 
-        if (residenciasRaw is List) {
-          return List.from(residenciasRaw)
-              .map((e) => ResidenciaModel.fromJson(e))
-              .toList();
+          if (residenciasRaw is List) {
+            return List.from(residenciasRaw)
+                .map((e) => ResidenciaModel.fromJson(e))
+                .toList();
+          } else {
+            return [ResidenciaModel.fromJson(residenciasRaw)];
+          }
         } else {
-          return [ResidenciaModel.fromJson(residenciasRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

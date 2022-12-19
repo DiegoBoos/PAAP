@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class ConsultorRemoteDataSourceImpl implements ConsultorRemoteDataSource {
 
   @override
   Future<List<ConsultorModel>> getConsultores(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final consultorSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final consultorSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -52,44 +54,47 @@ class ConsultorRemoteDataSourceImpl implements ConsultorRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final consultorResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: consultorSOAP);
+      final consultorResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: consultorSOAP);
 
-    if (consultorResp.statusCode == 200) {
-      final consultorDoc = xml.XmlDocument.parse(consultorResp.body);
+      if (consultorResp.statusCode == 200) {
+        final consultorDoc = xml.XmlDocument.parse(consultorResp.body);
 
-      final respuesta =
-          consultorDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            consultorDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          consultorDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = consultorDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            consultorDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = consultorDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final consultoresRaw = decodedResp.entries.first.value['Table'];
+          final consultoresRaw = decodedResp.entries.first.value['Table'];
 
-        if (consultoresRaw is List) {
-          return List.from(consultoresRaw)
-              .map((e) => ConsultorModel.fromJson(e))
-              .toList();
+          if (consultoresRaw is List) {
+            return List.from(consultoresRaw)
+                .map((e) => ConsultorModel.fromJson(e))
+                .toList();
+          } else {
+            return [ConsultorModel.fromJson(consultoresRaw)];
+          }
         } else {
-          return [ConsultorModel.fromJson(consultoresRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

@@ -28,3 +28,9 @@ class SyncError extends SyncEvent {
 
   const SyncError(this.message);
 }
+
+class SyncLog extends SyncEvent {
+  final List<SyncLogEntity> syncLog;
+
+  const SyncLog(this.syncLog);
+}

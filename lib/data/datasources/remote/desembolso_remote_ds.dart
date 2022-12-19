@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class DesembolsoRemoteDataSourceImpl implements DesembolsoRemoteDataSource {
 
   @override
   Future<List<DesembolsoModel>> getDesembolsos(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final desembolsoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final desembolsoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -53,44 +55,47 @@ class DesembolsoRemoteDataSourceImpl implements DesembolsoRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final desembolsoResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: desembolsoSOAP);
+      final desembolsoResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: desembolsoSOAP);
 
-    if (desembolsoResp.statusCode == 200) {
-      final desembolsoDoc = xml.XmlDocument.parse(desembolsoResp.body);
+      if (desembolsoResp.statusCode == 200) {
+        final desembolsoDoc = xml.XmlDocument.parse(desembolsoResp.body);
 
-      final respuesta =
-          desembolsoDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            desembolsoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          desembolsoDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = desembolsoDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            desembolsoDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = desembolsoDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final desembolsosRaw = decodedResp.entries.first.value['Table'];
+          final desembolsosRaw = decodedResp.entries.first.value['Table'];
 
-        if (desembolsosRaw is List) {
-          return List.from(desembolsosRaw)
-              .map((e) => DesembolsoModel.fromJson(e))
-              .toList();
+          if (desembolsosRaw is List) {
+            return List.from(desembolsosRaw)
+                .map((e) => DesembolsoModel.fromJson(e))
+                .toList();
+          } else {
+            return [DesembolsoModel.fromJson(desembolsosRaw)];
+          }
         } else {
-          return [DesembolsoModel.fromJson(desembolsosRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

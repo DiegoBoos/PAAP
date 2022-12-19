@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class GeneroRemoteDataSourceImpl implements GeneroRemoteDataSource {
 
   @override
   Future<List<GeneroModel>> getGeneros(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final generoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final generoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -52,44 +54,47 @@ class GeneroRemoteDataSourceImpl implements GeneroRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final generoResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: generoSOAP);
+      final generoResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: generoSOAP);
 
-    if (generoResp.statusCode == 200) {
-      final generoDoc = xml.XmlDocument.parse(generoResp.body);
+      if (generoResp.statusCode == 200) {
+        final generoDoc = xml.XmlDocument.parse(generoResp.body);
 
-      final respuesta =
-          generoDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            generoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          generoDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = generoDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            generoDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = generoDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final generosRaw = decodedResp.entries.first.value['Table'];
+          final generosRaw = decodedResp.entries.first.value['Table'];
 
-        if (generosRaw is List) {
-          return List.from(generosRaw)
-              .map((e) => GeneroModel.fromJson(e))
-              .toList();
+          if (generosRaw is List) {
+            return List.from(generosRaw)
+                .map((e) => GeneroModel.fromJson(e))
+                .toList();
+          } else {
+            return [GeneroModel.fromJson(generosRaw)];
+          }
         } else {
-          return [GeneroModel.fromJson(generosRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

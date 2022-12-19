@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -23,10 +24,11 @@ class CofinanciadorRemoteDataSourceImpl
   @override
   Future<List<CofinanciadorModel>> getCofinanciadoresByDepartamento(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final cofinanciadorSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final cofinanciadorSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -55,46 +57,49 @@ class CofinanciadorRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final cofinanciadorResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: cofinanciadorSOAP);
+      final cofinanciadorResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: cofinanciadorSOAP);
 
-    if (cofinanciadorResp.statusCode == 200) {
-      final cofinanciadorDoc = xml.XmlDocument.parse(cofinanciadorResp.body);
+      if (cofinanciadorResp.statusCode == 200) {
+        final cofinanciadorDoc = xml.XmlDocument.parse(cofinanciadorResp.body);
 
-      final respuesta = cofinanciadorDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          cofinanciadorDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = cofinanciadorDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = cofinanciadorDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            cofinanciadorDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = cofinanciadorDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final cofinanciadoresRaw = decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (cofinanciadoresRaw is List) {
-          return List.from(cofinanciadoresRaw)
-              .map((e) => CofinanciadorModel.fromJson(e))
-              .toList();
+          final cofinanciadoresRaw = decodedResp.entries.first.value['Table'];
+
+          if (cofinanciadoresRaw is List) {
+            return List.from(cofinanciadoresRaw)
+                .map((e) => CofinanciadorModel.fromJson(e))
+                .toList();
+          } else {
+            return [CofinanciadorModel.fromJson(cofinanciadoresRaw)];
+          }
         } else {
-          return [CofinanciadorModel.fromJson(cofinanciadoresRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

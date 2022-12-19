@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -23,10 +24,11 @@ class TipoIdentificacionRemoteDataSourceImpl
   @override
   Future<List<TipoIdentificacionModel>> getTiposIdentificaciones(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final tipoIdentificacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final tipoIdentificacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -55,48 +57,51 @@ class TipoIdentificacionRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final tipoIdentificacionResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: tipoIdentificacionSOAP);
+      final tipoIdentificacionResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: tipoIdentificacionSOAP);
 
-    if (tipoIdentificacionResp.statusCode == 200) {
-      final tipoIdentificacionDoc =
-          xml.XmlDocument.parse(tipoIdentificacionResp.body);
+      if (tipoIdentificacionResp.statusCode == 200) {
+        final tipoIdentificacionDoc =
+            xml.XmlDocument.parse(tipoIdentificacionResp.body);
 
-      final respuesta = tipoIdentificacionDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          tipoIdentificacionDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = tipoIdentificacionDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = tipoIdentificacionDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            tipoIdentificacionDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = tipoIdentificacionDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final tiposIdentificacionesRaw =
-            decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (tiposIdentificacionesRaw is List) {
-          return List.from(tiposIdentificacionesRaw)
-              .map((e) => TipoIdentificacionModel.fromJson(e))
-              .toList();
+          final tiposIdentificacionesRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (tiposIdentificacionesRaw is List) {
+            return List.from(tiposIdentificacionesRaw)
+                .map((e) => TipoIdentificacionModel.fromJson(e))
+                .toList();
+          } else {
+            return [TipoIdentificacionModel.fromJson(tiposIdentificacionesRaw)];
+          }
         } else {
-          return [TipoIdentificacionModel.fromJson(tiposIdentificacionesRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

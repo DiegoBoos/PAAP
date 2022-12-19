@@ -58,4 +58,11 @@ class UsuarioModel extends UsuarioEntity {
         "FechaCambio": fechaCambio,
         "Activo": activo
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is UsuarioModel && other.usuarioId == usuarioId;
+
+  @override
+  int get hashCode => usuarioId.hashCode;
 }

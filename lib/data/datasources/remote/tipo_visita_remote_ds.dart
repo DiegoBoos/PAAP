@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class TipoVisitaRemoteDataSourceImpl implements TipoVisitaRemoteDataSource {
 
   @override
   Future<List<TipoVisitaModel>> getTiposVisitas(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final tipoVisitaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final tipoVisitaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -52,44 +54,47 @@ class TipoVisitaRemoteDataSourceImpl implements TipoVisitaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final tipoVisitaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: tipoVisitaSOAP);
+      final tipoVisitaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: tipoVisitaSOAP);
 
-    if (tipoVisitaResp.statusCode == 200) {
-      final tipoVisitaDoc = xml.XmlDocument.parse(tipoVisitaResp.body);
+      if (tipoVisitaResp.statusCode == 200) {
+        final tipoVisitaDoc = xml.XmlDocument.parse(tipoVisitaResp.body);
 
-      final respuesta =
-          tipoVisitaDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            tipoVisitaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          tipoVisitaDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = tipoVisitaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            tipoVisitaDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = tipoVisitaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final tiposVisitasRaw = decodedResp.entries.first.value['Table'];
+          final tiposVisitasRaw = decodedResp.entries.first.value['Table'];
 
-        if (tiposVisitasRaw is List) {
-          return List.from(tiposVisitasRaw)
-              .map((e) => TipoVisitaModel.fromJson(e))
-              .toList();
+          if (tiposVisitasRaw is List) {
+            return List.from(tiposVisitasRaw)
+                .map((e) => TipoVisitaModel.fromJson(e))
+                .toList();
+          } else {
+            return [TipoVisitaModel.fromJson(tiposVisitasRaw)];
+          }
         } else {
-          return [TipoVisitaModel.fromJson(tiposVisitasRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

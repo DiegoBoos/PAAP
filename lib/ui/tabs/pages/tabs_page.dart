@@ -9,6 +9,7 @@ import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
 import '../../../domain/blocs/sync/sync_bloc.dart';
 import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../../domain/cubits/sync_log/sync_log_cubit.dart';
 import '../../../domain/entities/menu_entity.dart';
 
 import '../../alianzas/pages/alianzas_page.dart';
@@ -16,6 +17,8 @@ import '../../perfiles/pages/perfiles_page.dart';
 import '../../utils/custom_general_dialog.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/loading_page.dart';
+import '../../utils/network_icon.dart';
+import '../../utils/styles.dart';
 import 'home_page.dart';
 
 class TabsPage extends StatefulWidget {
@@ -55,6 +58,8 @@ class _TabsPageState extends State<TabsPage> {
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     final internetCubit = BlocProvider.of<InternetCubit>(context);
+    final syncBloc = BlocProvider.of<SyncBloc>(context);
+    final syncLogCubit = BlocProvider.of<SyncLogCubit>(context);
 
     return BlocListener<SyncBloc, SyncState>(
       listener: (context, state) {
@@ -69,6 +74,74 @@ class _TabsPageState extends State<TabsPage> {
       },
       child: BlocBuilder<SyncBloc, SyncState>(
         builder: (context, state) {
+          if (state is IncompleteSync) {
+            final syncLog = state.syncLog;
+            return WillPopScope(
+              onWillPop: () async => false,
+              child: Scaffold(
+                appBar: AppBar(
+                    title: const Text('Log'),
+                    centerTitle: true,
+                    actions: const [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.0),
+                        child: NetworkIcon(),
+                      )
+                    ]),
+                body: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Error al sincronizar',
+                        style: Styles.titleStyle
+                            .copyWith(color: Colors.red.shade400),
+                      ),
+                      const SizedBox(height: 20),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: syncLog.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final log = syncLog[index];
+                          return ListTile(
+                              title: Text(log.tabla),
+                              subtitle: Text('${log.cantidadRegistros}'));
+                        },
+                        separatorBuilder: ((_, __) => const Divider()),
+                      ),
+                      Row(mainAxisSize: MainAxisSize.min, children: [
+                        Expanded(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.yellowAccent.shade700),
+                                onPressed: () {
+                                  syncLogCubit.forceSyncDB(state.syncLog).then(
+                                      (value) {
+                                    syncBloc.add(SyncStarted(
+                                        authBloc.state.usuario!, 'P'));
+                                  }, onError: (error) {
+                                    syncBloc.add(SyncError(error));
+                                  });
+                                },
+                                child: const Text('Forzar Sincronización'))),
+                        const SizedBox(width: 20),
+                        Expanded(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red.shade400),
+                                onPressed: () {
+                                  syncBloc.add(const SyncError(
+                                      'Sincronización cancelada'));
+                                },
+                                child: const Text('Cancelar'))),
+                      ]),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
           if (state is SyncInProgress) {
             return LoadingPage(
                 title: 'Sincronizando...',

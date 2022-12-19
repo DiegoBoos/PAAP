@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class ProductoRemoteDataSourceImpl implements ProductoRemoteDataSource {
 
   @override
   Future<List<ProductoModel>> getProductos(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final productoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final productoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -53,44 +55,47 @@ class ProductoRemoteDataSourceImpl implements ProductoRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final productoResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: productoSOAP);
+      final productoResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: productoSOAP);
 
-    if (productoResp.statusCode == 200) {
-      final productoDoc = xml.XmlDocument.parse(productoResp.body);
+      if (productoResp.statusCode == 200) {
+        final productoDoc = xml.XmlDocument.parse(productoResp.body);
 
-      final respuesta =
-          productoDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            productoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          productoDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = productoDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            productoDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = productoDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final productosRaw = decodedResp.entries.first.value['Table'];
+          final productosRaw = decodedResp.entries.first.value['Table'];
 
-        if (productosRaw is List) {
-          return List.from(productosRaw)
-              .map((e) => ProductoModel.fromJson(e))
-              .toList();
+          if (productosRaw is List) {
+            return List.from(productosRaw)
+                .map((e) => ProductoModel.fromJson(e))
+                .toList();
+          } else {
+            return [ProductoModel.fromJson(productosRaw)];
+          }
         } else {
-          return [ProductoModel.fromJson(productosRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

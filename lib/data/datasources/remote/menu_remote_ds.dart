@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -19,10 +20,11 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
 
   @override
   Future<List<MenuModel>> getMenu(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final menuSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final menuSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -52,42 +54,47 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final menuResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: menuSOAP);
+      final menuResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: menuSOAP);
 
-    if (menuResp.statusCode == 200) {
-      final menuDoc = xml.XmlDocument.parse(menuResp.body);
+      if (menuResp.statusCode == 200) {
+        final menuDoc = xml.XmlDocument.parse(menuResp.body);
 
-      final respuesta =
-          menuDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            menuDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          menuDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = menuDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            menuDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = menuDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final menusRaw = decodedResp.entries.first.value['Table'];
+          final menusRaw = decodedResp.entries.first.value['Table'];
 
-        if (menusRaw is List) {
-          return List.from(menusRaw).map((e) => MenuModel.fromJson(e)).toList();
+          if (menusRaw is List) {
+            return List.from(menusRaw)
+                .map((e) => MenuModel.fromJson(e))
+                .toList();
+          } else {
+            return [MenuModel.fromJson(menusRaw)];
+          }
         } else {
-          return [MenuModel.fromJson(menusRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

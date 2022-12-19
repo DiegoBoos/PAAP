@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:paap/domain/entities/visita_entity.dart';
@@ -25,10 +26,11 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
 
   @override
   Future<List<VisitaModel>> getVisitas(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilesSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilesSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -57,60 +59,64 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final perfilesResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: perfilesSOAP);
+      final perfilesResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: perfilesSOAP);
 
-    if (perfilesResp.statusCode == 200) {
-      final perfilesDoc = xml.XmlDocument.parse(perfilesResp.body);
+      if (perfilesResp.statusCode == 200) {
+        final perfilesDoc = xml.XmlDocument.parse(perfilesResp.body);
 
-      final respuesta =
-          perfilesDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            perfilesDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          perfilesDoc.findAllElements('mensaje').map((e) => e.text).first;
+        final mensaje =
+            perfilesDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-      if (respuesta == 'true') {
-        final xmlString = perfilesDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true') {
+          final xmlString = perfilesDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final perfilesRaw = decodedResp.entries.first.value['Table'];
+          final perfilesRaw = decodedResp.entries.first.value['Table'];
 
-        final perfiles = List.from(perfilesRaw)
-            .map((e) => PerfilesModel.fromJson(e))
-            .toList();
+          final perfiles = List.from(perfilesRaw)
+              .map((e) => PerfilesModel.fromJson(e))
+              .toList();
 
-        List<VisitaModel> listVisita = [];
-        for (var perfil in perfiles) {
-          final dsVisita = await getVisitaTable(usuario, perfil.id);
-          if (dsVisita != null) {
-            listVisita.add(dsVisita);
+          List<VisitaModel> listVisita = [];
+          for (var perfil in perfiles) {
+            final dsVisita = await getVisitaTable(usuario, perfil.id);
+            if (dsVisita != null) {
+              listVisita.add(dsVisita);
+            }
           }
+          return listVisita;
+        } else {
+          throw ServerFailure([mensaje]);
         }
-        return listVisita;
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
   Future<VisitaModel?> getVisitaTable(
       UsuarioEntity usuario, String visitaId) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final visitasSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final visitasSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ConsultarVisita xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -140,37 +146,40 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final visitaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ConsultarVisita"
-        },
-        body: visitasSOAP);
+      final visitaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ConsultarVisita"
+          },
+          body: visitasSOAP);
 
-    if (visitaResp.statusCode == 200) {
-      final visitaDoc = xml.XmlDocument.parse(visitaResp.body);
+      if (visitaResp.statusCode == 200) {
+        final visitaDoc = xml.XmlDocument.parse(visitaResp.body);
 
-      final respuesta =
-          visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true') {
-        final xmlString = visitaDoc
-            .findAllElements('objeto')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true') {
+          final xmlString = visitaDoc
+              .findAllElements('objeto')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final decodedResp = json.decode(res);
+          final decodedResp = json.decode(res);
 
-        final visita = VisitaModel.fromJson(decodedResp['objeto']);
+          final visita = VisitaModel.fromJson(decodedResp['objeto']);
 
-        return visita;
+          return visita;
+        } else {
+          return null;
+        }
       } else {
-        return null;
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -189,10 +198,11 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
 
   Future<VisitaEntity?> saveVisita(
       UsuarioEntity usuario, VisitaEntity visitaEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final visitaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final visitaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarVisita xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -229,26 +239,29 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
     </soap:Envelope>
     ''';
 
-    final visitaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/GuardarVisita"
-        },
-        body: visitaSOAP);
+      final visitaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/GuardarVisita"
+          },
+          body: visitaSOAP);
 
-    if (visitaResp.statusCode == 200) {
-      final visitaDoc = xml.XmlDocument.parse(visitaResp.body);
+      if (visitaResp.statusCode == 200) {
+        final visitaDoc = xml.XmlDocument.parse(visitaResp.body);
 
-      final respuesta =
-          visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true') {
-        return visitaEntity;
+        if (respuesta == 'true') {
+          return visitaEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

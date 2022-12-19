@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -25,10 +26,11 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
 
   @override
   Future<List<AliadoModel>> getAliados(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final aliadoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final aliadoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -57,55 +59,60 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final aliadoResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: aliadoSOAP);
+      final aliadoResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: aliadoSOAP);
 
-    if (aliadoResp.statusCode == 200) {
-      final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
+      if (aliadoResp.statusCode == 200) {
+        final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
 
-      final respuesta =
-          aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          aliadoDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = aliadoDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            aliadoDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = aliadoDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final aliadosRaw = decodedResp.entries.first.value['Table'];
+          final aliadosRaw = decodedResp.entries.first.value['Table'];
 
-        final aliados =
-            List.from(aliadosRaw).map((e) => AliadosModel.fromJson(e)).toList();
+          final aliados = List.from(aliadosRaw)
+              .map((e) => AliadosModel.fromJson(e))
+              .toList();
 
-        List<AliadoModel> listAliado = [];
-        for (var aliado in aliados) {
-          final dsAliado = await getAliadoTable(usuario, aliado.aliadoId);
-          listAliado.add(dsAliado);
+          List<AliadoModel> listAliado = [];
+          for (var aliado in aliados) {
+            final dsAliado = await getAliadoTable(usuario, aliado.aliadoId);
+            listAliado.add(dsAliado);
+          }
+          return listAliado;
+        } else {
+          return [];
         }
-        return listAliado;
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
   Future<AliadoModel> getAliadoTable(
       UsuarioEntity usuario, String aliadoId) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final aliadoesSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final aliadoesSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ConsultarAliado xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -134,40 +141,43 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final aliadoResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ConsultarAliado"
-        },
-        body: aliadoesSOAP);
+      final aliadoResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ConsultarAliado"
+          },
+          body: aliadoesSOAP);
 
-    if (aliadoResp.statusCode == 200) {
-      final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
+      if (aliadoResp.statusCode == 200) {
+        final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
 
-      final respuesta =
-          aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          aliadoDoc.findAllElements('mensaje').map((e) => e.text).first;
+        final mensaje =
+            aliadoDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-      if (respuesta == 'true') {
-        final xmlString = aliadoDoc
-            .findAllElements('objeto')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true') {
+          final xmlString = aliadoDoc
+              .findAllElements('objeto')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final decodedResp = json.decode(res);
+          final decodedResp = json.decode(res);
 
-        final aliado = AliadoModel.fromJson(decodedResp['objeto']);
+          final aliado = AliadoModel.fromJson(decodedResp['objeto']);
 
-        return aliado;
+          return aliado;
+        } else {
+          throw ServerFailure([mensaje]);
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -186,10 +196,11 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
 
   Future<AliadoEntity?> saveAliado(
       UsuarioEntity usuario, AliadoEntity aliadoEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final aliadoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final aliadoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarAliado xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -232,26 +243,29 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
     </soap:Envelope>
     ''';
 
-    final aliadoResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/GuardarAliado"
-        },
-        body: aliadoSOAP);
+      final aliadoResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/GuardarAliado"
+          },
+          body: aliadoSOAP);
 
-    if (aliadoResp.statusCode == 200) {
-      final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
+      if (aliadoResp.statusCode == 200) {
+        final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
 
-      final respuesta =
-          aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true') {
-        return aliadoEntity;
+        if (respuesta == 'true') {
+          return aliadoEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

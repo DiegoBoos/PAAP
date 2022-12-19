@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -23,10 +24,11 @@ class ActividadEconomicaRemoteDataSourceImpl
   @override
   Future<List<ActividadEconomicaModel>> getActividadesEconomicas(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final actividadEconomicaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final actividadEconomicaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -56,48 +58,51 @@ class ActividadEconomicaRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final actividadEconomicaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: actividadEconomicaSOAP);
+      final actividadEconomicaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: actividadEconomicaSOAP);
 
-    if (actividadEconomicaResp.statusCode == 200) {
-      final actividadEconomicaDoc =
-          xml.XmlDocument.parse(actividadEconomicaResp.body);
+      if (actividadEconomicaResp.statusCode == 200) {
+        final actividadEconomicaDoc =
+            xml.XmlDocument.parse(actividadEconomicaResp.body);
 
-      final respuesta = actividadEconomicaDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          actividadEconomicaDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = actividadEconomicaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = actividadEconomicaDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            actividadEconomicaDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = actividadEconomicaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final actividadesEconomicasRaw =
-            decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (actividadesEconomicasRaw is List) {
-          return List.from(actividadesEconomicasRaw)
-              .map((e) => ActividadEconomicaModel.fromJson(e))
-              .toList();
+          final actividadesEconomicasRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (actividadesEconomicasRaw is List) {
+            return List.from(actividadesEconomicasRaw)
+                .map((e) => ActividadEconomicaModel.fromJson(e))
+                .toList();
+          } else {
+            return [ActividadEconomicaModel.fromJson(actividadesEconomicasRaw)];
+          }
         } else {
-          return [ActividadEconomicaModel.fromJson(actividadesEconomicasRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

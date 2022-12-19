@@ -476,7 +476,6 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
 
       final imageTemporary = File(image.path);
       setState(() => this.image = imageTemporary);
-      print(this.image);
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }

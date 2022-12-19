@@ -351,6 +351,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
           : emit(SyncInProgress(event.progress));
     });
     on<SyncError>((event, emit) => emit(SyncFailure(event.message)));
+    on<SyncLog>((event, emit) => emit(IncompleteSync(event.syncLog)));
   }
 
   double calculatePercent() {
@@ -2402,12 +2403,13 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     return result.fold((failure) => add(SyncError(failure.properties.first)),
         (data) {
       if (data!.isNotEmpty) {
-        //TODO: Sacar a pantalla para mostrar tablas con botón de forzar sincronización el cual debe ponerle 'R' a los registros N o E y ejecutar nuevamente la sincronización
+        add(SyncLog(data));
+      } else {
+        add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+            title: 'Sincronización Completada',
+            counter: state.syncProgressModel!.counter + 1,
+            percent: calculatePercent())));
       }
-      add(SyncStatusChanged(state.syncProgressModel!.copyWith(
-          title: 'Sincronización Completada',
-          counter: state.syncProgressModel!.counter + 1,
-          percent: calculatePercent())));
     });
   }
 }

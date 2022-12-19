@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -23,10 +24,11 @@ class TipoDiscapacidadRemoteDataSourceImpl
   @override
   Future<List<TipoDiscapacidadModel>> getTiposDiscapacidades(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final tipoDiscapacidadSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final tipoDiscapacidadSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -56,47 +58,51 @@ class TipoDiscapacidadRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final tipoDiscapacidadResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: tipoDiscapacidadSOAP);
+      final tipoDiscapacidadResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: tipoDiscapacidadSOAP);
 
-    if (tipoDiscapacidadResp.statusCode == 200) {
-      final tipoDiscapacidadDoc =
-          xml.XmlDocument.parse(tipoDiscapacidadResp.body);
+      if (tipoDiscapacidadResp.statusCode == 200) {
+        final tipoDiscapacidadDoc =
+            xml.XmlDocument.parse(tipoDiscapacidadResp.body);
 
-      final respuesta = tipoDiscapacidadDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          tipoDiscapacidadDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = tipoDiscapacidadDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = tipoDiscapacidadDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            tipoDiscapacidadDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = tipoDiscapacidadDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final tiposDiscapacidadesRaw = decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (tiposDiscapacidadesRaw is List) {
-          return List.from(tiposDiscapacidadesRaw)
-              .map((e) => TipoDiscapacidadModel.fromJson(e))
-              .toList();
+          final tiposDiscapacidadesRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (tiposDiscapacidadesRaw is List) {
+            return List.from(tiposDiscapacidadesRaw)
+                .map((e) => TipoDiscapacidadModel.fromJson(e))
+                .toList();
+          } else {
+            return [TipoDiscapacidadModel.fromJson(tiposDiscapacidadesRaw)];
+          }
         } else {
-          return [TipoDiscapacidadModel.fromJson(tiposDiscapacidadesRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

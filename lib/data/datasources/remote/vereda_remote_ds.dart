@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -66,10 +67,11 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
 
   Future<List<VeredaModel>> getVeredasByMunicipio(
       UsuarioEntity usuario, String municipioId) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final veredaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final veredaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -99,56 +101,61 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final veredaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: veredaSOAP);
+      final veredaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: veredaSOAP);
 
-    if (veredaResp.statusCode == 200) {
-      final veredaDoc = xml.XmlDocument.parse(veredaResp.body);
+      if (veredaResp.statusCode == 200) {
+        final veredaDoc = xml.XmlDocument.parse(veredaResp.body);
 
-      final respuesta =
-          veredaDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            veredaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          veredaDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = veredaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            veredaDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = veredaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        //final Map<String, dynamic> decodedResp = json.decode(res);
-        final Map<String, dynamic> decodedResp = jsonDecode(res
-            .toString()
-            .replaceAll(RegExp(r'[^A-Za-z0-9() áéíóúÁÉÍÓÚñÑ:[\]{}.,";?]'), ''));
+          //final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = jsonDecode(res
+              .toString()
+              .replaceAll(
+                  RegExp(r'[^A-Za-z0-9() áéíóúÁÉÍÓÚñÑ:[\]{}.,";?]'), ''));
 
-        final veredasRaw = decodedResp.entries.first.value['Table'];
+          final veredasRaw = decodedResp.entries.first.value['Table'];
 
-        if (veredasRaw is List) {
-          return List.from(veredasRaw)
-              .map((e) => VeredaModel.fromJson(e))
-              .toList();
+          if (veredasRaw is List) {
+            return List.from(veredasRaw)
+                .map((e) => VeredaModel.fromJson(e))
+                .toList();
+          } else {
+            return [VeredaModel.fromJson(veredasRaw)];
+          }
         } else {
-          return [VeredaModel.fromJson(veredasRaw)];
+          return [];
         }
       } else {
         return [];
       }
-    } else {
-      return [];
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
   Future<List<MunicipioModel>> getMunicipiosByDepartamento(
       UsuarioEntity usuario, String departamentoId) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final municipioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final municipioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -178,53 +185,57 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final municipioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: municipioSOAP);
+      final municipioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: municipioSOAP);
 
-    if (municipioResp.statusCode == 200) {
-      final municipioDoc = xml.XmlDocument.parse(municipioResp.body);
+      if (municipioResp.statusCode == 200) {
+        final municipioDoc = xml.XmlDocument.parse(municipioResp.body);
 
-      final respuesta =
-          municipioDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            municipioDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          municipioDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = municipioDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            municipioDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = municipioDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final municipiosRaw = decodedResp.entries.first.value['Table'];
+          final municipiosRaw = decodedResp.entries.first.value['Table'];
 
-        if (municipiosRaw is List) {
-          return List.from(municipiosRaw)
-              .map((e) => MunicipioModel.fromJson(e))
-              .toList();
+          if (municipiosRaw is List) {
+            return List.from(municipiosRaw)
+                .map((e) => MunicipioModel.fromJson(e))
+                .toList();
+          } else {
+            return [MunicipioModel.fromJson(municipiosRaw)];
+          }
         } else {
-          return [MunicipioModel.fromJson(municipiosRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
   Future<List<DepartamentoModel>> getDepartamentos(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final departamentoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final departamentoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -254,46 +265,51 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final departamentoResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: departamentoSOAP);
+      final departamentoResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: departamentoSOAP);
 
-    if (departamentoResp.statusCode == 200) {
-      final departamentoDoc = xml.XmlDocument.parse(departamentoResp.body);
+      if (departamentoResp.statusCode == 200) {
+        final departamentoDoc = xml.XmlDocument.parse(departamentoResp.body);
 
-      final respuesta =
-          departamentoDoc.findAllElements('respuesta').map((e) => e.text).first;
-
-      final mensaje =
-          departamentoDoc.findAllElements('mensaje').map((e) => e.text).first;
-
-      if (respuesta == 'true') {
-        final xmlString = departamentoDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = departamentoDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        final mensaje =
+            departamentoDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+        if (respuesta == 'true') {
+          final xmlString = departamentoDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final departamentosRaw = decodedResp.entries.first.value['Table'];
+          String res = Utils.convertXmlToJson(xmlString);
 
-        if (departamentosRaw is List) {
-          return List.from(departamentosRaw)
-              .map((e) => DepartamentoModel.fromJson(e))
-              .toList();
+          final Map<String, dynamic> decodedResp = json.decode(res);
+
+          final departamentosRaw = decodedResp.entries.first.value['Table'];
+
+          if (departamentosRaw is List) {
+            return List.from(departamentosRaw)
+                .map((e) => DepartamentoModel.fromJson(e))
+                .toList();
+          } else {
+            return [DepartamentoModel.fromJson(departamentosRaw)];
+          }
         } else {
-          return [DepartamentoModel.fromJson(departamentosRaw)];
+          throw ServerFailure([mensaje]);
         }
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

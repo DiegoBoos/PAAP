@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:paap/domain/blocs/sync/sync_bloc.dart';
 
 import 'domain/cubits/internet/internet_cubit.dart';
+import 'domain/cubits/slider/slider_cubit.dart';
 import 'domain/cubits/v_alianza/v_alianza_cubit.dart';
 import 'domain/usecases/actividad/actividad_exports.dart';
 import 'domain/usecases/actividad_economica/actividad_economica_exports.dart';
@@ -1259,6 +1260,7 @@ void init() {
   alianzaExperienciaPecuariaInit();
   perfilPreInversionPlanesNegociosInit();
   beneficioInit();
+  sliderInit();
   syncInit();
   syncLogInit();
   // external
@@ -2848,4 +2850,9 @@ alianzaBeneficiarioInit() {
   locator.registerLazySingleton<AlianzaBeneficiarioLocalDataSource>(
     () => AlianzaBeneficiarioLocalDataSourceImpl(),
   );
+}
+
+sliderInit() {
+  // cubit
+  locator.registerFactory(() => SliderCubit());
 }

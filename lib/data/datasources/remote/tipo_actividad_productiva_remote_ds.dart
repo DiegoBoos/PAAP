@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -22,11 +23,12 @@ class TipoActividadProductivaRemoteDataSourceImpl
   @override
   Future<List<TipoActividadProductivaModel>> getTiposActividadesProductivas(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final tipoActividadProductivaSOAP =
-        '''<?xml version="1.0" encoding="utf-8"?>
+      final tipoActividadProductivaSOAP =
+          '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -56,51 +58,56 @@ class TipoActividadProductivaRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final tipoActividadProductivaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: tipoActividadProductivaSOAP);
+      final tipoActividadProductivaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: tipoActividadProductivaSOAP);
 
-    if (tipoActividadProductivaResp.statusCode == 200) {
-      final tipoActividadProductivaDoc =
-          xml.XmlDocument.parse(tipoActividadProductivaResp.body);
+      if (tipoActividadProductivaResp.statusCode == 200) {
+        final tipoActividadProductivaDoc =
+            xml.XmlDocument.parse(tipoActividadProductivaResp.body);
 
-      final respuesta = tipoActividadProductivaDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          tipoActividadProductivaDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = tipoActividadProductivaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = tipoActividadProductivaDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            tipoActividadProductivaDoc
+                .findAllElements('NewDataSet')
+                .isNotEmpty) {
+          final xmlString = tipoActividadProductivaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final tiposActividadesProductivasRaw =
-            decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (tiposActividadesProductivasRaw is List) {
-          return List.from(tiposActividadesProductivasRaw)
-              .map((e) => TipoActividadProductivaModel.fromJson(e))
-              .toList();
+          final tiposActividadesProductivasRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (tiposActividadesProductivasRaw is List) {
+            return List.from(tiposActividadesProductivasRaw)
+                .map((e) => TipoActividadProductivaModel.fromJson(e))
+                .toList();
+          } else {
+            return [
+              TipoActividadProductivaModel.fromJson(
+                  tiposActividadesProductivasRaw)
+            ];
+          }
         } else {
-          return [
-            TipoActividadProductivaModel.fromJson(
-                tiposActividadesProductivasRaw)
-          ];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

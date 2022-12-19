@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -33,11 +34,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRemoteDataSourceImpl
   Future<List<PerfilPreInversionCofinanciadorActividadFinancieraModel>>
       getPerfilPreInversionCofinanciadorActividadesFinancieras(
           UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilPreInversionCofinanciadorActividadesFinancierasSOAP =
-        '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilPreInversionCofinanciadorActividadesFinancierasSOAP =
+          '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -66,59 +68,64 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final perfilPreInversionCofinanciadorActividadFinancieraResp =
-        await client.post(uri,
-            headers: {
-              "Content-Type": "text/xml; charset=utf-8",
-              "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-            },
-            body: perfilPreInversionCofinanciadorActividadesFinancierasSOAP);
+      final perfilPreInversionCofinanciadorActividadFinancieraResp =
+          await client.post(uri,
+              headers: {
+                "Content-Type": "text/xml; charset=utf-8",
+                "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+              },
+              body: perfilPreInversionCofinanciadorActividadesFinancierasSOAP);
 
-    if (perfilPreInversionCofinanciadorActividadFinancieraResp.statusCode ==
-        200) {
-      final perfilPreInversionCofinanciadorActividadFinancieraDoc =
-          xml.XmlDocument.parse(
-              perfilPreInversionCofinanciadorActividadFinancieraResp.body);
+      if (perfilPreInversionCofinanciadorActividadFinancieraResp.statusCode ==
+          200) {
+        final perfilPreInversionCofinanciadorActividadFinancieraDoc =
+            xml.XmlDocument.parse(
+                perfilPreInversionCofinanciadorActividadFinancieraResp.body);
 
-      final respuesta = perfilPreInversionCofinanciadorActividadFinancieraDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          perfilPreInversionCofinanciadorActividadFinancieraDoc
-              .findAllElements('NewDataSet')
-              .isNotEmpty) {
-        final xmlString = perfilPreInversionCofinanciadorActividadFinancieraDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = perfilPreInversionCofinanciadorActividadFinancieraDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            perfilPreInversionCofinanciadorActividadFinancieraDoc
+                .findAllElements('NewDataSet')
+                .isNotEmpty) {
+          final xmlString =
+              perfilPreInversionCofinanciadorActividadFinancieraDoc
+                  .findAllElements('NewDataSet')
+                  .map((xmlElement) => xmlElement.toXmlString())
+                  .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final perfilPreInversionCofinanciadorActividadesFinancierasRaw =
-            decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (perfilPreInversionCofinanciadorActividadesFinancierasRaw is List) {
-          return List.from(
+          final perfilPreInversionCofinanciadorActividadesFinancierasRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (perfilPreInversionCofinanciadorActividadesFinancierasRaw
+              is List) {
+            return List.from(
+                    perfilPreInversionCofinanciadorActividadesFinancierasRaw)
+                .map((e) =>
+                    PerfilPreInversionCofinanciadorActividadFinancieraModel
+                        .fromJson(e))
+                .toList();
+          } else {
+            return [
+              PerfilPreInversionCofinanciadorActividadFinancieraModel.fromJson(
                   perfilPreInversionCofinanciadorActividadesFinancierasRaw)
-              .map((e) =>
-                  PerfilPreInversionCofinanciadorActividadFinancieraModel
-                      .fromJson(e))
-              .toList();
+            ];
+          }
         } else {
-          return [
-            PerfilPreInversionCofinanciadorActividadFinancieraModel.fromJson(
-                perfilPreInversionCofinanciadorActividadesFinancierasRaw)
-          ];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -147,11 +154,12 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRemoteDataSourceImpl
           UsuarioEntity usuario,
           PerfilPreInversionCofinanciadorActividadFinancieraEntity
               perfilPreInversionCofinanciadorActividadFinancieraEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilPreInversionCofinanciadorActividadFinancieraSOAP =
-        '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilPreInversionCofinanciadorActividadFinancieraSOAP =
+          '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarPerfilPreInversionCofinanciadorActividadFinanciera xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -185,33 +193,36 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRemoteDataSourceImpl
     </soap:Envelope>
     ''';
 
-    final perfilPreInversionCofinanciadorActividadFinancieraResp =
-        await client.post(uri,
-            headers: {
-              "Content-Type": "text/xml; charset=utf-8",
-              "SOAPAction":
-                  "${Constants.urlSOAP}/GuardarPerfilPreInversionCofinanciadorActividadFinanciera"
-            },
-            body: perfilPreInversionCofinanciadorActividadFinancieraSOAP);
+      final perfilPreInversionCofinanciadorActividadFinancieraResp =
+          await client.post(uri,
+              headers: {
+                "Content-Type": "text/xml; charset=utf-8",
+                "SOAPAction":
+                    "${Constants.urlSOAP}/GuardarPerfilPreInversionCofinanciadorActividadFinanciera"
+              },
+              body: perfilPreInversionCofinanciadorActividadFinancieraSOAP);
 
-    if (perfilPreInversionCofinanciadorActividadFinancieraResp.statusCode ==
-        200) {
-      final perfilPreInversionCofinanciadorActividadFinancieraDoc =
-          xml.XmlDocument.parse(
-              perfilPreInversionCofinanciadorActividadFinancieraResp.body);
+      if (perfilPreInversionCofinanciadorActividadFinancieraResp.statusCode ==
+          200) {
+        final perfilPreInversionCofinanciadorActividadFinancieraDoc =
+            xml.XmlDocument.parse(
+                perfilPreInversionCofinanciadorActividadFinancieraResp.body);
 
-      final respuesta = perfilPreInversionCofinanciadorActividadFinancieraDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
+        final respuesta = perfilPreInversionCofinanciadorActividadFinancieraDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
+            .first;
 
-      if (respuesta == 'true') {
-        return perfilPreInversionCofinanciadorActividadFinancieraEntity;
+        if (respuesta == 'true') {
+          return perfilPreInversionCofinanciadorActividadFinancieraEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

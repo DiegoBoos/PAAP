@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -27,10 +28,11 @@ class ExperienciaAgricolaRemoteDataSourceImpl
   @override
   Future<List<ExperienciaAgricolaModel>> getExperienciasAgricolas(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final experienciaAgricolaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final experienciaAgricolaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -59,48 +61,53 @@ class ExperienciaAgricolaRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final experienciaAgricolaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: experienciaAgricolaSOAP);
+      final experienciaAgricolaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: experienciaAgricolaSOAP);
 
-    if (experienciaAgricolaResp.statusCode == 200) {
-      final experienciaAgricolaDoc =
-          xml.XmlDocument.parse(experienciaAgricolaResp.body);
+      if (experienciaAgricolaResp.statusCode == 200) {
+        final experienciaAgricolaDoc =
+            xml.XmlDocument.parse(experienciaAgricolaResp.body);
 
-      final respuesta = experienciaAgricolaDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          experienciaAgricolaDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = experienciaAgricolaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = experienciaAgricolaDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            experienciaAgricolaDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = experienciaAgricolaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final experienciasAgricolasRaw =
-            decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (experienciasAgricolasRaw is List) {
-          return List.from(experienciasAgricolasRaw)
-              .map((e) => ExperienciaAgricolaModel.fromJson(e))
-              .toList();
+          final experienciasAgricolasRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (experienciasAgricolasRaw is List) {
+            return List.from(experienciasAgricolasRaw)
+                .map((e) => ExperienciaAgricolaModel.fromJson(e))
+                .toList();
+          } else {
+            return [
+              ExperienciaAgricolaModel.fromJson(experienciasAgricolasRaw)
+            ];
+          }
         } else {
-          return [ExperienciaAgricolaModel.fromJson(experienciasAgricolasRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -121,10 +128,11 @@ class ExperienciaAgricolaRemoteDataSourceImpl
   Future<ExperienciaAgricolaEntity?> saveExperienciaAgricola(
       UsuarioEntity usuario,
       ExperienciaAgricolaEntity experienciaAgricolaEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final experienciaAgricolaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final experienciaAgricolaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarExperienciaAgricola xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -169,29 +177,32 @@ class ExperienciaAgricolaRemoteDataSourceImpl
     </soap:Envelope>
     ''';
 
-    final experienciaAgricolaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/GuardarExperienciaAgricola"
-        },
-        body: experienciaAgricolaSOAP);
+      final experienciaAgricolaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/GuardarExperienciaAgricola"
+          },
+          body: experienciaAgricolaSOAP);
 
-    if (experienciaAgricolaResp.statusCode == 200) {
-      final experienciaAgricolaDoc =
-          xml.XmlDocument.parse(experienciaAgricolaResp.body);
+      if (experienciaAgricolaResp.statusCode == 200) {
+        final experienciaAgricolaDoc =
+            xml.XmlDocument.parse(experienciaAgricolaResp.body);
 
-      final respuesta = experienciaAgricolaDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
+        final respuesta = experienciaAgricolaDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
+            .first;
 
-      if (respuesta == 'true') {
-        return experienciaAgricolaEntity;
+        if (respuesta == 'true') {
+          return experienciaAgricolaEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

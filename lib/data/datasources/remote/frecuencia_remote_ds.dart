@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class FrecuenciaRemoteDataSourceImpl implements FrecuenciaRemoteDataSource {
 
   @override
   Future<List<FrecuenciaModel>> getFrecuencias(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final frecuenciaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final frecuenciaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -52,44 +54,47 @@ class FrecuenciaRemoteDataSourceImpl implements FrecuenciaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final frecuenciaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: frecuenciaSOAP);
+      final frecuenciaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: frecuenciaSOAP);
 
-    if (frecuenciaResp.statusCode == 200) {
-      final frecuenciaDoc = xml.XmlDocument.parse(frecuenciaResp.body);
+      if (frecuenciaResp.statusCode == 200) {
+        final frecuenciaDoc = xml.XmlDocument.parse(frecuenciaResp.body);
 
-      final respuesta =
-          frecuenciaDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            frecuenciaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          frecuenciaDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = frecuenciaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            frecuenciaDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = frecuenciaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final frecuenciasRaw = decodedResp.entries.first.value['Table'];
+          final frecuenciasRaw = decodedResp.entries.first.value['Table'];
 
-        if (frecuenciasRaw is List) {
-          return List.from(frecuenciasRaw)
-              .map((e) => FrecuenciaModel.fromJson(e))
-              .toList();
+          if (frecuenciasRaw is List) {
+            return List.from(frecuenciasRaw)
+                .map((e) => FrecuenciaModel.fromJson(e))
+                .toList();
+          } else {
+            return [FrecuenciaModel.fromJson(frecuenciasRaw)];
+          }
         } else {
-          return [FrecuenciaModel.fromJson(frecuenciasRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

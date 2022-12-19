@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:xml/xml.dart' as xml;
@@ -26,10 +27,11 @@ class PerfilesPreInversionRemoteDataSourceImpl
   @override
   Future<List<PerfilPreInversionModel>> getPerfilesPreInversion(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilesPreInversionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilesPreInversionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -58,65 +60,69 @@ class PerfilesPreInversionRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final perfilesPreInversionResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: perfilesPreInversionSOAP);
+      final perfilesPreInversionResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: perfilesPreInversionSOAP);
 
-    if (perfilesPreInversionResp.statusCode == 200) {
-      final perfilesPreInversionDoc =
-          xml.XmlDocument.parse(perfilesPreInversionResp.body);
+      if (perfilesPreInversionResp.statusCode == 200) {
+        final perfilesPreInversionDoc =
+            xml.XmlDocument.parse(perfilesPreInversionResp.body);
 
-      final respuesta = perfilesPreInversionDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      final mensaje = perfilesPreInversionDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true') {
-        final xmlString = perfilesPreInversionDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = perfilesPreInversionDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        final mensaje = perfilesPreInversionDoc
+            .findAllElements('mensaje')
+            .map((e) => e.text)
+            .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+        if (respuesta == 'true') {
+          final xmlString = perfilesPreInversionDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final perfilesPreInversionRaw =
-            decodedResp.entries.first.value['Table'];
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final perfilesPreInversion = List.from(perfilesPreInversionRaw)
-            .map((e) => PerfilesPreInversionModel.fromJson(e))
-            .toList();
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        List<PerfilPreInversionModel> listPerfilesPreInversion = [];
-        for (var perfilPreInversion in perfilesPreInversion) {
-          final dsPerfilPreInversion =
-              await getPerfilPreInversionTable(usuario, perfilPreInversion.id);
-          listPerfilesPreInversion.add(dsPerfilPreInversion);
+          final perfilesPreInversionRaw =
+              decodedResp.entries.first.value['Table'];
+
+          final perfilesPreInversion = List.from(perfilesPreInversionRaw)
+              .map((e) => PerfilesPreInversionModel.fromJson(e))
+              .toList();
+
+          List<PerfilPreInversionModel> listPerfilesPreInversion = [];
+          for (var perfilPreInversion in perfilesPreInversion) {
+            final dsPerfilPreInversion = await getPerfilPreInversionTable(
+                usuario, perfilPreInversion.id);
+            listPerfilesPreInversion.add(dsPerfilPreInversion);
+          }
+          return listPerfilesPreInversion;
+        } else {
+          throw ServerFailure([mensaje]);
         }
-        return listPerfilesPreInversion;
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
   Future<PerfilPreInversionModel> getPerfilPreInversionTable(
       UsuarioEntity usuario, String perfilPreInversionId) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilesPreInversionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilesPreInversionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ConsultarPerfilPreInversion xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -145,46 +151,49 @@ class PerfilesPreInversionRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final perfilRespPreInversion = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ConsultarPerfilPreInversion"
-        },
-        body: perfilesPreInversionSOAP);
+      final perfilRespPreInversion = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ConsultarPerfilPreInversion"
+          },
+          body: perfilesPreInversionSOAP);
 
-    if (perfilRespPreInversion.statusCode == 200) {
-      final perfilPreInversionDoc =
-          xml.XmlDocument.parse(perfilRespPreInversion.body);
+      if (perfilRespPreInversion.statusCode == 200) {
+        final perfilPreInversionDoc =
+            xml.XmlDocument.parse(perfilRespPreInversion.body);
 
-      final respuesta = perfilPreInversionDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      final mensaje = perfilPreInversionDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true') {
-        final xmlString = perfilPreInversionDoc
-            .findAllElements('objeto')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = perfilPreInversionDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        final mensaje = perfilPreInversionDoc
+            .findAllElements('mensaje')
+            .map((e) => e.text)
+            .first;
 
-        final decodedResp = json.decode(res);
+        if (respuesta == 'true') {
+          final xmlString = perfilPreInversionDoc
+              .findAllElements('objeto')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final perfilPreInversion =
-            PerfilPreInversionModel.fromJson(decodedResp['objeto']);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        return perfilPreInversion;
+          final decodedResp = json.decode(res);
+
+          final perfilPreInversion =
+              PerfilPreInversionModel.fromJson(decodedResp['objeto']);
+
+          return perfilPreInversion;
+        } else {
+          throw ServerFailure([mensaje]);
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

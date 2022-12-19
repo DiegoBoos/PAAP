@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class ProyectoRemoteDataSourceImpl implements ProyectoRemoteDataSource {
 
   @override
   Future<List<ProyectoModel>> getProyectos(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final proyectoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final proyectoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -52,44 +54,47 @@ class ProyectoRemoteDataSourceImpl implements ProyectoRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final proyectoResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: proyectoSOAP);
+      final proyectoResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: proyectoSOAP);
 
-    if (proyectoResp.statusCode == 200) {
-      final proyectoDoc = xml.XmlDocument.parse(proyectoResp.body);
+      if (proyectoResp.statusCode == 200) {
+        final proyectoDoc = xml.XmlDocument.parse(proyectoResp.body);
 
-      final respuesta =
-          proyectoDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            proyectoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          proyectoDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = proyectoDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            proyectoDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = proyectoDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final proyectosRaw = decodedResp.entries.first.value['Table'];
+          final proyectosRaw = decodedResp.entries.first.value['Table'];
 
-        if (proyectosRaw is List) {
-          return List.from(proyectosRaw)
-              .map((e) => ProyectoModel.fromJson(e))
-              .toList();
+          if (proyectosRaw is List) {
+            return List.from(proyectosRaw)
+                .map((e) => ProyectoModel.fromJson(e))
+                .toList();
+          } else {
+            return [ProyectoModel.fromJson(proyectosRaw)];
+          }
         } else {
-          return [ProyectoModel.fromJson(proyectosRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

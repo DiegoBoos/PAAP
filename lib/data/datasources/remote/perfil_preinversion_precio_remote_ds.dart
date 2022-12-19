@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -30,11 +31,12 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
   @override
   Future<List<PerfilPreInversionPrecioModel>> getPerfilPreInversionPrecios(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilPreInversionPreciosSOAP =
-        '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilPreInversionPreciosSOAP =
+          '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -63,52 +65,56 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final perfilPreInversionPrecioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: perfilPreInversionPreciosSOAP);
+      final perfilPreInversionPrecioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: perfilPreInversionPreciosSOAP);
 
-    if (perfilPreInversionPrecioResp.statusCode == 200) {
-      final perfilPreInversionPrecioDoc =
-          xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
+      if (perfilPreInversionPrecioResp.statusCode == 200) {
+        final perfilPreInversionPrecioDoc =
+            xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
 
-      final respuesta = perfilPreInversionPrecioDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          perfilPreInversionPrecioDoc
-              .findAllElements('NewDataSet')
-              .isNotEmpty) {
-        final xmlString = perfilPreInversionPrecioDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = perfilPreInversionPrecioDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            perfilPreInversionPrecioDoc
+                .findAllElements('NewDataSet')
+                .isNotEmpty) {
+          final xmlString = perfilPreInversionPrecioDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final perfilPreInversionPreciosRaw =
-            decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (perfilPreInversionPreciosRaw is List) {
-          return List.from(perfilPreInversionPreciosRaw)
-              .map((e) => PerfilPreInversionPrecioModel.fromJson(e))
-              .toList();
+          final perfilPreInversionPreciosRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (perfilPreInversionPreciosRaw is List) {
+            return List.from(perfilPreInversionPreciosRaw)
+                .map((e) => PerfilPreInversionPrecioModel.fromJson(e))
+                .toList();
+          } else {
+            return [
+              PerfilPreInversionPrecioModel.fromJson(
+                  perfilPreInversionPreciosRaw)
+            ];
+          }
         } else {
-          return [
-            PerfilPreInversionPrecioModel.fromJson(perfilPreInversionPreciosRaw)
-          ];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -133,11 +139,12 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
   Future<PerfilPreInversionPrecioEntity?> savePerfilPreInversionPrecio(
       UsuarioEntity usuario,
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilPreInversionPrecioSOAP =
-        '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilPreInversionPrecioSOAP =
+          '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarPerfilPreInversionPrecio xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -171,40 +178,44 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
     </soap:Envelope>
     ''';
 
-    final perfilPreInversionPrecioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/GuardarPerfilPreInversionPrecio"
-        },
-        body: perfilPreInversionPrecioSOAP);
+      final perfilPreInversionPrecioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/GuardarPerfilPreInversionPrecio"
+          },
+          body: perfilPreInversionPrecioSOAP);
 
-    if (perfilPreInversionPrecioResp.statusCode == 200) {
-      final perfilPreInversionPrecioDoc =
-          xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
+      if (perfilPreInversionPrecioResp.statusCode == 200) {
+        final perfilPreInversionPrecioDoc =
+            xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
 
-      final respuesta = perfilPreInversionPrecioDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
+        final respuesta = perfilPreInversionPrecioDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
+            .first;
 
-      if (respuesta == 'true') {
-        return perfilPreInversionPrecioEntity;
+        if (respuesta == 'true') {
+          return perfilPreInversionPrecioEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
   Future<PerfilPreInversionPrecioEntity?> deletePerfilPreInversionPrecio(
       UsuarioEntity usuario,
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilPreInversionPrecioSOAP =
-        '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilPreInversionPrecioSOAP =
+          '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <BorrarPerfilPreInversionPrecio xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -236,29 +247,32 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
     </soap:Envelope>
     ''';
 
-    final perfilPreInversionPrecioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/BorrarPerfilPreInversionPrecio"
-        },
-        body: perfilPreInversionPrecioSOAP);
+      final perfilPreInversionPrecioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/BorrarPerfilPreInversionPrecio"
+          },
+          body: perfilPreInversionPrecioSOAP);
 
-    if (perfilPreInversionPrecioResp.statusCode == 200) {
-      final perfilPreInversionPrecioDoc =
-          xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
+      if (perfilPreInversionPrecioResp.statusCode == 200) {
+        final perfilPreInversionPrecioDoc =
+            xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
 
-      final respuesta = perfilPreInversionPrecioDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
+        final respuesta = perfilPreInversionPrecioDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
+            .first;
 
-      if (respuesta == 'true') {
-        return perfilPreInversionPrecioEntity;
+        if (respuesta == 'true') {
+          return perfilPreInversionPrecioEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

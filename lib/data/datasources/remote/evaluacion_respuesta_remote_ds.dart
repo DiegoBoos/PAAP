@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:paap/domain/entities/evaluacion_respuesta_entity.dart';
@@ -31,10 +32,11 @@ class EvaluacionRespuestaRemoteDataSourceImpl
   @override
   Future<List<EvaluacionRespuestaModel>> getEvaluacionesRespuestas(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final evaluacionRespuestaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final evaluacionRespuestaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -63,52 +65,57 @@ class EvaluacionRespuestaRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final evaluacionRespuestaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: evaluacionRespuestaSOAP);
+      final evaluacionRespuestaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: evaluacionRespuestaSOAP);
 
-    if (evaluacionRespuestaResp.statusCode == 200) {
-      final evaluacionRespuestaDoc =
-          xml.XmlDocument.parse(evaluacionRespuestaResp.body);
+      if (evaluacionRespuestaResp.statusCode == 200) {
+        final evaluacionRespuestaDoc =
+            xml.XmlDocument.parse(evaluacionRespuestaResp.body);
 
-      final respuesta = evaluacionRespuestaDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      final mensaje = evaluacionRespuestaDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true') {
-        final xmlString = evaluacionRespuestaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = evaluacionRespuestaDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        final mensaje = evaluacionRespuestaDoc
+            .findAllElements('mensaje')
+            .map((e) => e.text)
+            .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+        if (respuesta == 'true') {
+          final xmlString = evaluacionRespuestaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final evaluacionesRespuestasRaw =
-            decodedResp.entries.first.value['Table'];
+          String res = Utils.convertXmlToJson(xmlString);
 
-        if (evaluacionesRespuestasRaw is List) {
-          return List.from(evaluacionesRespuestasRaw)
-              .map((e) => EvaluacionRespuestaModel.fromJson(e))
-              .toList();
+          final Map<String, dynamic> decodedResp = json.decode(res);
+
+          final evaluacionesRespuestasRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (evaluacionesRespuestasRaw is List) {
+            return List.from(evaluacionesRespuestasRaw)
+                .map((e) => EvaluacionRespuestaModel.fromJson(e))
+                .toList();
+          } else {
+            return [
+              EvaluacionRespuestaModel.fromJson(evaluacionesRespuestasRaw)
+            ];
+          }
         } else {
-          return [EvaluacionRespuestaModel.fromJson(evaluacionesRespuestasRaw)];
+          throw ServerFailure([mensaje]);
         }
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -129,10 +136,11 @@ class EvaluacionRespuestaRemoteDataSourceImpl
   Future<EvaluacionRespuestaEntity?> saveEvaluacionRespuesta(
       UsuarioEntity usuario,
       EvaluacionRespuestaEntity evaluacionRespuestaEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final evaluacionRespuestaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final evaluacionRespuestaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarEvaluacionRespuesta xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -165,29 +173,32 @@ class EvaluacionRespuestaRemoteDataSourceImpl
     </soap:Envelope>
     ''';
 
-    final evaluacionRespuestaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/GuardarEvaluacionRespuesta"
-        },
-        body: evaluacionRespuestaSOAP);
+      final evaluacionRespuestaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/GuardarEvaluacionRespuesta"
+          },
+          body: evaluacionRespuestaSOAP);
 
-    if (evaluacionRespuestaResp.statusCode == 200) {
-      final evaluacionRespuestaDoc =
-          xml.XmlDocument.parse(evaluacionRespuestaResp.body);
+      if (evaluacionRespuestaResp.statusCode == 200) {
+        final evaluacionRespuestaDoc =
+            xml.XmlDocument.parse(evaluacionRespuestaResp.body);
 
-      final respuesta = evaluacionRespuestaDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
+        final respuesta = evaluacionRespuestaDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
+            .first;
 
-      if (respuesta == 'true') {
-        return evaluacionRespuestaEntity;
+        if (respuesta == 'true') {
+          return evaluacionRespuestaEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -207,10 +218,11 @@ class EvaluacionRespuestaRemoteDataSourceImpl
 
   Future<EvaluacionRespuestaModel?> getEvaluacionesRespuestasPorEvaluacion(
       UsuarioEntity usuario, evaluacionId) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final evaluacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final evaluacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -240,46 +252,49 @@ class EvaluacionRespuestaRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final evaluacionResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: evaluacionSOAP);
+      final evaluacionResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: evaluacionSOAP);
 
-    if (evaluacionResp.statusCode == 200) {
-      final evaluacionDoc = xml.XmlDocument.parse(evaluacionResp.body);
+      if (evaluacionResp.statusCode == 200) {
+        final evaluacionDoc = xml.XmlDocument.parse(evaluacionResp.body);
 
-      final respuesta =
-          evaluacionDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            evaluacionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          evaluacionDoc.findAllElements('mensaje').map((e) => e.text).first;
+        final mensaje =
+            evaluacionDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-      if (respuesta == 'true') {
-        final xmlString = evaluacionDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true') {
+          final xmlString = evaluacionDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final evaluacionesRaw = decodedResp.entries.first.value['Table'];
+          final evaluacionesRaw = decodedResp.entries.first.value['Table'];
 
-        if (evaluacionesRaw is List) {
-          return List.from(evaluacionesRaw)
-              .map((e) => EvaluacionRespuestaModel.fromJson(e))
-              .toList()[0];
+          if (evaluacionesRaw is List) {
+            return List.from(evaluacionesRaw)
+                .map((e) => EvaluacionRespuestaModel.fromJson(e))
+                .toList()[0];
+          } else {
+            return null;
+          }
         } else {
-          return null;
+          throw ServerFailure([mensaje]);
         }
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

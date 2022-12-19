@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class UnidadRemoteDataSourceImpl implements UnidadRemoteDataSource {
 
   @override
   Future<List<UnidadModel>> getUnidades(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final unidadSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final unidadSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -53,44 +55,47 @@ class UnidadRemoteDataSourceImpl implements UnidadRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final unidadResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: unidadSOAP);
+      final unidadResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: unidadSOAP);
 
-    if (unidadResp.statusCode == 200) {
-      final unidadDoc = xml.XmlDocument.parse(unidadResp.body);
+      if (unidadResp.statusCode == 200) {
+        final unidadDoc = xml.XmlDocument.parse(unidadResp.body);
 
-      final respuesta =
-          unidadDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            unidadDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          unidadDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = unidadDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            unidadDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = unidadDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final unidadesRaw = decodedResp.entries.first.value['Table'];
+          final unidadesRaw = decodedResp.entries.first.value['Table'];
 
-        if (unidadesRaw is List) {
-          return List.from(unidadesRaw)
-              .map((e) => UnidadModel.fromJson(e))
-              .toList();
+          if (unidadesRaw is List) {
+            return List.from(unidadesRaw)
+                .map((e) => UnidadModel.fromJson(e))
+                .toList();
+          } else {
+            return [UnidadModel.fromJson(unidadesRaw)];
+          }
         } else {
-          return [UnidadModel.fromJson(unidadesRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

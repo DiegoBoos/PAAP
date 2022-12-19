@@ -65,13 +65,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw ServerException();
       }
     } on SocketException catch (e) {
-      print(e);
       throw SocketException(e.toString());
     }
   }
 
   Future<UsuarioModel> consultarUsuario(Uri uri, UsuarioEntity usuario) async {
-    final consultarUsuarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    try {
+      final consultarUsuarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ConsultarUsuario xmlns="${Constants.urlSOAP}/">
@@ -87,45 +87,48 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final consultarUsuarioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ConsultarUsuario"
-        },
-        body: consultarUsuarioSOAP);
+      final consultarUsuarioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ConsultarUsuario"
+          },
+          body: consultarUsuarioSOAP);
 
-    if (consultarUsuarioResp.statusCode == 200) {
-      final consultarUsuarioDoc =
-          xml.XmlDocument.parse(consultarUsuarioResp.body);
+      if (consultarUsuarioResp.statusCode == 200) {
+        final consultarUsuarioDoc =
+            xml.XmlDocument.parse(consultarUsuarioResp.body);
 
-      final respuesta = consultarUsuarioDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      final mensaje = consultarUsuarioDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true') {
-        final xmlString = consultarUsuarioDoc
-            .findAllElements('objeto')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = consultarUsuarioDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        final mensaje = consultarUsuarioDoc
+            .findAllElements('mensaje')
+            .map((e) => e.text)
+            .first;
 
-        final decodedResp = json.decode(res);
+        if (respuesta == 'true') {
+          final xmlString = consultarUsuarioDoc
+              .findAllElements('objeto')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final usuario = UsuarioModel.fromJson(decodedResp['objeto']);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        return usuario;
+          final decodedResp = json.decode(res);
+
+          final usuario = UsuarioModel.fromJson(decodedResp['objeto']);
+
+          return usuario;
+        } else {
+          throw ServerFailure([mensaje]);
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

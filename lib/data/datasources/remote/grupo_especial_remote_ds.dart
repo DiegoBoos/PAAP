@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -22,10 +23,11 @@ class GrupoEspecialRemoteDataSourceImpl
   @override
   Future<List<GrupoEspecialModel>> getGruposEspeciales(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final grupoEspecialSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final grupoEspecialSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -54,46 +56,49 @@ class GrupoEspecialRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final grupoEspecialResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: grupoEspecialSOAP);
+      final grupoEspecialResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: grupoEspecialSOAP);
 
-    if (grupoEspecialResp.statusCode == 200) {
-      final grupoEspecialDoc = xml.XmlDocument.parse(grupoEspecialResp.body);
+      if (grupoEspecialResp.statusCode == 200) {
+        final grupoEspecialDoc = xml.XmlDocument.parse(grupoEspecialResp.body);
 
-      final respuesta = grupoEspecialDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          grupoEspecialDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = grupoEspecialDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = grupoEspecialDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            grupoEspecialDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = grupoEspecialDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final gruposEspecialesRaw = decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (gruposEspecialesRaw is List) {
-          return List.from(gruposEspecialesRaw)
-              .map((e) => GrupoEspecialModel.fromJson(e))
-              .toList();
+          final gruposEspecialesRaw = decodedResp.entries.first.value['Table'];
+
+          if (gruposEspecialesRaw is List) {
+            return List.from(gruposEspecialesRaw)
+                .map((e) => GrupoEspecialModel.fromJson(e))
+                .toList();
+          } else {
+            return [GrupoEspecialModel.fromJson(gruposEspecialesRaw)];
+          }
         } else {
-          return [GrupoEspecialModel.fromJson(gruposEspecialesRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

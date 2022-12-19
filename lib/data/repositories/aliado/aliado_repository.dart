@@ -17,9 +17,9 @@ class AliadoRepositoryImpl implements AliadoRepository {
   Future<Either<Failure, List<AliadoEntity>>> getAliadosRepository(
       UsuarioEntity usuario) async {
     try {
-      final tipoproyectos = await aliadoRemoteDataSource.getAliados(usuario);
+      final aliados = await aliadoRemoteDataSource.getAliados(usuario);
 
-      return Right(tipoproyectos);
+      return Right(aliados);
     } on ServerFailure catch (e) {
       return Left(ServerFailure(e.properties));
     } on ServerException {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -22,10 +23,11 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
 
   @override
   Future<List<AlianzaModel>> getAlianzas(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final alianzaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final alianzaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -54,55 +56,59 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final alianzaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: alianzaSOAP);
+      final alianzaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: alianzaSOAP);
 
-    if (alianzaResp.statusCode == 200) {
-      final alianzaDoc = xml.XmlDocument.parse(alianzaResp.body);
+      if (alianzaResp.statusCode == 200) {
+        final alianzaDoc = xml.XmlDocument.parse(alianzaResp.body);
 
-      final respuesta =
-          alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          alianzaDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = alianzaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            alianzaDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = alianzaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final alianzasRaw = decodedResp.entries.first.value['Table'];
-        final alianzas = List.from(alianzasRaw)
-            .map((e) => AlianzasModel.fromJson(e))
-            .toList();
+          final alianzasRaw = decodedResp.entries.first.value['Table'];
+          final alianzas = List.from(alianzasRaw)
+              .map((e) => AlianzasModel.fromJson(e))
+              .toList();
 
-        List<AlianzaModel> listAlianza = [];
-        for (var alianza in alianzas) {
-          final dsAlianza = await getAlianzaTable(usuario, alianza.id);
-          listAlianza.add(dsAlianza);
+          List<AlianzaModel> listAlianza = [];
+          for (var alianza in alianzas) {
+            final dsAlianza = await getAlianzaTable(usuario, alianza.id);
+            listAlianza.add(dsAlianza);
+          }
+          return listAlianza;
+        } else {
+          return [];
         }
-        return listAlianza;
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
   Future<AlianzaModel> getAlianzaTable(
       UsuarioEntity usuario, String alianzaId) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final alianzaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final alianzaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ConsultarAlianza xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -131,40 +137,43 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final alianzaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ConsultarAlianza"
-        },
-        body: alianzaSOAP);
+      final alianzaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ConsultarAlianza"
+          },
+          body: alianzaSOAP);
 
-    if (alianzaResp.statusCode == 200) {
-      final alianzaDoc = xml.XmlDocument.parse(alianzaResp.body);
+      if (alianzaResp.statusCode == 200) {
+        final alianzaDoc = xml.XmlDocument.parse(alianzaResp.body);
 
-      final respuesta =
-          alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      final mensaje =
-          alianzaDoc.findAllElements('mensaje').map((e) => e.text).first;
+        final mensaje =
+            alianzaDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-      if (respuesta == 'true') {
-        final xmlString = alianzaDoc
-            .findAllElements('objeto')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true') {
+          final xmlString = alianzaDoc
+              .findAllElements('objeto')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final decodedResp = json.decode(res);
+          final decodedResp = json.decode(res);
 
-        final alianza = AlianzaModel.fromJson(decodedResp['objeto']);
+          final alianza = AlianzaModel.fromJson(decodedResp['objeto']);
 
-        return alianza;
+          return alianza;
+        } else {
+          throw ServerFailure([mensaje]);
+        }
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -27,10 +28,11 @@ class PerfilBeneficiarioRemoteDataSourceImpl
   @override
   Future<List<PerfilBeneficiarioModel>> getPerfilBeneficiarios(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilBeneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilBeneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -59,47 +61,51 @@ class PerfilBeneficiarioRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final perfilBeneficiarioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: perfilBeneficiarioSOAP);
+      final perfilBeneficiarioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: perfilBeneficiarioSOAP);
 
-    if (perfilBeneficiarioResp.statusCode == 200) {
-      final perfilBeneficiarioDoc =
-          xml.XmlDocument.parse(perfilBeneficiarioResp.body);
+      if (perfilBeneficiarioResp.statusCode == 200) {
+        final perfilBeneficiarioDoc =
+            xml.XmlDocument.parse(perfilBeneficiarioResp.body);
 
-      final respuesta = perfilBeneficiarioDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          perfilBeneficiarioDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = perfilBeneficiarioDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = perfilBeneficiarioDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            perfilBeneficiarioDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = perfilBeneficiarioDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final perfilBeneficiariosRaw = decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (perfilBeneficiariosRaw is List) {
-          return List.from(perfilBeneficiariosRaw)
-              .map((e) => PerfilBeneficiarioModel.fromJson(e))
-              .toList();
+          final perfilBeneficiariosRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (perfilBeneficiariosRaw is List) {
+            return List.from(perfilBeneficiariosRaw)
+                .map((e) => PerfilBeneficiarioModel.fromJson(e))
+                .toList();
+          } else {
+            return [PerfilBeneficiarioModel.fromJson(perfilBeneficiariosRaw)];
+          }
         } else {
-          return [PerfilBeneficiarioModel.fromJson(perfilBeneficiariosRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -120,10 +126,11 @@ class PerfilBeneficiarioRemoteDataSourceImpl
   Future<PerfilBeneficiarioEntity?> savePerfilBeneficiario(
       UsuarioEntity usuario,
       PerfilBeneficiarioEntity perfilBeneficiarioEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilBeneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilBeneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarPerfilBeneficiario xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -165,29 +172,32 @@ class PerfilBeneficiarioRemoteDataSourceImpl
     </soap:Envelope>
     ''';
 
-    final perfilBeneficiarioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/GuardarPerfilBeneficiario"
-        },
-        body: perfilBeneficiarioSOAP);
+      final perfilBeneficiarioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/GuardarPerfilBeneficiario"
+          },
+          body: perfilBeneficiarioSOAP);
 
-    if (perfilBeneficiarioResp.statusCode == 200) {
-      final perfilBeneficiarioDoc =
-          xml.XmlDocument.parse(perfilBeneficiarioResp.body);
+      if (perfilBeneficiarioResp.statusCode == 200) {
+        final perfilBeneficiarioDoc =
+            xml.XmlDocument.parse(perfilBeneficiarioResp.body);
 
-      final respuesta = perfilBeneficiarioDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
+        final respuesta = perfilBeneficiarioDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
+            .first;
 
-      if (respuesta == 'true') {
-        return perfilBeneficiarioEntity;
+        if (respuesta == 'true') {
+          return perfilBeneficiarioEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

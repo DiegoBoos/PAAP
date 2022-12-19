@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class CriterioRemoteDataSourceImpl implements CriterioRemoteDataSource {
 
   @override
   Future<List<CriterioModel>> getCriterios(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final criterioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final criterioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -53,43 +55,46 @@ class CriterioRemoteDataSourceImpl implements CriterioRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final criterioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: criterioSOAP);
+      final criterioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: criterioSOAP);
 
-    if (criterioResp.statusCode == 200) {
-      final criterioDoc = xml.XmlDocument.parse(criterioResp.body);
+      if (criterioResp.statusCode == 200) {
+        final criterioDoc = xml.XmlDocument.parse(criterioResp.body);
 
-      final respuesta =
-          criterioDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            criterioDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          criterioDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = criterioDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            criterioDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = criterioDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final criteriosRaw = decodedResp.entries.first.value['Table'];
-        if (criteriosRaw is List) {
-          return List.from(criteriosRaw)
-              .map((e) => CriterioModel.fromJson(e))
-              .toList();
+          final criteriosRaw = decodedResp.entries.first.value['Table'];
+          if (criteriosRaw is List) {
+            return List.from(criteriosRaw)
+                .map((e) => CriterioModel.fromJson(e))
+                .toList();
+          } else {
+            return [CriterioModel.fromJson(criteriosRaw)];
+          }
         } else {
-          return [CriterioModel.fromJson(criteriosRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

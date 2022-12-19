@@ -5,20 +5,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../domain/cubits/genero/genero_cubit.dart';
 import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
 import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
+import '../../../domain/cubits/slider/slider_cubit.dart';
 import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../domain/entities/beneficiario_entity.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';
 import '../../../domain/entities/tipo_identificacion_entity.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
+import '../../utils/pdf_api.dart';
+import '../../utils/selected_images.dart';
 import '../../utils/styles.dart';
-import 'package:paap/domain/entities/beneficiario_entity.dart';
 
 class BeneficiarioForm extends StatefulWidget {
   const BeneficiarioForm({super.key});
@@ -29,7 +33,10 @@ class BeneficiarioForm extends StatefulWidget {
 
 class _BeneficiarioFormState extends State<BeneficiarioForm> {
   final dateFormat = DateFormat('yyyy-MM-dd');
-  File? image;
+  final List<File> images = [];
+  final pdf = pw.Document();
+
+  final PageController pageViewController = PageController(initialPage: 1);
 
   String? tipoIdentificacionId;
   String? generoId;
@@ -48,6 +55,13 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   @override
   void initState() {
     super.initState();
+
+    pageViewController.addListener(() {
+      final sliderCubit = BlocProvider.of<SliderCubit>(context);
+      sliderCubit.showSlider(sliderCubit.state.sliderModel
+          .copyWith(currentPage: pageViewController.page!));
+    });
+
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
 
     if (beneficiarioCubit.state is BeneficiarioLoaded) {
@@ -61,6 +75,12 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   void deactivate() {
     super.deactivate();
     BlocProvider.of<BeneficiarioCubit>(context).initState();
+  }
+
+  @override
+  void dispose() {
+    pageViewController.dispose();
+    super.dispose();
   }
 
   void loadBeneficiario(BeneficiarioEntity beneficiarioLoaded) {
@@ -99,7 +119,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
 
   @override
   Widget build(BuildContext context) {
-    final vperfilPreInversionCubit =
+    final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
 
@@ -140,7 +160,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                 return null;
               },
               onFieldSubmitted: (String value) {
-                final perfilPreInversionId = vperfilPreInversionCubit
+                final perfilPreInversionId = vPerfilPreInversionCubit
                     .state.vPerfilPreInversion!.perfilPreInversionId;
 
                 beneficiarioCubit.loadBeneficiario(value);
@@ -435,12 +455,23 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
               },
             ),
             const SizedBox(height: 20),
-            if (image != null)
-              Image.file(
-                image!,
-                width: 160,
-                height: 160,
-                fit: BoxFit.cover,
+            if (images.isNotEmpty)
+              Stack(
+                children: [
+                  SelectedImages(
+                      images: images, pageViewController: pageViewController),
+                  Positioned(
+                      top: 10,
+                      right: 10,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            color: Colors.black26, shape: BoxShape.circle),
+                        child: IconButton(
+                            icon: const Icon(Icons.delete,
+                                size: 30, color: Colors.white),
+                            onPressed: () => deleteCurrentImage()),
+                      )),
+                ],
               ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -470,6 +501,17 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                     Text('Seleccionar de Cámara')
                   ],
                 )),
+            const SizedBox(height: 20),
+            if (images.isNotEmpty)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  child: const Icon(Icons.save),
+                  onPressed: () {
+                    createPDF();
+                  },
+                ),
+              )
           ]),
         ),
       );
@@ -482,10 +524,33 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
       if (image == null) return;
 
       final imageTemporary = File(image.path);
-      setState(() => this.image = imageTemporary);
-      print(this.image);
+      setState(() => images.add(imageTemporary));
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      CustomSnackBar.showSnackBar(context, e.toString(), Colors.red);
+    }
+  }
+
+  void deleteCurrentImage() {
+    for (var i = 0; i < images.length; i++) {
+      if (pageViewController.page == i) {
+        setState(() => images.removeAt(i));
+        pageViewController.jumpToPage(i);
+      }
+    }
+  }
+
+  createPDF() async {
+    for (var i = 0; i < images.length; i++) {
+      final image = pw.MemoryImage(images[i].readAsBytesSync());
+
+      final pdfFile =
+          await PDFAPI.convertImageToPDF(image, i).catchError((error) {
+        CustomSnackBar.showSnackBar(context, error.toString(), Colors.red);
+      });
+
+      if (pdfFile != null) {
+        PDFAPI.openFile(pdfFile);
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -20,10 +21,11 @@ class IndicadorRemoteDataSourceImpl implements IndicadorRemoteDataSource {
 
   @override
   Future<List<IndicadorModel>> getIndicadores(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final indicadorSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final indicadorSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -52,44 +54,47 @@ class IndicadorRemoteDataSourceImpl implements IndicadorRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final indicadorResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: indicadorSOAP);
+      final indicadorResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: indicadorSOAP);
 
-    if (indicadorResp.statusCode == 200) {
-      final indicadorDoc = xml.XmlDocument.parse(indicadorResp.body);
+      if (indicadorResp.statusCode == 200) {
+        final indicadorDoc = xml.XmlDocument.parse(indicadorResp.body);
 
-      final respuesta =
-          indicadorDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta =
+            indicadorDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-      if (respuesta == 'true' &&
-          indicadorDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = indicadorDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
-            .first;
+        if (respuesta == 'true' &&
+            indicadorDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = indicadorDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        final indicadoresRaw = decodedResp.entries.first.value['Table'];
+          final indicadoresRaw = decodedResp.entries.first.value['Table'];
 
-        if (indicadoresRaw is List) {
-          return List.from(indicadoresRaw)
-              .map((e) => IndicadorModel.fromJson(e))
-              .toList();
+          if (indicadoresRaw is List) {
+            return List.from(indicadoresRaw)
+                .map((e) => IndicadorModel.fromJson(e))
+                .toList();
+          } else {
+            return [IndicadorModel.fromJson(indicadoresRaw)];
+          }
         } else {
-          return [IndicadorModel.fromJson(indicadoresRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

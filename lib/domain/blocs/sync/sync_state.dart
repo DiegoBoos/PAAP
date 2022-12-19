@@ -67,3 +67,15 @@ class SyncFailure extends SyncState {
   @override
   List<Object?> get props => [message];
 }
+
+class IncompleteSync extends SyncState {
+  final List<SyncLogEntity> syncLog;
+
+  IncompleteSync(this.syncLog)
+      : super(
+            syncProgressModel:
+                SyncProgressModel(title: '', counter: 0, percent: 0.0));
+
+  @override
+  List<Object?> get props => [syncLog];
+}

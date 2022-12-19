@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -28,11 +29,12 @@ class PerfilPreInversionCofinanciadorRemoteDataSourceImpl
   @override
   Future<List<PerfilPreInversionCofinanciadorModel>>
       getPerfilesPreInversionesCofinanciadores(UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilPreInversionCofinanciadoresSOAP =
-        '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilPreInversionCofinanciadoresSOAP =
+          '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -61,53 +63,56 @@ class PerfilPreInversionCofinanciadorRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final perfilPreInversionCofinanciadorResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: perfilPreInversionCofinanciadoresSOAP);
+      final perfilPreInversionCofinanciadorResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: perfilPreInversionCofinanciadoresSOAP);
 
-    if (perfilPreInversionCofinanciadorResp.statusCode == 200) {
-      final perfilPreInversionCofinanciadorDoc =
-          xml.XmlDocument.parse(perfilPreInversionCofinanciadorResp.body);
+      if (perfilPreInversionCofinanciadorResp.statusCode == 200) {
+        final perfilPreInversionCofinanciadorDoc =
+            xml.XmlDocument.parse(perfilPreInversionCofinanciadorResp.body);
 
-      final respuesta = perfilPreInversionCofinanciadorDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true' &&
-          perfilPreInversionCofinanciadorDoc
-              .findAllElements('NewDataSet')
-              .isNotEmpty) {
-        final xmlString = perfilPreInversionCofinanciadorDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = perfilPreInversionCofinanciadorDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            perfilPreInversionCofinanciadorDoc
+                .findAllElements('NewDataSet')
+                .isNotEmpty) {
+          final xmlString = perfilPreInversionCofinanciadorDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final perfilPreInversionCofinanciadoresRaw =
-            decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (perfilPreInversionCofinanciadoresRaw is List) {
-          return List.from(perfilPreInversionCofinanciadoresRaw)
-              .map((e) => PerfilPreInversionCofinanciadorModel.fromJson(e))
-              .toList();
+          final perfilPreInversionCofinanciadoresRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (perfilPreInversionCofinanciadoresRaw is List) {
+            return List.from(perfilPreInversionCofinanciadoresRaw)
+                .map((e) => PerfilPreInversionCofinanciadorModel.fromJson(e))
+                .toList();
+          } else {
+            return [
+              PerfilPreInversionCofinanciadorModel.fromJson(
+                  perfilPreInversionCofinanciadoresRaw)
+            ];
+          }
         } else {
-          return [
-            PerfilPreInversionCofinanciadorModel.fromJson(
-                perfilPreInversionCofinanciadoresRaw)
-          ];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -135,11 +140,12 @@ class PerfilPreInversionCofinanciadorRemoteDataSourceImpl
           UsuarioEntity usuario,
           PerfilPreInversionCofinanciadorEntity
               perfilPreInversionCofinanciadorEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final perfilPreInversionCofinanciadorSOAP =
-        '''<?xml version="1.0" encoding="utf-8"?>
+      final perfilPreInversionCofinanciadorSOAP =
+          '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarPerfilPreInversionCofinanciador xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -173,30 +179,33 @@ class PerfilPreInversionCofinanciadorRemoteDataSourceImpl
     </soap:Envelope>
     ''';
 
-    final perfilPreInversionCofinanciadorResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction":
-              "${Constants.urlSOAP}/GuardarPerfilPreInversionCofinanciador"
-        },
-        body: perfilPreInversionCofinanciadorSOAP);
+      final perfilPreInversionCofinanciadorResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "${Constants.urlSOAP}/GuardarPerfilPreInversionCofinanciador"
+          },
+          body: perfilPreInversionCofinanciadorSOAP);
 
-    if (perfilPreInversionCofinanciadorResp.statusCode == 200) {
-      final perfilPreInversionCofinanciadorDoc =
-          xml.XmlDocument.parse(perfilPreInversionCofinanciadorResp.body);
+      if (perfilPreInversionCofinanciadorResp.statusCode == 200) {
+        final perfilPreInversionCofinanciadorDoc =
+            xml.XmlDocument.parse(perfilPreInversionCofinanciadorResp.body);
 
-      final respuesta = perfilPreInversionCofinanciadorDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
+        final respuesta = perfilPreInversionCofinanciadorDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
+            .first;
 
-      if (respuesta == 'true') {
-        return perfilPreInversionCofinanciadorEntity;
+        if (respuesta == 'true') {
+          return perfilPreInversionCofinanciadorEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

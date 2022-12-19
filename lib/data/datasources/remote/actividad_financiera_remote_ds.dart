@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -24,10 +25,11 @@ class ActividadFinancieraRemoteDataSourceImpl
   @override
   Future<List<ActividadFinancieraModel>> getActividadesFinancieras(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final actividadFinancieraSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final actividadFinancieraSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -57,52 +59,57 @@ class ActividadFinancieraRemoteDataSourceImpl
       </soap:Body>
     </soap:Envelope>''';
 
-    final actividadFinancieraResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: actividadFinancieraSOAP);
+      final actividadFinancieraResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: actividadFinancieraSOAP);
 
-    if (actividadFinancieraResp.statusCode == 200) {
-      final actividadFinancieraDoc =
-          xml.XmlDocument.parse(actividadFinancieraResp.body);
+      if (actividadFinancieraResp.statusCode == 200) {
+        final actividadFinancieraDoc =
+            xml.XmlDocument.parse(actividadFinancieraResp.body);
 
-      final respuesta = actividadFinancieraDoc
-          .findAllElements('respuesta')
-          .map((e) => e.text)
-          .first;
-
-      final mensaje = actividadFinancieraDoc
-          .findAllElements('mensaje')
-          .map((e) => e.text)
-          .first;
-
-      if (respuesta == 'true') {
-        final xmlString = actividadFinancieraDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = actividadFinancieraDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        final mensaje = actividadFinancieraDoc
+            .findAllElements('mensaje')
+            .map((e) => e.text)
+            .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+        if (respuesta == 'true') {
+          final xmlString = actividadFinancieraDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final actividadesFinancierasRaw =
-            decodedResp.entries.first.value['Table'];
+          String res = Utils.convertXmlToJson(xmlString);
 
-        if (actividadesFinancierasRaw is List) {
-          return List.from(actividadesFinancierasRaw)
-              .map((e) => ActividadFinancieraModel.fromJson(e))
-              .toList();
+          final Map<String, dynamic> decodedResp = json.decode(res);
+
+          final actividadesFinancierasRaw =
+              decodedResp.entries.first.value['Table'];
+
+          if (actividadesFinancierasRaw is List) {
+            return List.from(actividadesFinancierasRaw)
+                .map((e) => ActividadFinancieraModel.fromJson(e))
+                .toList();
+          } else {
+            return [
+              ActividadFinancieraModel.fromJson(actividadesFinancierasRaw)
+            ];
+          }
         } else {
-          return [ActividadFinancieraModel.fromJson(actividadesFinancierasRaw)];
+          throw ServerFailure([mensaje]);
         }
       } else {
-        throw ServerFailure([mensaje]);
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

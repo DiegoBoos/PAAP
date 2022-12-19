@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -24,10 +25,11 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
   @override
   Future<List<BeneficiarioModel>> getBeneficiarios(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final beneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final beneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -56,44 +58,49 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final beneficiarioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: beneficiarioSOAP);
+      final beneficiarioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: beneficiarioSOAP);
 
-    if (beneficiarioResp.statusCode == 200) {
-      final beneficiarioDoc = xml.XmlDocument.parse(beneficiarioResp.body);
+      if (beneficiarioResp.statusCode == 200) {
+        final beneficiarioDoc = xml.XmlDocument.parse(beneficiarioResp.body);
 
-      final respuesta =
-          beneficiarioDoc.findAllElements('respuesta').map((e) => e.text).first;
-
-      if (respuesta == 'true' &&
-          beneficiarioDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = beneficiarioDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = beneficiarioDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            beneficiarioDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = beneficiarioDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final beneficiariosRaw = decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (beneficiariosRaw is List) {
-          return List.from(beneficiariosRaw)
-              .map((e) => BeneficiarioModel.fromJson(e))
-              .toList();
+          final beneficiariosRaw = decodedResp.entries.first.value['Table'];
+
+          if (beneficiariosRaw is List) {
+            return List.from(beneficiariosRaw)
+                .map((e) => BeneficiarioModel.fromJson(e))
+                .toList();
+          } else {
+            return [BeneficiarioModel.fromJson(beneficiariosRaw)];
+          }
         } else {
-          return [BeneficiarioModel.fromJson(beneficiariosRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 
@@ -112,10 +119,11 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
 
   Future<BeneficiarioEntity?> saveBeneficiario(
       UsuarioEntity usuario, BeneficiarioEntity beneficiarioEntity) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final beneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final beneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <GuardarBeneficiario xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -155,26 +163,31 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
     </soap:Envelope>
     ''';
 
-    final beneficiarioResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/GuardarBeneficiario"
-        },
-        body: beneficiarioSOAP);
+      final beneficiarioResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/GuardarBeneficiario"
+          },
+          body: beneficiarioSOAP);
 
-    if (beneficiarioResp.statusCode == 200) {
-      final beneficiarioDoc = xml.XmlDocument.parse(beneficiarioResp.body);
+      if (beneficiarioResp.statusCode == 200) {
+        final beneficiarioDoc = xml.XmlDocument.parse(beneficiarioResp.body);
 
-      final respuesta =
-          beneficiarioDoc.findAllElements('respuesta').map((e) => e.text).first;
+        final respuesta = beneficiarioDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
+            .first;
 
-      if (respuesta == 'true') {
-        return beneficiarioEntity;
+        if (respuesta == 'true') {
+          return beneficiarioEntity;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }

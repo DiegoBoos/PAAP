@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -21,10 +22,11 @@ class SitioEntregaRemoteDataSourceImpl implements SitioEntregaRemoteDataSource {
   @override
   Future<List<SitioEntregaModel>> getSitiosEntregas(
       UsuarioEntity usuario) async {
-    final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+    try {
+      final uri = Uri.parse(
+          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
-    final sitioEntregaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+      final sitioEntregaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
         <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
@@ -53,44 +55,49 @@ class SitioEntregaRemoteDataSourceImpl implements SitioEntregaRemoteDataSource {
       </soap:Body>
     </soap:Envelope>''';
 
-    final sitioEntregaResp = await client.post(uri,
-        headers: {
-          "Content-Type": "text/xml; charset=utf-8",
-          "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
-        },
-        body: sitioEntregaSOAP);
+      final sitioEntregaResp = await client.post(uri,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "${Constants.urlSOAP}/ObtenerDatos"
+          },
+          body: sitioEntregaSOAP);
 
-    if (sitioEntregaResp.statusCode == 200) {
-      final sitioEntregaDoc = xml.XmlDocument.parse(sitioEntregaResp.body);
+      if (sitioEntregaResp.statusCode == 200) {
+        final sitioEntregaDoc = xml.XmlDocument.parse(sitioEntregaResp.body);
 
-      final respuesta =
-          sitioEntregaDoc.findAllElements('respuesta').map((e) => e.text).first;
-
-      if (respuesta == 'true' &&
-          sitioEntregaDoc.findAllElements('NewDataSet').isNotEmpty) {
-        final xmlString = sitioEntregaDoc
-            .findAllElements('NewDataSet')
-            .map((xmlElement) => xmlElement.toXmlString())
+        final respuesta = sitioEntregaDoc
+            .findAllElements('respuesta')
+            .map((e) => e.text)
             .first;
 
-        String res = Utils.convertXmlToJson(xmlString);
+        if (respuesta == 'true' &&
+            sitioEntregaDoc.findAllElements('NewDataSet').isNotEmpty) {
+          final xmlString = sitioEntregaDoc
+              .findAllElements('NewDataSet')
+              .map((xmlElement) => xmlElement.toXmlString())
+              .first;
 
-        final Map<String, dynamic> decodedResp = json.decode(res);
+          String res = Utils.convertXmlToJson(xmlString);
 
-        final sitiosEntregasRaw = decodedResp.entries.first.value['Table'];
+          final Map<String, dynamic> decodedResp = json.decode(res);
 
-        if (sitiosEntregasRaw is List) {
-          return List.from(sitiosEntregasRaw)
-              .map((e) => SitioEntregaModel.fromJson(e))
-              .toList();
+          final sitiosEntregasRaw = decodedResp.entries.first.value['Table'];
+
+          if (sitiosEntregasRaw is List) {
+            return List.from(sitiosEntregasRaw)
+                .map((e) => SitioEntregaModel.fromJson(e))
+                .toList();
+          } else {
+            return [SitioEntregaModel.fromJson(sitiosEntregasRaw)];
+          }
         } else {
-          return [SitioEntregaModel.fromJson(sitiosEntregasRaw)];
+          return [];
         }
       } else {
-        return [];
+        throw ServerException();
       }
-    } else {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw SocketException(e.toString());
     }
   }
 }
