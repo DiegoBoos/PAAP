@@ -66,8 +66,7 @@ class _PerfilPreInversionCofinanciadorFormState
         vPerfilPreInversionCubit.state.vPerfilPreInversion!.departamento;
 
     cofinanciadoresFiltered = cofinanciadorCubit.state.cofinanciadores!
-        /*TODO: En método obtener datos TablaCofinanciadores se encuentran invertidos
-        los campos municipio y departamento*/
+        /*TODO: En método SOAP obtener datos TablaCofinanciadores se encuentran invertidos los campos municipio y departamento*/
         .where((cofinanciador) => cofinanciador.municipio == departamento)
         .toList();
 

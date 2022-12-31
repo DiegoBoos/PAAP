@@ -24,19 +24,19 @@ class AlianzaDetailPage extends StatelessWidget {
             );
           },
         ),
-        appBar: AppBar(title: const Text('Detalle Alianza'), actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: NetworkIcon(),
-          )
-        ]),
+        appBar: AppBar(
+            title: const Text('Información Básica', style: Styles.titleStyle),
+            actions: const [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: NetworkIcon(),
+              )
+            ]),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: ListView(children: const [
             SizedBox(height: 20),
             Text('Alianza', style: Styles.titleStyle),
-            SizedBox(height: 20),
-            Text('Información Básica', style: Styles.subtitleStyle),
             SizedBox(height: 20),
             AlianzaForm(),
             SizedBox(height: 20),

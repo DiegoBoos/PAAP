@@ -30,7 +30,7 @@ class _PerfilPreInversionDetailPageState
             );
           },
         ),
-        appBar: AppBar(title: const Text('Detalle Perfil'), actions: const [
+        appBar: AppBar(title: const Text('Información Básica'), actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
             child: NetworkIcon(),
@@ -41,8 +41,6 @@ class _PerfilPreInversionDetailPageState
           child: ListView(children: const [
             SizedBox(height: 20),
             Text('PERFIL PREINVERSIÓN', style: Styles.titleStyle),
-            SizedBox(height: 20),
-            Text('Información Básica', style: Styles.subtitleStyle),
             SizedBox(height: 20),
             PerfilPreInversionForm(),
             SizedBox(height: 20),

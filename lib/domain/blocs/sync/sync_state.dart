@@ -26,8 +26,8 @@ class SyncProgressModel {
 }
 
 abstract class SyncState extends Equatable {
-  final SyncProgressModel? syncProgressModel;
-  const SyncState({this.syncProgressModel});
+  final SyncProgressModel syncProgressModel;
+  const SyncState({required this.syncProgressModel});
 
   @override
   List<Object?> get props => [syncProgressModel];

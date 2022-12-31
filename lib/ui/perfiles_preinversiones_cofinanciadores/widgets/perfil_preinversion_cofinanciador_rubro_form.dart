@@ -11,7 +11,7 @@ import '../../../domain/usecases/perfil_preinversion_cofinanciador_rubro/perfil_
 import '../../../domain/usecases/rubro/rubro_exports.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
-import '../../utils/loading_page.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorRubroForm extends StatefulWidget {

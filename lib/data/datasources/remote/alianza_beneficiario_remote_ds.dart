@@ -231,6 +231,7 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
             <Longitud>${alianzaBeneficiarioEntity.longitud}</Longitud>
             <Latitud>${alianzaBeneficiarioEntity.latitud}</Latitud>
             <CedulaCatastral>${alianzaBeneficiarioEntity.cedulaCatastral}</CedulaCatastral>
+            <BeneficioId>${alianzaBeneficiarioEntity.beneficioId}</BeneficioId>
             $dataConyuge
           </objeto>
         </GuardarAlianzaBeneficiario>

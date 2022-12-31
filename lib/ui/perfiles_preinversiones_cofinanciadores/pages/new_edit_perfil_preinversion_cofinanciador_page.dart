@@ -124,7 +124,16 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
             },
           ),
           appBar: AppBar(
-              title: const Text('Detalle Cofinanciador'),
+              title: BlocBuilder<PerfilPreInversionCofinanciadorCubit,
+                  PerfilPreInversionCofinanciadorState>(
+                builder: (context, state) {
+                  if (state is PerfilPreInversionCofinanciadorLoaded) {
+                    return const Text('Editar');
+                  } else {
+                    return const Text('Crear');
+                  }
+                },
+              ),
               actions: const [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -135,26 +144,17 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ListView(children: [
               const SizedBox(height: 30),
-              const Text('COFINANCIADOR', style: Styles.titleStyle),
+              const Text(
+                'COFINANCIADOR PREINVERSIÓN',
+                style: Styles.titleStyle,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 20),
               Form(
                 key: formKeyCofinanciador,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BlocBuilder<PerfilPreInversionCofinanciadorCubit,
-                        PerfilPreInversionCofinanciadorState>(
-                      builder: (context, state) {
-                        if (state is PerfilPreInversionCofinanciadorLoaded) {
-                          return const Text('Editar',
-                              style: Styles.subtitleStyle);
-                        } else {
-                          return const Text('Creación',
-                              style: Styles.subtitleStyle);
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 20),
                     const PerfilPreInversionCofinanciadorForm(),
                     if (isPerfilPreInversionCofinanciadorDesembolsoEnabled)
                       const PerfilPreInversionCofinanciadorDesembolsoForm(),

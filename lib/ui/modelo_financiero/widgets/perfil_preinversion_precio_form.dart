@@ -12,7 +12,7 @@ import '../../../domain/entities/perfil_preinversion_precio_entity.dart';
 import '../../../domain/entities/producto_entity.dart';
 import '../../../domain/entities/tipo_calidad_entity.dart';
 import '../../utils/input_decoration.dart';
-import '../../utils/loading_page.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/styles.dart';
 
 class PerfilPreInversionPrecioForm extends StatefulWidget {
@@ -190,24 +190,6 @@ class _PerfilPreInversionPrecioFormState
                                   .validate()) {
                                 return;
                               }
-
-                              //TODO: validar cantidad?
-                              /*  if (perfilPreInversionIngresosUPTCubit.state
-                                      .perfilPreInversionIngresosUPT.cantidad ==
-                                  '') {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                            title: const Text(
-                                                'Seleccione cantidad'),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                  child: const Text('Aceptar'))
-                                            ]));
-                                return;
-                              } */
 
                               formKeyPerfilPreInversionPrecio.currentState!
                                   .save();

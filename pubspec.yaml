@@ -45,10 +45,8 @@ dependencies:
   http: ^0.13.5
   image_picker: ^0.8.6
   intl: ^0.17.0
-  open_file: ^3.2.1
+  path: ^1.8.2
   path_provider: ^2.0.11
-  pdf: ^3.8.4
-  permission_handler: ^10.2.0
   rxdart: ^0.27.5
   sqflite: ^2.0.3+1
   xml: ^6.1.0

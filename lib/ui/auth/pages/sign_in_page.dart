@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +12,7 @@ import '../../utils/all_platform.dart';
 
 import '../../utils/custom_general_dialog.dart';
 import '../../utils/custom_snack_bar.dart';
-import '../../utils/loading_page.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../widgets/auth_background.dart';
 
@@ -46,8 +48,9 @@ class _SignInPageState extends State<SignInPage> {
     final syncBloc = BlocProvider.of<SyncBloc>(context);
 
     TextEditingController usuarioIdCtrl =
-        TextEditingController(text: 'adamariatorrenegra@hotmail.com');
-    TextEditingController contrasenaCtrl = TextEditingController();
+        TextEditingController(text: 'hugo.suarez@minagricultura.gov.co');
+    TextEditingController contrasenaCtrl =
+        TextEditingController(text: 'MigracionPAAP*');
 
     return MultiBlocListener(
       listeners: [
@@ -202,9 +205,15 @@ class _SignInPageState extends State<SignInPage> {
                                             return;
                                           }
 
+                                          Codec<String, String> stringToBase64 =
+                                              utf8.fuse(base64);
+                                          String contrasenaEncoded =
+                                              stringToBase64
+                                                  .encode(contrasenaCtrl.text);
+
                                           final usuario = UsuarioEntity(
                                             usuarioId: usuarioIdCtrl.text,
-                                            contrasena: contrasenaCtrl.text,
+                                            contrasena: contrasenaEncoded,
                                             activo: '',
                                             apellido: '',
                                             correo: '',

@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../entities/usuario_entity.dart';
-import '../../usecases/actividad/actividad_exports.dart';
 import '../../usecases/actividad_economica/actividad_economica_exports.dart';
 import '../../usecases/actividad_financiera/actividad_financiera_exports.dart';
 import '../../usecases/agrupacion/agrupacion_exports.dart';
@@ -45,7 +44,6 @@ import '../../usecases/perfil_preinversion_consultor/perfil_preinversion_consult
 import '../../usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 import '../../usecases/perfil_preinversion_precio/perfil_preinversion_precio_exports.dart';
 import '../../usecases/producto/producto_exports.dart';
-import '../../usecases/proyecto/proyecto_exports.dart';
 import '../../usecases/residencia/residencia_exports.dart';
 import '../../usecases/revision/revision_exports.dart';
 import '../../usecases/rubro/rubro_exports.dart';
@@ -68,8 +66,6 @@ part 'sync_event.dart';
 part 'sync_state.dart';
 
 class SyncBloc extends Bloc<SyncEvent, SyncState> {
-  final ActividadUsecase actividad;
-  final ActividadUsecaseDB actividadDB;
   final ActividadEconomicaUsecase actividadEconomica;
   final ActividadEconomicaUsecaseDB actividadEconomicaDB;
   final ActividadFinancieraUsecase actividadFinanciera;
@@ -112,8 +108,6 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   final PerfilUsecaseDB perfilDB;
   final ProductoUsecase producto;
   final ProductoUsecaseDB productoDB;
-  final ProyectoUsecase proyecto;
-  final ProyectoUsecaseDB proyectoDB;
   final ResidenciaUsecase residencia;
   final ResidenciaUsecaseDB residenciaDB;
   final RevisionUsecase revision;
@@ -203,8 +197,6 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   int gTotal = 0;
 
   SyncBloc({
-    required this.actividad,
-    required this.actividadDB,
     required this.actividadEconomica,
     required this.actividadEconomicaDB,
     required this.actividadFinanciera,
@@ -247,8 +239,6 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     required this.perfilDB,
     required this.producto,
     required this.productoDB,
-    required this.proyecto,
-    required this.proyectoDB,
     required this.residencia,
     required this.residenciaDB,
     required this.revision,
@@ -328,18 +318,18 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     on<SyncStarted>((event, emit) async {
       final usuario = event.usuario;
       if (event.mode == 'A') {
-        gTotal = 60;
-        add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+        gTotal = 58;
+        add(SyncStatusChanged(state.syncProgressModel.copyWith(
             title: 'Sincronizando Actividades',
-            counter: state.syncProgressModel!.counter + 1,
+            counter: state.syncProgressModel.counter + 1,
             total: gTotal,
             percent: calculatePercent())));
-        await syncActividades(usuario, emit);
+        await syncActividadesEconomicas(usuario, emit);
       } else {
         gTotal = 20;
-        add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+        add(SyncStatusChanged(state.syncProgressModel.copyWith(
             title: 'Sincronizando Aliados',
-            counter: state.syncProgressModel!.counter + 1,
+            counter: state.syncProgressModel.counter + 1,
             total: gTotal,
             percent: calculatePercent())));
         await uploadAliado(usuario, emit);
@@ -355,39 +345,19 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   }
 
   double calculatePercent() {
-    final counter = state.syncProgressModel!.counter;
+    final counter = state.syncProgressModel.counter;
     final total = gTotal;
     final percent = ((counter / total) * 100) / 100;
 
     return percent;
   }
 
-  // Sync Actividades
-  Future<void> syncActividades(
-      UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
-        title: 'Sincronizando Actividades',
-        counter: state.syncProgressModel!.counter + 1,
-        total: gTotal,
-        percent: calculatePercent())));
-    final result = await actividad.getActividadesUsecase(usuario);
-    return result.fold((failure) => add(SyncError(failure.properties.first)),
-        (data) async => await saveActividades(data, emit, usuario));
-  }
-
-  Future<void> saveActividades(List<ActividadEntity> data,
-      Emitter<SyncState> emit, UsuarioEntity usuario) async {
-    final result = await actividadDB.saveActividadesUsecaseDB(data);
-    return result.fold((failure) => add(SyncError(failure.properties.first)),
-        (_) async => await syncActividadesEconomicas(usuario, emit));
-  }
-
   // Sync ActividadesEconomicas
   Future<void> syncActividadesEconomicas(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Actividades Económicas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result =
@@ -407,9 +377,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Actividades Financieras
   Future<void> syncActividadesFinancieras(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Actividades Financieras',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result =
@@ -429,9 +399,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Agrupaciones
   Future<void> syncAgrupaciones(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Agrupaciones',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await agrupacion.getAgrupacionesUsecase(usuario);
@@ -449,9 +419,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Alianzas
   Future<void> syncAlianzas(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Alianzas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await alianza.getAlianzasUsecase(usuario);
@@ -469,9 +439,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Cofinanciadores
   Future<void> syncCofinanciadores(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Cofinanciadores',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result =
@@ -490,9 +460,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Consultores
   Future<void> syncConsultores(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Consultores',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await consultor.getConsultoresUsecase(usuario);
@@ -510,9 +480,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Convocatorias
   Future<void> syncConvocatorias(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Convocatorias',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await convocatoria.getConvocatoriasUsecase(usuario);
@@ -530,9 +500,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Criterios
   Future<void> syncCriterios(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Criterios',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await criterio.getCriteriosUsecase(usuario);
@@ -550,9 +520,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Departamentos
   Future<void> syncDepartamentos(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Departamentos',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await departamento.getDepartamentosUsecase(usuario);
@@ -570,9 +540,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Desembolsos
   Future<void> syncDesembolsos(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Desembolsos',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await desembolso.getDesembolsosUsecase(usuario);
@@ -590,9 +560,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Estado Civil
   Future<void> syncEstadosCiviles(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Estados Civiles',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await estadoCivil.getEstadosCivilesUsecase(usuario);
@@ -610,9 +580,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Estado Visita
   Future<void> syncEstadosVisitas(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Estados Visitas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await estadoVisita.getEstadosVisitasUsecase(usuario);
@@ -630,9 +600,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Frecuencia
   Future<void> syncFrecuencias(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Estados Frecuencias',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await frecuencia.getFrecuenciasUsecase(usuario);
@@ -650,9 +620,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Generos
   Future<void> syncGeneros(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Estados Generos',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await genero.getGenerosUsecase(usuario);
@@ -670,9 +640,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Grupos Especiales
   Future<void> syncGruposEspeciales(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Estados Grupos Especiales',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await grupoEspecial.getGruposEspecialesUsecase(usuario);
@@ -689,9 +659,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
 
   // Sync Menu
   Future<void> syncMenus(UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Menus',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await menu.getMenuUsecase(usuario);
@@ -709,9 +679,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Municipio
   Future<void> syncMunicipios(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Municipios',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await municipio.getMunicipiosUsecase(usuario);
@@ -729,9 +699,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Niveles Escolares
   Future<void> syncNivelesEscolares(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Niveles Escolares',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await nivelEscolar.getNivelesEscolaresUsecase(usuario);
@@ -749,9 +719,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Opciones
   Future<void> syncOpciones(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Opciones',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await opcion.getOpcionesUsecase(usuario);
@@ -769,9 +739,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Perfiles
   Future<void> syncPerfiles(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfil.getPerfilesUsecase(usuario);
@@ -789,9 +759,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Productos
   Future<void> syncProductos(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Productos',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await producto.getProductosUsecase(usuario);
@@ -803,35 +773,15 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       UsuarioEntity usuario) async {
     final result = await productoDB.saveProductoUsecaseDB(data);
     return result.fold((failure) => add(SyncError(failure.properties.first)),
-        (_) async => await syncProyectos(usuario, emit));
-  }
-
-  // Sync Proyectos
-  Future<void> syncProyectos(
-      UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
-        title: 'Sincronizando Proyectos',
-        counter: state.syncProgressModel!.counter + 1,
-        total: gTotal,
-        percent: calculatePercent())));
-    final result = await proyecto.getProyectosUsecase(usuario);
-    return result.fold((failure) => add(SyncError(failure.properties.first)),
-        (data) async => await saveProyectos(data, emit, usuario));
-  }
-
-  Future<void> saveProyectos(List<ProyectoEntity> data, Emitter<SyncState> emit,
-      UsuarioEntity usuario) async {
-    final result = await proyectoDB.saveProyectosUsecaseDB(data);
-    return result.fold((failure) => add(SyncError(failure.properties.first)),
         (_) async => await syncResidencias(usuario, emit));
   }
 
   // Sync Residencias
   Future<void> syncResidencias(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Residencias',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await residencia.getResidenciasUsecase(usuario);
@@ -849,9 +799,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Revisiones
   Future<void> syncRevisiones(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Revisiones',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await revision.getRevisionesUsecase(usuario);
@@ -869,9 +819,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Sitios Entregas
   Future<void> syncSitiosEntregas(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Sitios Entregas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await sitioEntrega.getSitiosEntregasUsecase(usuario);
@@ -891,9 +841,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Sitios Tipos Actividades Productivas
   Future<void> syncSitiosTiposActividadesProductivas(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Sitios Tipos Actividades Productivas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await tipoActividadProductiva
@@ -917,9 +867,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Sitios Tipos Calidades
   Future<void> syncSitiosTiposCalidades(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Sitios Tipos Actividades Productivas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await tipoCalidad.getTiposCalidadesUsecase(usuario);
@@ -937,9 +887,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Sitios Tipos Discapacidades
   Future<void> syncTiposDiscapacidades(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Tipos Discapacidades',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result =
@@ -961,9 +911,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Sitios Tipos Entidades
   Future<void> syncTiposEntidades(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Tipos Entidades',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await tipoEntidad.getTiposEntidadesUsecase(usuario);
@@ -981,9 +931,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Sitios Tipos Identificaciones
   Future<void> syncTiposIdentificaciones(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Tipos Identificaciones',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result =
@@ -1007,9 +957,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Sitios Tipos Movimientos
   Future<void> syncTiposMovimientos(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Tipos Movimientos',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await tipoMovimiento.getTiposMovimientosUsecase(usuario);
@@ -1027,9 +977,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Sitios Tipos Proyectos
   Future<void> syncTiposProyectos(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Tipos Proyectos',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await tipoProyecto.getTiposProyectosUsecase(usuario);
@@ -1047,9 +997,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Sitios Tipos Tenencias
   Future<void> syncTiposTenencias(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Tipos Tenencias',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await tipoTenencia.getTiposTenenciasUsecase(usuario);
@@ -1067,9 +1017,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Tipos Visitas
   Future<void> syncTiposVisitas(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Tipos Visitas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await tipoVisita.getTiposVisitasUsecase(usuario);
@@ -1087,9 +1037,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Unidades
   Future<void> syncUnidades(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Unidades',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await unidad.getUnidadesUsecase(usuario);
@@ -1107,9 +1057,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Veredas
   Future<void> syncVeredas(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Veredas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await vereda.getVeredasUsecase(usuario);
@@ -1127,9 +1077,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Perfiles PreInversion
   Future<void> syncPerfilesPreInversion(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando PerfilesPreInversion',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result =
@@ -1149,9 +1099,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Rubros
   Future<void> syncRubros(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Rubros',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await rubro.getRubrosUsecase(usuario);
@@ -1169,9 +1119,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Beneficios
   Future<void> syncBeneficios(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Beneficios',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await beneficio.getBeneficiosUsecase(usuario);
@@ -1189,9 +1139,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Aliados
   Future<void> uploadAliado(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Aliados',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await aliadoDB.getAliadosProduccionUsecaseDB();
@@ -1234,9 +1184,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Alianza Beneficiario
   Future<void> uploadAlianzaBeneficiario(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Alianzas Beneficiarios',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await alianzaBeneficiarioDB
@@ -1292,9 +1242,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Alianza ExperienciaAgricola
   Future<void> uploadAlianzaExperienciaAgricola(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Alianzas Experiencias Agricolas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await alianzaExperienciaAgricolaDB
@@ -1356,9 +1306,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Alianza ExperienciaPecuaria
   Future<void> uploadAlianzaExperienciaPecuaria(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Alianzas Experiencias Pecuarias',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await alianzaExperienciaPecuariaDB
@@ -1420,9 +1370,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Beneficiarios
   Future<void> uploadBeneficiario(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Beneficiarios',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await beneficiarioDB.getBeneficiariosProduccionUsecaseDB();
@@ -1468,9 +1418,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Evaluaciones
   Future<void> uploadEvaluacion(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Evaluaciones',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await evaluacionDB.getEvaluacionesProduccionUsecaseDB();
@@ -1506,9 +1456,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync EvaluacionesRespuestas
   Future<void> uploadEvaluacionRespuesta(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Evaluaciones Respuestas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await evaluacionRespuestaDB
@@ -1564,9 +1514,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync ExperienciaAgricola
   Future<void> uploadExperienciaAgricola(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Experiencias Agricolas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await experienciaAgricolaDB
@@ -1622,9 +1572,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync  ExperienciaPecuaria
   Future<void> uploadExperienciaPecuaria(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando  Experiencias Pecuarias',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await experienciaPecuariaDB
@@ -1680,9 +1630,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilBeneficiario
   Future<void> uploadPerfilBeneficiario(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles Beneficiarios',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilBeneficiarioDB
@@ -1738,9 +1688,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilPreInversionAliado
   Future<void> uploadPerfilPreInversionAliado(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles PreInversion Aliado',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionAliadoDB
@@ -1802,9 +1752,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilPreInversionBeneficiario
   Future<void> uploadPerfilPreInversionBeneficiario(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles PreInversion Beneficiario',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionBeneficiarioDB
@@ -1869,9 +1819,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilPreInversionCofinanciador
   Future<void> uploadPerfilPreInversionCofinanciador(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles PreInversion Cofinanciador',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionCofinanciadorDB
@@ -1938,10 +1888,10 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilPreInversionCofinanciador Actividad Financiera
   Future<void> uploadPerfilPreInversionCofinanciadorActividadFinanciera(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title:
             'Sincronizando Perfiles PreInversion Cofinanciador Actividad Financiera',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
@@ -2016,9 +1966,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilPreInversionCofinanciador Desembolso
   Future<void> uploadPerfilPreInversionCofinanciadorDesembolso(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles PreInversion CofinanciadorDesembolso',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionCofinanciadorDesembolsoDB
@@ -2088,9 +2038,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilPreInversionCofinanciador Rubro
   Future<void> uploadPerfilPreInversionCofinanciadorRubro(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles PreInversion CofinanciadorRubro',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionCofinanciadorRubroDB
@@ -2156,9 +2106,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilPreInversion Consultor
   Future<void> uploadPerfilPreInversionConsultor(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles PreInversion Consultor',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionConsultorDB
@@ -2220,9 +2170,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilPreInversion Plan Negocio
   Future<void> uploadPerfilPreInversionPlanNegocio(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles PreInversion PlanNegocio',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionPlanNegocioDB
@@ -2285,9 +2235,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync PerfilPreInversion Precio
   Future<void> uploadPerfilPreInversionPrecio(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Perfiles PreInversion Precio',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await perfilPreInversionPrecioDB
@@ -2349,9 +2299,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   // Sync Visita
   Future<void> uploadVisita(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
-    add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
         title: 'Sincronizando Visitas',
-        counter: state.syncProgressModel!.counter + 1,
+        counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
     final result = await visitaDB.getVisitasProduccionUsecaseDB();
@@ -2380,9 +2330,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       return result.fold((failure) => add(SyncError(failure.properties.first)),
           (data) async => await saveSyncVisitas(data, emit, usuario));
     } else {
-      add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+      add(SyncStatusChanged(state.syncProgressModel.copyWith(
           title: 'Sincronización Completada',
-          counter: state.syncProgressModel!.counter + 1,
+          counter: state.syncProgressModel.counter + 1,
           percent: calculatePercent())));
     }
   }
@@ -2392,9 +2342,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     final result = await visitaDB.saveVisitasUsecaseDB(data);
     return result.fold((failure) => add(SyncError(failure.properties.first)),
         (_) async => verifySync());
-    /*  (_) async => add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+    /*  (_) async => add(SyncStatusChanged(state.syncProgressModel.copyWith(
             title: 'Sincronización Completada',
-            counter: state.syncProgressModel!.counter + 1,
+            counter: state.syncProgressModel.counter + 1,
             percent: calculatePercent())))); */
   }
 
@@ -2405,9 +2355,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       if (data!.isNotEmpty) {
         add(SyncLog(data));
       } else {
-        add(SyncStatusChanged(state.syncProgressModel!.copyWith(
+        add(SyncStatusChanged(state.syncProgressModel.copyWith(
             title: 'Sincronización Completada',
-            counter: state.syncProgressModel!.counter + 1,
+            counter: state.syncProgressModel.counter + 1,
             percent: calculatePercent())));
       }
     });

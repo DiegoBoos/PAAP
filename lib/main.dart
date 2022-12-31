@@ -15,7 +15,6 @@ import 'domain/blocs/perfiles/perfiles_bloc.dart';
 import 'domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
 import 'domain/blocs/perfiles_preinversiones_precios/perfiles_preinversiones_precios_bloc.dart';
 import 'domain/blocs/sync/sync_bloc.dart';
-import 'domain/cubits/actividad/actividad_cubit.dart';
 import 'domain/cubits/actividad_economica/actividad_economica_cubit.dart';
 import 'domain/cubits/actividad_financiera/actividad_financiera_cubit.dart';
 import 'domain/cubits/agrupacion/agrupacion_cubit.dart';
@@ -40,13 +39,10 @@ import 'domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
 import 'domain/cubits/frecuencia/frecuencia_cubit.dart';
 import 'domain/cubits/genero/genero_cubit.dart';
 import 'domain/cubits/grupo_especial/grupo_especial_cubit.dart';
-import 'domain/cubits/indicador/indicador_cubit.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
 import 'domain/cubits/menu/menu_cubit.dart';
-import 'domain/cubits/meta_indicador/meta_indicador_cubit.dart';
 import 'domain/cubits/municipio/municipio_cubit.dart';
 import 'domain/cubits/nivel_escolar/nivel_escolar_cubit.dart';
-import 'domain/cubits/objetivo/objetivo_cubit.dart';
 import 'domain/cubits/opcion/opcion_cubit.dart';
 import 'domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import 'domain/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
@@ -58,8 +54,6 @@ import 'domain/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversio
 import 'domain/cubits/perfil_preinversion_consultor/perfil_preinversion_consultor_cubit.dart';
 import 'domain/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
 import 'domain/cubits/producto/producto_cubit.dart';
-import 'domain/cubits/producto_objetivo/producto_objetivo_cubit.dart';
-import 'domain/cubits/proyecto/proyecto_cubit.dart';
 import 'domain/cubits/residencia/residencia_cubit.dart';
 import 'domain/cubits/revision/revision_cubit.dart';
 import 'domain/cubits/rubro/rubro_cubit.dart';
@@ -121,24 +115,6 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) =>
                 di.locator<PerfilPreInversionCofinanciadorRubrosBloc>(),
-          ),
-          BlocProvider(
-            create: (_) => di.locator<ActividadCubit>(),
-          ),
-          BlocProvider(
-            create: (_) => di.locator<IndicadorCubit>(),
-          ),
-          BlocProvider(
-            create: (_) => di.locator<MetaIndicadorCubit>(),
-          ),
-          BlocProvider(
-            create: (_) => di.locator<ObjetivoCubit>(),
-          ),
-          BlocProvider(
-            create: (_) => di.locator<ProductoObjetivoCubit>(),
-          ),
-          BlocProvider(
-            create: (_) => di.locator<ProyectoCubit>(),
           ),
           BlocProvider(
             create: (_) => di.locator<ExperienciaAgricolaCubit>(),

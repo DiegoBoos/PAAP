@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/blocs/alianzas/alianzas_bloc.dart';
 import '../../../domain/entities/v_alianza_entity.dart';
-import '../../utils/loading_page.dart';
-import '../../utils/network_icon.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 import '../widgets/alianzas_rows.dart';
@@ -31,60 +30,45 @@ class _AlianzasPageState extends State<AlianzasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            leading: const NetworkIcon(),
-            title: const Text('Alianzas'),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 60.0),
-                child: IconButton(
-                    onPressed: () =>
-                        Navigator.pushReplacementNamed(context, 'sign-in'),
-                    icon: const Icon(Icons.logout)),
-              ),
-            ]),
         body: ListView(children: [
-          const SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text('ALIANZAS', style: Styles.titleStyle),
-                ),
-                Expanded(child: filtersDropdown(context)),
-              ],
+      const SizedBox(height: 30),
+      Padding(
+        padding: const EdgeInsets.only(left: 30.0),
+        child: Row(
+          children: [
+            const Expanded(
+              child: Text('ALIANZAS', style: Styles.titleStyle),
             ),
-          ),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text('Consulta', style: Styles.subtitleStyle),
-          ),
-          const SizedBox(height: 20),
-          if (showCard)
-            SearchCard(
-                text: 'Alianza', enableId: enableId, enableName: enableName),
-          BlocBuilder<AlianzasBloc, AlianzasState>(
-            builder: (context, state) {
-              if (state is AlianzasLoading) {
-                return const CustomCircularProgress(
-                    alignment: Alignment.center);
-              } else if (state is AlianzasLoaded) {
-                List<VAlianzaEntity> alianzas = state.alianzasLoaded!;
-                if (alianzas.isEmpty) {
-                  return const SizedBox(
-                      child:
-                          Center(child: NoDataSvg(title: 'No hay resultados')));
-                }
-                return AlianzasRows(
-                    alianzas: alianzas, subtitleStyle: Styles.subtitleStyle);
-              }
-              return Container();
-            },
-          ),
-          const SizedBox(height: 30),
-        ]));
+            Expanded(child: filtersDropdown(context)),
+          ],
+        ),
+      ),
+      const SizedBox(height: 20),
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        child: Text('Consulta', style: Styles.subtitleStyle),
+      ),
+      const SizedBox(height: 20),
+      if (showCard)
+        SearchCard(text: 'Alianza', enableId: enableId, enableName: enableName),
+      BlocBuilder<AlianzasBloc, AlianzasState>(
+        builder: (context, state) {
+          if (state is AlianzasLoading) {
+            return const CustomCircularProgress(alignment: Alignment.center);
+          } else if (state is AlianzasLoaded) {
+            List<VAlianzaEntity> alianzas = state.alianzasLoaded!;
+            if (alianzas.isEmpty) {
+              return const SizedBox(
+                  child: Center(child: NoDataSvg(title: 'No hay resultados')));
+            }
+            return AlianzasRows(
+                alianzas: alianzas, subtitleStyle: Styles.subtitleStyle);
+          }
+          return Container();
+        },
+      ),
+      const SizedBox(height: 30),
+    ]));
   }
 
   DropdownButton<Object> filtersDropdown(BuildContext context) {

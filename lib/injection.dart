@@ -6,7 +6,6 @@ import 'package:paap/domain/blocs/sync/sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
 import 'domain/cubits/slider/slider_cubit.dart';
 import 'domain/cubits/v_alianza/v_alianza_cubit.dart';
-import 'domain/usecases/actividad/actividad_exports.dart';
 import 'domain/usecases/actividad_economica/actividad_economica_exports.dart';
 import 'domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import 'domain/usecases/agrupacion/agrupacion_exports.dart';
@@ -33,12 +32,9 @@ import 'domain/usecases/experiencia_pecuaria/experiencia_pecuaria_exports.dart';
 import 'domain/usecases/frecuencia/frecuencia_exports.dart';
 import 'domain/usecases/genero/genero_exports.dart';
 import 'domain/usecases/grupo_especial/grupo_especial_exports.dart';
-import 'domain/usecases/indicador/indicador_exports.dart';
 import 'domain/usecases/menu/menu_exports.dart';
-import 'domain/usecases/meta_indicador/meta_indicador_exports.dart';
 import 'domain/usecases/municipio/municipio_exports.dart';
 import 'domain/usecases/nivel_escolar/nivel_escolar_exports.dart';
-import 'domain/usecases/objetivo/objetivo_exports.dart';
 import 'domain/usecases/opcion/opcion_exports.dart';
 import 'domain/usecases/perfil/perfil_exports.dart';
 import 'domain/usecases/perfil_beneficiario/perfil_beneficiario_exports.dart';
@@ -53,8 +49,6 @@ import 'domain/usecases/perfil_preinversion_consultor/perfil_preinversion_consul
 import 'domain/usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 import 'domain/usecases/perfil_preinversion_precio/perfil_preinversion_precio_exports.dart';
 import 'domain/usecases/producto/producto_exports.dart';
-import 'domain/usecases/producto_objetivo/producto_objetivo_exports.dart';
-import 'domain/usecases/proyecto/proyecto_exports.dart';
 import 'domain/usecases/residencia/residencia_exports.dart';
 import 'domain/usecases/revision/revision_exports.dart';
 import 'domain/usecases/rubro/rubro_exports.dart';
@@ -148,43 +142,6 @@ actividadFinancieraInit() {
   // local data source
   locator.registerLazySingleton<ActividadFinancieraLocalDataSource>(
     () => ActividadFinancieraLocalDataSourceImpl(),
-  );
-}
-
-actividadInit() {
-  // cubit
-  locator.registerFactory(() => ActividadCubit(actividadDB: locator()));
-
-  // remote usecase
-  locator.registerLazySingleton(() => ActividadUsecase(locator()));
-
-  // local usecase
-  locator.registerLazySingleton(() => ActividadUsecaseDB(locator()));
-
-  // repository
-  locator.registerLazySingleton<ActividadRepository>(
-    () => ActividadRepositoryImpl(
-      actividadRemoteDataSource: locator(),
-    ),
-  );
-
-  // repository DB
-  locator.registerLazySingleton<ActividadRepositoryDB>(
-    () => ActividadRepositoryDBImpl(
-      actividadLocalDataSource: locator(),
-    ),
-  );
-
-  // remote data source
-  locator.registerLazySingleton<ActividadRemoteDataSource>(
-    () => ActividadRemoteDataSourceImpl(
-      client: locator(),
-    ),
-  );
-
-  // local data source
-  locator.registerLazySingleton<ActividadLocalDataSource>(
-    () => ActividadLocalDataSourceImpl(),
   );
 }
 
@@ -599,8 +556,6 @@ desembolsoInit() {
 syncInit() {
   // bloc
   locator.registerFactory(() => SyncBloc(
-        actividad: locator(),
-        actividadDB: locator(),
         actividadEconomica: locator(),
         actividadEconomicaDB: locator(),
         actividadFinanciera: locator(),
@@ -643,8 +598,6 @@ syncInit() {
         perfilDB: locator(),
         producto: locator(),
         productoDB: locator(),
-        proyecto: locator(),
-        proyectoDB: locator(),
         residencia: locator(),
         residenciaDB: locator(),
         revision: locator(),
@@ -1156,50 +1109,7 @@ grupoEspecialInit() {
   );
 }
 
-indicadorInit() {
-  // cubit
-  locator.registerFactory(() => IndicadorCubit(indicadorDB: locator()));
-
-  // remote usecase
-  locator.registerLazySingleton(() => IndicadorUsecase(locator()));
-
-  // local usecase
-  locator.registerLazySingleton(() => IndicadorUsecaseDB(locator()));
-
-  // repository
-  locator.registerLazySingleton<IndicadorRepository>(
-    () => IndicadorRepositoryImpl(
-      indicadorRemoteDataSource: locator(),
-    ),
-  );
-
-  // repository DB
-  locator.registerLazySingleton<IndicadorRepositoryDB>(
-    () => IndicadorRepositoryDBImpl(
-      indicadorLocalDataSource: locator(),
-    ),
-  );
-
-  // remote data source
-  locator.registerLazySingleton<IndicadorRemoteDataSource>(
-    () => IndicadorRemoteDataSourceImpl(
-      client: locator(),
-    ),
-  );
-
-  // local data source
-  locator.registerLazySingleton<IndicadorLocalDataSource>(
-    () => IndicadorLocalDataSourceImpl(),
-  );
-}
-
 void init() {
-  actividadInit();
-  indicadorInit();
-  metaIndicadorInit();
-  objetivoInit();
-  productoObjetivoInit();
-  proyectoInit();
   actividadEconomicaInit();
   actividadFinancieraInit();
   agrupacionInit();
@@ -1309,43 +1219,6 @@ menuCubitInit() {
   );
 }
 
-metaIndicadorInit() {
-  // cubit
-  locator.registerFactory(() => MetaIndicadorCubit(metaIndicadorDB: locator()));
-
-  // remote usecase
-  locator.registerLazySingleton(() => MetaIndicadorUsecase(locator()));
-
-  // local usecase
-  locator.registerLazySingleton(() => MetaIndicadorUsecaseDB(locator()));
-
-  // repository
-  locator.registerLazySingleton<MetaIndicadorRepository>(
-    () => MetaIndicadorRepositoryImpl(
-      metaIndicadorRemoteDataSource: locator(),
-    ),
-  );
-
-  // repository DB
-  locator.registerLazySingleton<MetaIndicadorRepositoryDB>(
-    () => MetaIndicadorRepositoryDBImpl(
-      metaIndicadorLocalDataSource: locator(),
-    ),
-  );
-
-  // remote data source
-  locator.registerLazySingleton<MetaIndicadorRemoteDataSource>(
-    () => MetaIndicadorRemoteDataSourceImpl(
-      client: locator(),
-    ),
-  );
-
-  // local data source
-  locator.registerLazySingleton<MetaIndicadorLocalDataSource>(
-    () => MetaIndicadorLocalDataSourceImpl(),
-  );
-}
-
 municipiosInit() {
   // cubit
   locator.registerFactory(() => MunicipioCubit(municipioDB: locator()));
@@ -1415,43 +1288,6 @@ nivelEscolarInit() {
   // local data source
   locator.registerLazySingleton<NivelEscolarLocalDataSource>(
     () => NivelEscolarLocalDataSourceImpl(),
-  );
-}
-
-objetivoInit() {
-  // cubit
-  locator.registerFactory(() => ObjetivoCubit(objetivoDB: locator()));
-
-  // remote usecase
-  locator.registerLazySingleton(() => ObjetivoUsecase(locator()));
-
-  // local usecase
-  locator.registerLazySingleton(() => ObjetivoUsecaseDB(locator()));
-
-  // repository
-  locator.registerLazySingleton<ObjetivoRepository>(
-    () => ObjetivoRepositoryImpl(
-      objetivoRemoteDataSource: locator(),
-    ),
-  );
-
-  // repository DB
-  locator.registerLazySingleton<ObjetivoRepositoryDB>(
-    () => ObjetivoRepositoryDBImpl(
-      objetivoLocalDataSource: locator(),
-    ),
-  );
-
-  // remote data source
-  locator.registerLazySingleton<ObjetivoRemoteDataSource>(
-    () => ObjetivoRemoteDataSourceImpl(
-      client: locator(),
-    ),
-  );
-
-  // local data source
-  locator.registerLazySingleton<ObjetivoLocalDataSource>(
-    () => ObjetivoLocalDataSourceImpl(),
   );
 }
 
@@ -2035,44 +1871,6 @@ perfilPreInversionPlanesNegociosInit() {
   );
 }
 
-productoObjetivoInit() {
-  // cubit
-  locator.registerFactory(
-      () => ProductoObjetivoCubit(productoObjetivoDB: locator()));
-
-  // remote usecase
-  locator.registerLazySingleton(() => ProductoObjetivoUsecase(locator()));
-
-  // local usecase
-  locator.registerLazySingleton(() => ProductoObjetivoUsecaseDB(locator()));
-
-  // repository
-  locator.registerLazySingleton<ProductoObjetivoRepository>(
-    () => ProductoObjetivoRepositoryImpl(
-      productoObjetivoRemoteDataSource: locator(),
-    ),
-  );
-
-  // repository DB
-  locator.registerLazySingleton<ProductoObjetivoRepositoryDB>(
-    () => ProductoObjetivoRepositoryDBImpl(
-      productoObjetivoLocalDataSource: locator(),
-    ),
-  );
-
-  // remote data source
-  locator.registerLazySingleton<ProductoObjetivoRemoteDataSource>(
-    () => ProductoObjetivoRemoteDataSourceImpl(
-      client: locator(),
-    ),
-  );
-
-  // local data source
-  locator.registerLazySingleton<ProductoObjetivoLocalDataSource>(
-    () => ProductoObjetivoLocalDataSourceImpl(),
-  );
-}
-
 productosInit() {
   // cubit
   locator.registerFactory(() => ProductoCubit(productoDB: locator()));
@@ -2106,42 +1904,6 @@ productosInit() {
   // local data source
   locator.registerLazySingleton<ProductoLocalDataSource>(
     () => ProductoLocalDataSourceImpl(),
-  );
-}
-
-proyectoInit() {
-  // cubit
-  locator.registerFactory(() => ProyectoCubit(proyectoDB: locator()));
-  // remote usecase
-  locator.registerLazySingleton(() => ProyectoUsecase(locator()));
-
-  // local usecase
-  locator.registerLazySingleton(() => ProyectoUsecaseDB(locator()));
-
-  // repository
-  locator.registerLazySingleton<ProyectoRepository>(
-    () => ProyectoRepositoryImpl(
-      proyectoRemoteDataSource: locator(),
-    ),
-  );
-
-  // repository DB
-  locator.registerLazySingleton<ProyectoRepositoryDB>(
-    () => ProyectoRepositoryDBImpl(
-      proyectoLocalDataSource: locator(),
-    ),
-  );
-
-  // remote data source
-  locator.registerLazySingleton<ProyectoRemoteDataSource>(
-    () => ProyectoRemoteDataSourceImpl(
-      client: locator(),
-    ),
-  );
-
-  // local data source
-  locator.registerLazySingleton<ProyectoLocalDataSource>(
-    () => ProyectoLocalDataSourceImpl(),
   );
 }
 
@@ -2215,43 +1977,6 @@ revisionInit() {
   // local data source
   locator.registerLazySingleton<RevisionLocalDataSource>(
     () => RevisionLocalDataSourceImpl(),
-  );
-}
-
-royectoInit() {
-  // cubit
-  locator.registerFactory(() => ProyectoCubit(proyectoDB: locator()));
-
-  // remote usecase
-  locator.registerLazySingleton(() => ProyectoUsecase(locator()));
-
-  // local usecase
-  locator.registerLazySingleton(() => ProyectoUsecaseDB(locator()));
-
-  // repository
-  locator.registerLazySingleton<ProyectoRepository>(
-    () => ProyectoRepositoryImpl(
-      proyectoRemoteDataSource: locator(),
-    ),
-  );
-
-  // repository DB
-  locator.registerLazySingleton<ProyectoRepositoryDB>(
-    () => ProyectoRepositoryDBImpl(
-      proyectoLocalDataSource: locator(),
-    ),
-  );
-
-  // remote data source
-  locator.registerLazySingleton<ProyectoRemoteDataSource>(
-    () => ProyectoRemoteDataSourceImpl(
-      client: locator(),
-    ),
-  );
-
-  // local data source
-  locator.registerLazySingleton<ProyectoLocalDataSource>(
-    () => ProyectoLocalDataSourceImpl(),
   );
 }
 

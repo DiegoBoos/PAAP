@@ -112,7 +112,7 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
       ],
       child: Scaffold(
         appBar: AppBar(
-            title: const Text('Primera visita del perfil'),
+            title: const Text('Registro primera visita'),
             actions: const [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -128,7 +128,7 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
               const SizedBox(height: 30),
               const Text('Evaluación del Perfil', style: Styles.titleStyle),
               const SizedBox(height: 10),
-              const Text('Creación', style: Styles.subtitleStyle),
+              const Text('Crear', style: Styles.subtitleStyle),
               const SizedBox(height: 10),
               BlocBuilder<VisitaCubit, VisitaState>(
                 builder: (context, state) {
@@ -278,10 +278,6 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                               }
                                               formKeyRegistro.currentState!
                                                   .save();
-
-                                              evaluacionRespuestaCubit
-                                                  .changeEvaluacion(
-                                                      evaluacion.evaluacionId);
 
                                               evaluacionRespuestaCubit
                                                   .saveEvaluacionRespuestaDB(

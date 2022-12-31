@@ -13,7 +13,7 @@ import '../../../domain/entities/desembolso_entity.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
-import '../../utils/loading_page.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorDesembolsoForm extends StatefulWidget {

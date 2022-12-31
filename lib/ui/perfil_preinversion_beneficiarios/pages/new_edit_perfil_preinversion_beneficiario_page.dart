@@ -64,7 +64,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
               },
             ),
             appBar: AppBar(
-                title: const Text('Detalle Beneficiario'),
+                title: Text(beneficiarioId == '' ? 'Crear' : 'Editar'),
                 actions: const [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -78,13 +78,14 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
                 child: Form(
                   key: formKey,
                   child: Column(children: [
-                    const Text('BENEFICIARIOS', style: Styles.titleStyle),
+                    const Text(
+                      'BENEFICIARIO PREINVERSIÓN',
+                      style: Styles.titleStyle,
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 10),
                     Column(
                       children: [
-                        Text(beneficiarioId == '' ? 'Creación' : 'Editar',
-                            style: Styles.subtitleStyle),
-                        const SizedBox(height: 10),
                         const BeneficiarioForm(),
                         const PerfilBeneficiarioForm(),
                         const PerfilPreInversionBeneficiarioForm(),

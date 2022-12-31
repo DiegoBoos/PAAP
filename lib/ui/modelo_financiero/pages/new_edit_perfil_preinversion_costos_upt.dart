@@ -99,24 +99,33 @@ class _NewEditPerfilPreInversionCostosUPTState
     final tipoMovimientoId =
         ModalRoute.of(context)!.settings.arguments as String;
 
-    return Scaffold(
-        appBar: AppBar(title: const Text('Costos UPT'), actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: NetworkIcon(),
-          )
-        ]),
-        body: BlocListener<PerfilPreInversionCostosUPTCubit,
-                PerfilPreInversionCostosUPTState>(
-            listener: (context, state) {
-              if (state is PerfilPreInversionCostosUPTLoaded) {
-                final perfilPreInversionCostosUPTLoaded =
-                    state.perfilPreInversionCostosUPTLoaded;
-                loadPerfilPreInversionCostosUPT(
-                    perfilPreInversionCostosUPTLoaded);
-              }
-            },
-            child: Form(
+    return BlocConsumer<PerfilPreInversionCostosUPTCubit,
+        PerfilPreInversionCostosUPTState>(
+      listener: (context, state) {
+        BlocListener<PerfilPreInversionCostosUPTCubit,
+            PerfilPreInversionCostosUPTState>(listener: (context, state) {
+          if (state is PerfilPreInversionCostosUPTLoaded) {
+            final perfilPreInversionCostosUPTLoaded =
+                state.perfilPreInversionCostosUPTLoaded;
+            loadPerfilPreInversionCostosUPT(perfilPreInversionCostosUPTLoaded);
+          }
+        });
+      },
+      builder: (context, state) {
+        return Scaffold(
+            appBar: AppBar(
+                title: Text(
+                    state.perfilPreInversionCostosUPT.actividadFinancieraId !=
+                            ''
+                        ? 'Editar'
+                        : 'Crear'),
+                actions: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.0),
+                    child: NetworkIcon(),
+                  )
+                ]),
+            body: Form(
               key: formKeyCostosUPT,
               child: Padding(
                 padding:
@@ -320,6 +329,8 @@ class _NewEditPerfilPreInversionCostosUPTState
                   )
                 ]),
               ),
-            )));
+            ));
+      },
+    );
   }
 }

@@ -31,81 +31,77 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
         BlocProvider.of<PerfilPreInversionAliadosBloc>(context);
 
     return BlocListener<PerfilPreInversionAliadoCubit,
-            PerfilPreInversionAliadoState>(
-        listener: (context, state) {
-          if (state is PerfilPreInversionAliadoSaved) {
-            CustomSnackBar.showSnackBar(
-                context, 'Datos guardados satisfactoriamente', Colors.green);
+        PerfilPreInversionAliadoState>(listener: (context, state) {
+      if (state is PerfilPreInversionAliadoSaved) {
+        CustomSnackBar.showSnackBar(
+            context, 'Datos guardados satisfactoriamente', Colors.green);
 
-            perfilPreInversionAliadosBloc.add(GetPerfilPreInversionAliados(
-                vPerfilPreInversionCubit
-                    .state.vPerfilPreInversion!.perfilPreInversionId));
-          }
-        },
-        child: Scaffold(
-            drawer: BlocBuilder<MenuCubit, MenuState>(
-              builder: (context, state) {
-                final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
-                return PerfilPreInversionDrawer(
-                  menuHijo: menuHijo,
-                );
-              },
-            ),
-            appBar: AppBar(title: const Text('Detalle Aliado'), actions: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: NetworkIcon(),
-              )
-            ]),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: (ListView(children: [
-                const SizedBox(height: 20),
-                const Text('ALIADO', style: Styles.titleStyle),
-                const SizedBox(height: 20),
-                BlocBuilder<PerfilPreInversionAliadoCubit,
-                    PerfilPreInversionAliadoState>(
-                  builder: (context, state) {
-                    return Column(
-                      children: [
-                        Text(
-                            state.perfilPreInversionAliado.aliadoId == ''
-                                ? 'Creación'
-                                : 'Editar',
-                            style: Styles.subtitleStyle),
-                        const SizedBox(height: 20),
-                        Form(
-                            key: formKey,
-                            child: PerfilPreInversionAliadoForm(formKey)),
-                        const SizedBox(height: 20),
-                        SaveBackButtons(
-                          onSaved: () {
-                            if (!formKey.currentState!.validate()) return;
+        perfilPreInversionAliadosBloc.add(GetPerfilPreInversionAliados(
+            vPerfilPreInversionCubit
+                .state.vPerfilPreInversion!.perfilPreInversionId));
+      }
+    }, child: BlocBuilder<PerfilPreInversionAliadoCubit,
+        PerfilPreInversionAliadoState>(builder: (context, state) {
+      return Scaffold(
+          drawer: BlocBuilder<MenuCubit, MenuState>(
+            builder: (context, state) {
+              final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
+              return PerfilPreInversionDrawer(
+                menuHijo: menuHijo,
+              );
+            },
+          ),
+          appBar: AppBar(
+              title: Text(state.perfilPreInversionAliado.aliadoId == ''
+                  ? 'Crear'
+                  : 'Editar'),
+              actions: const [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30.0),
+                  child: NetworkIcon(),
+                )
+              ]),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: (ListView(children: [
+              const SizedBox(height: 20),
+              const Text(
+                'ALIADO PREINVERSIÓN',
+                style: Styles.titleStyle,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              Column(
+                children: [
+                  Form(
+                      key: formKey,
+                      child: PerfilPreInversionAliadoForm(formKey)),
+                  const SizedBox(height: 20),
+                  SaveBackButtons(
+                    onSaved: () {
+                      if (!formKey.currentState!.validate()) return;
 
-                            formKey.currentState!.save();
+                      formKey.currentState!.save();
 
-                            final vPerfilPreInversionId =
-                                vPerfilPreInversionCubit.state
-                                    .vPerfilPreInversion!.perfilPreInversionId;
+                      final vPerfilPreInversionId = vPerfilPreInversionCubit
+                          .state.vPerfilPreInversion!.perfilPreInversionId;
 
-                            aliadoCubit.saveAliadoDB(aliadoCubit.state.aliado);
+                      aliadoCubit.saveAliadoDB(aliadoCubit.state.aliado);
 
-                            perfilPreInversionAliadoCubit
-                                .changePerfilPreInversionId(
-                                    vPerfilPreInversionId);
+                      perfilPreInversionAliadoCubit
+                          .changePerfilPreInversionId(vPerfilPreInversionId);
 
-                            perfilPreInversionAliadoCubit
-                                .savePerfilPreInversionAliadoDB(
-                                    perfilPreInversionAliadoCubit
-                                        .state.perfilPreInversionAliado);
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-                    );
-                  },
-                ),
-              ])),
-            )));
+                      perfilPreInversionAliadoCubit
+                          .savePerfilPreInversionAliadoDB(
+                              perfilPreInversionAliadoCubit
+                                  .state.perfilPreInversionAliado);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ])),
+          ));
+    }));
   }
 }

@@ -142,10 +142,11 @@ class EvaluacionRespuestaLocalDataSourceImpl
     var batch = db.batch();
 
     final resQuery = await db.query('EvaluacionRespuesta',
-        where: 'CriterioId = ? AND EvaluacionId = ?',
+        where: 'CriterioId = ? AND EvaluacionId = ? AND OpcionId = ?',
         whereArgs: [
           evaluacionRespuestaEntity.criterioId,
-          evaluacionRespuestaEntity.evaluacionId
+          evaluacionRespuestaEntity.evaluacionId,
+          evaluacionRespuestaEntity.opcionId,
         ]);
 
     if (resQuery.isEmpty) {
@@ -156,10 +157,11 @@ class EvaluacionRespuestaLocalDataSourceImpl
         evaluacionRespuestaEntity.recordStatus = 'E';
       }
       batch.update('EvaluacionRespuesta', evaluacionRespuestaEntity.toJson(),
-          where: 'CriterioId = ? AND EvaluacionId = ?',
+          where: 'CriterioId = ? AND EvaluacionId = ? AND OpcionId = ?',
           whereArgs: [
             evaluacionRespuestaEntity.criterioId,
-            evaluacionRespuestaEntity.evaluacionId
+            evaluacionRespuestaEntity.evaluacionId,
+            evaluacionRespuestaEntity.opcionId,
           ]);
     }
 
@@ -203,7 +205,9 @@ class EvaluacionRespuestaLocalDataSourceImpl
 
     List<EvaluacionRespuestaModel> evaluacionesRespuestas = [];
     for (var evaluacion in evaluacionesRespuestasModel) {
-      evaluacion.evaluacionId = evaluacion.remoteEvaluacionId;
+      if (evaluacion.recordStatus != 'N') {
+        evaluacion.evaluacionId = evaluacion.remoteEvaluacionId;
+      }
       evaluacionesRespuestas.add(evaluacion);
     }
 
@@ -223,10 +227,11 @@ class EvaluacionRespuestaLocalDataSourceImpl
       evaluacionRespuestaProduccion.recordStatus = 'R';
       batch.update(
           'EvaluacionRespuesta', evaluacionRespuestaProduccion.toJson(),
-          where: 'EvaluacionId = ? AND CriterioId',
+          where: 'EvaluacionId = ? AND CriterioId = ? AND OpcionId = ?',
           whereArgs: [
             evaluacionRespuestaProduccion.evaluacionId,
-            evaluacionRespuestaProduccion.criterioId
+            evaluacionRespuestaProduccion.criterioId,
+            evaluacionRespuestaProduccion.opcionId,
           ]);
     }
 

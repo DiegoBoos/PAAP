@@ -5,7 +5,7 @@ import '../../../domain/blocs/perfil_preinversion_beneficiarios/perfil_preinvers
 import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
-import '../../utils/loading_page.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
@@ -51,7 +51,7 @@ class _PerfilPreInversionBeneficiariosPageState
             child: const Icon(Icons.save),
             onPressed: () => Navigator.pushNamed(
                 context, 'NewEditVBeneficiarioPreInversion')),
-        appBar: AppBar(title: const Text('Beneficiarios'), actions: const [
+        appBar: AppBar(title: const Text('Consulta'), actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
             child: NetworkIcon(),
@@ -61,12 +61,11 @@ class _PerfilPreInversionBeneficiariosPageState
           const SizedBox(height: 30),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text('BENEFICIARIOS', style: Styles.titleStyle),
-          ),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text('Consulta', style: Styles.subtitleStyle),
+            child: Text(
+              'BENEFICIARIOS PREINVERSIÓN',
+              style: Styles.titleStyle,
+              textAlign: TextAlign.center,
+            ),
           ),
           const SizedBox(height: 20),
           BlocBuilder<PerfilPreInversionBeneficiariosBloc,

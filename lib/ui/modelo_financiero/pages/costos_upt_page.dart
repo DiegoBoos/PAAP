@@ -7,7 +7,7 @@ import '../../../domain/cubits/perfil_preinversion_costos_utp/perfil_preinversio
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/cubits/v_perfiles_preinversiones_plan_negocios/v_perfiles_preinversiones_plan_negocios_cubit.dart';
 import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart';
-import '../../utils/loading_page.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 import '../widgets/perfiles_preinversiones_plan_negocios_rows.dart';

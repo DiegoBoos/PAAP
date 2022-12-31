@@ -69,6 +69,7 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
     left join TipoProyecto on (TipoProyecto.TipoProyectoId=Perfil.TipoProyectoId)
     left join Producto as ProductoPrincipal on (ProductoPrincipal.ProductoId =Perfil.ProductoId)
     left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =Perfil.ProductoAsociadoId)
+    ORDER BY CAST(PerfilId AS INTEGER)
     ''';
 
     final res = await db.rawQuery(sql);

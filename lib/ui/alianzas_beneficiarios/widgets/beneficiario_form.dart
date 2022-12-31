@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
@@ -11,13 +7,13 @@ import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../domain/cubits/genero/genero_cubit.dart';
 import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
 import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
+import '../../../domain/entities/beneficiario_entity.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';
 import '../../../domain/entities/tipo_identificacion_entity.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
-import 'package:paap/domain/entities/beneficiario_entity.dart';
 
 class BeneficiarioForm extends StatefulWidget {
   const BeneficiarioForm({super.key});
@@ -28,7 +24,6 @@ class BeneficiarioForm extends StatefulWidget {
 
 class _BeneficiarioFormState extends State<BeneficiarioForm> {
   final dateFormat = DateFormat('yyyy-MM-dd');
-  File? image;
 
   String? tipoIdentificacionId;
   String? generoId;
@@ -428,56 +423,9 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
               },
             ),
             const SizedBox(height: 20),
-            if (image != null)
-              Image.file(
-                image!,
-                width: 160,
-                height: 160,
-                fit: BoxFit.cover,
-              ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(56),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    textStyle: const TextStyle(fontSize: 20)),
-                onPressed: () => pickImage(ImageSource.gallery),
-                child: Row(children: const [
-                  Icon(Icons.image_outlined),
-                  SizedBox(width: 16),
-                  Text('Seleccionar de Galería')
-                ])),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(56),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    textStyle: const TextStyle(fontSize: 20)),
-                onPressed: () => pickImage(ImageSource.camera),
-                child: Row(
-                  children: const [
-                    Icon(Icons.camera_alt_outlined),
-                    SizedBox(width: 16),
-                    Text('Seleccionar de Cámara')
-                  ],
-                )),
           ]),
         ),
       );
     }));
-  }
-
-  Future pickImage(ImageSource source) async {
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
-
-      final imageTemporary = File(image.path);
-      setState(() => this.image = imageTemporary);
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
   }
 }

@@ -48,7 +48,7 @@ class _ModeloFinancieroPageState extends State<ModeloFinancieroPage> {
                   },
                   child: const Icon(Icons.add)),
               appBar: AppBar(
-                title: const Text('MODELO FINANCIERO'),
+                title: const Text('Consulta'),
                 actions: const [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.0),

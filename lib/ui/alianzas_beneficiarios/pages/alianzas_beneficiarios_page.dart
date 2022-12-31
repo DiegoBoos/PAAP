@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
-import '../../utils/loading_page.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
@@ -49,7 +49,7 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
             child: const Icon(Icons.save),
             onPressed: () =>
                 Navigator.pushNamed(context, 'NewEditVBeneficiarioAlianza')),
-        appBar: AppBar(title: const Text('Beneficiarios'), actions: const [
+        appBar: AppBar(title: const Text('Consulta'), actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
             child: NetworkIcon(),
@@ -59,12 +59,8 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
           const SizedBox(height: 30),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text('BENEFICIARIOS ALIANZA', style: Styles.titleStyle),
-          ),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text('Consulta', style: Styles.subtitleStyle),
+            child: Text('BENEFICIARIOS ALIANZA',
+                style: Styles.titleStyle, textAlign: TextAlign.center),
           ),
           const SizedBox(height: 20),
           BlocBuilder<AlianzasBeneficiariosBloc, AlianzasBeneficiariosState>(

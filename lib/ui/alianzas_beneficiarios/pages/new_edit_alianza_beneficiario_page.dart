@@ -26,53 +26,53 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
     final menuCubit = BlocProvider.of<MenuCubit>(context);
 
-    return Scaffold(
-        drawer: BlocBuilder<MenuCubit, MenuState>(
-          builder: (context, state) {
-            final menuHijo = menuCubit.alianzaMenuSorted(state.menus!);
-            return AlianzaDrawer(
-              menuHijo: menuHijo,
-            );
-          },
-        ),
-        appBar:
-            AppBar(title: const Text('Detalle Beneficiario'), actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: NetworkIcon(),
-          )
-        ]),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            child: Form(
-              key: formKey,
-              child: Column(children: [
-                const Text('BENEFICIARIOS ALIANZA', style: Styles.titleStyle),
-                const SizedBox(height: 10),
-                BlocConsumer<AlianzaBeneficiarioCubit,
-                    AlianzaBeneficiarioState>(
-                  listener: (context, state) {
-                    if (state is AlianzaBeneficiarioError) {
-                      CustomSnackBar.showSnackBar(
-                          context, 'Error al guardar datos', Colors.red);
-                    }
-                    if (state is AlianzaBeneficiarioSaved) {
-                      CustomSnackBar.showSnackBar(context,
-                          'Datos guardados satisfactoriamente', Colors.green);
-                    }
-                  },
-                  builder: (context, state) {
-                    final alianzaBeneficiario = state.alianzaBeneficiario;
+    return BlocConsumer<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
+      listener: (context, state) {
+        if (state is AlianzaBeneficiarioError) {
+          CustomSnackBar.showSnackBar(
+              context, 'Error al guardar datos', Colors.red);
+        }
+        if (state is AlianzaBeneficiarioSaved) {
+          CustomSnackBar.showSnackBar(
+              context, 'Datos guardados satisfactoriamente', Colors.green);
+        }
+      },
+      builder: (context, state) {
+        final alianzaBeneficiario = state.alianzaBeneficiario;
 
-                    final beneficiarioId = alianzaBeneficiario.beneficiarioId;
+        final beneficiarioId = alianzaBeneficiario.beneficiarioId;
 
-                    final estadoCivilId = alianzaBeneficiario.estadoCivilId;
+        final estadoCivilId = alianzaBeneficiario.estadoCivilId;
 
-                    return Column(
+        return Scaffold(
+            drawer: BlocBuilder<MenuCubit, MenuState>(
+              builder: (context, state) {
+                final menuHijo = menuCubit.alianzaMenuSorted(state.menus!);
+                return AlianzaDrawer(
+                  menuHijo: menuHijo,
+                );
+              },
+            ),
+            appBar: AppBar(
+                title: Text(beneficiarioId == '' ? 'Crear' : 'Editar'),
+                actions: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.0),
+                    child: NetworkIcon(),
+                  )
+                ]),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                child: Form(
+                  key: formKey,
+                  child: Column(children: [
+                    const Text('BENEFICIARIOS ALIANZA',
+                        style: Styles.titleStyle),
+                    const SizedBox(height: 10),
+                    Column(
                       children: [
-                        Text(beneficiarioId == '' ? 'Creación' : 'Editar',
-                            style: Styles.subtitleStyle),
                         const SizedBox(height: 10),
                         const BeneficiarioForm(),
                         const AlianzaPerfilBeneficiarioForm(),
@@ -96,13 +96,13 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 10)
                       ],
-                    );
-                  },
+                    )
+                  ]),
                 ),
-              ]),
-            ),
-          ),
-        ));
+              ),
+            ));
+      },
+    );
   }
 
   void saveBeneficiario(BuildContext context) {

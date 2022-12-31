@@ -6,7 +6,7 @@ import '../../../domain/cubits/menu/menu_cubit.dart';
 import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_aliado_entity.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
-import '../../utils/loading_page.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
@@ -51,21 +51,20 @@ class _PerfilPreInversionAliadosPageState
             );
           },
         ),
-        appBar: AppBar(
-            title: const Text('PerfilPreInversionAliados'),
-            actions: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: NetworkIcon(),
-              )
-            ]),
+        appBar: AppBar(title: const Text('Consulta'), actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: NetworkIcon(),
+          )
+        ]),
         body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
             child: ListView(children: [
-              const SizedBox(height: 30),
-              const Text('PerfilPreInversionAliados', style: Styles.titleStyle),
-              const SizedBox(height: 20),
-              const Text('Consulta', style: Styles.subtitleStyle),
+              const Text(
+                'ALIADOS PREINVERSIÓN',
+                style: Styles.titleStyle,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 20),
               BlocBuilder<PerfilPreInversionAliadosBloc,
                   PerfilPreInversionAliadosState>(

@@ -32,12 +32,18 @@ class _NewEditPerfilPreInversionIngresosUPTState
         ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(
-        appBar: AppBar(title: const Text('Ingresos UPT'), actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: NetworkIcon(),
-          )
-        ]),
+        appBar: AppBar(
+            title: Text(perfilPreInversionIngresosUPTCubit.state
+                        .perfilPreInversionIngresosUPT.actividadFinancieraId !=
+                    ''
+                ? 'Editar'
+                : 'Crear'),
+            actions: const [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: NetworkIcon(),
+              )
+            ]),
         body: Form(
           key: formKeyIngresosUPT,
           child: Padding(

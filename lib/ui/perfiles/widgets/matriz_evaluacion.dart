@@ -10,7 +10,7 @@ import '../../../domain/entities/agrupacion_entity.dart';
 import '../../../domain/entities/criterio_entity.dart';
 import '../../../domain/entities/opcion_entity.dart';
 import '../../utils/input_decoration.dart';
-import '../../utils/loading_page.dart';
+import '../../utils/sync_pages.dart';
 import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 
@@ -169,18 +169,17 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                               );
                             }).toList(),
                             onChanged: (String? value) {
-                              evaluacionRespuestaCubit.changeOpcion(value!);
-                              setState(() {
-                                opcionId = value;
-                              });
-
                               evaluacionRespuestaCubit
                                   .getEvaluacionRespuestaOpcionDB(
                                       evaluacionRespuestaCubit
                                           .state.evaluacionRespuesta.criterioId,
                                       evaluacionRespuestaCubit.state
                                           .evaluacionRespuesta.evaluacionId,
-                                      opcionId!);
+                                      value!);
+
+                              opcionId = value;
+
+                              setState(() {});
                             },
                           ),
                           const SizedBox(height: 20),
@@ -200,6 +199,9 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                                         hintText: 'Observaciones',
                                         labelText: 'Observaciones'),
                                 onSaved: (String? newValue) {
+                                  evaluacionRespuestaCubit
+                                      .changeOpcion(opcionId!);
+
                                   evaluacionRespuestaCubit
                                       .changeObservacion(newValue!);
                                 },
