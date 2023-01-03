@@ -142,6 +142,9 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
         .changePerfilPreInversionId(perfilPreInversionId);
     perfilPreInversionBeneficiarioCubit.changeConocePerfil('true');
 
+    if (perfilPreInversionBeneficiario.fueBeneficiado == '') {
+      perfilPreInversionBeneficiarioCubit.changeFueBeneficiado('false');
+    }
     if (perfilPreInversionBeneficiario.activo == '') {
       perfilPreInversionBeneficiarioCubit.changeActivo('false');
     }

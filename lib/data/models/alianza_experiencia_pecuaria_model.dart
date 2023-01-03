@@ -2,9 +2,9 @@ import '../../domain/entities/alianza_experiencia_pecuaria_entity.dart';
 
 class AlianzaExperienciaPecuariaModel extends AlianzaExperienciaPecuariaEntity {
   AlianzaExperienciaPecuariaModel({
-    required String? tipoActividadProductivaId,
-    required String? beneficiarioId,
-    required String? frecuenciaId,
+    required String tipoActividadProductivaId,
+    required String beneficiarioId,
+    required String frecuenciaId,
     String? cantidadAnimales,
     String? cantidadCria,
     String? cantidadLevante,
@@ -15,9 +15,9 @@ class AlianzaExperienciaPecuariaModel extends AlianzaExperienciaPecuariaEntity {
     String? ingresos,
     String? recordStatus,
   }) : super(
-          tipoActividadProductivaId: tipoActividadProductivaId ?? '',
-          beneficiarioId: beneficiarioId ?? '',
-          frecuenciaId: frecuenciaId ?? '',
+          tipoActividadProductivaId: tipoActividadProductivaId,
+          beneficiarioId: beneficiarioId,
+          frecuenciaId: frecuenciaId,
           cantidadAnimales: cantidadAnimales ?? '',
           cantidadCria: cantidadCria ?? '',
           cantidadLevante: cantidadLevante ?? '',

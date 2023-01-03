@@ -127,6 +127,9 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
     final alianzaBeneficiario =
         alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
+    if (alianzaBeneficiario.fueBeneficiado == '') {
+      alianzaBeneficiarioCubit.changeFueBeneficiado('false');
+    }
     if (alianzaBeneficiario.activo == '') {
       alianzaBeneficiarioCubit.changeActivo('false');
     }

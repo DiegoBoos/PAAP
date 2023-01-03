@@ -2,9 +2,9 @@ import 'package:paap/domain/entities/alianza_experiencia_agricola_entity.dart';
 
 class AlianzaExperienciaAgricolaModel extends AlianzaExperienciaAgricolaEntity {
   AlianzaExperienciaAgricolaModel({
-    required String? tipoActividadProductivaId,
-    required String? beneficiarioId,
-    required String? frecuenciaId,
+    required String tipoActividadProductivaId,
+    required String beneficiarioId,
+    required String frecuenciaId,
     String? areaCultivo,
     String? cantidadProducida,
     String? cantidadVendida,
@@ -19,9 +19,9 @@ class AlianzaExperienciaAgricolaModel extends AlianzaExperienciaAgricolaEntity {
     String? totalAreaPredio,
     String? recordStatus,
   }) : super(
-          tipoActividadProductivaId: tipoActividadProductivaId ?? '',
-          beneficiarioId: beneficiarioId ?? '',
-          frecuenciaId: frecuenciaId ?? '',
+          tipoActividadProductivaId: tipoActividadProductivaId,
+          beneficiarioId: beneficiarioId,
+          frecuenciaId: frecuenciaId,
           areaCultivo: areaCultivo ?? '',
           cantidadProducida: cantidadProducida ?? '',
           cantidadVendida: cantidadVendida ?? '',

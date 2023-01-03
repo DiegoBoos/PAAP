@@ -27,9 +27,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  animate_do: ^2.1.0
+  animate_do: ^3.0.2
   bloc: ^8.1.0
-  connectivity_plus: ^2.3.7
+  connectivity_plus: ^3.0.2
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
   email_validator: ^2.1.17
@@ -44,7 +44,7 @@ dependencies:
   get_it: ^7.2.0
   http: ^0.13.5
   image_picker: ^0.8.6
-  intl: ^0.17.0
+  intl: ^0.18.0
   path: ^1.8.2
   path_provider: ^2.0.11
   rxdart: ^0.27.5
@@ -58,7 +58,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.15
-  mocktail: ^0.2.0
+  mocktail: ^0.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

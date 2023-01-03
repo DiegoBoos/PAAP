@@ -12,7 +12,6 @@ class AlianzaBeneficiarioEntity {
     required this.conocePerfil,
     required this.fueBeneficiado,
     required this.cualBeneficio,
-    required this.beneficioId,
     required this.activo,
     required this.miembrosHogar,
     required this.miembrosEcoActivos,
@@ -27,29 +26,31 @@ class AlianzaBeneficiarioEntity {
     required this.activoCorriente,
     required this.nota,
     required this.nombreFinca,
+    required this.tipoDiscapacidadId,
     required this.nivelEscolarId,
     required this.cotizanteBeps,
     required this.estadoCivilId,
+    required this.conyugeNombre1,
+    required this.conyugeFechaNacimiento,
+    required this.conyugeIngresosMensuales,
     required this.calificacionSisben,
     required this.ingresosMensuales,
-    required this.tipoDiscapacidadId,
-    required this.conyugeTipoIdentificacionId,
-    required this.conyugeId,
-    required this.conyugeNombre1,
     required this.conyugeNombre2,
     required this.conyugeApellido1,
     required this.conyugeApellido2,
     required this.conyugeGeneroId,
     required this.conyugeFechaExpedicionDocumento,
     required this.conyugeGrupoEspecialId,
-    required this.conyugeFechaNacimiento,
-    required this.conyugeIngresosMensuales,
     required this.actividadEconomicaId,
     required this.ingresosDiarios,
     required this.diasTrabajo,
+    required this.conyugeTipoIdentificacionId,
+    required this.conyugeId,
     required this.longitud,
     required this.latitud,
     required this.cedulaCatastral,
+    required this.beneficioId,
+    //OTROS
     this.documento,
     this.tipoDocumento,
     this.nombre,
@@ -72,7 +73,6 @@ class AlianzaBeneficiarioEntity {
   String conocePerfil;
   String fueBeneficiado;
   String cualBeneficio;
-  String beneficioId;
   String activo;
   String miembrosHogar;
   String miembrosEcoActivos;
@@ -87,29 +87,30 @@ class AlianzaBeneficiarioEntity {
   String activoCorriente;
   String nota;
   String nombreFinca;
+  String tipoDiscapacidadId;
   String nivelEscolarId;
   String cotizanteBeps;
   String estadoCivilId;
+  String conyugeNombre1;
+  String conyugeFechaNacimiento;
+  String conyugeIngresosMensuales;
   String calificacionSisben;
   String ingresosMensuales;
-  String tipoDiscapacidadId;
-  String conyugeTipoIdentificacionId;
-  String conyugeId;
-  String conyugeNombre1;
   String conyugeNombre2;
   String conyugeApellido1;
   String conyugeApellido2;
   String conyugeGeneroId;
   String conyugeFechaExpedicionDocumento;
   String conyugeGrupoEspecialId;
-  String conyugeFechaNacimiento;
-  String conyugeIngresosMensuales;
   String actividadEconomicaId;
   String ingresosDiarios;
   String diasTrabajo;
+  String conyugeTipoIdentificacionId;
+  String conyugeId;
   String longitud;
   String latitud;
   String cedulaCatastral;
+  String beneficioId;
   String? documento;
   String? tipoDocumento;
   String? nombre;
@@ -132,7 +133,6 @@ class AlianzaBeneficiarioEntity {
     String? conocePerfil,
     String? fueBeneficiado,
     String? cualBeneficio,
-    String? beneficioId,
     String? activo,
     String? miembrosHogar,
     String? miembrosEcoActivos,
@@ -147,29 +147,30 @@ class AlianzaBeneficiarioEntity {
     String? activoCorriente,
     String? nota,
     String? nombreFinca,
+    String? tipoDiscapacidadId,
     String? nivelEscolarId,
     String? cotizanteBeps,
     String? estadoCivilId,
+    String? conyugeNombre1,
+    String? conyugeFechaNacimiento,
+    String? conyugeIngresosMensuales,
     String? calificacionSisben,
     String? ingresosMensuales,
-    String? tipoDiscapacidadId,
-    String? conyugeTipoIdentificacionId,
-    String? conyugeId,
-    String? conyugeNombre1,
     String? conyugeNombre2,
     String? conyugeApellido1,
     String? conyugeApellido2,
     String? conyugeGeneroId,
     String? conyugeFechaExpedicionDocumento,
     String? conyugeGrupoEspecialId,
-    String? conyugeFechaNacimiento,
-    String? conyugeIngresosMensuales,
     String? actividadEconomicaId,
     String? ingresosDiarios,
     String? diasTrabajo,
+    String? conyugeTipoIdentificacionId,
+    String? conyugeId,
     String? longitud,
     String? latitud,
     String? cedulaCatastral,
+    String? beneficioId,
     String? recordStatus,
   }) =>
       AlianzaBeneficiarioEntity(
@@ -185,7 +186,6 @@ class AlianzaBeneficiarioEntity {
         conocePerfil: conocePerfil ?? this.conocePerfil,
         fueBeneficiado: fueBeneficiado ?? this.fueBeneficiado,
         cualBeneficio: cualBeneficio ?? this.cualBeneficio,
-        beneficioId: beneficioId ?? this.beneficioId,
         activo: activo ?? this.activo,
         miembrosHogar: miembrosHogar ?? this.miembrosHogar,
         miembrosEcoActivos: miembrosEcoActivos ?? this.miembrosEcoActivos,
@@ -201,16 +201,17 @@ class AlianzaBeneficiarioEntity {
         activoCorriente: activoCorriente ?? this.activoCorriente,
         nota: nota ?? this.nota,
         nombreFinca: nombreFinca ?? this.nombreFinca,
+        tipoDiscapacidadId: tipoDiscapacidadId ?? this.tipoDiscapacidadId,
         nivelEscolarId: nivelEscolarId ?? this.nivelEscolarId,
         cotizanteBeps: cotizanteBeps ?? this.cotizanteBeps,
         estadoCivilId: estadoCivilId ?? this.estadoCivilId,
+        conyugeNombre1: conyugeNombre1 ?? this.conyugeNombre1,
+        conyugeFechaNacimiento:
+            conyugeFechaNacimiento ?? this.conyugeFechaNacimiento,
+        conyugeIngresosMensuales:
+            conyugeIngresosMensuales ?? this.conyugeIngresosMensuales,
         calificacionSisben: calificacionSisben ?? this.calificacionSisben,
         ingresosMensuales: ingresosMensuales ?? this.ingresosMensuales,
-        tipoDiscapacidadId: tipoDiscapacidadId ?? this.tipoDiscapacidadId,
-        conyugeTipoIdentificacionId:
-            conyugeTipoIdentificacionId ?? this.conyugeTipoIdentificacionId,
-        conyugeId: conyugeId ?? this.conyugeId,
-        conyugeNombre1: conyugeNombre1 ?? this.conyugeNombre1,
         conyugeNombre2: conyugeNombre2 ?? this.conyugeNombre2,
         conyugeApellido1: conyugeApellido1 ?? this.conyugeApellido1,
         conyugeApellido2: conyugeApellido2 ?? this.conyugeApellido2,
@@ -219,16 +220,16 @@ class AlianzaBeneficiarioEntity {
             this.conyugeFechaExpedicionDocumento,
         conyugeGrupoEspecialId:
             conyugeGrupoEspecialId ?? this.conyugeGrupoEspecialId,
-        conyugeFechaNacimiento:
-            conyugeFechaNacimiento ?? this.conyugeFechaNacimiento,
-        conyugeIngresosMensuales:
-            conyugeIngresosMensuales ?? this.conyugeIngresosMensuales,
         actividadEconomicaId: actividadEconomicaId ?? this.actividadEconomicaId,
         ingresosDiarios: ingresosDiarios ?? this.ingresosDiarios,
         diasTrabajo: diasTrabajo ?? this.diasTrabajo,
+        conyugeTipoIdentificacionId:
+            conyugeTipoIdentificacionId ?? this.conyugeTipoIdentificacionId,
+        conyugeId: conyugeId ?? this.conyugeId,
         longitud: longitud ?? this.longitud,
         latitud: latitud ?? this.latitud,
         cedulaCatastral: cedulaCatastral ?? this.cedulaCatastral,
+        beneficioId: beneficioId ?? this.beneficioId,
         recordStatus: recordStatus ?? this.recordStatus,
       );
 
@@ -246,7 +247,6 @@ class AlianzaBeneficiarioEntity {
         conocePerfil: json["ConocePerfil"],
         fueBeneficiado: json["FueBeneficiado"],
         cualBeneficio: json["CualBeneficio"],
-        beneficioId: json["BeneficioId"],
         activo: json["Activo"],
         miembrosHogar: json["MiembrosHogar"],
         miembrosEcoActivos: json["MiembrosEcoActivos"],
@@ -261,15 +261,15 @@ class AlianzaBeneficiarioEntity {
         activoCorriente: json["ActivoCorriente"],
         nota: json["Nota"],
         nombreFinca: json["NombreFinca"],
-        nivelEscolarId: json["NivelEscolarId"],
-        cotizanteBeps: json["CotizanteBEPS"],
-        estadoCivilId: json["EstadoCivilId"],
-        calificacionSisben: json["CalificacionSISBEN"],
-        ingresosMensuales: json["IngresosMensuales"],
         tipoDiscapacidadId: json["TipoDiscapacidadId"],
-        conyugeTipoIdentificacionId: json["ConyugeTipoIdentificacionId"],
-        conyugeId: json["ConyugeId"],
+        nivelEscolarId: json["NivelEscolarId"],
+        cotizanteBeps: json["CotizanteBeps"],
+        estadoCivilId: json["EstadoCivilId"],
         conyugeNombre1: json["ConyugeNombre1"],
+        conyugeFechaNacimiento: json["ConyugeFechaNacimiento"],
+        conyugeIngresosMensuales: json["ConyugeIngresosMensuales"],
+        calificacionSisben: json["CalificacionSisben"],
+        ingresosMensuales: json["IngresosMensuales"],
         conyugeNombre2: json["ConyugeNombre2"],
         conyugeApellido1: json["ConyugeApellido1"],
         conyugeApellido2: json["ConyugeApellido2"],
@@ -277,14 +277,15 @@ class AlianzaBeneficiarioEntity {
         conyugeFechaExpedicionDocumento:
             json["ConyugeFechaExpedicionDocumento"],
         conyugeGrupoEspecialId: json["ConyugeGrupoEspecialId"],
-        conyugeFechaNacimiento: json["ConyugeFechaNacimiento"],
-        conyugeIngresosMensuales: json["ConyugeIngresosMensuales"],
         actividadEconomicaId: json["ActividadEconomicaId"],
         ingresosDiarios: json["IngresosDiarios"],
         diasTrabajo: json["DiasTrabajo"],
+        conyugeTipoIdentificacionId: json["ConyugeTipoIdentificacionId"],
+        conyugeId: json["ConyugeId"],
         longitud: json["Longitud"],
         latitud: json["Latitud"],
         cedulaCatastral: json["CedulaCatastral"],
+        beneficioId: json["BeneficioId"],
         recordStatus: json["RecordStatus"],
       );
 
@@ -301,7 +302,6 @@ class AlianzaBeneficiarioEntity {
         "ConocePerfil": conocePerfil,
         "FueBeneficiado": fueBeneficiado,
         "CualBeneficio": cualBeneficio,
-        "BeneficioId": beneficioId,
         "Activo": activo,
         "MiembrosHogar": miembrosHogar,
         "MiembrosEcoActivos": miembrosEcoActivos,
@@ -316,31 +316,30 @@ class AlianzaBeneficiarioEntity {
         "ActivoCorriente": activoCorriente,
         "Nota": nota,
         "NombreFinca": nombreFinca,
-        "NivelEscolarId": nivelEscolarId,
-        "CotizanteBEPS": cotizanteBeps,
-        "EstadoCivilId": estadoCivilId,
-        "CalificacionSISBEN": calificacionSisben,
-        "IngresosMensuales": ingresosMensuales,
         "TipoDiscapacidadId": tipoDiscapacidadId,
-        "ConyugeTipoIdentificacionId": conyugeTipoIdentificacionId,
-        "ConyugeId": conyugeId,
+        "NivelEscolarId": nivelEscolarId,
+        "CotizanteBeps": cotizanteBeps,
+        "EstadoCivilId": estadoCivilId,
         "ConyugeNombre1": conyugeNombre1,
+        "ConyugeFechaNacimiento": conyugeFechaNacimiento,
+        "ConyugeIngresosMensuales": conyugeIngresosMensuales,
+        "CalificacionSisben": calificacionSisben,
+        "IngresosMensuales": ingresosMensuales,
         "ConyugeNombre2": conyugeNombre2,
         "ConyugeApellido1": conyugeApellido1,
         "ConyugeApellido2": conyugeApellido2,
         "ConyugeGeneroId": conyugeGeneroId,
         "ConyugeFechaExpedicionDocumento": conyugeFechaExpedicionDocumento,
         "ConyugeGrupoEspecialId": conyugeGrupoEspecialId,
-        "ConyugeFechaNacimiento": conyugeFechaNacimiento,
-        "ConyugeIngresosMensuales": conyugeIngresosMensuales,
         "ActividadEconomicaId": actividadEconomicaId,
         "IngresosDiarios": ingresosDiarios,
         "DiasTrabajo": diasTrabajo,
+        "ConyugeTipoIdentificacionId": conyugeTipoIdentificacionId,
+        "ConyugeId": conyugeId,
         "Longitud": longitud,
         "Latitud": latitud,
         "CedulaCatastral": cedulaCatastral,
+        "BeneficioId": beneficioId,
         "RecordStatus": recordStatus,
       };
-
-  void changeAccesoExplotacionTierra(bool value) {}
 }
