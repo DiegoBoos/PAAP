@@ -194,6 +194,7 @@ class PerfilPreInversionCofinanciadorDesembolsoRemoteDataSourceImpl
               },
               body: perfilPreInversionCofinanciadorDesembolsoSOAP);
 
+      print(perfilPreInversionCofinanciadorDesembolsoEntity.toJson());
       if (perfilPreInversionCofinanciadorDesembolsoResp.statusCode == 200) {
         final perfilPreInversionCofinanciadorDesembolsoDoc =
             xml.XmlDocument.parse(

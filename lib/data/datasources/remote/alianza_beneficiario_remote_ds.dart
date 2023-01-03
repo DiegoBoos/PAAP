@@ -142,7 +142,7 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
           alianzaBeneficiarioEntity.estadoCivilId != '5') {
         dataConyuge = '''
             <ConyugeTipoIdentificacionId>1</ConyugeTipoIdentificacionId>
-            <ConyugeId>${alianzaBeneficiarioEntity.conyugeId}</ConyugeId>
+            <ConyugeId>${alianzaBeneficiarioEntity.beneficiarioId}</ConyugeId>
             <ConyugeNombre1></ConyugeNombre1>
             <ConyugeNombre2></ConyugeNombre2>
             <ConyugeApellido1></ConyugeApellido1>
@@ -204,7 +204,6 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
             <ConocePerfil>${alianzaBeneficiarioEntity.conocePerfil}</ConocePerfil>
             <FueBeneficiado>${alianzaBeneficiarioEntity.fueBeneficiado}</FueBeneficiado>
             <CualBeneficio>${alianzaBeneficiarioEntity.cualBeneficio}</CualBeneficio>
-            <BeneficioId>${alianzaBeneficiarioEntity.beneficioId}</BeneficioId>
             <Activo>${alianzaBeneficiarioEntity.activo}</Activo>
             <MiembrosHogar>${alianzaBeneficiarioEntity.miembrosHogar}</MiembrosHogar>
             <MiembrosEcoActivos>${alianzaBeneficiarioEntity.miembrosEcoActivos}</MiembrosEcoActivos>
@@ -245,8 +244,9 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
             "SOAPAction": "${Constants.urlSOAP}/GuardarAlianzaBeneficiario"
           },
           body: alianzaBeneficiarioSOAP);
-
+      final ab = alianzaBeneficiarioEntity.toJson();
       if (alianzaBeneficiarioResp.statusCode == 200) {
+        print(ab);
         final alianzaBeneficiarioDoc =
             xml.XmlDocument.parse(alianzaBeneficiarioResp.body);
 
