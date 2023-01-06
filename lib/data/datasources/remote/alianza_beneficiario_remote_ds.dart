@@ -244,9 +244,8 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
             "SOAPAction": "${Constants.urlSOAP}/GuardarAlianzaBeneficiario"
           },
           body: alianzaBeneficiarioSOAP);
-      final ab = alianzaBeneficiarioEntity.toJson();
+
       if (alianzaBeneficiarioResp.statusCode == 200) {
-        print(ab);
         final alianzaBeneficiarioDoc =
             xml.XmlDocument.parse(alianzaBeneficiarioResp.body);
 

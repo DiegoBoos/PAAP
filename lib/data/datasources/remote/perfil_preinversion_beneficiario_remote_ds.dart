@@ -240,7 +240,6 @@ class PerfilPreInversionBeneficiarioRemoteDataSourceImpl
             <Longitud>${perfilPreInversionBeneficiarioEntity.longitud}</Longitud>
             <Latitud>${perfilPreInversionBeneficiarioEntity.latitud}</Latitud>
             <CedulaCatastral>${perfilPreInversionBeneficiarioEntity.cedulaCatastral}</CedulaCatastral>
-            <BeneficioId>${perfilPreInversionBeneficiarioEntity.beneficioId}</BeneficioId>
             $dataConyuge
           </objeto>
         </GuardarPerfilPreInversionBeneficiario>

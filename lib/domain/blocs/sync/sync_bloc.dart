@@ -1627,7 +1627,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         (_) async => await uploadPerfilBeneficiario(usuario, emit));
   }
 
-  // Sync PerfilBeneficiario
+  // TODO: Quitar Sync PerfilBeneficiario
   Future<void> uploadPerfilBeneficiario(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
     add(SyncStatusChanged(state.syncProgressModel.copyWith(

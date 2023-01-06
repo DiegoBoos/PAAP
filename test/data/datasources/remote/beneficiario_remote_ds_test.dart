@@ -2,22 +2,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:paap/data/constants.dart';
-import 'package:paap/data/datasources/remote/aliado_remote_ds.dart';
-import 'package:paap/data/models/aliado_model.dart';
+import 'package:paap/data/datasources/remote/beneficiario_remote_ds.dart';
+import 'package:paap/data/models/beneficiario_model.dart';
 import 'package:paap/data/models/usuario_model.dart';
 
 import '../../../helpers/test_helper.mocks.dart';
 
 void main() {
   late MockHttpClient mockHttpClient;
-  late AliadoRemoteDataSourceImpl dataSource;
+  late BeneficiarioRemoteDataSourceImpl dataSource;
 
   setUp(() {
     mockHttpClient = MockHttpClient();
-    dataSource = AliadoRemoteDataSourceImpl(client: mockHttpClient);
+    dataSource = BeneficiarioRemoteDataSourceImpl(client: mockHttpClient);
   });
 
-  group('GuardarAliado', () {
+  group('GuardarBeneficiario', () {
     final uri = Uri.parse(
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
@@ -35,26 +35,24 @@ void main() {
         fechaCambio: '2023-04-19T17:41:22.633+02:00',
         activo: 'true');
 
-    final aliadoModel = AliadoModel(
-        aliadoId: '100',
-        nombre: 'string',
-        fechaCreacion: '2022-12-28T21:01:26.263Z',
-        nombreContacto: 'string',
-        direccion: 'string',
-        telefonoFijo: 'string',
-        telefonoMovil: 'string',
-        correo: 'string',
-        municipioId: '100',
-        experiencia: '100',
-        fechaActivacion: '2022-12-28T21:01:26.263Z',
-        fechaDesactivacion: '2022-12-28T21:01:26.263Z',
-        fechaCambio: '2022-12-28T21:01:26.263Z',
-        activo: 'true');
+    final beneficiarioModel = BeneficiarioModel(
+        beneficiarioId: '0',
+        nombre1: 'Manuel',
+        nombre2: 'de Jesus',
+        apellido1: 'Castrillo',
+        apellido2: 'Carmona',
+        generoId: '1',
+        fechaNacimiento: '1964-11-09T00:00:00+01:00',
+        fechaExpedicionDocumento: '1983-01-29T00:00:00+01:00',
+        grupoEspecialId: '1',
+        telefonoMovil: '311 745 1629',
+        activo: 'true',
+        tipoIdentificacionId: '1');
 
-    final aliadoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
+    final beneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
-        <GuardarAliado xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+        <GuardarBeneficiario xmlns="http://alianzasproductivas.minagricultura.gov.co/">
           <usuario>
             <UsuarioId>${usuarioModel.usuarioId}</UsuarioId>
             <Nombre>${usuarioModel.nombre}</Nombre>
@@ -74,22 +72,19 @@ void main() {
             <Nombre>string</Nombre>
           </rol>
           <objeto>
-            <AliadoId>${aliadoModel.aliadoId}</AliadoId>
-            <Nombre>${aliadoModel.nombre}</Nombre>
-            <FechaCreacion>${aliadoModel.fechaCreacion}</FechaCreacion>
-            <NombreContacto>${aliadoModel.nombreContacto}</NombreContacto>
-            <Direccion>${aliadoModel.direccion}</Direccion>
-            <TelefonoFijo>${aliadoModel.telefonoFijo}</TelefonoFijo>
-            <TelefonoMovil>${aliadoModel.telefonoMovil}</TelefonoMovil>
-            <Correo>${aliadoModel.correo}</Correo>
-            <MunicipioId>${aliadoModel.municipioId}</MunicipioId>
-            <Experiencia>${aliadoModel.experiencia}</Experiencia>
-            <FechaActivacion>${aliadoModel.fechaActivacion}</FechaActivacion>
-            <FechaDesactivacion>${aliadoModel.fechaDesactivacion}</FechaDesactivacion>
-            <FechaCambio>${aliadoModel.fechaCambio}</FechaCambio>
-            <Activo>${aliadoModel.activo}</Activo>
+            <Nombre1>${beneficiarioModel.nombre1}</Nombre1>
+            <Nombre2>${beneficiarioModel.nombre2}</Nombre2>
+            <Apellido1>${beneficiarioModel.apellido1}</Apellido1>
+            <Apellido2>${beneficiarioModel.apellido2}</Apellido2>
+            <GeneroId>${beneficiarioModel.generoId}</GeneroId>
+            <FechaNacimiento>${beneficiarioModel.fechaNacimiento}</FechaNacimiento>
+            <FechaExpedicionDocumento>${beneficiarioModel.fechaExpedicionDocumento}</FechaExpedicionDocumento>
+            <GrupoEspecialId>${beneficiarioModel.grupoEspecialId}</GrupoEspecialId>
+            <TelefonoMovil>${beneficiarioModel.telefonoMovil}</TelefonoMovil>
+            <Activo>${beneficiarioModel.activo}</Activo>
+            <TipoIdentificacionId>${beneficiarioModel.tipoIdentificacionId}</TipoIdentificacionId>
           </objeto>
-        </GuardarAliado>
+        </GuardarBeneficiario>
       </soap:Body>
     </soap:Envelope>
     ''';
@@ -102,31 +97,31 @@ void main() {
           mockHttpClient.post(uri,
               headers: {
                 "Content-Type": "text/xml; charset=utf-8",
-                "SOAPAction": "${Constants.urlSOAP}/GuardarAliado"
+                "SOAPAction": "${Constants.urlSOAP}/GuardarBeneficiario"
               },
-              body: aliadoSOAP),
+              body: beneficiarioSOAP),
         ).thenAnswer(
           (_) async => http.Response('''<?xml version="1.0" encoding="utf-8"?>
         <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns:xsd="http://www.w3.org/2001/XMLSchema">
             <soap:Body>
-                <GuardarAliadoResponse xmlns="http://alianzasproductivas.minagricultura.gov.co/">
-                    <GuardarAliadoResult>
+                <GuardarBeneficiarioResponse xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+                    <GuardarBeneficiarioResult>
                         <respuesta>true</respuesta>
                         <mensaje>Transacción realizada correctamente</mensaje>
                         <registroId>-1</registroId>
-                    </GuardarAliadoResult>
-                </GuardarAliadoResponse>
+                    </GuardarBeneficiarioResult>
+                </GuardarBeneficiarioResponse>
             </soap:Body>
         </soap:Envelope>''', 200),
         );
 
         // act
-        final saveAliadoResult =
-            await dataSource.saveAliado(usuarioModel, aliadoModel);
+        final saveBeneficiarioResult =
+            await dataSource.saveBeneficiario(usuarioModel, beneficiarioModel);
 
         // assert
-        expect(saveAliadoResult, equals(aliadoModel));
+        expect(saveBeneficiarioResult, equals(beneficiarioModel));
       },
     );
   });

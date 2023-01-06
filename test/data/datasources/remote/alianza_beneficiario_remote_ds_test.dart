@@ -23,71 +23,104 @@ void main() {
         '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
 
     final usuarioModel = UsuarioModel(
-        usuarioId: '',
-        nombre: '',
-        apellido: '',
-        direccion: '',
-        telefonoFijo: '',
-        telefonoMovil: '',
-        correo: '',
-        contrasena: '',
-        fechaActivacion: '',
-        fechaDesactivacion: '',
-        fechaCambio: '',
-        activo: '');
+        usuarioId: 'hugo.suarez@minagricultura.gov.co',
+        nombre: 'Hugo Armando',
+        apellido: 'Suárez León',
+        direccion: 'Av Jimenez # 7b-01',
+        telefonoFijo: '2543300',
+        telefonoMovil: '2543300',
+        correo: 'hugo.suarez@minagricultura.gov.co',
+        contrasena: 'TWlncmFjaW9uUEFBUCo=',
+        fechaActivacion: '2020-03-01T00:00:00+01:00',
+        fechaDesactivacion: '2023-04-19T17:41:22.633+02:00',
+        fechaCambio: '2023-04-19T17:41:22.633+02:00',
+        activo: 'true');
 
     final alianzaBeneficiarioModel = AlianzaBeneficiarioModel(
-      alianzaId: '',
-      beneficiarioId: '',
-      municipioId: '',
-      veredaId: '',
-      areaFinca: '',
-      areaProyecto: '',
-      tipoTenenciaId: '',
-      experiencia: '',
-      asociado: '',
-      conocePerfil: '',
-      fueBeneficiado: '',
-      cualBeneficio: '',
-      activo: '',
-      miembrosHogar: '',
-      miembrosEcoActivos: '',
-      residenciaId: '',
-      accesoExplotacionTierra: '',
-      gastosMensuales: '',
-      mesesAsociado: '',
-      nombreOrganizacion: '',
-      activoInmobiliario: '',
-      activoFinanciero: '',
-      activoProductivo: '',
-      activoCorriente: '',
-      nota: '',
-      nombreFinca: '',
-      tipoDiscapacidadId: '',
-      nivelEscolarId: '',
-      cotizanteBeps: '',
-      estadoCivilId: '',
-      conyugeNombre1: '',
-      conyugeFechaNacimiento: '',
-      conyugeIngresosMensuales: '',
-      calificacionSisben: '',
-      ingresosMensuales: '',
-      conyugeNombre2: '',
-      conyugeApellido1: '',
+      alianzaId: '1',
+      beneficiarioId: '0',
+      municipioId: '91001',
+      veredaId: '34485',
+      areaFinca: '1.00',
+      areaProyecto: '2.00',
+      tipoTenenciaId: '1',
+      experiencia: '1',
+      asociado: 'true',
+      conocePerfil: 'true',
+      fueBeneficiado: 'true',
+      cualBeneficio: 'fdasf',
+      activo: 'true',
+      miembrosHogar: '1',
+      miembrosEcoActivos: '1',
+      residenciaId: '1',
+      accesoExplotacionTierra: 'false',
+      gastosMensuales: '1',
+      mesesAsociado: '1',
+      nombreOrganizacion: 'fsda1',
+      activoInmobiliario: '1.00',
+      activoFinanciero: '1.00',
+      activoProductivo: '1.00',
+      activoCorriente: '1.00',
+      nota: 'rrrrrr',
+      nombreFinca: 'fsad',
+      tipoDiscapacidadId: '1',
+      nivelEscolarId: '1',
+      cotizanteBeps: 'false',
+      estadoCivilId: '2',
+      calificacionSisben: '3',
+      ingresosMensuales: '2',
+      actividadEconomicaId: '1',
+      ingresosDiarios: '2',
+      diasTrabajo: '2',
+      longitud: '4.000000',
+      latitud: '3.000000',
+      cedulaCatastral: '231',
+      beneficioId: '8',
+      conyugeTipoIdentificacionId: '1',
+      conyugeId: '23423',
+      conyugeNombre1: 'aasf',
+      conyugeNombre2: 'fdsfds',
+      conyugeApellido1: 'asdfre',
       conyugeApellido2: '',
-      conyugeGeneroId: '',
-      conyugeFechaExpedicionDocumento: '',
-      conyugeGrupoEspecialId: '',
-      actividadEconomicaId: '',
-      ingresosDiarios: '',
-      diasTrabajo: '',
-      conyugeTipoIdentificacionId: '',
-      conyugeId: '',
-      longitud: '',
-      latitud: '',
-      cedulaCatastral: '',
-      beneficioId: '',
+      conyugeGeneroId: '2',
+      conyugeFechaExpedicionDocumento: '2022-12-16T00:00:00+01:00',
+      conyugeGrupoEspecialId: '1',
+      conyugeFechaNacimiento: '2022-12-16T00:00:00+01:00',
+      conyugeIngresosMensuales: '12313',
     );
+
+    String dataConyuge = '';
+
+    if (alianzaBeneficiarioModel.estadoCivilId != '2' &&
+        alianzaBeneficiarioModel.estadoCivilId != '5') {
+      dataConyuge = '''
+            <ConyugeTipoIdentificacionId>1</ConyugeTipoIdentificacionId>
+            <ConyugeId>${alianzaBeneficiarioModel.beneficiarioId}</ConyugeId>
+            <ConyugeNombre1></ConyugeNombre1>
+            <ConyugeNombre2></ConyugeNombre2>
+            <ConyugeApellido1></ConyugeApellido1>
+            <ConyugeApellido2></ConyugeApellido2>
+            <ConyugeGeneroId>1</ConyugeGeneroId>
+            <ConyugeFechaExpedicionDocumento>1900-01-01T00:00:00+01:00</ConyugeFechaExpedicionDocumento>
+            <ConyugeGrupoEspecialId>1</ConyugeGrupoEspecialId>
+            <ConyugeFechaNacimiento>1900-01-01T00:00:00+01:00</ConyugeFechaNacimiento>
+            <ConyugeIngresosMensuales>0</ConyugeIngresosMensuales>
+      ''';
+    } else {
+      dataConyuge = '''
+            <ConyugeTipoIdentificacionId>${alianzaBeneficiarioModel.conyugeTipoIdentificacionId}</ConyugeTipoIdentificacionId>
+            <ConyugeId>${alianzaBeneficiarioModel.conyugeId}</ConyugeId>
+            <ConyugeNombre1>${alianzaBeneficiarioModel.conyugeNombre1}</ConyugeNombre1>
+            <ConyugeNombre2>${alianzaBeneficiarioModel.conyugeNombre2}</ConyugeNombre2>
+            <ConyugeApellido1>${alianzaBeneficiarioModel.conyugeApellido1}</ConyugeApellido1>
+            <ConyugeApellido2>${alianzaBeneficiarioModel.conyugeApellido2}</ConyugeApellido2>
+            <ConyugeGeneroId>${alianzaBeneficiarioModel.conyugeGeneroId}</ConyugeGeneroId>
+            <ConyugeFechaExpedicionDocumento>${alianzaBeneficiarioModel.conyugeFechaExpedicionDocumento}</ConyugeFechaExpedicionDocumento>
+            <ConyugeGrupoEspecialId>${alianzaBeneficiarioModel.conyugeGrupoEspecialId}</ConyugeGrupoEspecialId>
+            <ConyugeFechaNacimiento>${alianzaBeneficiarioModel.conyugeFechaNacimiento}</ConyugeFechaNacimiento>
+            <ConyugeIngresosMensuales>${alianzaBeneficiarioModel.conyugeIngresosMensuales}</ConyugeIngresosMensuales>
+      ''';
+    }
 
     final alianzaBeneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -138,30 +171,20 @@ void main() {
             <ActivoCorriente>${alianzaBeneficiarioModel.activoCorriente}</ActivoCorriente>
             <Nota>${alianzaBeneficiarioModel.nota}</Nota>
             <NombreFinca>${alianzaBeneficiarioModel.nombreFinca}</NombreFinca>
-            <TipoDiscapacidadId>${alianzaBeneficiarioModel.tipoDiscapacidadId}</TipoDiscapacidadId>
             <NivelEscolarId>${alianzaBeneficiarioModel.nivelEscolarId}</NivelEscolarId>
             <CotizanteBEPS>${alianzaBeneficiarioModel.cotizanteBeps}</CotizanteBEPS>
             <EstadoCivilId>${alianzaBeneficiarioModel.estadoCivilId}</EstadoCivilId>
-            <ConyugeNombre1>${alianzaBeneficiarioModel.conyugeNombre1}</ConyugeNombre1>
-            <ConyugeFechaNacimiento>${alianzaBeneficiarioModel.conyugeFechaNacimiento}</ConyugeFechaNacimiento>
-            <ConyugeIngresosMensuales>${alianzaBeneficiarioModel.conyugeIngresosMensuales}</ConyugeIngresosMensuales>
             <CalificacionSISBEN>${alianzaBeneficiarioModel.calificacionSisben}</CalificacionSISBEN>
             <IngresosMensuales>${alianzaBeneficiarioModel.ingresosMensuales}</IngresosMensuales>
-            <ConyugeNombre2>${alianzaBeneficiarioModel.conyugeNombre2}</ConyugeNombre2>
-            <ConyugeApellido1>${alianzaBeneficiarioModel.conyugeApellido1}</ConyugeApellido1>
-            <ConyugeApellido2>${alianzaBeneficiarioModel.conyugeApellido2}</ConyugeApellido2>
-            <ConyugeGeneroId>${alianzaBeneficiarioModel.conyugeGeneroId}</ConyugeGeneroId>
-            <ConyugeFechaExpedicionDocumento>${alianzaBeneficiarioModel.conyugeFechaExpedicionDocumento}</ConyugeFechaExpedicionDocumento>
-            <ConyugeGrupoEspecialId>${alianzaBeneficiarioModel.conyugeGrupoEspecialId}</ConyugeGrupoEspecialId>
+            <TipoDiscapacidadId>${alianzaBeneficiarioModel.tipoDiscapacidadId}</TipoDiscapacidadId>
             <ActividadEconomicaId>${alianzaBeneficiarioModel.actividadEconomicaId}</ActividadEconomicaId>
             <IngresosDiarios>${alianzaBeneficiarioModel.ingresosDiarios}</IngresosDiarios>
             <DiasTrabajo>${alianzaBeneficiarioModel.diasTrabajo}</DiasTrabajo>
-            <ConyugeTipoIdentificacionId>${alianzaBeneficiarioModel.conyugeTipoIdentificacionId}</ConyugeTipoIdentificacionId>
-            <ConyugeId>${alianzaBeneficiarioModel.conyugeId}</ConyugeId>
             <Longitud>${alianzaBeneficiarioModel.longitud}</Longitud>
             <Latitud>${alianzaBeneficiarioModel.latitud}</Latitud>
             <CedulaCatastral>${alianzaBeneficiarioModel.cedulaCatastral}</CedulaCatastral>
             <BeneficioId>${alianzaBeneficiarioModel.beneficioId}</BeneficioId>
+            $dataConyuge
           </objeto>
         </GuardarAlianzaBeneficiario>
       </soap:Body>
@@ -180,14 +203,19 @@ void main() {
               },
               body: alianzaBeneficiarioSOAP),
         ).thenAnswer(
-          (_) async => http.Response(
-              '''<GuardarAlianzaBeneficiarioResponse xmlns="http://alianzasproductivas.minagricultura.gov.co/">
-            <GuardarAlianzaBeneficiarioResult>
-                <respuesta>true</respuesta>
-                <mensaje>Transacción realizada correctamente</mensaje>
-                <registroId>-1</registroId>
-            </GuardarAlianzaBeneficiarioResult>
-        </GuardarAlianzaBeneficiarioResponse>''', 200),
+          (_) async => http.Response('''<?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <soap:Body>
+                <GuardarAlianzaBeneficiarioResponse xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+                    <GuardarAlianzaBeneficiarioResult>
+                        <respuesta>true</respuesta>
+                        <mensaje>Transacción realizada correctamente</mensaje>
+                        <registroId>-1</registroId>
+                    </GuardarAlianzaBeneficiarioResult>
+                </GuardarAlianzaBeneficiarioResponse>
+            </soap:Body>
+        </soap:Envelope>''', 200),
         );
 
         // act

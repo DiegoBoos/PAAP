@@ -173,7 +173,6 @@ class PerfilPreInversionAliadoRemoteDataSourceImpl
             <FrecuenciaId>${perfilPreInversionAliadoEntity.frecuenciaId}</FrecuenciaId>
             <PorcentajeCompra>${perfilPreInversionAliadoEntity.porcentajeCompra}</PorcentajeCompra>
             <SitioEntregaId>${perfilPreInversionAliadoEntity.sitioEntregaId}</SitioEntregaId>
-            
           </objeto>
         </GuardarPerfilPreInversionAliado>
       </soap:Body>

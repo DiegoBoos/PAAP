@@ -287,8 +287,7 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
             <PerfilPreInversionId>${perfilPreInversionConsultorEntity.perfilPreInversionId}</PerfilPreInversionId>
             <ConsultorId>${perfilPreInversionConsultorEntity.consultorId}</ConsultorId>
             <RevisionId>${perfilPreInversionConsultorEntity.revisionId}</RevisionId>
-            <FechaRevision>${perfilPreInversionConsultorEntity.fechaRevision}</FechaRevision>
-            
+            <FechaRevision>${perfilPreInversionConsultorEntity.fechaRevision}</FechaRevision> 
           </objeto>
         </GuardarPerfilPreInversionConsultor>
       </soap:Body>

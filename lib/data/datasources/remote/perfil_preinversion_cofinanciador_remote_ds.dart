@@ -172,7 +172,6 @@ class PerfilPreInversionCofinanciadorRemoteDataSourceImpl
             <CofinanciadorId>${perfilPreInversionCofinanciadorEntity.cofinanciadorId}</CofinanciadorId>
             <Monto>${perfilPreInversionCofinanciadorEntity.monto}</Monto>
             <Participacion>${perfilPreInversionCofinanciadorEntity.participacion}</Participacion>
-            
           </objeto>
         </GuardarPerfilPreInversionCofinanciador>
       </soap:Body>

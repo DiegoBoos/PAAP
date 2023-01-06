@@ -59,4 +59,10 @@ class EvaluacionModel extends EvaluacionEntity {
         "RecordStatus": recordStatus,
         "RemoteEvaluacionId": remoteEvaluacionId,
       };
+  @override
+  bool operator ==(Object other) =>
+      other is EvaluacionModel && other.evaluacionId == evaluacionId;
+
+  @override
+  int get hashCode => evaluacionId.hashCode;
 }
