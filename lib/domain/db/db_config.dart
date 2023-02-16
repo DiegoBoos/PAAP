@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../../data/datasources/local/actividad_economica_local_ds.dart';
 import '../../data/datasources/local/actividad_financiera_local_ds.dart';
@@ -71,95 +72,106 @@ class DBConfig {
   static Future<Database> get database async {
     if (_database != null) return _database!;
 
-    //Path donde se almacena la base de datos
-    Directory documentDirectory = await getApplicationDocumentsDirectory();
+    if (Platform.isWindows || Platform.isLinux) {
+      // Initialize FFI
+      sqfliteFfiInit();
+      var databaseFactory = databaseFactoryFfi;
+      final path = p.join(".", "paap.db");
+      print('Ruta base desktop: $path');
+      _database = await databaseFactory.openDatabase(path);
+    } else {
+      //Path donde se almacena la base de datos
+      Directory documentDirectory = await getApplicationDocumentsDirectory();
 
-    final path = p.join(documentDirectory.path, 'paap.db');
-    print('Ruta base: $path');
-    //Crear base de datos
-    _database = await openDatabase(path, version: 1, onOpen: (db) {},
-        onCreate: (Database db, int version) async {
-      await ActividadEconomicaLocalDataSourceImpl.createActividadEconomicaTable(
-          db);
-      await ActividadFinancieraLocalDataSourceImpl
-          .createActividadFinancieraTable(db);
-      await AgrupacionLocalDataSourceImpl.createAgrupacionTable(db);
-      await AliadosLocalDataSourceImpl.createAliadoTable(db);
-      await AlianzasLocalDataSourceImpl.createAlianzaTable(db);
-      await AuthLocalDataSourceImpl.createUserTable(db);
-      await AlianzaBeneficiarioLocalDataSourceImpl
-          .createAlianzaBeneficiarioTable(db);
-      await BeneficiarioLocalDataSourceImpl.createBeneficiarioTable(db);
-      await PerfilPreInversionBeneficiarioLocalDataSourceImpl
-          .createPerfilPreInversionBeneficiarioTable(db);
-      await CofinanciadorLocalDataSourceImpl.createCofinanciadorTable(db);
-      await ConsultorLocalDataSourceImpl.createConsultorTable(db);
-      await ConvocatoriaLocalDataSourceImpl.createConvocatoriaTable(db);
-      await DepartamentoLocalDataSourceImpl.createDepartamentoTable(db);
-      await DesembolsoLocalDataSourceImpl.createDesembolsoTable(db);
-      await EstadoCivilLocalDataSourceImpl.createEstadoCivilTable(db);
-      await EstadoVisitaLocalDataSourceImpl.createEstadoVisitaTable(db);
-      await FrecuenciaLocalDataSourceImpl.createFrecuenciaTable(db);
-      await GeneroLocalDataSourceImpl.createGeneroTable(db);
-      await GrupoEspecialLocalDataSourceImpl.createGrupoEspecialTable(db);
-      await MenuLocalDataSourceImpl.createMenuTable(db);
-      await MunicipioLocalDataSourceImpl.createMunicipioTable(db);
-      await NivelEscolarLocalDataSourceImpl.createNivelEscolarTable(db);
-      await PerfilPreInversionLocalDataSourceImpl.createPerfilPreInversionTable(
-          db);
-      await PerfilLocalDataSourceImpl.createPerfilTable(db);
-      await ProductoLocalDataSourceImpl.createProductoTable(db);
-      await ResidenciaLocalDataSourceImpl.createResidenciaTable(db);
-      await RevisionLocalDataSourceImpl.createRevisionTable(db);
-      await RubroLocalDataSourceImpl.createRubroTable(db);
-      await TipoActividadProductivaLocalDataSourceImpl
-          .createTipoActividadProductivaTable(db);
-      await TipoCalidadLocalDataSourceImpl.createTipoCalidadTable(db);
-      await TipoDiscapacidadLocalDataSourceImpl.createTipoDiscapacidadTable(db);
-      await TipoEntidadLocalDataSourceImpl.createTipoEntidadTable(db);
-      await TipoIdentificacionLocalDataSourceImpl.createTipoIdentificacionTable(
-          db);
-      await TipoMovimientoLocalDataSourceImpl.createTipoMovimientoTable(db);
-      await TipoProyectoLocalDataSourceImpl.createTipoProyectoTable(db);
-      await TipoTenenciaLocalDataSourceImpl.createTipoTenenciaTable(db);
-      await TipoVisitaLocalDataSourceImpl.createTipoVisitaTable(db);
-      await UnidadLocalDataSourceImpl.createUnidadTable(db);
-      await VeredaLocalDataSourceImpl.createVeredaTable(db);
-      await VisitaLocalDataSourceImpl.createVisitaTable(db);
-      await EvaluacionLocalDataSourceImpl.createEvaluacionTable(db);
-      await OpcionLocalDataSourceImpl.createOpcionTable(db);
-      await CriterioLocalDataSourceImpl.createCriterioTable(db);
-      await SitioEntregaLocalDataSourceImpl.createSitioEntregaTable(db);
-      await EvaluacionRespuestaLocalDataSourceImpl
-          .createEvaluacionRespuestaTable(db);
-      await PerfilPreInversionAliadoLocalDataSourceImpl
-          .createPerfilPreInversionAliadoTable(db);
-      await PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
-          .createPerfilPreInversionCofinanciadorActividadFinancieraTable(db);
-      await PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
-          .createPerfilPreInversionCofinanciadorDesembolsoTable(db);
-      await PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
-          .createPerfilPreInversionCofinanciadorRubroTable(db);
-      await PerfilPreInversionCofinanciadorLocalDataSourceImpl
-          .createPerfilPreInversionCofinanciadorTable(db);
-      await PerfilPreInversionConsultorLocalDataSourceImpl
-          .createPerfilPreInversionConsultorTable(db);
-      await PerfilPreInversionPrecioLocalDataSourceImpl
-          .createPerfilPreInversionPrecioTable(db);
-      await PerfilPreInversionPlanNegocioLocalDataSourceImpl
-          .createPerfilPreInversionPlanNegocioTable(db);
-      await PerfilBeneficiarioLocalDataSourceImpl.createPerfilBeneficiarioTable(
-          db);
-      await ExperienciaAgricolaLocalDataSourceImpl
-          .createExperienciaAgricolaTable(db);
-      await ExperienciaPecuariaLocalDataSourceImpl
-          .createExperienciaPecuariaTable(db);
-      await AlianzaExperienciaAgricolaLocalDataSourceImpl
-          .createAlianzaExperienciaAgricolaTable(db);
-      await AlianzaExperienciaPecuariaLocalDataSourceImpl
-          .createAlianzaExperienciaPecuariaTable(db);
-      await BeneficioLocalDataSourceImpl.createBeneficioTable(db);
-    });
+      final path = p.join(documentDirectory.path, 'paap.db');
+      print('Ruta base móvil: $path');
+
+      //Crear base de datos
+      _database = await openDatabase(path, version: 1, onOpen: (db) {},
+          onCreate: (Database db, int version) async {
+        await ActividadEconomicaLocalDataSourceImpl
+            .createActividadEconomicaTable(db);
+        await ActividadFinancieraLocalDataSourceImpl
+            .createActividadFinancieraTable(db);
+        await AgrupacionLocalDataSourceImpl.createAgrupacionTable(db);
+        await AliadosLocalDataSourceImpl.createAliadoTable(db);
+        await AlianzasLocalDataSourceImpl.createAlianzaTable(db);
+        await AuthLocalDataSourceImpl.createUserTable(db);
+        await AlianzaBeneficiarioLocalDataSourceImpl
+            .createAlianzaBeneficiarioTable(db);
+        await BeneficiarioLocalDataSourceImpl.createBeneficiarioTable(db);
+        await PerfilPreInversionBeneficiarioLocalDataSourceImpl
+            .createPerfilPreInversionBeneficiarioTable(db);
+        await CofinanciadorLocalDataSourceImpl.createCofinanciadorTable(db);
+        await ConsultorLocalDataSourceImpl.createConsultorTable(db);
+        await ConvocatoriaLocalDataSourceImpl.createConvocatoriaTable(db);
+        await DepartamentoLocalDataSourceImpl.createDepartamentoTable(db);
+        await DesembolsoLocalDataSourceImpl.createDesembolsoTable(db);
+        await EstadoCivilLocalDataSourceImpl.createEstadoCivilTable(db);
+        await EstadoVisitaLocalDataSourceImpl.createEstadoVisitaTable(db);
+        await FrecuenciaLocalDataSourceImpl.createFrecuenciaTable(db);
+        await GeneroLocalDataSourceImpl.createGeneroTable(db);
+        await GrupoEspecialLocalDataSourceImpl.createGrupoEspecialTable(db);
+        await MenuLocalDataSourceImpl.createMenuTable(db);
+        await MunicipioLocalDataSourceImpl.createMunicipioTable(db);
+        await NivelEscolarLocalDataSourceImpl.createNivelEscolarTable(db);
+        await PerfilPreInversionLocalDataSourceImpl
+            .createPerfilPreInversionTable(db);
+        await PerfilLocalDataSourceImpl.createPerfilTable(db);
+        await ProductoLocalDataSourceImpl.createProductoTable(db);
+        await ResidenciaLocalDataSourceImpl.createResidenciaTable(db);
+        await RevisionLocalDataSourceImpl.createRevisionTable(db);
+        await RubroLocalDataSourceImpl.createRubroTable(db);
+        await TipoActividadProductivaLocalDataSourceImpl
+            .createTipoActividadProductivaTable(db);
+        await TipoCalidadLocalDataSourceImpl.createTipoCalidadTable(db);
+        await TipoDiscapacidadLocalDataSourceImpl.createTipoDiscapacidadTable(
+            db);
+        await TipoEntidadLocalDataSourceImpl.createTipoEntidadTable(db);
+        await TipoIdentificacionLocalDataSourceImpl
+            .createTipoIdentificacionTable(db);
+        await TipoMovimientoLocalDataSourceImpl.createTipoMovimientoTable(db);
+        await TipoProyectoLocalDataSourceImpl.createTipoProyectoTable(db);
+        await TipoTenenciaLocalDataSourceImpl.createTipoTenenciaTable(db);
+        await TipoVisitaLocalDataSourceImpl.createTipoVisitaTable(db);
+        await UnidadLocalDataSourceImpl.createUnidadTable(db);
+        await VeredaLocalDataSourceImpl.createVeredaTable(db);
+        await VisitaLocalDataSourceImpl.createVisitaTable(db);
+        await EvaluacionLocalDataSourceImpl.createEvaluacionTable(db);
+        await OpcionLocalDataSourceImpl.createOpcionTable(db);
+        await CriterioLocalDataSourceImpl.createCriterioTable(db);
+        await SitioEntregaLocalDataSourceImpl.createSitioEntregaTable(db);
+        await EvaluacionRespuestaLocalDataSourceImpl
+            .createEvaluacionRespuestaTable(db);
+        await PerfilPreInversionAliadoLocalDataSourceImpl
+            .createPerfilPreInversionAliadoTable(db);
+        await PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
+            .createPerfilPreInversionCofinanciadorActividadFinancieraTable(db);
+        await PerfilPreInversionCofinanciadorDesembolsoLocalDataSourceImpl
+            .createPerfilPreInversionCofinanciadorDesembolsoTable(db);
+        await PerfilPreInversionCofinanciadorRubroLocalDataSourceImpl
+            .createPerfilPreInversionCofinanciadorRubroTable(db);
+        await PerfilPreInversionCofinanciadorLocalDataSourceImpl
+            .createPerfilPreInversionCofinanciadorTable(db);
+        await PerfilPreInversionConsultorLocalDataSourceImpl
+            .createPerfilPreInversionConsultorTable(db);
+        await PerfilPreInversionPrecioLocalDataSourceImpl
+            .createPerfilPreInversionPrecioTable(db);
+        await PerfilPreInversionPlanNegocioLocalDataSourceImpl
+            .createPerfilPreInversionPlanNegocioTable(db);
+        await PerfilBeneficiarioLocalDataSourceImpl
+            .createPerfilBeneficiarioTable(db);
+        await ExperienciaAgricolaLocalDataSourceImpl
+            .createExperienciaAgricolaTable(db);
+        await ExperienciaPecuariaLocalDataSourceImpl
+            .createExperienciaPecuariaTable(db);
+        await AlianzaExperienciaAgricolaLocalDataSourceImpl
+            .createAlianzaExperienciaAgricolaTable(db);
+        await AlianzaExperienciaPecuariaLocalDataSourceImpl
+            .createAlianzaExperienciaPecuariaTable(db);
+        await BeneficioLocalDataSourceImpl.createBeneficioTable(db);
+      });
+    }
 
     return _database!;
   }
