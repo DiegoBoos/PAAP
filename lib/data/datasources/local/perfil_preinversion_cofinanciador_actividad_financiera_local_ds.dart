@@ -41,7 +41,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraLocalDataSourceImpl
   static createPerfilPreInversionCofinanciadorActividadFinancieraTable(
       Database db) async {
     await db.execute('''
-      CREATE TABLE PerfilPreInversionCofinanciadorActividadFinanciera (
+      CREATE TABLE IF NOT EXISTS PerfilPreInversionCofinanciadorActividadFinanciera (
         ActividadFinancieraId	TEXT NOT NULL,
         PerfilPreInversionId	TEXT NOT NULL,
         CofinanciadorId	TEXT NOT NULL,

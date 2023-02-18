@@ -26,7 +26,7 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
     implements PerfilPreInversionAliadoLocalDataSource {
   static createPerfilPreInversionAliadoTable(Database db) async {
     await db.execute('''
-      CREATE TABLE PerfilPreInversionAliado (
+      CREATE TABLE IF NOT EXISTS PerfilPreInversionAliado (
         PerfilPreInversionId	TEXT NOT NULL,
         AliadoId	TEXT NOT NULL,
         ProductoId	TEXT NOT NULL,

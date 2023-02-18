@@ -14,7 +14,7 @@ abstract class AlianzasLocalDataSource {
 class AlianzasLocalDataSourceImpl implements AlianzasLocalDataSource {
   static createAlianzaTable(Database db) async {
     await db.execute('''
-      CREATE TABLE Alianza (
+      CREATE TABLE IF NOT EXISTS Alianza (
         AlianzaId	TEXT NOT NULL,
         PerfilPreInversionId	TEXT NOT NULL,
         ConvocatoriaId	TEXT NOT NULL,

@@ -17,7 +17,7 @@ abstract class EvaluacionLocalDataSource {
 class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
   static createEvaluacionTable(Database db) async {
     await db.execute('''
-      CREATE TABLE Evaluacion (
+      CREATE TABLE IF NOT EXISTS Evaluacion (
         EvaluacionId	INTEGER,
         PerfilId	TEXT NOT NULL,
         Resumen	TEXT NOT NULL,

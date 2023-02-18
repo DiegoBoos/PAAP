@@ -18,7 +18,7 @@ class PerfilPreInversionLocalDataSourceImpl
     implements PerfilPreInversionLocalDataSource {
   static createPerfilPreInversionTable(Database db) async {
     await db.execute('''
-      CREATE TABLE PerfilPreInversion (
+      CREATE TABLE IF NOT EXISTS PerfilPreInversion (
         PerfilPreInversionId	TEXT NOT NULL,
         PerfilId	TEXT NOT NULL,
         ConvocatoriaId	TEXT NOT NULL,

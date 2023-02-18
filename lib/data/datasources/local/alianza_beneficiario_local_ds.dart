@@ -22,7 +22,7 @@ class AlianzaBeneficiarioLocalDataSourceImpl
     implements AlianzaBeneficiarioLocalDataSource {
   static createAlianzaBeneficiarioTable(Database db) async {
     await db.execute('''
-      CREATE TABLE AlianzaBeneficiario (
+      CREATE TABLE IF NOT EXISTS AlianzaBeneficiario (
         AlianzaId	TEXT NOT NULL,
         BeneficiarioId	TEXT NOT NULL,
         MunicipioId	TEXT NOT NULL,

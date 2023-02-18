@@ -13,7 +13,7 @@ abstract class MenuLocalDataSource {
 class MenuLocalDataSourceImpl implements MenuLocalDataSource {
   static createMenuTable(Database db) async {
     await db.execute('''
-      CREATE TABLE Menu(
+      CREATE TABLE IF NOT EXISTS Menu(
         MenuId TEXT NOT NULL,
         Nombre TEXT,
         Ruta TEXT,

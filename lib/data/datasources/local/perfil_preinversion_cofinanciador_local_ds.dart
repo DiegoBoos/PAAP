@@ -31,7 +31,7 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
     implements PerfilPreInversionCofinanciadorLocalDataSource {
   static createPerfilPreInversionCofinanciadorTable(Database db) async {
     await db.execute('''
-      CREATE TABLE PerfilPreInversionCofinanciador (
+      CREATE TABLE IF NOT EXISTS PerfilPreInversionCofinanciador (
         PerfilPreInversionId	TEXT NOT NULL,
         CofinanciadorId	TEXT NOT NULL,
         Monto	TEXT,

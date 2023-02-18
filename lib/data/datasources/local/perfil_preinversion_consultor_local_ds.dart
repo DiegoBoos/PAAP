@@ -27,7 +27,7 @@ class PerfilPreInversionConsultorLocalDataSourceImpl
     implements PerfilPreInversionConsultorLocalDataSource {
   static createPerfilPreInversionConsultorTable(Database db) async {
     await db.execute('''
-      CREATE TABLE PerfilPreInversionConsultor (
+      CREATE TABLE IF NOT EXISTS PerfilPreInversionConsultor (
         PerfilPreInversionId	TEXT NOT NULL,
         ConsultorId	TEXT NOT NULL,
         RevisionId	TEXT,

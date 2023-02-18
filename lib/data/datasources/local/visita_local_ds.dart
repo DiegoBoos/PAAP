@@ -17,7 +17,7 @@ abstract class VisitaLocalDataSource {
 class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
   static createVisitaTable(Database db) async {
     await db.execute('''
-      CREATE TABLE Visita (
+      CREATE TABLE IF NOT EXISTS Visita (
         PerfilId	TEXT NOT NULL,
         TipoVisitaId	TEXT NOT NULL,
         FechaInicial	TEXT,

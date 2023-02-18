@@ -33,7 +33,7 @@ class PerfilPreInversionPlanNegocioLocalDataSourceImpl
     implements PerfilPreInversionPlanNegocioLocalDataSource {
   static createPerfilPreInversionPlanNegocioTable(Database db) async {
     await db.execute('''
-     CREATE TABLE PerfilPreInversionPlanNegocio (
+     CREATE TABLE IF NOT EXISTS PerfilPreInversionPlanNegocio (
       PerfilPreInversionId	TEXT NOT NULL,
       RubroId	TEXT NOT NULL,
       Year	TEXT NOT NULL,

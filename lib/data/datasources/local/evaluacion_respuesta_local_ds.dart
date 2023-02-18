@@ -34,7 +34,7 @@ class EvaluacionRespuestaLocalDataSourceImpl
     implements EvaluacionRespuestaLocalDataSource {
   static createEvaluacionRespuestaTable(Database db) async {
     await db.execute('''
-      CREATE TABLE EvaluacionRespuesta (
+      CREATE TABLE IF NOT EXISTS EvaluacionRespuesta (
         CriterioId	TEXT NOT NULL,
         EvaluacionId	TEXT NOT NULL,
         OpcionId	TEXT NOT NULL,

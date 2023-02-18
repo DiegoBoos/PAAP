@@ -26,7 +26,7 @@ class PerfilPreInversionBeneficiarioLocalDataSourceImpl
     implements PerfilPreInversionBeneficiarioLocalDataSource {
   static createPerfilPreInversionBeneficiarioTable(Database db) async {
     await db.execute('''
-      CREATE TABLE PerfilPreInversionBeneficiario (
+      CREATE TABLE IF NOT EXISTS PerfilPreInversionBeneficiario (
         PerfilPreInversionId	TEXT NOT NULL,
         BeneficiarioId	TEXT NOT NULL,
         MunicipioId	TEXT NOT NULL,
