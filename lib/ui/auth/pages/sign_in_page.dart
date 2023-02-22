@@ -52,6 +52,8 @@ class _SignInPageState extends State<SignInPage> {
     TextEditingController contrasenaCtrl =
         TextEditingController(text: 'MigracionPAAP*');
 
+    final size = MediaQuery.of(context).size;
+
     return MultiBlocListener(
       listeners: [
         BlocListener<AuthBloc, AuthState>(listener: (context, state) {
@@ -120,9 +122,10 @@ class _SignInPageState extends State<SignInPage> {
               child: AuthBackground(
                 child: Form(
                   key: formKey,
-                  child: Padding(
+                  child: Container(
+                    width: (size.width > 500) ? size.width / 2 : size.width,
                     padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 30),
+                        vertical: 20, horizontal: 20),
                     child: Column(
                       children: <Widget>[
                         const SizedBox(height: 10),

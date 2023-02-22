@@ -16,8 +16,10 @@ class AuthBackground extends StatelessWidget {
 class _PurpleBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
       width: double.infinity,
+      height: size.height / 3,
       decoration: _purpleBackground(context),
       child: Stack(children: [
         Positioned(
@@ -65,9 +67,11 @@ class _BackgroundImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-            child: Image.asset('assets/images/logo.png')));
+        child: Container(
+      padding: const EdgeInsets.all(8.0),
+      alignment: Alignment.center,
+      child: Image.asset('assets/images/logo.png'),
+    ));
   }
 }
 

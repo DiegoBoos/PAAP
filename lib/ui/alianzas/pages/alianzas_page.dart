@@ -33,13 +33,12 @@ class _AlianzasPageState extends State<AlianzasPage> {
         body: ListView(children: [
       const SizedBox(height: 30),
       Padding(
-        padding: const EdgeInsets.only(left: 30.0),
+        padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: Row(
           children: [
-            const Expanded(
-              child: Text('ALIANZAS', style: Styles.titleStyle),
-            ),
-            Expanded(child: filtersDropdown(context)),
+            const Text('ALIANZAS', style: Styles.titleStyle),
+            const Spacer(),
+            filtersDropdown(context),
           ],
         ),
       ),
