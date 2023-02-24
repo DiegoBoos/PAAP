@@ -60,6 +60,33 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.0.15
   mocktail: ^0.3.0
+  flutter_launcher_icons: ^0.11.0
+  flutter_native_splash: 
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_foreground: "assets/icon/logo-foreground.png"
+  adaptive_icon_background: "#64DD17"
+  min_sdk_android: 16 # android min sdk min:16, default 21
+  windows:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icon/icon.png"
+
+flutter_native_splash:
+  color: "#64DD17"
+  image: assets/icon/logo-foreground.png
+  android: true
+  ios: true
+
+  android_12:
+    image: assets/icon/logo-foreground.png
+    icon_background_color: "#64DD17"
 
 msix_config:
   display_name: PAAP Off Line
