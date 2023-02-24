@@ -47,10 +47,8 @@ class _SignInPageState extends State<SignInPage> {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     final syncBloc = BlocProvider.of<SyncBloc>(context);
 
-    TextEditingController usuarioIdCtrl =
-        TextEditingController(text: 'hugo.suarez@minagricultura.gov.co');
-    TextEditingController contrasenaCtrl =
-        TextEditingController(text: 'MigracionPAAP*');
+    TextEditingController usuarioIdCtrl = TextEditingController(text: '');
+    TextEditingController contrasenaCtrl = TextEditingController(text: '');
 
     final size = MediaQuery.of(context).size;
 

@@ -120,7 +120,7 @@ class _TabsPageState extends State<TabsPage> {
                                 authBloc: authBloc),
                           )
                         : PreferredSize(
-                            preferredSize: size,
+                            preferredSize: Size.fromHeight(size.height * 0.08),
                             child: MobileAppBar(
                                 usuario: usuario,
                                 internetCubit: internetCubit,
