@@ -100,7 +100,7 @@ class _TabsPageState extends State<TabsPage> {
 
                 final widgetOptions = tabsMenu.map((menu) {
                   if (menu.nombre == 'Inicio') {
-                    return const HomePage();
+                    return const PerfilesPage();
                   } else if (menu.nombre == 'Perfiles') {
                     return const PerfilesPage();
                   } else if (menu.nombre == 'PreInversión') {
@@ -120,7 +120,7 @@ class _TabsPageState extends State<TabsPage> {
                                 authBloc: authBloc),
                           )
                         : PreferredSize(
-                            preferredSize: Size.fromHeight(size.height * 0.1),
+                            preferredSize: size,
                             child: MobileAppBar(
                                 usuario: usuario,
                                 internetCubit: internetCubit,
@@ -278,8 +278,8 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                         (menu) => CustomTab(title: menu.nombre),
                       )
                       .toList()),
-              SizedBox(
-                height: 400,
+              Expanded(
+                flex: 10,
                 child: TabBarView(
                     controller: tabController,
                     children: tabsMenu.map((menu) {
@@ -299,6 +299,9 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
 
                       return Container();
                     }).toList()),
+              ),
+              const Expanded(
+                child: SizedBox(),
               )
             ],
           );
