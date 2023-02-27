@@ -31,6 +31,8 @@ class _SignInPageState extends State<SignInPage> {
   final localCaptchaController = LocalCaptchaController();
   final configFormData = ConfigFormData();
 
+  final usuarioIdCtrl = TextEditingController();
+  final contrasenaCtrl = TextEditingController();
   var inputCode = '';
 
   @override
@@ -47,9 +49,6 @@ class _SignInPageState extends State<SignInPage> {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     final syncBloc = BlocProvider.of<SyncBloc>(context);
 
-    TextEditingController usuarioIdCtrl = TextEditingController(text: '');
-    TextEditingController contrasenaCtrl = TextEditingController(text: '');
-
     final size = MediaQuery.of(context).size;
 
     return MultiBlocListener(
@@ -58,6 +57,7 @@ class _SignInPageState extends State<SignInPage> {
           if (state is AuthLoaded) {
             if (internetCubit.state is InternetConnected) {
               final usuario = state.usuarioAutenticado!;
+
               authBloc.add(SaveUsuario(usuario: usuario));
 
               showDialog(
@@ -137,9 +137,6 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                         const SizedBox(height: 10),
                         SignInForm(
-                            formKey: formKey,
-                            internetCubit: internetCubit,
-                            authBloc: authBloc,
                             usuarioIdCtrl: usuarioIdCtrl,
                             contrasenaCtrl: contrasenaCtrl),
                         const SizedBox(height: 10),

@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../domain/blocs/auth/auth_bloc.dart';
-import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/validators/form_validators.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({
     super.key,
-    required this.formKey,
-    required this.internetCubit,
-    required this.authBloc,
     required this.usuarioIdCtrl,
     required this.contrasenaCtrl,
   });
 
-  final GlobalKey<FormState> formKey;
-  final InternetCubit internetCubit;
-  final AuthBloc authBloc;
   final TextEditingController usuarioIdCtrl;
   final TextEditingController contrasenaCtrl;
 
@@ -66,7 +58,6 @@ class _SignInFormState extends State<SignInForm> {
                         size: 18,
                       )),
           ),
-          //validator: (value) => FormValidators.validatePassword(value),
         ),
         const SizedBox(height: 20),
       ],
