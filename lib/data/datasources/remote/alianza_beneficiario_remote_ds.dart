@@ -30,8 +30,8 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
   Future<List<AlianzaBeneficiarioModel>> getAlianzasBeneficiarios(
       UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final alianzasBeneficiariosSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>
@@ -133,8 +133,8 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
       UsuarioEntity usuario,
       AlianzaBeneficiarioEntity alianzaBeneficiarioEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       String dataConyuge = '';
 

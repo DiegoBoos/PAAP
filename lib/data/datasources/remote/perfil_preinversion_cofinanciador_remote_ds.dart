@@ -30,8 +30,8 @@ class PerfilPreInversionCofinanciadorRemoteDataSourceImpl
   Future<List<PerfilPreInversionCofinanciadorModel>>
       getPerfilesPreInversionesCofinanciadores(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilPreInversionCofinanciadoresSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>
@@ -141,8 +141,8 @@ class PerfilPreInversionCofinanciadorRemoteDataSourceImpl
           PerfilPreInversionCofinanciadorEntity
               perfilPreInversionCofinanciadorEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilPreInversionCofinanciadorSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>

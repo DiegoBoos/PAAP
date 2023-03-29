@@ -22,8 +22,8 @@ class RevisionRemoteDataSourceImpl implements RevisionRemoteDataSource {
   @override
   Future<List<RevisionModel>> getRevisiones(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final revisionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

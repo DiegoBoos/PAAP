@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'app_config.dart';
 import 'domain/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
 import 'domain/blocs/alianzas/alianzas_bloc.dart';
 import 'domain/blocs/auth/auth_bloc.dart';
@@ -75,18 +76,43 @@ import 'domain/cubits/v_perfil/v_perfil_cubit.dart';
 import 'domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import 'domain/cubits/vereda/vereda_cubit.dart';
 import 'domain/cubits/visita/visita_cubit.dart';
+import 'domain/db/db_config.dart';
 import 'domain/usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 import 'injection.dart' as di;
 import 'router.dart';
 import 'ui/utils/styles.dart';
 
-void main() {
+Future<Widget> initializeApp(AppConfig appConfig) async {
   di.init();
-  runApp(const MyApp());
+  return MyApp(appConfig);
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  final AppConfig appConfig;
+  const MyApp(this.appConfig, {super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    setAppConfig();
+  }
+
+  setAppConfig() async {
+    final db = await DBConfig.database;
+
+    Map<String, dynamic> appConfig = {
+      "appName": widget.appConfig.appName,
+      "flavor": widget.appConfig.flavor,
+      "url": widget.appConfig.url,
+    };
+
+    await db.insert('AppConfig', appConfig);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -353,8 +379,9 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
-            title: 'Flutter Demo',
-            debugShowCheckedModeBanner: false,
+            title: 'PAAP',
+            debugShowCheckedModeBanner:
+                widget.appConfig.flavor == 'dev' ? true : false,
             initialRoute: AppRouter.initialRoute,
             routes: AppRouter.routes,
             theme: ThemeData(

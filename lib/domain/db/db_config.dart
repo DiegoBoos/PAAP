@@ -66,6 +66,8 @@ import '../../data/datasources/local/vereda_local_ds.dart';
 import '../../data/datasources/local/visita_local_ds.dart';
 
 class DBConfig {
+  DBConfig._();
+
   static Database? _database;
   static final DBConfig db = DBConfig._();
 
@@ -99,6 +101,14 @@ class DBConfig {
   }
 
   static Future<void> createTables(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS AppConfig (
+        appName	TEXT,
+        flavor	TEXT,
+        url	TEXT
+      )
+    ''');
+
     await ActividadEconomicaLocalDataSourceImpl.createActividadEconomicaTable(
         db);
     await ActividadFinancieraLocalDataSourceImpl.createActividadFinancieraTable(
@@ -179,17 +189,5 @@ class DBConfig {
     await AlianzaExperienciaPecuariaLocalDataSourceImpl
         .createAlianzaExperienciaPecuariaTable(db);
     await BeneficioLocalDataSourceImpl.createBeneficioTable(db);
-  }
-
-  DBConfig._();
-
-  void deleteDB() async {
-    //Path donde se almacena la base de datos
-    Directory documentDirectory = await getApplicationDocumentsDirectory();
-
-    final path = p.join(documentDirectory.path, 'paap.db');
-
-    //Eliminar base de datos
-    databaseFactory.deleteDatabase(path);
   }
 }

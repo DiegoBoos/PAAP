@@ -58,6 +58,16 @@ class _SignInFormState extends State<SignInForm> {
                         size: 18,
                       )),
           ),
+          validator: (value) {
+            if (value != null && value.isNotEmpty) {
+              if (value.length < 6) {
+                return '*La contraseña debe ser mínimo 6 caracteres.';
+              }
+              return null;
+            }
+
+            return '*Requerido.';
+          },
         ),
         const SizedBox(height: 20),
       ],

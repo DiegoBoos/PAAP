@@ -27,8 +27,8 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
   @override
   Future<List<VisitaModel>> getVisitas(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilesSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -113,8 +113,8 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
   Future<VisitaModel?> getVisitaTable(
       UsuarioEntity usuario, String visitaId) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final visitasSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -199,8 +199,8 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
   Future<VisitaEntity?> saveVisita(
       UsuarioEntity usuario, VisitaEntity visitaEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final visitaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

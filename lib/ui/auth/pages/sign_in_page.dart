@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/app_config.dart';
 
 import '../../../domain/blocs/auth/auth_bloc.dart';
 import '../../../domain/blocs/sync/sync_bloc.dart';
 import '../../../domain/cubits/internet/internet_cubit.dart';
 import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../../domain/db/db_config.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../utils/all_platform.dart';
 
@@ -35,10 +37,21 @@ class _SignInPageState extends State<SignInPage> {
   final contrasenaCtrl = TextEditingController();
   var inputCode = '';
 
+  Future<AppConfig> getAppConfig() async {
+    final db = await DBConfig.database;
+
+    final List<Map<String, dynamic>> mapList = await db.query('AppConfig');
+
+    return AppConfig(
+      appName: mapList[0]['appName'],
+      flavor: mapList[0]['flavor'],
+      url: mapList[0]['url'],
+    );
+  }
+
   @override
   void dispose() {
     localCaptchaController.dispose();
-
     super.dispose();
   }
 
@@ -157,8 +170,10 @@ class _SignInPageState extends State<SignInPage> {
                         const SizedBox(height: 10),
                         TextFormField(
                           decoration: const InputDecoration(
-                            labelText: 'Escriba el texto',
-                            hintText: 'Escriba el texto',
+                            labelText:
+                                'Escriba el texto que aparece en pantalla',
+                            hintText:
+                                'Escriba el texto que aparece en pantalla',
                             isDense: true,
                             border: OutlineInputBorder(),
                           ),
@@ -265,6 +280,21 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 10),
+                        FutureBuilder(
+                            future: getAppConfig(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<AppConfig> snapshot) {
+                              if (snapshot.hasData) {
+                                final appConfig = snapshot.data!;
+                                return Text(
+                                  '${appConfig.appName} Versión 1.0.0 ${appConfig.flavor}',
+                                  style: const TextStyle(color: Colors.green),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            })
                       ],
                     ),
                   ),

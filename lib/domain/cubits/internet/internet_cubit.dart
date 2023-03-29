@@ -7,34 +7,35 @@ import 'package:equatable/equatable.dart';
 part 'internet_state.dart';
 
 class InternetCubit extends Cubit<InternetState> {
-  final Connectivity connectivity;
-
-  InternetCubit({required this.connectivity}) : super(InternetLoading()) {
-    connectivity.onConnectivityChanged.listen((connectivityResult) {
-      if (connectivityResult == ConnectivityResult.wifi) {
-        emitInternetConnected(ConnnectionType.wifi);
-      } else if (connectivityResult == ConnnectionType.mobile) {
-        emitInternetConnected(ConnnectionType.mobile);
-      } else if (connectivityResult == ConnectivityResult.none) {
-        emitInternetDisconnected();
+  StreamSubscription? subscription;
+  InternetCubit() : super(InternetLoading()) {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult connectivityResult) {
+      if (connectivityResult == ConnectivityResult.wifi ||
+          connectivityResult == ConnectivityResult.mobile) {
+        emit(InternetConnected());
+      } else {
+        emit(InternetDisconnected());
       }
     });
-    checkConnection(connectivity: connectivity);
+    checkConnection();
   }
 
-  Future<void> checkConnection({required Connectivity connectivity}) async {
+  Future<void> checkConnection() async {
     ConnectivityResult connectivityResult =
-        await connectivity.checkConnectivity();
-    if (connectivityResult == ConnectivityResult.wifi) {
-      emitInternetConnected(ConnnectionType.wifi);
-    } else if (connectivityResult == ConnnectionType.mobile) {
-      emitInternetConnected(ConnnectionType.mobile);
-    } else if (connectivityResult == ConnectivityResult.none) {
-      emitInternetDisconnected();
+        await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+      emit(InternetConnected());
+    } else {
+      emit(InternetDisconnected());
     }
   }
 
-  void emitInternetConnected(ConnnectionType connnectionType) =>
-      emit(InternetConnected(connnectionType: connnectionType));
-  void emitInternetDisconnected() => emit(InternetDisconnected());
+  @override
+  Future<void> close() {
+    subscription?.cancel();
+    return super.close();
+  }
 }

@@ -12,12 +12,8 @@ class NetworkIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<InternetCubit, InternetState>(
       builder: (context, state) {
-        if (state is InternetConnected &&
-            state.connnectionType == ConnnectionType.wifi) {
+        if (state is InternetConnected) {
           return const Icon(Icons.wifi, color: Colors.green);
-        } else if (state is InternetConnected &&
-            state.connnectionType == ConnnectionType.mobile) {
-          return const Icon(Icons.lte_mobiledata_outlined, color: Colors.green);
         } else if (state is InternetDisconnected) {
           return const Icon(Icons.wifi_off, color: Colors.red);
         }

@@ -31,8 +31,8 @@ class AlianzaExperienciaPecuariaRemoteDataSourceImpl
   Future<List<AlianzaExperienciaPecuariaModel>>
       getAlianzasExperienciasPecuarias(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final alianzaExperienciaPecuariaSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>
@@ -140,8 +140,8 @@ class AlianzaExperienciaPecuariaRemoteDataSourceImpl
       UsuarioEntity usuario,
       AlianzaExperienciaPecuariaEntity alianzaExperienciaPecuariaEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final alianzaExperienciaPecuariaSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>

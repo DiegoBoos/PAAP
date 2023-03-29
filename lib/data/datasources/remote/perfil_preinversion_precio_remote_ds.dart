@@ -32,8 +32,8 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
   Future<List<PerfilPreInversionPrecioModel>> getPerfilPreInversionPrecios(
       UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilPreInversionPreciosSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>
@@ -140,8 +140,8 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
       UsuarioEntity usuario,
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilPreInversionPrecioSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>
@@ -211,8 +211,8 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
       UsuarioEntity usuario,
       PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilPreInversionPrecioSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>

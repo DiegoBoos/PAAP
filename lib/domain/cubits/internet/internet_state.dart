@@ -1,7 +1,5 @@
 part of 'internet_cubit.dart';
 
-enum ConnnectionType { wifi, mobile }
-
 abstract class InternetState extends Equatable {
   const InternetState();
 
@@ -11,10 +9,6 @@ abstract class InternetState extends Equatable {
 
 class InternetLoading extends InternetState {}
 
-class InternetConnected extends InternetState {
-  final ConnnectionType connnectionType;
-
-  const InternetConnected({required this.connnectionType});
-}
+class InternetConnected extends InternetState {}
 
 class InternetDisconnected extends InternetState {}

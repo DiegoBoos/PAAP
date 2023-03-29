@@ -27,8 +27,8 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
   @override
   Future<List<AliadoModel>> getAliados(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final aliadoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -109,8 +109,8 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
   Future<AliadoModel> getAliadoTable(
       UsuarioEntity usuario, String aliadoId) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final aliadoesSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -197,8 +197,8 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
   Future<AliadoEntity?> saveAliado(
       UsuarioEntity usuario, AliadoEntity aliadoEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final aliadoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

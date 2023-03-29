@@ -1,8 +1,7 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:paap/domain/blocs/sync/sync_bloc.dart';
 
+import 'domain/blocs/sync/sync_bloc.dart';
 import 'domain/cubits/internet/internet_cubit.dart';
 import 'domain/cubits/slider/slider_cubit.dart';
 import 'domain/cubits/v_alianza/v_alianza_cubit.dart';
@@ -1179,7 +1178,7 @@ void init() {
 
 internetCubitInit() {
   // cubit
-  locator.registerFactory(() => InternetCubit(connectivity: Connectivity()));
+  locator.registerFactory(() => InternetCubit());
 }
 
 menuCubitInit() {

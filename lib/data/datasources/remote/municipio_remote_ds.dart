@@ -37,8 +37,8 @@ class MunicipioRemoteDataSourceImpl implements MunicipioRemoteDataSource {
   Future<List<MunicipioModel>> getMunicipiosByDepartamento(
       UsuarioEntity usuario, String departamentoId) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final municipioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -117,8 +117,8 @@ class MunicipioRemoteDataSourceImpl implements MunicipioRemoteDataSource {
   Future<List<DepartamentoModel>> getDepartamentos(
       UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final departamentoSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

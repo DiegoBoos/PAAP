@@ -22,8 +22,8 @@ class FrecuenciaRemoteDataSourceImpl implements FrecuenciaRemoteDataSource {
   @override
   Future<List<FrecuenciaModel>> getFrecuencias(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final frecuenciaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

@@ -32,8 +32,8 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
   Future<List<PerfilPreInversionConsultorModel>>
       getPerfilPreInversionConsultores(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilesPreInversionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -138,8 +138,8 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
       getPerfilPreInversionConsultorTable(
           UsuarioEntity usuario, String perfilPreInversionId) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilPreInversionConsultoresSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>
@@ -257,8 +257,8 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
       PerfilPreInversionConsultorEntity
           perfilPreInversionConsultorEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilPreInversionConsultorSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>
@@ -329,8 +329,8 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
       PerfilPreInversionConsultorEntity
           perfilPreInversionConsultorEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final perfilPreInversionConsultorSOAP =
           '''<?xml version="1.0" encoding="utf-8"?>

@@ -26,8 +26,8 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
   Future<List<BeneficiarioModel>> getBeneficiarios(
       UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final beneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -120,8 +120,8 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
   Future<BeneficiarioEntity?> saveBeneficiario(
       UsuarioEntity usuario, BeneficiarioEntity beneficiarioEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final beneficiarioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

@@ -29,8 +29,8 @@ class ExperienciaAgricolaRemoteDataSourceImpl
   Future<List<ExperienciaAgricolaModel>> getExperienciasAgricolas(
       UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final experienciaAgricolaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -129,8 +129,8 @@ class ExperienciaAgricolaRemoteDataSourceImpl
       UsuarioEntity usuario,
       ExperienciaAgricolaEntity experienciaAgricolaEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final experienciaAgricolaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

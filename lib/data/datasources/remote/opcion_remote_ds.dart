@@ -35,8 +35,8 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
 
   Future<List<CriterioModel>> getCriterios(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final criterioSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -114,8 +114,8 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
   Future<List<OpcionModel>> getOpcionesByCriterio(
       UsuarioEntity usuario, String criterioId) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final opcioneSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

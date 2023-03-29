@@ -33,8 +33,8 @@ class EvaluacionRespuestaRemoteDataSourceImpl
   Future<List<EvaluacionRespuestaModel>> getEvaluacionesRespuestas(
       UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final evaluacionRespuestaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -137,8 +137,8 @@ class EvaluacionRespuestaRemoteDataSourceImpl
       UsuarioEntity usuario,
       EvaluacionRespuestaEntity evaluacionRespuestaEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final evaluacionRespuestaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -219,8 +219,8 @@ class EvaluacionRespuestaRemoteDataSourceImpl
   Future<EvaluacionRespuestaModel?> getEvaluacionesRespuestasPorEvaluacion(
       UsuarioEntity usuario, evaluacionId) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final evaluacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

@@ -28,8 +28,8 @@ class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
   @override
   Future<List<EvaluacionModel>> getEvaluaciones(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final evaluacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -123,8 +123,8 @@ class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
   Future<EvaluacionEntity?> saveEvaluacion(
       UsuarioEntity usuario, EvaluacionEntity evaluacionEntity) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
       final evaluacionIdTable = evaluacionEntity.evaluacionId;
       if (evaluacionEntity.recordStatus == 'N') {
         evaluacionEntity.evaluacionId = '0';
@@ -215,8 +215,8 @@ class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
   Future<EvaluacionModel?> getEvaluacionPorPerfil(
       UsuarioEntity usuario, perfilId) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final evaluacionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

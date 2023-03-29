@@ -24,8 +24,8 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
   @override
   Future<List<AlianzaModel>> getAlianzas(UsuarioEntity usuario) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final alianzaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -105,8 +105,8 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
   Future<AlianzaModel> getAlianzaTable(
       UsuarioEntity usuario, String alianzaId) async {
     try {
-      final uri = Uri.parse(
-          '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+      String url = await Constants.getAppUrl();
+      final uri = Uri.parse(url);
 
       final alianzaSOAP = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
