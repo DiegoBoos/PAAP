@@ -32,15 +32,17 @@ class _PerfilPreInversionCofinanciadorFormState
   void initState() {
     super.initState();
 
-    final vPerfilPreInversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
+    // final vPerfilPreInversionCubit =
+    //     BlocProvider.of<VPerfilPreInversionCubit>(context);
 
-    final municipio =
-        vPerfilPreInversionCubit.state.vPerfilPreInversion!.municipio;
+    // final municipio =
+    //     vPerfilPreInversionCubit.state.vPerfilPreInversion!.municipio;
 
     setState(() {
       cofinanciadoresFiltered = widget.cofinanciadores
-          .where((cofinanciador) => cofinanciador.municipio == municipio)
+          .where((cofinanciador) =>
+              cofinanciador.municipio ==
+              widget.perfilPreInversionCofinanciador?.municipio)
           .toList();
 
       cofinanciadorId = widget.perfilPreInversionCofinanciador?.cofinanciadorId;

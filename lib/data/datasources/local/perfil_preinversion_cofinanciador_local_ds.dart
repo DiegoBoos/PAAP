@@ -55,6 +55,7 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
       Cofinanciador.Nombre as Nombre,
       Cofinanciador.Teléfono_x0020_Móvil as TelefonoMovil,
       Cofinanciador.Correo as Correo,
+      Cofinanciador.Municipio as Municipio,
       PerfilPreInversionCofinanciador.Monto as Monto,
       CASE  
       WHEN Cast(PerfilPreInversionCofinanciador.Monto as decimal) = 0  
@@ -71,6 +72,7 @@ class PerfilPreInversionCofinanciadorLocalDataSourceImpl
       '' as Nombre,
       '' as TelefonoMovil,
       'TOTAL' as Correo,
+      '' as Municipio,
       SUM (Cast(PerfilPreInversionCofinanciador.Monto as decimal)) + MAX( Cast(PerfilPreInversion.IncentivoModular as decimal)) as Monto,
       CASE  
       WHEN (SUM (Cast(PerfilPreInversionCofinanciador.Monto as decimal)) + MAX(Cast(PerfilPreInversion.IncentivoModular as decimal))) = 0  
