@@ -7,8 +7,4 @@ class DesembolsoModel extends DesembolsoEntity {
   factory DesembolsoModel.fromJson(Map<String, dynamic> json) =>
       DesembolsoModel(
           desembolsoId: json["DesembolsoId"], nombre: json["Nombre"]);
-
-  @override
-  Map<String, dynamic> toJson() =>
-      {"DesembolsoId": desembolsoId, "Nombre": nombre};
 }

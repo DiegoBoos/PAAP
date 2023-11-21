@@ -4,7 +4,7 @@ export 'package:paap/domain/repositories/perfil_preinversion/perfil_preinversion
 export 'package:paap/domain/repositories/perfil_preinversion/perfil_preinversion_repository_db.dart';
 export 'package:paap/domain/entities/perfil_preinversion_entity.dart';
 export 'package:paap/domain/entities/perfil_preinversion_entity.dart';
-export 'package:paap/domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
+export 'package:paap/ui/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
 export 'package:paap/data/repositories/perfil_preinversion/perfil_preinversion_repository.dart';
 export 'package:paap/data/repositories/perfil_preinversion/perfil_preinversion_repository_db.dart';
 export 'package:paap/data/datasources/remote/perfil_preinversion_remote_ds.dart';

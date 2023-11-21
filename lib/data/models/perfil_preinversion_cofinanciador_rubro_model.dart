@@ -40,15 +40,4 @@ class PerfilPreInversionCofinanciadorRubroModel
         desembolso: json["Desembolso"],
         recordStatus: json["RecordStatus"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "PerfilPreInversionId": perfilPreInversionId,
-        "CofinanciadorId": cofinanciadorId,
-        "DesembolsoId": desembolsoId,
-        "ActividadFinancieraId": actividadFinancieraId,
-        "RubroId": rubroId,
-        "Valor": valor,
-        "RecordStatus": recordStatus,
-      };
 }

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 import '../../models/menu_model.dart';
 import '../../utils.dart';
 
@@ -61,37 +61,38 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
           },
           body: menuSOAP);
 
-      if (menuResp.statusCode == 200) {
-        final menuDoc = xml.XmlDocument.parse(menuResp.body);
+      if (menuResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los menús']);
+      }
 
-        final respuesta =
-            menuDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final menuDoc = xml.XmlDocument.parse(menuResp.body);
 
-        if (respuesta == 'true' &&
-            menuDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = menuDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          menuDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final menusRaw = decodedResp.entries.first.value['Table'];
-
-          if (menusRaw is List) {
-            return List.from(menusRaw)
-                .map((e) => MenuModel.fromJson(e))
-                .toList();
-          } else {
-            return [MenuModel.fromJson(menusRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (menuDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = menuDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final menusRaw = decodedResp.entries.first.value['Table'];
+
+        if (menusRaw is List) {
+          return List.from(menusRaw).map((e) => MenuModel.fromJson(e)).toList();
+        } else {
+          return [MenuModel.fromJson(menusRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los menús']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

@@ -7,7 +7,4 @@ class ResidenciaModel extends ResidenciaEntity {
   factory ResidenciaModel.fromJson(Map<String, dynamic> json) =>
       ResidenciaModel(
           residenciaId: json["ResidenciaId"], nombre: json["Nombre"]);
-  @override
-  Map<String, dynamic> toJson() =>
-      {"ResidenciaId": residenciaId, "Nombre": nombre};
 }

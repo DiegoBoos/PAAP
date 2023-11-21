@@ -34,17 +34,4 @@ class CofinanciadorModel extends CofinanciadorEntity {
         departamento: json["Departamento"],
         municipio: json["Municipio"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "ID": id,
-        "Nombre": nombre,
-        "Teléfono_x0020_Fijo": telefonoFijo,
-        "Teléfono_x0020_Móvil": telefonoMovil,
-        "Correo": correo,
-        "Dirección": direccion,
-        "Tipo_x0020_Entidad": tipoEntidad,
-        "Departamento": departamento,
-        "Municipio": municipio,
-      };
 }

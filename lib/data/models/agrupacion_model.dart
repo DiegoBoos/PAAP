@@ -19,12 +19,4 @@ class AgrupacionModel extends AgrupacionEntity {
         descripcion: json["Descripcion"],
         convocatoriaId: json["ConvocatoriaId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "AgrupacionId": agrupacionId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-        "ConvocatoriaId": convocatoriaId
-      };
 }

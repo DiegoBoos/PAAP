@@ -1,8 +1,8 @@
 class ExperienciaAgricolaEntity {
   ExperienciaAgricolaEntity({
-    required this.tipoActividadProductivaId,
+    this.tipoActividadProductivaId,
     required this.beneficiarioId,
-    required this.frecuenciaId,
+    this.frecuenciaId,
     required this.areaCultivo,
     required this.cantidadProducida,
     required this.cantidadVendida,
@@ -18,9 +18,9 @@ class ExperienciaAgricolaEntity {
     required this.recordStatus,
   });
 
-  String tipoActividadProductivaId;
+  String? tipoActividadProductivaId;
   String beneficiarioId;
-  String frecuenciaId;
+  String? frecuenciaId;
   String areaCultivo;
   String cantidadProducida;
   String cantidadVendida;
@@ -72,26 +72,6 @@ class ExperienciaAgricolaEntity {
         areaImplementacion: areaImplementacion ?? this.areaImplementacion,
         totalAreaPredio: totalAreaPredio ?? this.totalAreaPredio,
         recordStatus: recordStatus ?? this.recordStatus,
-      );
-
-  factory ExperienciaAgricolaEntity.fromJson(Map<String, dynamic> json) =>
-      ExperienciaAgricolaEntity(
-        tipoActividadProductivaId: json["TipoActividadProductivaId"],
-        beneficiarioId: json["BeneficiarioId"],
-        frecuenciaId: json["FrecuenciaId"],
-        areaCultivo: json["AreaCultivo"],
-        cantidadProducida: json["CantidadProducida"],
-        cantidadVendida: json["CantidadVendida"],
-        cantidadAutoconsumo: json["CantidadAutoconsumo"],
-        costoImplementacion: json["CostoImplementacion"],
-        valorJornal: json["ValorJornal"],
-        totalIngresoNeto: json["TotalIngresoNeto"],
-        areaPasto: json["AreaPasto"],
-        areaSinUso: json["AreaSinUso"],
-        areaReservaConservacion: json["AreaReservaConservacion"],
-        areaImplementacion: json["AreaImplementacion"],
-        totalAreaPredio: json["TotalAreaPredio"],
-        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {

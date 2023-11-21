@@ -13,14 +13,6 @@ class RubroEntity {
   String activo;
   String actividadFinancieraId;
 
-  factory RubroEntity.fromJson(Map<String, dynamic> json) => RubroEntity(
-        rubroId: json["RubroId"],
-        nombre: json["Nombre"],
-        descripcion: json["Descripcion"],
-        activo: json["Activo"],
-        actividadFinancieraId: json["ActividadFinancieraId"],
-      );
-
   Map<String, dynamic> toJson() => {
         "RubroId": rubroId,
         "Nombre": nombre,

@@ -3,7 +3,7 @@ export 'package:paap/domain/usecases/municipio/municipio_db_usecase.dart';
 export 'package:paap/domain/repositories/municipio/municipio_repository.dart';
 export 'package:paap/domain/repositories/municipio/municipio_repository_db.dart';
 export 'package:paap/domain/entities/municipio_entity.dart';
-export 'package:paap/domain/cubits/municipio/municipio_cubit.dart';
+export 'package:paap/ui/cubits/municipio/municipio_cubit.dart';
 export 'package:paap/data/repositories/municipio/municipio_repository.dart';
 export 'package:paap/data/repositories/municipio/municipio_repository_db.dart';
 export 'package:paap/data/datasources/remote/municipio_remote_ds.dart';

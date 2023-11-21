@@ -25,14 +25,4 @@ class ConvocatoriaModel extends ConvocatoriaEntity {
         fechaFinal: json["FechaFinal"],
         recursos: json["Recursos"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "ConvocatoriaId": convocatoriaId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-        "FechaInicial": fechaInicial,
-        "FechaFinal": fechaFinal,
-        "Recursos": recursos,
-      };
 }

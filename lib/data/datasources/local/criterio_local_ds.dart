@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/criterio_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/criterio_model.dart';
 
 abstract class CriterioLocalDataSource {

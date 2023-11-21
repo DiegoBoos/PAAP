@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/blocs/perfiles_preinversiones_precios/perfiles_preinversiones_precios_bloc.dart';
-import '../../../domain/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
-import '../../../domain/cubits/producto/producto_cubit.dart';
-import '../../../domain/cubits/tipo_calidad/tipo_calidad_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/blocs/perfiles_preinversiones_precios/perfiles_preinversiones_precios_bloc.dart';
+import '../../../ui/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
+import '../../../ui/cubits/producto/producto_cubit.dart';
+import '../../../ui/cubits/tipo_calidad/tipo_calidad_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_precio_entity.dart';
 import '../../../domain/entities/producto_entity.dart';
 import '../../../domain/entities/tipo_calidad_entity.dart';

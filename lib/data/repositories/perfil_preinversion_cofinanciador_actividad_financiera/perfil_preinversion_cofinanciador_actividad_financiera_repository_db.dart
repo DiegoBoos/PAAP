@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_actividad_financiera_entity.dart';
 import '../../../domain/repositories/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_repository_db.dart';
 import '../../datasources/local/perfil_preinversion_cofinanciador_actividad_financiera_local_ds.dart';

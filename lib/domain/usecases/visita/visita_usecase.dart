@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:paap/domain/entities/visita_entity.dart';
 
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/usuario_entity.dart';
 import '../../repositories/visita/visita_repository.dart';
 

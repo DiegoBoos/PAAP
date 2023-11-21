@@ -6,7 +6,4 @@ class RevisionModel extends RevisionEntity {
 
   factory RevisionModel.fromJson(Map<String, dynamic> json) =>
       RevisionModel(revisionId: json["RevisionId"], nombre: json["Nombre"]);
-
-  @override
-  Map<String, dynamic> toJson() => {"RevisionId": revisionId, "Nombre": nombre};
 }

@@ -22,13 +22,4 @@ class ActividadFinancieraModel extends ActividadFinancieraEntity {
         activo: json["Activo"],
         tipoMovimientoId: json["TipoMovimientoId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "ActividadFinancieraId": actividadFinancieraId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-        "Activo": activo,
-        "TipoMovimientoId": tipoMovimientoId,
-      };
 }

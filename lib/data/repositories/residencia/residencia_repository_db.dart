@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/residencia_entity.dart';
 import '../../../domain/repositories/residencia/residencia_repository_db.dart';
 import '../../datasources/local/residencia_local_ds.dart';

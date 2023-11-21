@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/estado_civil_entity.dart';
 import '../../repositories/estado_civil/estado_civil_repository_db.dart';
 

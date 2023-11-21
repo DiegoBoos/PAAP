@@ -15,7 +15,7 @@ class PerfilDrawer extends StatelessWidget {
             final submenu = menuHijo[index];
 
             return ListTile(
-                leading: Icon(setIcon(submenu)),
+                leading: setIcon(submenu),
                 title: Text(submenu.nombre),
                 onTap: () {
                   if (submenu.menuId == '12') {
@@ -29,11 +29,15 @@ class PerfilDrawer extends StatelessWidget {
         ));
   }
 
-  IconData setIcon(MenuEntity submenu) {
-    if (submenu.menuId == '12') return Icons.group;
-    if (submenu.menuId == '22') return Icons.home;
-    if (submenu.menuId == '31') return Icons.assignment_turned_in;
-
-    return Icons.abc;
+  Icon? setIcon(MenuEntity submenu) {
+    if (submenu.menuId == '12') return const Icon(Icons.group);
+    if (submenu.menuId == '22') return const Icon(Icons.home);
+    if (submenu.menuId == '31') return const Icon(Icons.assignment_turned_in);
+    if (submenu.menuId == '18') {
+      return const Icon(Icons.sentiment_very_satisfied);
+    }
+    if (submenu.menuId == '14') return const Icon(Icons.accessibility);
+    if (submenu.menuId == '21') return const Icon(Icons.add_to_photos);
+    return null;
   }
 }

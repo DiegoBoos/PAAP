@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/tipo_actividad_productiva_entity.dart';
 import '../../../domain/repositories/tipo_actividad_productiva/tipo_actividad_productiva_repository_db.dart';
 import '../../datasources/local/tipo_actividad_productiva_local_ds.dart';

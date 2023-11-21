@@ -33,25 +33,6 @@ class ConsultorEntity {
   String usuarioId;
   String consultor;
 
-  factory ConsultorEntity.fromJson(Map<String, dynamic> json) =>
-      ConsultorEntity(
-        consultorId: json["ConsultorId"],
-        nombre1: json["Nombre1"],
-        nombre2: json["Nombre2"],
-        apellido1: json["Apellido1"],
-        apellido2: json["Apellido2"],
-        generoId: json["GeneroId"],
-        fechaNacimiento: json["FechaNacimiento"],
-        fechaExpedicionDocumento: json["FechaExpedicionDocumento"],
-        direccion: json["Direccion"],
-        telefonoFijo: json["TelefonoFijo"],
-        telefonoMovil: json["TelefonoMovil"],
-        experiencia: json["Experiencia"],
-        activo: json["Activo"],
-        usuarioId: json["UsuarioId"],
-        consultor: json["Consultor"],
-      );
-
   Map<String, dynamic> toJson() => {
         "ConsultorId": consultorId,
         "Nombre1": nombre1,

@@ -1,10 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
-import 'domain/blocs/sync/sync_bloc.dart';
-import 'domain/cubits/internet/internet_cubit.dart';
-import 'domain/cubits/slider/slider_cubit.dart';
-import 'domain/cubits/v_alianza/v_alianza_cubit.dart';
+import 'ui/blocs/aliados/aliados_bloc.dart';
+import 'ui/blocs/sync/sync_bloc.dart';
+import 'ui/cubits/internet/internet_cubit.dart';
+import 'ui/cubits/slider/slider_cubit.dart';
+import 'ui/cubits/v_alianza/v_alianza_cubit.dart';
 import 'domain/usecases/actividad_economica/actividad_economica_exports.dart';
 import 'domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import 'domain/usecases/agrupacion/agrupacion_exports.dart';
@@ -181,6 +182,8 @@ agrupacionInit() {
 }
 
 aliadoInit() {
+  // bloc
+  locator.registerFactory(() => AliadosBloc(aliadoUsecaseDB: locator()));
   // cubit
   locator.registerFactory(() => AliadoCubit(aliadoUsecaseDB: locator()));
   // remote usecase
@@ -297,6 +300,10 @@ authBlocInit() {
 }
 
 beneficiarioInit() {
+  // cubit
+  locator.registerFactory(
+      () => BeneficiariosBloc(beneficiarioUsecaseDB: locator()));
+
   // cubit
   locator.registerFactory(() => BeneficiarioCubit(beneficiarioDB: locator()));
 

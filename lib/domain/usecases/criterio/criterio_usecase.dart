@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:paap/domain/entities/criterio_entity.dart';
 
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/usuario_entity.dart';
 import '../../repositories/criterio/criterio_repository.dart';
 

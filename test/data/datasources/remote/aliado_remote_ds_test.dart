@@ -19,7 +19,7 @@ void main() {
 
   group('GuardarAliado', () {
     final uri = Uri.parse(
-        '${Constants.paapServicioWebSoapBaseUrl}/PaapServicios/PAAPServicioWeb.asmx');
+        '${Constants.paapServicioWebSoapBaseUrl}/PAAP/ServiciosDesarrollo/PAAPServicioWeb.asmx');
 
     final usuarioModel = UsuarioModel(
         usuarioId: 'hugo.suarez@minagricultura.gov.co',

@@ -11,8 +11,4 @@ class DepartamentoModel extends DepartamentoEntity {
         nombre: json["Nombre"],
         paisid: json["PaisId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() =>
-      {"DepartamentoId": id, "Nombre": nombre, "PaisId": paisid};
 }

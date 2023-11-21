@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../../domain/entities/evaluacion_entity.dart';
 import '../../../../domain/entities/visita_entity.dart';
-import '../../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/visita_model.dart';
 
 abstract class VisitaLocalDataSource {

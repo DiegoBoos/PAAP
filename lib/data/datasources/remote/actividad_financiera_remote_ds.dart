@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/actividad_financiera_model.dart';
 import '../../utils.dart';
@@ -66,47 +65,50 @@ class ActividadFinancieraRemoteDataSourceImpl
           },
           body: actividadFinancieraSOAP);
 
-      if (actividadFinancieraResp.statusCode == 200) {
-        final actividadFinancieraDoc =
-            xml.XmlDocument.parse(actividadFinancieraResp.body);
+      if (actividadFinancieraResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener las actividades financieras']);
+      }
 
-        final respuesta = actividadFinancieraDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
+      final actividadFinancieraDoc =
+          xml.XmlDocument.parse(actividadFinancieraResp.body);
+
+      final respuesta = actividadFinancieraDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      final mensaje = actividadFinancieraDoc
+          .findAllElements('mensaje')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        if (actividadFinancieraDoc.findAllElements('NewDataSet').isEmpty) {
+          return [];
+        }
+
+        final xmlString = actividadFinancieraDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
             .first;
 
-        final mensaje = actividadFinancieraDoc
-            .findAllElements('mensaje')
-            .map((e) => e.text)
-            .first;
+        String res = Utils.convertXmlToJson(xmlString);
 
-        if (respuesta == 'true') {
-          final xmlString = actividadFinancieraDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+        final Map<String, dynamic> decodedResp = json.decode(res);
 
-          String res = Utils.convertXmlToJson(xmlString);
+        final actividadesFinancierasRaw =
+            decodedResp.entries.first.value['Table'];
 
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final actividadesFinancierasRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (actividadesFinancierasRaw is List) {
-            return List.from(actividadesFinancierasRaw)
-                .map((e) => ActividadFinancieraModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              ActividadFinancieraModel.fromJson(actividadesFinancierasRaw)
-            ];
-          }
+        if (actividadesFinancierasRaw is List) {
+          return List.from(actividadesFinancierasRaw)
+              .map((e) => ActividadFinancieraModel.fromJson(e))
+              .toList();
         } else {
-          throw ServerFailure([mensaje]);
+          return [ActividadFinancieraModel.fromJson(actividadesFinancierasRaw)];
         }
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

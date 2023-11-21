@@ -26,15 +26,4 @@ class MenuModel extends MenuEntity {
       orden: json["Orden"],
       menuPadre: json["MenuPadre"],
       tipoMenuId: json["TipoMenuId"]);
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "MenuId": menuId,
-        "Nombre": nombre,
-        "Ruta": ruta,
-        "Icono": icono,
-        "Orden": orden,
-        "MenuPadre": menuPadre,
-        "TipoMenuId": tipoMenuId
-      };
 }

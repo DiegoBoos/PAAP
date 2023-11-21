@@ -3,7 +3,7 @@ export 'package:paap/domain/usecases/cofinanciador/cofinanciador_db_usecase.dart
 export 'package:paap/domain/repositories/cofinanciador/cofinanciador_repository.dart';
 export 'package:paap/domain/repositories/cofinanciador/cofinanciador_repository_db.dart';
 export 'package:paap/domain/entities/cofinanciador_entity.dart';
-export 'package:paap/domain/cubits/cofinanciador/cofinanciador_cubit.dart';
+export 'package:paap/ui/cubits/cofinanciador/cofinanciador_cubit.dart';
 export 'package:paap/data/repositories/cofinanciador/cofinanciador_repository.dart';
 export 'package:paap/data/repositories/cofinanciador/cofinanciador_repository_db.dart';
 export 'package:paap/data/datasources/remote/cofinanciador_remote_ds.dart';

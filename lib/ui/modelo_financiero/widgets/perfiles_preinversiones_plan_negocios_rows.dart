@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/cubits/perfil_preinversion_costos_utp/perfil_preinversion_costos_utp_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_costos_utp/perfil_preinversion_costos_utp_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart';
 
 class PerfilPreInversionPlanNegociosRows extends StatelessWidget {

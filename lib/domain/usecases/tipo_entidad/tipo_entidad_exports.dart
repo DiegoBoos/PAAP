@@ -3,7 +3,7 @@ export 'package:paap/domain/usecases/tipo_entidad/tipo_entidad_db_usecase.dart';
 export 'package:paap/domain/repositories/tipo_entidad/tipo_entidad_repository.dart';
 export 'package:paap/domain/repositories/tipo_entidad/tipo_entidad_repository_db.dart';
 export 'package:paap/domain/entities/tipo_entidad_entity.dart';
-export 'package:paap/domain/cubits/tipo_entidad/tipo_entidad_cubit.dart';
+export 'package:paap/ui/cubits/tipo_entidad/tipo_entidad_cubit.dart';
 export 'package:paap/data/repositories/tipo_entidad/tipo_entidad_repository.dart';
 export 'package:paap/data/repositories/tipo_entidad/tipo_entidad_repository_db.dart';
 export 'package:paap/data/datasources/remote/tipo_entidad_remote_ds.dart';

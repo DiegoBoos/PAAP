@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/sync_log_entity.dart';
 import '../../../domain/repositories/sync_log/sync_log_repository_db.dart';
 import '../../datasources/local/sync_log_local_ds.dart';

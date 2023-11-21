@@ -46,20 +46,4 @@ class VPerfilPreInversionPlanNegocioModel
         tipoCalidadId: json['TipoCalidadId'],
         porcentaje: json['Porcentaje'].toString(),
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "actividadFinancieraId": actividadFinancieraId,
-        "RubroId": rubroId,
-        "ActividadFinanciera": actividadFinanciera,
-        "Rubro": rubro,
-        "UnidadId": unidadId,
-        "Unidad": unidad,
-        "Year": year,
-        "Cantidad": cantidad,
-        "Valor": valor,
-        "ProductoId": productoId,
-        "TipoCalidadId": tipoCalidadId,
-        "Porcentaje": porcentaje
-      };
 }

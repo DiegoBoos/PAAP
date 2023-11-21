@@ -16,11 +16,4 @@ class TipoDiscapacidadModel extends TipoDiscapacidadEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoDiscapacidadId": tipoDiscapacidadId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-      };
 }

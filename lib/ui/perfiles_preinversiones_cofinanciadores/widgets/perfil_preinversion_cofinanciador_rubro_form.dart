@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
+import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../../domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import '../../../domain/usecases/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_exports.dart';
@@ -15,7 +15,11 @@ import '../../utils/sync_pages.dart';
 import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorRubroForm extends StatefulWidget {
-  const PerfilPreInversionCofinanciadorRubroForm({super.key});
+  const PerfilPreInversionCofinanciadorRubroForm(
+      {super.key, required this.perfilPreInversionCofinanciadorRubro});
+
+  final PerfilPreInversionCofinanciadorRubroEntity?
+      perfilPreInversionCofinanciadorRubro;
 
   @override
   State<PerfilPreInversionCofinanciadorRubroForm> createState() =>
@@ -37,18 +41,22 @@ class _PerfilPreInversionCofinanciadorRubroFormState
   @override
   void initState() {
     super.initState();
-    final perfilPreInversionCofinanciadorRubroCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorRubroCubit>(context);
+    final rubroCubit = BlocProvider.of<RubroCubit>(context);
 
-    if (perfilPreInversionCofinanciadorRubroCubit.state
-        is PerfilPreInversionCofinanciadorRubroLoaded) {
-      final perfilPreInversionCofinanciadorRubroLoaded =
-          perfilPreInversionCofinanciadorRubroCubit
-              .state.perfilPreInversionCofinanciadorRubro;
+    setState(() {
+      actividadFinancieraId =
+          widget.perfilPreInversionCofinanciadorRubro?.actividadFinancieraId;
+      desembolsoId = widget.perfilPreInversionCofinanciadorRubro?.desembolsoId;
+      rubroId = widget.perfilPreInversionCofinanciadorRubro?.rubroId;
+      valorCtrl.text = widget.perfilPreInversionCofinanciadorRubro?.valor ?? '';
 
-      loadPerfilPreInversionCofinanciadorRubro(
-          perfilPreInversionCofinanciadorRubroLoaded);
-    }
+      if (rubroCubit.state is RubrosLoaded) {
+        rubrosFiltered = rubroCubit.state.rubros!
+            .where(((rubro) =>
+                rubro.actividadFinancieraId == actividadFinancieraId))
+            .toList();
+      }
+    });
   }
 
   @override
@@ -57,29 +65,6 @@ class _PerfilPreInversionCofinanciadorRubroFormState
     BlocProvider.of<PerfilPreInversionCofinanciadorRubroCubit>(
       context,
     ).initState();
-  }
-
-  void loadPerfilPreInversionCofinanciadorRubro(
-      PerfilPreInversionCofinanciadorRubroEntity
-          perfilPreInversionCofinanciadorRubroLoaded) async {
-    final rubroCubit = BlocProvider.of<RubroCubit>(context);
-
-    await rubroCubit.getRubrosDB();
-
-    actividadFinancieraId =
-        perfilPreInversionCofinanciadorRubroLoaded.actividadFinancieraId;
-    desembolsoId = perfilPreInversionCofinanciadorRubroLoaded.desembolsoId;
-    rubroId = perfilPreInversionCofinanciadorRubroLoaded.rubroId;
-    valorCtrl.text = perfilPreInversionCofinanciadorRubroLoaded.valor;
-
-    if (rubroCubit.state is RubrosLoaded) {
-      rubrosFiltered = rubroCubit.state.rubros!
-          .where(
-              ((rubro) => rubro.actividadFinancieraId == actividadFinancieraId))
-          .toList();
-    }
-
-    setState(() {});
   }
 
   @override
@@ -276,7 +261,7 @@ class _PerfilPreInversionCofinanciadorRubroFormState
                             perfilPreInversionCofinanciadorCubit
                                 .state
                                 .perfilPreInversionCofinanciador
-                                .cofinanciadorId;
+                                .cofinanciadorId!;
 
                         perfilPreInversionCofinanciadorRubroCubit
                             .changePerfilPreInversionId(vPerfilPreInversionId);

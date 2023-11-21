@@ -39,28 +39,6 @@ class VPerfilPreInversionEntity {
   final String incentivoModular;
   final String departamento;
 
-  factory VPerfilPreInversionEntity.fromJson(Map<String, dynamic> json) =>
-      VPerfilPreInversionEntity(
-        perfilPreInversionId: json["perfilPreInversionId"],
-        perfilId: json["perfilId"],
-        convocatoria: json["convocatoria"],
-        nombre: json["nombre"],
-        abreviatura: json["abreviatura"],
-        nit: json["nit"],
-        municipio: json["municipio"],
-        direccion: json["direccion"],
-        contacto: json["contacto"],
-        telefonoFijo: json["telefonoFijo"],
-        telefonoMovil: json["telefonoMovil"],
-        correo: json["correo"],
-        tipoProyecto: json["tipoProyecto"],
-        producto: json["producto"],
-        productoAsociado: json["productoAsociado"],
-        valorTotalProyecto: json["valorTotalProyecto"],
-        incentivoModular: json["incentivoModular"],
-        departamento: json["Departamento"],
-      );
-
   Map<String, dynamic> toJson() => {
         "perfilPreInversionId": perfilPreInversionId,
         "perfilId": perfilId,

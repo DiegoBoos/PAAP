@@ -56,24 +56,4 @@ class AlianzaExperienciaAgricolaModel extends AlianzaExperienciaAgricolaEntity {
         totalAreaPredio: json["TotalAreaPredio"],
         recordStatus: json["RecordStatus"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoActividadProductivaId": tipoActividadProductivaId,
-        "BeneficiarioId": beneficiarioId,
-        "FrecuenciaId": frecuenciaId,
-        "AreaCultivo": areaCultivo,
-        "CantidadProducida": cantidadProducida,
-        "CantidadVendida": cantidadVendida,
-        "CantidadAutoconsumo": cantidadAutoconsumo,
-        "CostoImplementacion": costoImplementacion,
-        "ValorJornal": valorJornal,
-        "TotalIngresoNeto": totalIngresoNeto,
-        "AreaPasto": areaPasto,
-        "AreaSinUso": areaSinUso,
-        "AreaReservaConservacion": areaReservaConservacion,
-        "AreaImplementacion": areaImplementacion,
-        "TotalAreaPredio": totalAreaPredio,
-        "RecordStatus": recordStatus,
-      };
 }

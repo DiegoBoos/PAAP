@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/estado_civil_model.dart';
 import '../../utils.dart';
@@ -62,39 +62,40 @@ class EstadoCivilRemoteDataSourceImpl implements EstadoCivilRemoteDataSource {
           },
           body: estadocivilSOAP);
 
-      if (estadocivilResp.statusCode == 200) {
-        final estadocivilDoc = xml.XmlDocument.parse(estadocivilResp.body);
+      if (estadocivilResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los estados civiles']);
+      }
 
-        final respuesta = estadocivilDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final estadocivilDoc = xml.XmlDocument.parse(estadocivilResp.body);
 
-        if (respuesta == 'true' &&
-            estadocivilDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = estadocivilDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          estadocivilDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final estadosCivilesRaw = decodedResp.entries.first.value['Table'];
-
-          if (estadosCivilesRaw is List) {
-            return List.from(estadosCivilesRaw)
-                .map((e) => EstadoCivilModel.fromJson(e))
-                .toList();
-          } else {
-            return [EstadoCivilModel.fromJson(estadosCivilesRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (estadocivilDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = estadocivilDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final estadosCivilesRaw = decodedResp.entries.first.value['Table'];
+
+        if (estadosCivilesRaw is List) {
+          return List.from(estadosCivilesRaw)
+              .map((e) => EstadoCivilModel.fromJson(e))
+              .toList();
+        } else {
+          return [EstadoCivilModel.fromJson(estadosCivilesRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los estados civiles']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/revision_model.dart';
 import '../../utils.dart';
@@ -61,37 +61,40 @@ class RevisionRemoteDataSourceImpl implements RevisionRemoteDataSource {
           },
           body: revisionSOAP);
 
-      if (revisionResp.statusCode == 200) {
-        final revisionDoc = xml.XmlDocument.parse(revisionResp.body);
+      if (revisionResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las revisiones']);
+      }
 
-        final respuesta =
-            revisionDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final revisionDoc = xml.XmlDocument.parse(revisionResp.body);
 
-        if (respuesta == 'true' &&
-            revisionDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = revisionDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          revisionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final revisionesRaw = decodedResp.entries.first.value['Table'];
-
-          if (revisionesRaw is List) {
-            return List.from(revisionesRaw)
-                .map((e) => RevisionModel.fromJson(e))
-                .toList();
-          } else {
-            return [RevisionModel.fromJson(revisionesRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (revisionDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = revisionDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final revisionesRaw = decodedResp.entries.first.value['Table'];
+
+        if (revisionesRaw is List) {
+          return List.from(revisionesRaw)
+              .map((e) => RevisionModel.fromJson(e))
+              .toList();
+        } else {
+          return [RevisionModel.fromJson(revisionesRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener las revisiones']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

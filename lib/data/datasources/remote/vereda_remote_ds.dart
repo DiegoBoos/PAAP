@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../../domain/core/error/exception.dart';
 
 import '../../models/departamento_model.dart';
 import '../../models/municipio_model.dart';
@@ -108,41 +107,43 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
           },
           body: veredaSOAP);
 
-      if (veredaResp.statusCode == 200) {
-        final veredaDoc = xml.XmlDocument.parse(veredaResp.body);
+      if (veredaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las veredas']);
+      }
 
-        final respuesta =
-            veredaDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final veredaDoc = xml.XmlDocument.parse(veredaResp.body);
 
-        if (respuesta == 'true' &&
-            veredaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = veredaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          veredaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          //final Map<String, dynamic> decodedResp = json.decode(res);
-          final Map<String, dynamic> decodedResp = jsonDecode(res
-              .toString()
-              .replaceAll(
-                  RegExp(r'[^A-Za-z0-9() áéíóúÁÉÍÓÚñÑ:[\]{}.,";?]'), ''));
-
-          final veredasRaw = decodedResp.entries.first.value['Table'];
-
-          if (veredasRaw is List) {
-            return List.from(veredasRaw)
-                .map((e) => VeredaModel.fromJson(e))
-                .toList();
-          } else {
-            return [VeredaModel.fromJson(veredasRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (veredaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = veredaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        //final Map<String, dynamic> decodedResp = json.decode(res);
+        final Map<String, dynamic> decodedResp = jsonDecode(res
+            .toString()
+            .replaceAll(RegExp(r'[^A-Za-z0-9() áéíóúÁÉÍÓÚñÑ:[\]{}.,";?]'), ''));
+
+        final veredasRaw = decodedResp.entries.first.value['Table'];
+
+        if (veredasRaw is List) {
+          return List.from(veredasRaw)
+              .map((e) => VeredaModel.fromJson(e))
+              .toList();
+        } else {
+          return [VeredaModel.fromJson(veredasRaw)];
+        }
       } else {
-        return [];
+        throw const ServerFailure(['Error al obtener las veredas']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -192,37 +193,41 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
           },
           body: municipioSOAP);
 
-      if (municipioResp.statusCode == 200) {
-        final municipioDoc = xml.XmlDocument.parse(municipioResp.body);
+      if (municipioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los municipios']);
+      }
 
-        final respuesta =
-            municipioDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final municipioDoc = xml.XmlDocument.parse(municipioResp.body);
 
-        if (respuesta == 'true' &&
-            municipioDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = municipioDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          municipioDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final municipiosRaw = decodedResp.entries.first.value['Table'];
-
-          if (municipiosRaw is List) {
-            return List.from(municipiosRaw)
-                .map((e) => MunicipioModel.fromJson(e))
-                .toList();
-          } else {
-            return [MunicipioModel.fromJson(municipiosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (municipioDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = municipioDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final municipiosRaw = decodedResp.entries.first.value['Table'];
+
+        if (municipiosRaw is List) {
+          return List.from(municipiosRaw)
+              .map((e) => MunicipioModel.fromJson(e))
+              .toList();
+        } else {
+          return [MunicipioModel.fromJson(municipiosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los municipios por departamento']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -272,41 +277,43 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
           },
           body: departamentoSOAP);
 
-      if (departamentoResp.statusCode == 200) {
-        final departamentoDoc = xml.XmlDocument.parse(departamentoResp.body);
+      if (departamentoResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los departamentos']);
+      }
 
-        final respuesta = departamentoDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
+      final departamentoDoc = xml.XmlDocument.parse(departamentoResp.body);
+
+      final respuesta =
+          departamentoDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      final mensaje =
+          departamentoDoc.findAllElements('mensaje').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        if (departamentoDoc.findAllElements('NewDataSet').isEmpty) {
+          return [];
+        }
+
+        final xmlString = departamentoDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
             .first;
 
-        final mensaje =
-            departamentoDoc.findAllElements('mensaje').map((e) => e.text).first;
+        String res = Utils.convertXmlToJson(xmlString);
 
-        if (respuesta == 'true') {
-          final xmlString = departamentoDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+        final Map<String, dynamic> decodedResp = json.decode(res);
 
-          String res = Utils.convertXmlToJson(xmlString);
+        final departamentosRaw = decodedResp.entries.first.value['Table'];
 
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final departamentosRaw = decodedResp.entries.first.value['Table'];
-
-          if (departamentosRaw is List) {
-            return List.from(departamentosRaw)
-                .map((e) => DepartamentoModel.fromJson(e))
-                .toList();
-          } else {
-            return [DepartamentoModel.fromJson(departamentosRaw)];
-          }
+        if (departamentosRaw is List) {
+          return List.from(departamentosRaw)
+              .map((e) => DepartamentoModel.fromJson(e))
+              .toList();
         } else {
-          throw ServerFailure([mensaje]);
+          return [DepartamentoModel.fromJson(departamentosRaw)];
         }
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

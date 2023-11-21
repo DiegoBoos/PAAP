@@ -57,23 +57,6 @@ class VPerfilPreInversionPlanNegocioEntity {
     );
   }
 
-  factory VPerfilPreInversionPlanNegocioEntity.fromJson(
-          Map<String, dynamic> json) =>
-      VPerfilPreInversionPlanNegocioEntity(
-        actividadFinancieraId: json['ActividadFinancieraId'],
-        actividadFinanciera: json['ActividadFinanciera'],
-        rubroId: json['RubroId'],
-        rubro: json['Rubro'],
-        unidadId: json['UnidadId'],
-        unidad: json['Unidad'],
-        year: json['Year'],
-        cantidad: json['Cantidad'],
-        valor: json['Valor'],
-        productoId: json['ProductoId'],
-        tipoCalidadId: json['TipoCalidadId'],
-        porcentaje: json['Porcentaje'],
-      );
-
   Map<String, dynamic> toJson() => {
         "ActividadFinancieraId": actividadFinancieraId,
         "ActividadFinanciera": actividadFinanciera,

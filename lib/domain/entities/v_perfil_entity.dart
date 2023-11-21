@@ -35,25 +35,6 @@ class VPerfilEntity {
   final String valorTotalProyecto;
   final String incentivoModular;
 
-  factory VPerfilEntity.fromJson(Map<String, dynamic> json) => VPerfilEntity(
-        perfilId: json["perfilId"],
-        convocatoriaId: json["convocatoriaId"],
-        nombre: json["nombre"],
-        abreviatura: json["abreviatura"],
-        municipio: json["municipio"],
-        departamento: json["departamento"],
-        direccion: json["direccion"],
-        contacto: json["contacto"],
-        telefonoFijo: json["telefonoFijo"],
-        telefonoMovil: json["telefonoMovil"],
-        correo: json["correo"],
-        tipoProyecto: json["tipoProyecto"],
-        productoPrincipal: json["productoPrincipal"],
-        productoAsociado: json["productoAsociado"],
-        valorTotalProyecto: json["valorTotalProyecto"],
-        incentivoModular: json["incentivoModular"],
-      );
-
   Map<String, dynamic> toJson() => {
         "perfilId": perfilId,
         "convocatoriaId": convocatoriaId,

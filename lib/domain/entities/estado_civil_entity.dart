@@ -8,12 +8,6 @@ class EstadoCivilEntity {
   String nombre;
   String tieneConyuge;
 
-  factory EstadoCivilEntity.fromJson(Map<String, dynamic> json) =>
-      EstadoCivilEntity(
-          estadoCivilId: json["EstadoCivilId"],
-          nombre: json["Nombre"],
-          tieneConyuge: json["TieneConyuge"]);
-
   Map<String, dynamic> toJson() => {
         "EstadoCivilId": estadoCivilId,
         "Nombre": nombre,

@@ -61,26 +61,4 @@ class VPerfilPreInversionModel extends VPerfilPreInversionEntity {
         incentivoModular: json["incentivoModular"],
         departamento: json["Departamento"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "perfilPreInversionId": perfilPreInversionId,
-        "perfilId": perfilId,
-        "convocatoria": convocatoria,
-        "nombre": nombre,
-        "abreviatura": abreviatura,
-        "nit": nit,
-        "municipio": municipio,
-        "direccion": direccion,
-        "contacto": contacto,
-        "telefonoFijo": telefonoFijo,
-        "telefonoMovil": telefonoMovil,
-        "correo": correo,
-        "tipoProyecto": tipoProyecto,
-        "producto": producto,
-        "productoAsociado": productoAsociado,
-        "valorTotalProyecto": valorTotalProyecto,
-        "incentivoModular": incentivoModular,
-        "departamento": departamento,
-      };
 }

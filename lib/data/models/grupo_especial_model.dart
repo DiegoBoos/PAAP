@@ -16,11 +16,4 @@ class GrupoEspecialModel extends GrupoEspecialEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "GrupoEspecialId": grupoEspecialId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-      };
 }

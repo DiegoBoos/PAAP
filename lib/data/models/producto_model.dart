@@ -24,14 +24,4 @@ class ProductoModel extends ProductoEntity {
         esProducto: json["EsProducto"],
         esAsociado: json["EsAsociado"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "ProductoId": id,
-        "Nombre": nombre,
-        "Unidad": unidad,
-        "Simbolo": simbolo,
-        "EsProducto": esProducto,
-        "EsAsociado": esAsociado
-      };
 }

@@ -3,7 +3,7 @@ export 'package:paap/domain/usecases/genero/genero_db_usecase.dart';
 export 'package:paap/domain/repositories/genero/genero_repository.dart';
 export 'package:paap/domain/repositories/genero/genero_repository_db.dart';
 export 'package:paap/domain/entities/genero_entity.dart';
-export 'package:paap/domain/cubits/genero/genero_cubit.dart';
+export 'package:paap/ui/cubits/genero/genero_cubit.dart';
 export 'package:paap/data/repositories/genero/genero_repository.dart';
 export 'package:paap/data/repositories/genero/genero_repository_db.dart';
 export 'package:paap/data/datasources/remote/genero_remote_ds.dart';

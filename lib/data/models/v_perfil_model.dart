@@ -53,24 +53,4 @@ class VPerfilModel extends VPerfilEntity {
       productoAsociado: json["productoAsociado"],
       valorTotalProyecto: json["valorTotalProyecto"],
       incentivoModular: json["incentivoModular"]);
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "perfilId": perfilId,
-        "convocatoriaId": convocatoriaId,
-        "nombre": nombre,
-        "abreviatura": abreviatura,
-        "municipio": municipio,
-        "departamento": departamento,
-        "direccion": direccion,
-        "contacto": contacto,
-        "telefonoFijo": telefonoFijo,
-        "telefonoMovil": telefonoMovil,
-        "correo": correo,
-        "tipoProyecto": tipoProyecto,
-        "productoPrincipal": productoPrincipal,
-        "productoAsociado": productoAsociado,
-        "valorTotalProyecto": valorTotalProyecto,
-        "incentivoModular": incentivoModular
-      };
 }

@@ -4,10 +4,9 @@ import 'package:http/http.dart' as http;
 
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/perfil_preinversion_model.dart';
 import '../../models/perfiles_preinversion_model.dart';
@@ -67,49 +66,54 @@ class PerfilesPreInversionRemoteDataSourceImpl
           },
           body: perfilesPreInversionSOAP);
 
-      if (perfilesPreInversionResp.statusCode == 200) {
-        final perfilesPreInversionDoc =
-            xml.XmlDocument.parse(perfilesPreInversionResp.body);
+      if (perfilesPreInversionResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los perfiles de preinversión']);
+      }
 
-        final respuesta = perfilesPreInversionDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilesPreInversionDoc =
+          xml.XmlDocument.parse(perfilesPreInversionResp.body);
 
-        final mensaje = perfilesPreInversionDoc
-            .findAllElements('mensaje')
-            .map((e) => e.text)
-            .first;
+      final respuesta = perfilesPreInversionDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-        if (respuesta == 'true') {
-          final xmlString = perfilesPreInversionDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final mensaje = perfilesPreInversionDoc
+          .findAllElements('mensaje')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilesPreInversionRaw =
-              decodedResp.entries.first.value['Table'];
-
-          final perfilesPreInversion = List.from(perfilesPreInversionRaw)
-              .map((e) => PerfilesPreInversionModel.fromJson(e))
-              .toList();
-
-          List<PerfilPreInversionModel> listPerfilesPreInversion = [];
-          for (var perfilPreInversion in perfilesPreInversion) {
-            final dsPerfilPreInversion = await getPerfilPreInversionTable(
-                usuario, perfilPreInversion.id);
-            listPerfilesPreInversion.add(dsPerfilPreInversion);
-          }
-          return listPerfilesPreInversion;
-        } else {
-          throw ServerFailure([mensaje]);
+      if (respuesta == 'true') {
+        if (perfilesPreInversionDoc.findAllElements('NewDataSet').isEmpty) {
+          return [];
         }
+
+        final xmlString = perfilesPreInversionDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilesPreInversionRaw =
+            decodedResp.entries.first.value['Table'];
+
+        final perfilesPreInversion = List.from(perfilesPreInversionRaw)
+            .map((e) => PerfilesPreInversionModel.fromJson(e))
+            .toList();
+
+        List<PerfilPreInversionModel> listPerfilesPreInversion = [];
+        for (var perfilPreInversion in perfilesPreInversion) {
+          final dsPerfilPreInversion =
+              await getPerfilPreInversionTable(usuario, perfilPreInversion.id);
+          listPerfilesPreInversion.add(dsPerfilPreInversion);
+        }
+        return listPerfilesPreInversion;
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -158,39 +162,40 @@ class PerfilesPreInversionRemoteDataSourceImpl
           },
           body: perfilesPreInversionSOAP);
 
-      if (perfilRespPreInversion.statusCode == 200) {
-        final perfilPreInversionDoc =
-            xml.XmlDocument.parse(perfilRespPreInversion.body);
+      if (perfilRespPreInversion.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener el perfil de preinversión']);
+      }
 
-        final respuesta = perfilPreInversionDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
+      final perfilPreInversionDoc =
+          xml.XmlDocument.parse(perfilRespPreInversion.body);
+
+      final respuesta = perfilPreInversionDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      final mensaje = perfilPreInversionDoc
+          .findAllElements('mensaje')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        final xmlString = perfilPreInversionDoc
+            .findAllElements('objeto')
+            .map((xmlElement) => xmlElement.toXmlString())
             .first;
 
-        final mensaje = perfilPreInversionDoc
-            .findAllElements('mensaje')
-            .map((e) => e.text)
-            .first;
+        String res = Utils.convertXmlToJson(xmlString);
 
-        if (respuesta == 'true') {
-          final xmlString = perfilPreInversionDoc
-              .findAllElements('objeto')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+        final decodedResp = json.decode(res);
 
-          String res = Utils.convertXmlToJson(xmlString);
+        final perfilPreInversion =
+            PerfilPreInversionModel.fromJson(decodedResp['objeto']);
 
-          final decodedResp = json.decode(res);
-
-          final perfilPreInversion =
-              PerfilPreInversionModel.fromJson(decodedResp['objeto']);
-
-          return perfilPreInversion;
-        } else {
-          throw ServerFailure([mensaje]);
-        }
+        return perfilPreInversion;
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

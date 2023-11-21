@@ -1,4 +1,4 @@
-import '../domain/db/db_config.dart';
+import 'db/db_config.dart';
 
 class Constants {
   static const paapServicioWebSoapBaseUrl = 'http://161.97.105.205';

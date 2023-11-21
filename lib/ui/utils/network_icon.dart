@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/cubits/internet/internet_cubit.dart';
+import '../../ui/cubits/internet/internet_cubit.dart';
 
 class NetworkIcon extends StatelessWidget {
   const NetworkIcon({

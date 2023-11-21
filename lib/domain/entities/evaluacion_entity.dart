@@ -27,22 +27,6 @@ class EvaluacionEntity {
   String recordStatus;
   String remoteEvaluacionId;
 
-  factory EvaluacionEntity.fromJson(Map<String, dynamic> json) =>
-      EvaluacionEntity(
-        evaluacionId: json["EvaluacionId"],
-        perfilId: json["PerfilId"],
-        resumen: json["Resumen"],
-        fortalezas: json["Fortalezas"],
-        debilidades: json["Debilidades"],
-        riesgos: json["Riesgos"],
-        finalizado: json["Finalizado"],
-        usuarioIdCoordinador: json["UsuarioIdCoordinador"],
-        fechaEvaluacion: json["FechaEvaluacion"],
-        preAprobado: json["PreAprobado"],
-        recordStatus: json["RecordStatus"],
-        remoteEvaluacionId: json["RemoteEvaluacionId"],
-      );
-
   Map<String, dynamic> toJson() => {
         //"EvaluacionId": evaluacionId,
         "PerfilId": perfilId,

@@ -50,23 +50,4 @@ class AliadoModel extends AliadoEntity {
         activo: json["Activo"],
         recordStatus: json["RecordStatus"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "AliadoId": aliadoId,
-        "Nombre": nombre,
-        "FechaCreacion": fechaCreacion,
-        "NombreContacto": nombreContacto,
-        "Direccion": direccion,
-        "TelefonoFijo": telefonoFijo,
-        "TelefonoMovil": telefonoMovil,
-        "Correo": correo,
-        "MunicipioId": municipioId,
-        "Experiencia": experiencia,
-        "FechaActivacion": fechaActivacion,
-        "FechaDesactivacion": fechaDesactivacion,
-        "FechaCambio": fechaCambio,
-        "Activo": activo,
-        "RecordStatus": recordStatus,
-      };
 }

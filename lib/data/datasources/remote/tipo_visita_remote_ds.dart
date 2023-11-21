@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/tipo_visita_model.dart';
 import '../../utils.dart';
@@ -61,37 +61,40 @@ class TipoVisitaRemoteDataSourceImpl implements TipoVisitaRemoteDataSource {
           },
           body: tipoVisitaSOAP);
 
-      if (tipoVisitaResp.statusCode == 200) {
-        final tipoVisitaDoc = xml.XmlDocument.parse(tipoVisitaResp.body);
+      if (tipoVisitaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los tipos de visita']);
+      }
 
-        final respuesta =
-            tipoVisitaDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final tipoVisitaDoc = xml.XmlDocument.parse(tipoVisitaResp.body);
 
-        if (respuesta == 'true' &&
-            tipoVisitaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = tipoVisitaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          tipoVisitaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final tiposVisitasRaw = decodedResp.entries.first.value['Table'];
-
-          if (tiposVisitasRaw is List) {
-            return List.from(tiposVisitasRaw)
-                .map((e) => TipoVisitaModel.fromJson(e))
-                .toList();
-          } else {
-            return [TipoVisitaModel.fromJson(tiposVisitasRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (tipoVisitaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = tipoVisitaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final tiposVisitasRaw = decodedResp.entries.first.value['Table'];
+
+        if (tiposVisitasRaw is List) {
+          return List.from(tiposVisitasRaw)
+              .map((e) => TipoVisitaModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoVisitaModel.fromJson(tiposVisitasRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los tipos de visita']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

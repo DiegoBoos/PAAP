@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/perfil_entity.dart';
 
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/v_perfil_model.dart';
 
 abstract class PerfilLocalDataSource {
@@ -16,7 +16,7 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
   static createPerfilTable(Database db) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS Perfil (
-	      PerfilId	TEXT NOT NULL,
+	      ID	TEXT NOT NULL,
 	      ConvocatoriaId	TEXT NOT NULL,
 	      Nombre	TEXT,
 	      Abreviatura	TEXT,
@@ -31,7 +31,7 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
 	      ProductoAsociadoId	TEXT NOT NULL,
 	      ValorTotalProyecto	TEXT,
 	      IncentivoModular	TEXT,
-	      PRIMARY KEY(PerfilId),
+	      PRIMARY KEY(ID),
 	      FOREIGN KEY(ConvocatoriaId) REFERENCES Convocatoria(ConvocatoriaId),
 	      FOREIGN KEY(TipoProyectoId) REFERENCES TipoProyecto(TipoProyectoId),
 	      FOREIGN KEY(ProductoId) REFERENCES Producto(ProductoId),
@@ -47,7 +47,7 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
 
     String sql = '''
     select
-    PerfilId as perfilId,
+    ID as perfilId,
     ConvocatoriaId as convocatoriaId,
     Perfil.Nombre as nombre, 
     Abreviatura as abreviatura, 
@@ -69,7 +69,7 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
     left join TipoProyecto on (TipoProyecto.TipoProyectoId=Perfil.TipoProyectoId)
     left join Producto as ProductoPrincipal on (ProductoPrincipal.ProductoId =Perfil.ProductoId)
     left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =Perfil.ProductoAsociadoId)
-    ORDER BY CAST(PerfilId AS INTEGER)
+    ORDER BY CAST(ID AS INTEGER)
     ''';
 
     final res = await db.rawQuery(sql);
@@ -90,7 +90,7 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
 
     String sql = '''
     select
-    PerfilId as perfilId,
+    ID as perfilId,
     ConvocatoriaId as convocatoriaId,
     Perfil.Nombre as nombre, 
     Abreviatura as abreviatura, 
@@ -112,7 +112,7 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
     left join TipoProyecto on (TipoProyecto.TipoProyectoId=Perfil.TipoProyectoId)
     left join Producto as ProductoPrincipal on (ProductoPrincipal.ProductoId =Perfil.ProductoId)
     left join Producto as ProductoAsociado on (ProductoAsociado.ProductoId =Perfil.ProductoAsociadoId)
-    where PerfilId LIKE '%$id%' AND Perfil.Nombre LIKE '%$nombre%'
+    where ID LIKE '%$id%' AND Perfil.Nombre LIKE '%$nombre%'
     ''';
 
     final res = await db.rawQuery(sql);

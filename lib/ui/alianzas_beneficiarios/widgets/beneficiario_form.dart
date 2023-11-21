@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
-import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
-import '../../../domain/cubits/genero/genero_cubit.dart';
-import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
-import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
+import '../../../ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
+import '../../../ui/cubits/beneficiario/beneficiario_cubit.dart';
+import '../../../ui/cubits/genero/genero_cubit.dart';
+import '../../../ui/cubits/grupo_especial/grupo_especial_cubit.dart';
+import '../../../ui/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
 import '../../../domain/entities/beneficiario_entity.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';

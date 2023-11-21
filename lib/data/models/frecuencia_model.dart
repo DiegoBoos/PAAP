@@ -7,8 +7,4 @@ class FrecuenciaModel extends FrecuenciaEntity {
   factory FrecuenciaModel.fromJson(Map<String, dynamic> json) =>
       FrecuenciaModel(
           frecuenciaId: json["FrecuenciaId"], nombre: json["Nombre"]);
-
-  @override
-  Map<String, dynamic> toJson() =>
-      {"FrecuenciaId": frecuenciaId, "Nombre": nombre};
 }

@@ -13,11 +13,4 @@ class EstadoCivilModel extends EstadoCivilEntity {
           estadoCivilId: json["EstadoCivilId"],
           nombre: json["Nombre"],
           tieneConyuge: json["TieneConyuge"]);
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "EstadoCivilId": estadoCivilId,
-        "Nombre": nombre,
-        "TieneConyuge": tieneConyuge
-      };
 }

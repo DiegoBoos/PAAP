@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/estado_visita_model.dart';
 import '../../utils.dart';
@@ -63,38 +62,40 @@ class EstadoVisitaRemoteDataSourceImpl implements EstadoVisitaRemoteDataSource {
           },
           body: estadovisitaSOAP);
 
-      if (estadovisitaResp.statusCode == 200) {
-        final estadovisitaDoc = xml.XmlDocument.parse(estadovisitaResp.body);
+      if (estadovisitaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los estados de visita']);
+      }
 
-        final respuesta = estadovisitaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
+      final estadovisitaDoc = xml.XmlDocument.parse(estadovisitaResp.body);
+
+      final respuesta =
+          estadovisitaDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      final mensaje =
+          estadovisitaDoc.findAllElements('mensaje').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        if (estadovisitaDoc.findAllElements('NewDataSet').isEmpty) {
+          return [];
+        }
+
+        final xmlString = estadovisitaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
             .first;
 
-        final mensaje =
-            estadovisitaDoc.findAllElements('mensaje').map((e) => e.text).first;
+        String res = Utils.convertXmlToJson(xmlString);
 
-        if (respuesta == 'true') {
-          final xmlString = estadovisitaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+        final Map<String, dynamic> decodedResp = json.decode(res);
 
-          String res = Utils.convertXmlToJson(xmlString);
+        final estadovisitasRaw = decodedResp.entries.first.value['Table'];
+        final estadovisitas = List.from(estadovisitasRaw)
+            .map((e) => EstadoVisitaModel.fromJson(e))
+            .toList();
 
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final estadovisitasRaw = decodedResp.entries.first.value['Table'];
-          final estadovisitas = List.from(estadovisitasRaw)
-              .map((e) => EstadoVisitaModel.fromJson(e))
-              .toList();
-
-          return estadovisitas;
-        } else {
-          throw ServerFailure([mensaje]);
-        }
+        return estadovisitas;
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

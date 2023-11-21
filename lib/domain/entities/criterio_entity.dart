@@ -15,15 +15,6 @@ class CriterioEntity {
   String valorMaximo;
   String agrupacionId;
 
-  factory CriterioEntity.fromJson(Map<String, dynamic> json) => CriterioEntity(
-        criterioId: json["CriterioId"],
-        nombre: json["Nombre"],
-        descripcion: json["Descripcion"],
-        variable: json["Variable"],
-        valorMaximo: json["ValorMaximo"],
-        agrupacionId: json["AgrupacionId"],
-      );
-
   Map<String, dynamic> toJson() => {
         "CriterioId": criterioId,
         "Nombre": nombre,

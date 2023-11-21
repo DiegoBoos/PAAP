@@ -1,65 +1,128 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/cubits/v_perfil/v_perfil_cubit.dart';
 
 import '../../../domain/entities/v_perfil_entity.dart';
+import '../../cubits/v_perfil/v_perfil_cubit.dart';
 
-class PerfilesRows extends StatelessWidget {
+class VPerfilesTableSource extends DataTableSource {
+  final BuildContext context;
+  final List<VPerfilEntity> vPerfiles;
+
+  VPerfilesTableSource(this.context, this.vPerfiles);
+
+  @override
+  DataRow getRow(int index) {
+    final vPerfil = vPerfiles[index];
+
+    return DataRow.byIndex(
+      index: index,
+      cells: <DataCell>[
+        DataCell(Text(vPerfil.perfilId)),
+        DataCell(TextButton(
+          onPressed: () {
+            BlocProvider.of<VPerfilCubit>(context).selectVPerfil(vPerfil);
+            Navigator.pushNamed(context, 'VPerfil');
+          },
+          child: Text(
+            vPerfil.nombre,
+          ),
+        )),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => vPerfiles.length;
+
+  @override
+  int get selectedRowCount => 0;
+}
+
+class PerfilesRows extends StatefulWidget {
   const PerfilesRows({
     Key? key,
     required this.vPerfiles,
-    required this.subtitleStyle,
   }) : super(key: key);
 
   final List<VPerfilEntity> vPerfiles;
-  final TextStyle subtitleStyle;
+
+  @override
+  State<PerfilesRows> createState() => _PerfilesRowsState();
+}
+
+class _PerfilesRowsState extends State<PerfilesRows> {
+  List<VPerfilEntity> vPerfilesFiltered = [];
+  List<VPerfilEntity> allVPerfiles = [];
+
+  bool enableId = false;
+
+  @override
+  void initState() {
+    super.initState();
+    allVPerfiles = widget.vPerfiles;
+    vPerfilesFiltered = allVPerfiles;
+  }
+
+  void _buscar(String query) {
+    final lowerCaseQuery = query.toLowerCase();
+
+    if (enableId) {
+      final vperfiles = allVPerfiles.where((vperfil) {
+        return vperfil.perfilId.toLowerCase().contains(lowerCaseQuery);
+      }).toList();
+
+      setState(() {
+        vPerfilesFiltered = vperfiles;
+      });
+      return;
+    } else {
+      final vperfiles = allVPerfiles.where((vperfil) {
+        return vperfil.nombre.toLowerCase().contains(lowerCaseQuery);
+      }).toList();
+
+      setState(() {
+        vPerfilesFiltered = vperfiles;
+      });
+      return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: DataTable(
-        headingRowColor:
-            MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-        dividerThickness: 1,
-        columnSpacing: 10,
-        dataRowHeight: 200,
-        columns: <DataColumn>[
-          DataColumn(
-            label: Expanded(
-              child: Text('ID',
-                  style: subtitleStyle.copyWith(color: Colors.white)),
-            ),
+    return ListView(
+      children: [
+        TextField(
+          onChanged: (value) => _buscar(value),
+          decoration: InputDecoration(
+            labelText: enableId ? 'Buscar por id' : 'Buscar por nombre',
+            suffixIcon: const Icon(Icons.search),
           ),
-          DataColumn(
-            label: Expanded(
-              child: Text('Nombre',
-                  style: subtitleStyle.copyWith(color: Colors.white)),
-            ),
+        ),
+        PaginatedDataTable(
+          header: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Perfiles'),
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      enableId = !enableId;
+                    });
+                  },
+                  icon: const Icon(Icons.filter_alt))
+            ],
           ),
-          const DataColumn(
-            label: Expanded(
-              child: Text(''),
-            ),
-          ),
-        ],
-        rows: List.generate(vPerfiles.length, (index) {
-          VPerfilEntity vPerfil = vPerfiles[index];
-
-          return DataRow(cells: <DataCell>[
-            DataCell(Text(vPerfil.perfilId)),
-            DataCell(Text(vPerfil.nombre)),
-            DataCell(IconButton(
-                onPressed: () {
-                  BlocProvider.of<VPerfilCubit>(context).selectVPerfil(vPerfil);
-                  Navigator.pushNamed(context, 'VPerfil');
-                },
-                icon: const Icon(
-                  Icons.keyboard_arrow_right,
-                ))),
-          ]);
-        }),
-      ),
+          rowsPerPage: 10, // Adjust as needed
+          columns: const <DataColumn>[
+            DataColumn(label: Text('ID')),
+            DataColumn(label: Text('Nombre')),
+          ],
+          source: VPerfilesTableSource(context, vPerfilesFiltered),
+        ),
+      ],
     );
   }
 }

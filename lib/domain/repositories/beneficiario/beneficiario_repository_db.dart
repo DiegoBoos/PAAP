@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/beneficiario_entity.dart';
 
 abstract class BeneficiarioRepositoryDB {
   Future<Either<Failure, List<BeneficiarioEntity>>>
-      getBeneficiariosRepositoryDB();
+      getBeneficiariosRepositoryDB(String perfilId);
   Future<Either<Failure, List<BeneficiarioEntity>>>
       getBeneficiariosProduccionRepositoryDB();
 

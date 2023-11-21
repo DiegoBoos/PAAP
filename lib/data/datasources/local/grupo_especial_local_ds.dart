@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/grupo_especial_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/grupo_especial_model.dart';
 
 abstract class GrupoEspecialLocalDataSource {

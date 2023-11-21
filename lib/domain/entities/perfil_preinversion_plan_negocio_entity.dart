@@ -44,20 +44,6 @@ class PerfilPreInversionPlanNegocioEntity {
     );
   }
 
-  factory PerfilPreInversionPlanNegocioEntity.fromJson(
-          Map<String, dynamic> json) =>
-      PerfilPreInversionPlanNegocioEntity(
-        perfilPreInversionId: json["PerfilPreInversionId"],
-        rubroId: json["RubroId"],
-        year: json["Year"],
-        valor: json["Valor"],
-        cantidad: json["Cantidad"],
-        unidadId: json["UnidadId"],
-        productoId: json["ProductoId"],
-        tipoCalidadId: json["TipoCalidadId"],
-        recordStatus: json["RecordStatus"],
-      );
-
   Map<String, dynamic> toJson() => {
         "PerfilPreInversionId": perfilPreInversionId,
         "RubroId": rubroId,

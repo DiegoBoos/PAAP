@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/perfil_preinversion_consultor_entity.dart';
 import '../../repositories/perfil_preinversion_consultor/perfil_preinversion_consultor_repository_db.dart';
 

@@ -8,7 +8,4 @@ class GeneroModel extends GeneroEntity {
         generoId: json["GeneroId"],
         nombre: json["Nombre"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {"GeneroId": generoId, "Nombre": nombre};
 }

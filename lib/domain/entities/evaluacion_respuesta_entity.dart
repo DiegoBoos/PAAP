@@ -33,16 +33,6 @@ class EvaluacionRespuestaEntity {
     );
   }
 
-  factory EvaluacionRespuestaEntity.fromJson(Map<String, dynamic> json) =>
-      EvaluacionRespuestaEntity(
-        criterioId: json["CriterioId"],
-        evaluacionId: json["EvaluacionId"],
-        opcionId: json["OpcionId"],
-        observacion: json["Observacion"],
-        recordStatus: json["RecordStatus"],
-        remoteEvaluacionId: json["RemoteEvaluacionId"],
-      );
-
   Map<String, dynamic> toJson() => {
         "CriterioId": criterioId,
         "EvaluacionId": evaluacionId,

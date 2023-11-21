@@ -50,22 +50,4 @@ class PerfilBeneficiarioModel extends PerfilBeneficiarioEntity {
         activo: json["Activo"],
         recordStatus: json["RecordStatus"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "PerfilId": perfilId,
-        "BeneficiarioId": beneficiarioId,
-        "MunicipioId": municipioId,
-        "VeredaId": veredaId,
-        "AreaFinca": areaFinca,
-        "AreaProyecto": areaProyecto,
-        "TipoTenenciaId": tipoTenenciaId,
-        "Experiencia": experiencia,
-        "Asociado": asociado,
-        "ConocePerfil": conocePerfil,
-        "FueBeneficiado": fueBeneficiado,
-        "CualBeneficio": cualBeneficio,
-        "Activo": activo,
-        "recordStatus": recordStatus,
-      };
 }

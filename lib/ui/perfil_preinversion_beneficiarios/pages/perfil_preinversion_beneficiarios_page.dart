@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
-import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
+import '../../../ui/cubits/menu/menu_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
-import '../../utils/styles.dart';
 import '../widgets/perfil_preinversion_beneficiarios_rows.dart';
 
 class PerfilPreInversionBeneficiariosPage extends StatefulWidget {
@@ -29,69 +28,69 @@ class _PerfilPreInversionBeneficiariosPageState
 
     final perfilPreInversionBeneficiariosBloc =
         BlocProvider.of<PerfilPreInversionBeneficiariosBloc>(context);
-    perfilPreInversionBeneficiariosBloc.add(GetPerfilPreInversionBeneficiarios(
-        vPerfilPreInversionCubit
-            .state.vPerfilPreInversion!.perfilPreInversionId));
+
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId;
+
+    perfilPreInversionBeneficiariosBloc
+        .add(GetPerfilPreInversionBeneficiarios(perfilPreInversionId));
   }
 
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
+    final perfilPreInversionBeneficiariosBloc =
+        BlocProvider.of<PerfilPreInversionBeneficiariosBloc>(context);
+    final perfilPreInversionBeneficiarios = perfilPreInversionBeneficiariosBloc
+        .state.perfilPreInversionBeneficiarios;
 
     return Scaffold(
-        drawer: BlocBuilder<MenuCubit, MenuState>(
+      drawer: BlocBuilder<MenuCubit, MenuState>(
+        builder: (context, state) {
+          final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
+          return PerfilPreInversionDrawer(
+            menuHijo: menuHijo,
+          );
+        },
+      ),
+      floatingActionButton: perfilPreInversionBeneficiarios != null &&
+              perfilPreInversionBeneficiarios.isEmpty
+          ? FloatingActionButton(
+              child: const Icon(Icons.save),
+              onPressed: () => Navigator.pushNamed(
+                  context, 'NewEditVBeneficiarioPreInversion'))
+          : null,
+      appBar: AppBar(title: const Text('Consulta'), actions: const [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30.0),
+          child: NetworkIcon(),
+        )
+      ]),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: BlocBuilder<PerfilPreInversionBeneficiariosBloc,
+            PerfilPreInversionBeneficiariosState>(
           builder: (context, state) {
-            final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
-            return PerfilPreInversionDrawer(
-              menuHijo: menuHijo,
-            );
+            if (state is PerfilPreInversionBeneficiariosLoading) {
+              return const CustomCircularProgress(alignment: Alignment.center);
+            }
+            if (state is PerfilPreInversionBeneficiariosLoaded) {
+              final perfilPreInversionBeneficiarios =
+                  state.perfilPreInversionBeneficiariosLoaded;
+              if (perfilPreInversionBeneficiarios.isEmpty) {
+                return const SizedBox(
+                    child:
+                        Center(child: NoDataSvg(title: 'No hay resultados')));
+              }
+              return PerfilPreInversionBeneficiariosRows(
+                perfilPreInversionBeneficiarios:
+                    perfilPreInversionBeneficiarios,
+              );
+            }
+            return Container();
           },
         ),
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.save),
-            onPressed: () => Navigator.pushNamed(
-                context, 'NewEditVBeneficiarioPreInversion')),
-        appBar: AppBar(title: const Text('Consulta'), actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: NetworkIcon(),
-          )
-        ]),
-        body: ListView(children: [
-          const SizedBox(height: 30),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text(
-              'BENEFICIARIOS PREINVERSIÓN',
-              style: Styles.titleStyle,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 20),
-          BlocBuilder<PerfilPreInversionBeneficiariosBloc,
-              PerfilPreInversionBeneficiariosState>(
-            builder: (context, state) {
-              if (state is PerfilPreInversionBeneficiariosLoading) {
-                return const CustomCircularProgress(
-                    alignment: Alignment.center);
-              }
-              if (state is PerfilPreInversionBeneficiariosLoaded) {
-                final perfilPreInversionBeneficiarios =
-                    state.perfilPreInversionBeneficiariosLoaded;
-                if (perfilPreInversionBeneficiarios.isEmpty) {
-                  return const SizedBox(
-                      child:
-                          Center(child: NoDataSvg(title: 'No hay resultados')));
-                }
-                return PerfilPreInversionBeneficiariosRows(
-                    perfilPreInversionBeneficiarios:
-                        perfilPreInversionBeneficiarios,
-                    subtitleStyle: Styles.subtitleStyle);
-              }
-              return Container();
-            },
-          ),
-          const SizedBox(height: 30),
-        ]));
+      ),
+    );
   }
 }

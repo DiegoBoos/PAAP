@@ -7,8 +7,4 @@ class TipoEntidadModel extends TipoEntidadEntity {
   factory TipoEntidadModel.fromJson(Map<String, dynamic> json) =>
       TipoEntidadModel(
           tipoEntidadId: json["TipoEntidadId"], nombre: json["Nombre"]);
-
-  @override
-  Map<String, dynamic> toJson() =>
-      {"TipoEntidadId": tipoEntidadId, "Nombre": nombre};
 }

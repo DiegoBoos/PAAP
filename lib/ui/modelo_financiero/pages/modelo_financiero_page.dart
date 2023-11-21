@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/menu/menu_cubit.dart';
+import '../../../ui/cubits/menu/menu_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/network_icon.dart';
 import 'costos_upt_page.dart';

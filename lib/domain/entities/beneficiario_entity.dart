@@ -1,96 +1,95 @@
 class BeneficiarioEntity {
   BeneficiarioEntity({
     required this.beneficiarioId,
+    this.tipoIdentificacionId,
+    this.tipoDocumento,
+    required this.fechaExpedicionDocumento,
+    required this.fechaNacimiento,
+    this.edad,
     required this.nombre1,
     required this.nombre2,
     required this.apellido1,
     required this.apellido2,
-    required this.generoId,
-    required this.fechaNacimiento,
-    required this.fechaExpedicionDocumento,
-    required this.grupoEspecialId,
+    this.generoId,
+    this.genero,
+    this.grupoEspecialId,
+    this.grupoEspecial,
     required this.telefonoMovil,
     required this.activo,
-    required this.tipoIdentificacionId,
-    required this.recordStatus,
+    this.recordStatus,
   });
 
   String beneficiarioId;
+  String? tipoIdentificacionId;
+  String? tipoDocumento;
+  String fechaExpedicionDocumento;
+  String fechaNacimiento;
+  int? edad;
   String nombre1;
   String nombre2;
   String apellido1;
   String apellido2;
-  String generoId;
-  String fechaNacimiento;
-  String fechaExpedicionDocumento;
-  String grupoEspecialId;
+  String? generoId;
+  String? genero;
+  String? grupoEspecialId;
+  String? grupoEspecial;
   String telefonoMovil;
   String activo;
-  String tipoIdentificacionId;
-  String recordStatus;
+  String? recordStatus;
 
   BeneficiarioEntity copyWith({
     String? beneficiarioId,
+    String? tipoIdentificacionId,
+    String? tipoDocumento,
+    String? fechaExpedicionDocumento,
+    String? fechaNacimiento,
+    int? edad,
     String? nombre1,
     String? nombre2,
     String? apellido1,
     String? apellido2,
     String? generoId,
-    String? fechaNacimiento,
-    String? fechaExpedicionDocumento,
+    String? genero,
     String? grupoEspecialId,
+    String? grupoEspecial,
     String? telefonoMovil,
     String? activo,
-    String? tipoIdentificacionId,
     String? recordStatus,
   }) =>
       BeneficiarioEntity(
         beneficiarioId: beneficiarioId ?? this.beneficiarioId,
+        tipoIdentificacionId: tipoIdentificacionId ?? this.tipoIdentificacionId,
+        tipoDocumento: tipoDocumento ?? this.tipoDocumento,
+        fechaExpedicionDocumento:
+            fechaExpedicionDocumento ?? this.fechaExpedicionDocumento,
+        fechaNacimiento: fechaNacimiento ?? this.fechaNacimiento,
+        edad: edad ?? this.edad,
         nombre1: nombre1 ?? this.nombre1,
         nombre2: nombre2 ?? this.nombre2,
         apellido1: apellido1 ?? this.apellido1,
         apellido2: apellido2 ?? this.apellido2,
         generoId: generoId ?? this.generoId,
-        fechaNacimiento: fechaNacimiento ?? this.fechaNacimiento,
-        fechaExpedicionDocumento:
-            fechaExpedicionDocumento ?? this.fechaExpedicionDocumento,
+        genero: genero ?? this.genero,
         grupoEspecialId: grupoEspecialId ?? this.grupoEspecialId,
+        grupoEspecial: grupoEspecial ?? this.grupoEspecial,
         telefonoMovil: telefonoMovil ?? this.telefonoMovil,
         activo: activo ?? this.activo,
-        tipoIdentificacionId: tipoIdentificacionId ?? this.tipoIdentificacionId,
         recordStatus: recordStatus ?? this.recordStatus,
-      );
-
-  factory BeneficiarioEntity.fromJson(Map<String, dynamic> json) =>
-      BeneficiarioEntity(
-        beneficiarioId: json["BeneficiarioId"],
-        nombre1: json["Nombre1"],
-        nombre2: json["Nombre2"],
-        apellido1: json["Apellido1"],
-        apellido2: json["Apellido2"],
-        generoId: json["GeneroId"],
-        fechaNacimiento: json["FechaNacimiento"],
-        fechaExpedicionDocumento: json["FechaExpedicionDocumento"],
-        grupoEspecialId: json["GrupoEspecialId"],
-        telefonoMovil: json["TelefonoMovil"],
-        activo: json["Activo"],
-        tipoIdentificacionId: json["TipoIdentificacionId"],
-        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {
         "BeneficiarioId": beneficiarioId,
+        "TipoIdentificacionId": tipoIdentificacionId,
+        "FechaExpedicionDocumento": fechaExpedicionDocumento,
+        "FechaNacimiento": fechaNacimiento,
         "Nombre1": nombre1,
         "Nombre2": nombre2,
         "Apellido1": apellido1,
         "Apellido2": apellido2,
         "GeneroId": generoId,
-        "FechaNacimiento": fechaNacimiento,
-        "FechaExpedicionDocumento": fechaExpedicionDocumento,
         "GrupoEspecialId": grupoEspecialId,
         "TelefonoMovil": telefonoMovil,
         "Activo": activo,
-        "TipoIdentificacionId": tipoIdentificacionId,
         "RecordStatus": recordStatus,
       };
 }

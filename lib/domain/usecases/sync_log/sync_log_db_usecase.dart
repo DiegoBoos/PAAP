@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/sync_log_entity.dart';
 import '../../repositories/sync_log/sync_log_repository_db.dart';
 

@@ -64,24 +64,6 @@ class PerfilBeneficiarioEntity {
         recordStatus: recordStatus ?? this.recordStatus,
       );
 
-  factory PerfilBeneficiarioEntity.fromJson(Map<String, dynamic> json) =>
-      PerfilBeneficiarioEntity(
-        perfilId: json["PerfilId"],
-        beneficiarioId: json["BeneficiarioId"],
-        municipioId: json["MunicipioId"],
-        veredaId: json["VeredaId"],
-        areaFinca: json["AreaFinca"],
-        areaProyecto: json["AreaProyecto"],
-        tipoTenenciaId: json["TipoTenenciaId"],
-        experiencia: json["Experiencia"],
-        asociado: json["Asociado"],
-        conocePerfil: json["ConocePerfil"],
-        fueBeneficiado: json["FueBeneficiado"],
-        cualBeneficio: json["CualBeneficio"],
-        activo: json["Activo"],
-        recordStatus: json["RecordStatus"],
-      );
-
   Map<String, dynamic> toJson() => {
         "PerfilId": perfilId,
         "BeneficiarioId": beneficiarioId,

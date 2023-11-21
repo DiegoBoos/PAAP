@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_aliado_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/perfil_preinversion_aliado_model.dart';
 import '../../utils.dart';
@@ -71,45 +71,47 @@ class PerfilPreInversionAliadoRemoteDataSourceImpl
           },
           body: perfilPreInversionAliadosSOAP);
 
-      if (perfilPreInversionAliadoResp.statusCode == 200) {
-        final perfilPreInversionAliadoDoc =
-            xml.XmlDocument.parse(perfilPreInversionAliadoResp.body);
+      if (perfilPreInversionAliadoResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los aliados de perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionAliadoDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionAliadoDoc =
+          xml.XmlDocument.parse(perfilPreInversionAliadoResp.body);
 
-        if (respuesta == 'true' &&
-            perfilPreInversionAliadoDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString = perfilPreInversionAliadoDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = perfilPreInversionAliadoDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilPreInversionAliadosRaw =
-              decodedResp.entries.first.value['Table'];
-          if (perfilPreInversionAliadosRaw is List) {
-            return List.from(perfilPreInversionAliadosRaw)
-                .map((e) => PerfilPreInversionAliadoModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              PerfilPreInversionAliadoModel.fromJson(
-                  perfilPreInversionAliadosRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (perfilPreInversionAliadoDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = perfilPreInversionAliadoDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilPreInversionAliadosRaw =
+            decodedResp.entries.first.value['Table'];
+        if (perfilPreInversionAliadosRaw is List) {
+          return List.from(perfilPreInversionAliadosRaw)
+              .map((e) => PerfilPreInversionAliadoModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            PerfilPreInversionAliadoModel.fromJson(perfilPreInversionAliadosRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los aliados de perfil preinversión']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -186,20 +188,21 @@ class PerfilPreInversionAliadoRemoteDataSourceImpl
           },
           body: perfilPreInversionAliadoSOAP);
 
-      if (perfilPreInversionAliadoResp.statusCode == 200) {
-        final perfilPreInversionAliadoDoc =
-            xml.XmlDocument.parse(perfilPreInversionAliadoResp.body);
+      if (perfilPreInversionAliadoResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al guardar el aliado del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionAliadoDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionAliadoDoc =
+          xml.XmlDocument.parse(perfilPreInversionAliadoResp.body);
 
-        if (respuesta == 'true') {
-          return perfilPreInversionAliadoEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilPreInversionAliadoDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionAliadoEntity;
       } else {
         return null;
       }

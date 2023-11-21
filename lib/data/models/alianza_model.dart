@@ -60,26 +60,4 @@ class AlianzaModel extends AlianzaEntity {
         incentivoModular: json["IncentivoModular"],
         legalizado: json["Legalizado"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "AlianzaId": alianzaId,
-        "PerfilPreInversionId": perfilPreInversionId,
-        "ConvocatoriaId": convocatoriaId,
-        "Nombre": nombre,
-        "Abreviatura": abreviatura,
-        "NIT": nit,
-        "MunicipioId": municipioId,
-        "Direccion": direccion,
-        "Contacto": contacto,
-        "TelefonoFijo": telefonoFijo,
-        "TelefonoMovil": telefonoMovil,
-        "Correo": correo,
-        "TipoProyectoId": tipoProyectoId,
-        "ProductoId": productoId,
-        "ProductoAsociadoId": productoAsociadoId,
-        "ValorTotalProyecto": valorTotalProyecto,
-        "IncentivoModular": incentivoModular,
-        "Legalizado": legalizado,
-      };
 }

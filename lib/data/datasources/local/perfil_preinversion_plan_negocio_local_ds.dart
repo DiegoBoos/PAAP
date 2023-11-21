@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../../domain/entities/perfil_preinversion_plan_negocio_entity.dart';
 import '../../models/perfil_preinversion_plan_negocio_model.dart';
 import '../../models/v_perfil_preinversion_plan_negocio_model.dart';

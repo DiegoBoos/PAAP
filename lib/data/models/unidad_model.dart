@@ -13,11 +13,4 @@ class UnidadModel extends UnidadEntity {
         nombre: json["Nombre"],
         simbolo: json["Simbolo"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "UnidadId": unidadId,
-        "Nombre": nombre,
-        "Simbolo": simbolo,
-      };
 }

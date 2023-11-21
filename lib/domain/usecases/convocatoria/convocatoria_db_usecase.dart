@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/convocatoria_entity.dart';
 import '../../repositories/convocatoria/convocatoria_repository_db.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/v_perfil/v_perfil_cubit.dart';
+import '../../../ui/cubits/v_perfil/v_perfil_cubit.dart';
 
 class PerfilCard extends StatelessWidget {
   const PerfilCard({super.key});

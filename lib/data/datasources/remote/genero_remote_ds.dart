@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/genero_model.dart';
 import '../../utils.dart';
@@ -61,37 +61,40 @@ class GeneroRemoteDataSourceImpl implements GeneroRemoteDataSource {
           },
           body: generoSOAP);
 
-      if (generoResp.statusCode == 200) {
-        final generoDoc = xml.XmlDocument.parse(generoResp.body);
+      if (generoResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los géneros']);
+      }
 
-        final respuesta =
-            generoDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final generoDoc = xml.XmlDocument.parse(generoResp.body);
 
-        if (respuesta == 'true' &&
-            generoDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = generoDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          generoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final generosRaw = decodedResp.entries.first.value['Table'];
-
-          if (generosRaw is List) {
-            return List.from(generosRaw)
-                .map((e) => GeneroModel.fromJson(e))
-                .toList();
-          } else {
-            return [GeneroModel.fromJson(generosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (generoDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = generoDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final generosRaw = decodedResp.entries.first.value['Table'];
+
+        if (generosRaw is List) {
+          return List.from(generosRaw)
+              .map((e) => GeneroModel.fromJson(e))
+              .toList();
+        } else {
+          return [GeneroModel.fromJson(generosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los géneros']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
 import '../../../../domain/entities/usuario_entity.dart';
-import '../../../../domain/core/error/exception.dart';
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/alianza_experiencia_pecuaria_entity.dart';
 import '../../constants.dart';
 import '../../models/alianza_experiencia_pecuaria_model.dart';
@@ -71,46 +71,50 @@ class AlianzaExperienciaPecuariaRemoteDataSourceImpl
           },
           body: alianzaExperienciaPecuariaSOAP);
 
-      if (alianzaExperienciaPecuariaResp.statusCode == 200) {
-        final alianzaExperienciaPecuariaDoc =
-            xml.XmlDocument.parse(alianzaExperienciaPecuariaResp.body);
+      if (alianzaExperienciaPecuariaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener experiencias pecuarias']);
+      }
 
-        final respuesta = alianzaExperienciaPecuariaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final alianzaExperienciaPecuariaDoc =
+          xml.XmlDocument.parse(alianzaExperienciaPecuariaResp.body);
 
-        if (respuesta == 'true' &&
-            alianzaExperienciaPecuariaDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString = alianzaExperienciaPecuariaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = alianzaExperienciaPecuariaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final alianzasExperienciasPecuariasRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (alianzasExperienciasPecuariasRaw is List) {
-            return List.from(alianzasExperienciasPecuariasRaw)
-                .map((e) => AlianzaExperienciaPecuariaModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              AlianzaExperienciaPecuariaModel.fromJson(
-                  alianzasExperienciasPecuariasRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (alianzaExperienciaPecuariaDoc
+            .findAllElements('NewDataSet')
+            .isEmpty) {
           return [];
         }
+
+        final xmlString = alianzaExperienciaPecuariaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final alianzasExperienciasPecuariasRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (alianzasExperienciasPecuariasRaw is List) {
+          return List.from(alianzasExperienciasPecuariasRaw)
+              .map((e) => AlianzaExperienciaPecuariaModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            AlianzaExperienciaPecuariaModel.fromJson(
+                alianzasExperienciasPecuariasRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener experiencias pecuarias de la alianza']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -192,20 +196,21 @@ class AlianzaExperienciaPecuariaRemoteDataSourceImpl
           },
           body: alianzaExperienciaPecuariaSOAP);
 
-      if (alianzaExperienciaPecuariaResp.statusCode == 200) {
-        final alianzaExperienciaPecuariaDoc =
-            xml.XmlDocument.parse(alianzaExperienciaPecuariaResp.body);
+      if (alianzaExperienciaPecuariaResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al guardar la alianza experiencia pecuaria']);
+      }
 
-        final respuesta = alianzaExperienciaPecuariaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final alianzaExperienciaPecuariaDoc =
+          xml.XmlDocument.parse(alianzaExperienciaPecuariaResp.body);
 
-        if (respuesta == 'true') {
-          return alianzaExperienciaPecuariaEntity;
-        } else {
-          return null;
-        }
+      final respuesta = alianzaExperienciaPecuariaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return alianzaExperienciaPecuariaEntity;
       } else {
         return null;
       }

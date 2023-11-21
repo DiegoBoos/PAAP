@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
+import '../../../ui/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../utils/input_decoration.dart';
 
 class AlianzaForm extends StatelessWidget {

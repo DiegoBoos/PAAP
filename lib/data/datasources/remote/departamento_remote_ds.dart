@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/departamento_model.dart';
 import '../../utils.dart';
@@ -63,39 +63,40 @@ class DepartamentoRemoteDataSourceImpl implements DepartamentoRemoteDataSource {
           },
           body: departamentoSOAP);
 
-      if (departamentoResp.statusCode == 200) {
-        final departamentoDoc = xml.XmlDocument.parse(departamentoResp.body);
+      if (departamentoResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los departamentos']);
+      }
 
-        final respuesta = departamentoDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final departamentoDoc = xml.XmlDocument.parse(departamentoResp.body);
 
-        if (respuesta == 'true' &&
-            departamentoDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = departamentoDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          departamentoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final departamentosRaw = decodedResp.entries.first.value['Table'];
-
-          if (departamentosRaw is List) {
-            return List.from(departamentosRaw)
-                .map((e) => DepartamentoModel.fromJson(e))
-                .toList();
-          } else {
-            return [DepartamentoModel.fromJson(departamentosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (departamentoDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = departamentoDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final departamentosRaw = decodedResp.entries.first.value['Table'];
+
+        if (departamentosRaw is List) {
+          return List.from(departamentosRaw)
+              .map((e) => DepartamentoModel.fromJson(e))
+              .toList();
+        } else {
+          return [DepartamentoModel.fromJson(departamentosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los departamentos']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

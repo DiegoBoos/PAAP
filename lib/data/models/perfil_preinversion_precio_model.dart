@@ -34,14 +34,4 @@ class PerfilPreInversionPrecioModel extends PerfilPreInversionPrecioEntity {
           unidad: json["Unidad"],
           tipoCalidad: json["TipoCalidad"],
           recordStatus: json["RecordStatus"]);
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "PerfilPreInversionId": perfilPreInversionId,
-        "ProductoId": productoId,
-        "UnidadId": unidadId,
-        "TipoCalidadId": tipoCalidadId,
-        "Precio": precio,
-        "RecordStatus": recordStatus,
-      };
 }

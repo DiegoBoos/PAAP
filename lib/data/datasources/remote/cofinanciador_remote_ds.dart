@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/cofinanciador_model.dart';
 import '../../utils.dart';
@@ -64,39 +64,42 @@ class CofinanciadorRemoteDataSourceImpl
           },
           body: cofinanciadorSOAP);
 
-      if (cofinanciadorResp.statusCode == 200) {
-        final cofinanciadorDoc = xml.XmlDocument.parse(cofinanciadorResp.body);
+      if (cofinanciadorResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los cofinanciadores']);
+      }
 
-        final respuesta = cofinanciadorDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final cofinanciadorDoc = xml.XmlDocument.parse(cofinanciadorResp.body);
 
-        if (respuesta == 'true' &&
-            cofinanciadorDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = cofinanciadorDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = cofinanciadorDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final cofinanciadoresRaw = decodedResp.entries.first.value['Table'];
-
-          if (cofinanciadoresRaw is List) {
-            return List.from(cofinanciadoresRaw)
-                .map((e) => CofinanciadorModel.fromJson(e))
-                .toList();
-          } else {
-            return [CofinanciadorModel.fromJson(cofinanciadoresRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (cofinanciadorDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = cofinanciadorDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final cofinanciadoresRaw = decodedResp.entries.first.value['Table'];
+
+        if (cofinanciadoresRaw is List) {
+          return List.from(cofinanciadoresRaw)
+              .map((e) => CofinanciadorModel.fromJson(e))
+              .toList();
+        } else {
+          return [CofinanciadorModel.fromJson(cofinanciadoresRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los cofinanciadores']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

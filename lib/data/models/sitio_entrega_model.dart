@@ -9,8 +9,4 @@ class SitioEntregaModel extends SitioEntregaEntity {
         sitioEntregaId: json["SitioEntregaId"],
         nombre: json["Nombre"],
       );
-
-  @override
-  Map<String, dynamic> toJson() =>
-      {"SitioEntregaId": sitioEntregaId, "Nombre": nombre};
 }

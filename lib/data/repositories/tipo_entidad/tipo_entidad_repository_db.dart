@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/tipo_entidad_entity.dart';
 import '../../../domain/repositories/tipo_entidad/tipo_entidad_repository_db.dart';
 import '../../datasources/local/tipo_entidad_local_ds.dart';

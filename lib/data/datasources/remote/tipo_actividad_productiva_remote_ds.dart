@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 import '../../models/tipo_actividad_productiva_model.dart';
 import '../../utils.dart';
 
@@ -65,46 +65,49 @@ class TipoActividadProductivaRemoteDataSourceImpl
           },
           body: tipoActividadProductivaSOAP);
 
-      if (tipoActividadProductivaResp.statusCode == 200) {
-        final tipoActividadProductivaDoc =
-            xml.XmlDocument.parse(tipoActividadProductivaResp.body);
+      if (tipoActividadProductivaResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los tipos de actividades productivas']);
+      }
 
-        final respuesta = tipoActividadProductivaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final tipoActividadProductivaDoc =
+          xml.XmlDocument.parse(tipoActividadProductivaResp.body);
 
-        if (respuesta == 'true' &&
-            tipoActividadProductivaDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString = tipoActividadProductivaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = tipoActividadProductivaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final tiposActividadesProductivasRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (tiposActividadesProductivasRaw is List) {
-            return List.from(tiposActividadesProductivasRaw)
-                .map((e) => TipoActividadProductivaModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              TipoActividadProductivaModel.fromJson(
-                  tiposActividadesProductivasRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (tipoActividadProductivaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = tipoActividadProductivaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final tiposActividadesProductivasRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (tiposActividadesProductivasRaw is List) {
+          return List.from(tiposActividadesProductivasRaw)
+              .map((e) => TipoActividadProductivaModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            TipoActividadProductivaModel.fromJson(
+                tiposActividadesProductivasRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los tipos de actividades productivas']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

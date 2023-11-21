@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
-import '../../../domain/cubits/genero/genero_cubit.dart';
-import '../../../domain/cubits/grupo_especial/grupo_especial_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
-import '../../../domain/cubits/slider/slider_cubit.dart';
-import '../../../domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
+import '../../../ui/cubits/beneficiario/beneficiario_cubit.dart';
+import '../../../ui/cubits/genero/genero_cubit.dart';
+import '../../../ui/cubits/grupo_especial/grupo_especial_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
+import '../../../ui/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/beneficiario_entity.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';
@@ -18,7 +18,8 @@ import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class BeneficiarioForm extends StatefulWidget {
-  const BeneficiarioForm({super.key});
+  const BeneficiarioForm({super.key, this.perfilPreInversionBeneficiario});
+  final PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario;
 
   @override
   State<BeneficiarioForm> createState() => _BeneficiarioFormState();
@@ -26,7 +27,6 @@ class BeneficiarioForm extends StatefulWidget {
 
 class _BeneficiarioFormState extends State<BeneficiarioForm> {
   final dateFormat = DateFormat('yyyy-MM-dd');
-  /* final List<File> images = []; */
 
   final PageController pageViewController = PageController(initialPage: 1);
 
@@ -48,19 +48,14 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   void initState() {
     super.initState();
 
-    pageViewController.addListener(() {
-      final sliderCubit = BlocProvider.of<SliderCubit>(context);
-      sliderCubit.showSlider(sliderCubit.state.sliderModel
-          .copyWith(currentPage: pageViewController.page!));
-    });
+    // pageViewController.addListener(() {
+    //   final sliderCubit = BlocProvider.of<SliderCubit>(context);
+    //   sliderCubit.showSlider(sliderCubit.state.sliderModel
+    //       .copyWith(currentPage: pageViewController.page!));
+    // });
 
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
-
-    if (beneficiarioCubit.state is BeneficiarioLoaded) {
-      final beneficiarioLoaded = beneficiarioCubit.state.beneficiario;
-
-      loadBeneficiario(beneficiarioLoaded);
-    }
+    loadBeneficiario(beneficiarioCubit.state.beneficiario);
   }
 
   @override
@@ -75,29 +70,30 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     super.dispose();
   }
 
-  void loadBeneficiario(BeneficiarioEntity beneficiarioLoaded) {
-    tipoIdentificacionId = beneficiarioLoaded.tipoIdentificacionId;
-    generoId = beneficiarioLoaded.generoId;
-    grupoEspecialId = beneficiarioLoaded.grupoEspecialId;
+  void loadBeneficiario(BeneficiarioEntity beneficiario) {
+    setState(() {
+      tipoIdentificacionId = beneficiario.tipoIdentificacionId;
+      generoId = beneficiario.generoId;
+      grupoEspecialId = beneficiario.grupoEspecialId;
+      beneficiarioIdCtrl.text = beneficiario.beneficiarioId;
 
-    beneficiarioIdCtrl.text = beneficiarioLoaded.beneficiarioId;
+      if (beneficiario.fechaExpedicionDocumento != '') {
+        fechaExpedicionDocumentoCtrl.text = dateFormat
+            .format(DateTime.parse(beneficiario.fechaExpedicionDocumento));
+      }
 
-    if (beneficiarioLoaded.fechaExpedicionDocumento != '') {
-      fechaExpedicionDocumentoCtrl.text = dateFormat
-          .format(DateTime.parse(beneficiarioLoaded.fechaExpedicionDocumento));
-    }
+      if (beneficiario.fechaNacimiento != '') {
+        fechaNacimientoCtrl.text =
+            dateFormat.format(DateTime.parse(beneficiario.fechaNacimiento));
+        calcularEdad(fechaNacimientoCtrl.text);
+      }
 
-    if (beneficiarioLoaded.fechaNacimiento != '') {
-      fechaNacimientoCtrl.text =
-          dateFormat.format(DateTime.parse(beneficiarioLoaded.fechaNacimiento));
-      calcularEdad(beneficiarioLoaded.fechaNacimiento);
-    }
-
-    telefonoMovilCtrl.text = beneficiarioLoaded.telefonoMovil;
-    nombre1Ctrl.text = beneficiarioLoaded.nombre1;
-    nombre2Ctrl.text = beneficiarioLoaded.nombre2;
-    apellido1Ctrl.text = beneficiarioLoaded.apellido1;
-    apellido2Ctrl.text = beneficiarioLoaded.apellido2;
+      telefonoMovilCtrl.text = beneficiario.telefonoMovil;
+      nombre1Ctrl.text = beneficiario.nombre1;
+      nombre2Ctrl.text = beneficiario.nombre2;
+      apellido1Ctrl.text = beneficiario.apellido1;
+      apellido2Ctrl.text = beneficiario.apellido2;
+    });
   }
 
   void calcularEdad(String fechaNacimiento) {
@@ -125,7 +121,6 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
       }
       if (state is BeneficiarioLoaded) {
         final beneficiarioLoaded = state.beneficiarioLoaded;
-
         loadBeneficiario(beneficiarioLoaded);
       }
     }, child: BlocBuilder<BeneficiarioCubit, BeneficiarioState>(
@@ -172,6 +167,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
               builder: (context, state) {
                 if (state is TiposIdentificacionesLoaded) {
                   return DropdownButtonFormField(
+                    isExpanded: true,
                     decoration: CustomInputDecoration.inputDecoration(
                         hintText: 'Tipo de identificación',
                         labelText: 'Tipo de identificación'),
@@ -447,102 +443,103 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
               },
             ),
             const SizedBox(height: 20),
-            /*  if (images.isNotEmpty)
-              Stack(
-                children: [
-                  SelectedImages(
-                      images: images, pageViewController: pageViewController),
-                  Positioned(
-                      top: 10,
-                      right: 10,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                            color: Colors.black26, shape: BoxShape.circle),
-                        child: IconButton(
-                            icon: const Icon(Icons.delete,
-                                size: 30, color: Colors.white),
-                            onPressed: () => deleteCurrentImage()),
-                      )),
-                ],
-              ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(56),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    textStyle: const TextStyle(fontSize: 20)),
-                onPressed: () => pickImage(ImageSource.gallery),
-                child: Row(children: const [
-                  Icon(Icons.image_outlined),
-                  SizedBox(width: 16),
-                  Text('Seleccionar de Galería')
-                ])),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(56),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    textStyle: const TextStyle(fontSize: 20)),
-                onPressed: () => pickImage(ImageSource.camera),
-                child: Row(
-                  children: const [
-                    Icon(Icons.camera_alt_outlined),
-                    SizedBox(width: 16),
-                    Text('Seleccionar de Cámara')
-                  ],
-                )),
-            const SizedBox(height: 20),
-            if (images.isNotEmpty)
-              Align(
-                alignment: Alignment.bottomRight,
-                child: FloatingActionButton(
-                  child: const Icon(Icons.save),
-                  onPressed: () {
-                    createPDF();
-                  },
-                ),
-              ) */
           ]),
         ),
       );
     }));
   }
-
-  /* Future pickImage(ImageSource source) async {
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
-
-      final imageTemporary = File(image.path);
-      setState(() => images.add(imageTemporary));
-    } on PlatformException catch (e) {
-      CustomSnackBar.showSnackBar(context, e.toString(), Colors.red);
-    }
-  }
-
-  void deleteCurrentImage() {
-    for (var i = 0; i < images.length; i++) {
-      if (pageViewController.page == i) {
-        setState(() => images.removeAt(i));
-        pageViewController.jumpToPage(i);
-      }
-    }
-  }
-
-  createPDF() async {
-    for (var i = 0; i < images.length; i++) {
-      final image = pw.MemoryImage(images[i].readAsBytesSync());
-
-      final pdfFile =
-          await PDFAPI.convertImageToPDF(image, i).catchError((error) {
-        CustomSnackBar.showSnackBar(context, error.toString(), Colors.red);
-      });
-
-      if (pdfFile != null) {
-        PDFAPI.openFile(pdfFile);
-      }
-    }
-  } */
 }
+
+//if (images.isNotEmpty)
+//     Stack(
+//       children: [
+//         SelectedImages(
+//             images: images, pageViewController: pageViewController),
+//         Positioned(
+//             top: 10,
+//             right: 10,
+//             child: Container(
+//               decoration: const BoxDecoration(
+//                   color: Colors.black26, shape: BoxShape.circle),
+//               child: IconButton(
+//                   icon: const Icon(Icons.delete,
+//                       size: 30, color: Colors.white),
+//                   onPressed: () => deleteCurrentImage()),
+//             )),
+//       ],
+//     ),
+//   const SizedBox(height: 20),
+//   ElevatedButton(
+//       style: ElevatedButton.styleFrom(
+//           minimumSize: const Size.fromHeight(56),
+//           backgroundColor: Colors.white,
+//           foregroundColor: Colors.black,
+//           textStyle: const TextStyle(fontSize: 20)),
+//       onPressed: () => pickImage(ImageSource.gallery),
+//       child: Row(children: const [
+//         Icon(Icons.image_outlined),
+//         SizedBox(width: 16),
+//         Text('Seleccionar de Galería')
+//       ])),
+//   const SizedBox(height: 20),
+//   ElevatedButton(
+//       style: ElevatedButton.styleFrom(
+//           minimumSize: const Size.fromHeight(56),
+//           backgroundColor: Colors.white,
+//           foregroundColor: Colors.black,
+//           textStyle: const TextStyle(fontSize: 20)),
+//       onPressed: () => pickImage(ImageSource.camera),
+//       child: Row(
+//         children: const [
+//           Icon(Icons.camera_alt_outlined),
+//           SizedBox(width: 16),
+//           Text('Seleccionar de Cámara')
+//         ],
+//       )),
+//   const SizedBox(height: 20),
+//   if (images.isNotEmpty)
+//     Align(
+//       alignment: Alignment.bottomRight,
+//       child: FloatingActionButton(
+//         child: const Icon(Icons.save),
+//         onPressed: () {
+//           createPDF();
+//         },
+//       ),
+//     )
+
+// Future pickImage(ImageSource source) async {
+//   try {
+//     final image = await ImagePicker().pickImage(source: source);
+//     if (image == null) return;
+
+//     final imageTemporary = File(image.path);
+//     setState(() => images.add(imageTemporary));
+//   } on PlatformException catch (e) {
+//     CustomSnackBar.showSnackBar(context, e.toString(), Colors.red);
+//   }
+// }
+
+// void deleteCurrentImage() {
+//   for (var i = 0; i < images.length; i++) {
+//     if (pageViewController.page == i) {
+//       setState(() => images.removeAt(i));
+//       pageViewController.jumpToPage(i);
+//     }
+//   }
+// }
+
+// createPDF() async {
+//   for (var i = 0; i < images.length; i++) {
+//     final image = pw.MemoryImage(images[i].readAsBytesSync());
+
+//     final pdfFile =
+//         await PDFAPI.convertImageToPDF(image, i).catchError((error) {
+//       CustomSnackBar.showSnackBar(context, error.toString(), Colors.red);
+//     });
+
+//     if (pdfFile != null) {
+//       PDFAPI.openFile(pdfFile);
+//     }
+//   }
+// }

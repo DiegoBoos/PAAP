@@ -39,7 +39,7 @@ class PerfilPreInversionDrawer extends StatelessWidget {
     if (submenu.menuId == '39') return Icons.accessibility;
     if (submenu.menuId == '40') return Icons.add_to_photos;
     if (submenu.menuId == '41') return Icons.touch_app;
-    if (submenu.menuId == '2067') return Icons.attach_money;
+    if (submenu.menuId == '1069') return Icons.attach_money;
 
     return Icons.abc;
   }

@@ -38,16 +38,6 @@ class PerfilPreInversionPrecioEntity {
     );
   }
 
-  factory PerfilPreInversionPrecioEntity.fromJson(Map<String, dynamic> json) =>
-      PerfilPreInversionPrecioEntity(
-        perfilPreInversionId: json["PerfilPreInversionId"],
-        productoId: json["ProductoId"],
-        unidadId: json["UnidadId"],
-        tipoCalidadId: json["TipoCalidadId"],
-        precio: json["Precio"],
-        recordStatus: json["RecordStatus"],
-      );
-
   Map<String, dynamic> toJson() => {
         "PerfilPreInversionId": perfilPreInversionId,
         "ProductoId": productoId,

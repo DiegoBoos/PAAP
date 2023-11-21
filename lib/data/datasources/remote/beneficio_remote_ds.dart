@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/beneficio_model.dart';
 import '../../utils.dart';
@@ -51,37 +51,40 @@ class BeneficioRemoteDataSourceImpl implements BeneficioRemoteDataSource {
           },
           body: beneficioSOAP);
 
-      if (beneficioResp.statusCode == 200) {
-        final beneficioDoc = xml.XmlDocument.parse(beneficioResp.body);
+      if (beneficioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los beneficios']);
+      }
 
-        final respuesta =
-            beneficioDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final beneficioDoc = xml.XmlDocument.parse(beneficioResp.body);
 
-        if (respuesta == 'true' &&
-            beneficioDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = beneficioDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          beneficioDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final beneficiosRaw = decodedResp.entries.first.value['Table'];
-
-          if (beneficiosRaw is List) {
-            return List.from(beneficiosRaw)
-                .map((e) => BeneficioModel.fromJson(e))
-                .toList();
-          } else {
-            return [BeneficioModel.fromJson(beneficiosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (beneficioDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = beneficioDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final beneficiosRaw = decodedResp.entries.first.value['Table'];
+
+        if (beneficiosRaw is List) {
+          return List.from(beneficiosRaw)
+              .map((e) => BeneficioModel.fromJson(e))
+              .toList();
+        } else {
+          return [BeneficioModel.fromJson(beneficiosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los beneficios']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

@@ -2,81 +2,83 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app_config.dart';
-import 'domain/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
-import 'domain/blocs/alianzas/alianzas_bloc.dart';
-import 'domain/blocs/auth/auth_bloc.dart';
-import 'domain/blocs/perfil_preinversion_aliados/perfil_preinversion_aliados_bloc.dart';
-import 'domain/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
-import 'domain/blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
-import 'domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
-import 'domain/blocs/perfil_preinversion_cofinanciador_rubros/perfil_preinversion_cofinanciador_rubros_bloc.dart';
-import 'domain/blocs/perfil_preinversion_cofinanciadores/perfil_preinversion_cofinanciadores_bloc.dart';
-import 'domain/blocs/perfil_preinversion_consultores/perfil_preinversion_consultores_bloc.dart';
-import 'domain/blocs/perfiles/perfiles_bloc.dart';
-import 'domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
-import 'domain/blocs/perfiles_preinversiones_precios/perfiles_preinversiones_precios_bloc.dart';
-import 'domain/blocs/sync/sync_bloc.dart';
-import 'domain/cubits/actividad_economica/actividad_economica_cubit.dart';
-import 'domain/cubits/actividad_financiera/actividad_financiera_cubit.dart';
-import 'domain/cubits/agrupacion/agrupacion_cubit.dart';
-import 'domain/cubits/aliado/aliado_cubit.dart';
-import 'domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
-import 'domain/cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
-import 'domain/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
-import 'domain/cubits/beneficiario/beneficiario_cubit.dart';
-import 'domain/cubits/beneficio/beneficio_cubit.dart';
-import 'domain/cubits/cofinanciador/cofinanciador_cubit.dart';
-import 'domain/cubits/consultor/consultor_cubit.dart';
-import 'domain/cubits/convocatoria/convocatoria_cubit.dart';
-import 'domain/cubits/criterio/criterio_cubit.dart';
-import 'domain/cubits/departamento/departamento_cubit.dart';
-import 'domain/cubits/desembolso/desembolso_cubit.dart';
-import 'domain/cubits/estado_civil/estado_civil_cubit.dart';
-import 'domain/cubits/estado_visita/estado_visita_cubit.dart';
-import 'domain/cubits/evaluacion/evaluacion_cubit.dart';
-import 'domain/cubits/evaluacion_respuesta/evaluacion_respuesta_cubit.dart';
-import 'domain/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
-import 'domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
-import 'domain/cubits/frecuencia/frecuencia_cubit.dart';
-import 'domain/cubits/genero/genero_cubit.dart';
-import 'domain/cubits/grupo_especial/grupo_especial_cubit.dart';
-import 'domain/cubits/internet/internet_cubit.dart';
-import 'domain/cubits/menu/menu_cubit.dart';
-import 'domain/cubits/municipio/municipio_cubit.dart';
-import 'domain/cubits/nivel_escolar/nivel_escolar_cubit.dart';
-import 'domain/cubits/opcion/opcion_cubit.dart';
-import 'domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
-import 'domain/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
-import 'domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
-import 'domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
-import 'domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
-import 'domain/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
-import 'domain/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
-import 'domain/cubits/perfil_preinversion_consultor/perfil_preinversion_consultor_cubit.dart';
-import 'domain/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
-import 'domain/cubits/producto/producto_cubit.dart';
-import 'domain/cubits/residencia/residencia_cubit.dart';
-import 'domain/cubits/revision/revision_cubit.dart';
-import 'domain/cubits/rubro/rubro_cubit.dart';
-import 'domain/cubits/sitio_entrega/sitio_entrega_cubit.dart';
-import 'domain/cubits/slider/slider_cubit.dart';
-import 'domain/cubits/sync_log/sync_log_cubit.dart';
-import 'domain/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
-import 'domain/cubits/tipo_calidad/tipo_calidad_cubit.dart';
-import 'domain/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
-import 'domain/cubits/tipo_entidad/tipo_entidad_cubit.dart';
-import 'domain/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
-import 'domain/cubits/tipo_movimiento/tipo_movimiento_cubit.dart';
-import 'domain/cubits/tipo_proyecto/tipo_proyecto_cubit.dart';
-import 'domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
-import 'domain/cubits/tipo_visita/tipo_visita_cubit.dart';
-import 'domain/cubits/unidad/unidad_cubit.dart';
-import 'domain/cubits/v_alianza/v_alianza_cubit.dart';
-import 'domain/cubits/v_perfil/v_perfil_cubit.dart';
-import 'domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
-import 'domain/cubits/vereda/vereda_cubit.dart';
-import 'domain/cubits/visita/visita_cubit.dart';
-import 'domain/db/db_config.dart';
+import 'ui/blocs/aliados/aliados_bloc.dart';
+import 'ui/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
+import 'ui/blocs/alianzas/alianzas_bloc.dart';
+import 'ui/blocs/auth/auth_bloc.dart';
+import 'ui/blocs/beneficiarios/beneficiarios_bloc.dart';
+import 'ui/blocs/perfil_preinversion_aliados/perfil_preinversion_aliados_bloc.dart';
+import 'ui/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
+import 'ui/blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
+import 'ui/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
+import 'ui/blocs/perfil_preinversion_cofinanciador_rubros/perfil_preinversion_cofinanciador_rubros_bloc.dart';
+import 'ui/blocs/perfil_preinversion_cofinanciadores/perfil_preinversion_cofinanciadores_bloc.dart';
+import 'ui/blocs/perfil_preinversion_consultores/perfil_preinversion_consultores_bloc.dart';
+import 'ui/blocs/perfiles/perfiles_bloc.dart';
+import 'ui/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
+import 'ui/blocs/perfiles_preinversiones_precios/perfiles_preinversiones_precios_bloc.dart';
+import 'ui/blocs/sync/sync_bloc.dart';
+import 'ui/cubits/actividad_economica/actividad_economica_cubit.dart';
+import 'ui/cubits/actividad_financiera/actividad_financiera_cubit.dart';
+import 'ui/cubits/agrupacion/agrupacion_cubit.dart';
+import 'ui/cubits/aliado/aliado_cubit.dart';
+import 'ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
+import 'ui/cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
+import 'ui/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
+import 'ui/cubits/beneficiario/beneficiario_cubit.dart';
+import 'ui/cubits/beneficio/beneficio_cubit.dart';
+import 'ui/cubits/cofinanciador/cofinanciador_cubit.dart';
+import 'ui/cubits/consultor/consultor_cubit.dart';
+import 'ui/cubits/convocatoria/convocatoria_cubit.dart';
+import 'ui/cubits/criterio/criterio_cubit.dart';
+import 'ui/cubits/departamento/departamento_cubit.dart';
+import 'ui/cubits/desembolso/desembolso_cubit.dart';
+import 'ui/cubits/estado_civil/estado_civil_cubit.dart';
+import 'ui/cubits/estado_visita/estado_visita_cubit.dart';
+import 'ui/cubits/evaluacion/evaluacion_cubit.dart';
+import 'ui/cubits/evaluacion_respuesta/evaluacion_respuesta_cubit.dart';
+import 'ui/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
+import 'ui/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
+import 'ui/cubits/frecuencia/frecuencia_cubit.dart';
+import 'ui/cubits/genero/genero_cubit.dart';
+import 'ui/cubits/grupo_especial/grupo_especial_cubit.dart';
+import 'ui/cubits/internet/internet_cubit.dart';
+import 'ui/cubits/menu/menu_cubit.dart';
+import 'ui/cubits/municipio/municipio_cubit.dart';
+import 'ui/cubits/nivel_escolar/nivel_escolar_cubit.dart';
+import 'ui/cubits/opcion/opcion_cubit.dart';
+import 'ui/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
+import 'ui/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
+import 'ui/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
+import 'ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
+import 'ui/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
+import 'ui/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
+import 'ui/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
+import 'ui/cubits/perfil_preinversion_consultor/perfil_preinversion_consultor_cubit.dart';
+import 'ui/cubits/perfil_preinversion_precio/perfil_preinversion_precio_cubit.dart';
+import 'ui/cubits/producto/producto_cubit.dart';
+import 'ui/cubits/residencia/residencia_cubit.dart';
+import 'ui/cubits/revision/revision_cubit.dart';
+import 'ui/cubits/rubro/rubro_cubit.dart';
+import 'ui/cubits/sitio_entrega/sitio_entrega_cubit.dart';
+import 'ui/cubits/slider/slider_cubit.dart';
+import 'ui/cubits/sync_log/sync_log_cubit.dart';
+import 'ui/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
+import 'ui/cubits/tipo_calidad/tipo_calidad_cubit.dart';
+import 'ui/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
+import 'ui/cubits/tipo_entidad/tipo_entidad_cubit.dart';
+import 'ui/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
+import 'ui/cubits/tipo_movimiento/tipo_movimiento_cubit.dart';
+import 'ui/cubits/tipo_proyecto/tipo_proyecto_cubit.dart';
+import 'ui/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
+import 'ui/cubits/tipo_visita/tipo_visita_cubit.dart';
+import 'ui/cubits/unidad/unidad_cubit.dart';
+import 'ui/cubits/v_alianza/v_alianza_cubit.dart';
+import 'ui/cubits/v_perfil/v_perfil_cubit.dart';
+import 'ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import 'ui/cubits/vereda/vereda_cubit.dart';
+import 'ui/cubits/visita/visita_cubit.dart';
+import 'data/db/db_config.dart';
 import 'domain/usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 import 'injection.dart' as di;
 import 'router.dart';
@@ -164,6 +166,9 @@ class _MyAppState extends State<MyApp> {
             create: (_) => di.locator<AgrupacionCubit>(),
           ),
           BlocProvider(
+            create: (_) => di.locator<AliadosBloc>(),
+          ),
+          BlocProvider(
             create: (_) => di.locator<AliadoCubit>(),
           ),
           BlocProvider(
@@ -180,6 +185,9 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider(
             create: (_) => di.locator<AuthBloc>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<BeneficiariosBloc>(),
           ),
           BlocProvider(
             create: (_) => di.locator<BeneficiarioCubit>(),

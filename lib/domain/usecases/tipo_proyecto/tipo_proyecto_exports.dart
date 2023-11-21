@@ -3,7 +3,7 @@ export 'package:paap/domain/usecases/tipo_proyecto/tipo_proyecto_db_usecase.dart
 export 'package:paap/domain/repositories/tipo_proyecto/tipo_proyecto_repository.dart';
 export 'package:paap/domain/repositories/tipo_proyecto/tipo_proyecto_repository_db.dart';
 export 'package:paap/domain/entities/tipo_proyecto_entity.dart';
-export 'package:paap/domain/cubits/tipo_proyecto/tipo_proyecto_cubit.dart';
+export 'package:paap/ui/cubits/tipo_proyecto/tipo_proyecto_cubit.dart';
 export 'package:paap/data/repositories/tipo_proyecto/tipo_proyecto_repository.dart';
 export 'package:paap/data/repositories/tipo_proyecto/tipo_proyecto_repository_db.dart';
 export 'package:paap/data/datasources/remote/tipo_proyecto_remote_ds.dart';

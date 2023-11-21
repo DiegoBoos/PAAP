@@ -13,15 +13,6 @@ class ActividadFinancieraEntity {
   String activo;
   String tipoMovimientoId;
 
-  factory ActividadFinancieraEntity.fromJson(Map<String, dynamic> json) =>
-      ActividadFinancieraEntity(
-        actividadFinancieraId: json["ActividadFinancieraId"],
-        nombre: json["Nombre"],
-        descripcion: json["Descripcion"],
-        activo: json["Activo"],
-        tipoMovimientoId: json["TipoMovimientoId"],
-      );
-
   Map<String, dynamic> toJson() => {
         "ActividadFinancieraId": actividadFinancieraId,
         "Nombre": nombre,

@@ -3,7 +3,7 @@ export 'package:paap/domain/usecases/beneficio/beneficio_db_usecase.dart';
 export 'package:paap/domain/repositories/beneficio/beneficio_repository.dart';
 export 'package:paap/domain/repositories/beneficio/beneficio_repository_db.dart';
 export 'package:paap/domain/entities/beneficio_entity.dart';
-export 'package:paap/domain/cubits/beneficio/beneficio_cubit.dart';
+export 'package:paap/ui/cubits/beneficio/beneficio_cubit.dart';
 export 'package:paap/data/repositories/beneficio/beneficio_repository.dart';
 export 'package:paap/data/repositories/beneficio/beneficio_repository_db.dart';
 export 'package:paap/data/datasources/remote/beneficio_remote_ds.dart';

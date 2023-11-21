@@ -3,11 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/aliado_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/aliado_model.dart';
 import '../../models/aliados_model.dart';
@@ -66,40 +65,42 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
           },
           body: aliadoSOAP);
 
-      if (aliadoResp.statusCode == 200) {
-        final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
+      if (aliadoResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los aliados']);
+      }
 
-        final respuesta =
-            aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
 
-        if (respuesta == 'true' &&
-            aliadoDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = aliadoDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final aliadosRaw = decodedResp.entries.first.value['Table'];
-
-          final aliados = List.from(aliadosRaw)
-              .map((e) => AliadosModel.fromJson(e))
-              .toList();
-
-          List<AliadoModel> listAliado = [];
-          for (var aliado in aliados) {
-            final dsAliado = await getAliadoTable(usuario, aliado.aliadoId);
-            listAliado.add(dsAliado);
-          }
-          return listAliado;
-        } else {
+      if (respuesta == 'true') {
+        if (aliadoDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = aliadoDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final aliadosRaw = decodedResp.entries.first.value['Table'];
+
+        final aliados =
+            List.from(aliadosRaw).map((e) => AliadosModel.fromJson(e)).toList();
+
+        List<AliadoModel> listAliado = [];
+        for (var aliado in aliados) {
+          final dsAliado = await getAliadoTable(usuario, aliado.aliadoId);
+          listAliado.add(dsAliado);
+        }
+        return listAliado;
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los aliados']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -148,33 +149,33 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
           },
           body: aliadoesSOAP);
 
-      if (aliadoResp.statusCode == 200) {
-        final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
+      if (aliadoResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener el aliado']);
+      }
 
-        final respuesta =
-            aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
 
-        final mensaje =
-            aliadoDoc.findAllElements('mensaje').map((e) => e.text).first;
+      final respuesta =
+          aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-        if (respuesta == 'true') {
-          final xmlString = aliadoDoc
-              .findAllElements('objeto')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final mensaje =
+          aliadoDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
+      if (respuesta == 'true') {
+        final xmlString = aliadoDoc
+            .findAllElements('objeto')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
 
-          final decodedResp = json.decode(res);
+        String res = Utils.convertXmlToJson(xmlString);
 
-          final aliado = AliadoModel.fromJson(decodedResp['objeto']);
+        final decodedResp = json.decode(res);
 
-          return aliado;
-        } else {
-          throw ServerFailure([mensaje]);
-        }
+        final aliado = AliadoModel.fromJson(decodedResp['objeto']);
+
+        return aliado;
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -250,17 +251,17 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
           },
           body: aliadoSOAP);
 
-      if (aliadoResp.statusCode == 200) {
-        final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
+      if (aliadoResp.statusCode != 200) {
+        throw const ServerFailure(['Error al guardar el aliado']);
+      }
 
-        final respuesta =
-            aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final aliadoDoc = xml.XmlDocument.parse(aliadoResp.body);
 
-        if (respuesta == 'true') {
-          return aliadoEntity;
-        } else {
-          return null;
-        }
+      final respuesta =
+          aliadoDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        return aliadoEntity;
       } else {
         return null;
       }

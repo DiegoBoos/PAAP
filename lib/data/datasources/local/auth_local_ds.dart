@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/usuario_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/usuario_model.dart';
 
 abstract class AuthLocalDataSource {

@@ -3,11 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_consultor_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 import '../../models/perfil_preinversion_consultor_model.dart';
 import '../../models/perfiles_preinversion_model.dart';
 import '../../utils.dart';
@@ -36,33 +35,34 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
       final uri = Uri.parse(url);
 
       final perfilesPreInversionSOAP = '''<?xml version="1.0" encoding="utf-8"?>
-    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-      <soap:Body>
-        <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
-          <usuario>
-            <UsuarioId>${usuario.usuarioId}</UsuarioId>
-            <Nombre>${usuario.nombre}</Nombre>
-            <Apellido>${usuario.apellido}</Apellido>
-            <Direccion>${usuario.direccion}</Direccion>
-            <TelefonoFijo>${usuario.telefonoFijo}</TelefonoFijo>
-            <TelefonoMovil>${usuario.telefonoMovil}</TelefonoMovil>
-            <Correo>${usuario.correo}</Correo>
-            <Contrasena>${usuario.contrasena}</Contrasena>
-            <FechaActivacion>${usuario.fechaActivacion}</FechaActivacion>
-            <FechaDesactivacion>${usuario.fechaDesactivacion}</FechaDesactivacion>
-            <FechaCambio>${usuario.fechaCambio}</FechaCambio>
-            <Activo>${usuario.activo}</Activo>
-          </usuario>
-          <rol>
-            <RolId>400</RolId>
-            <Nombre>string</Nombre>
-          </rol>
-          <parametros>
-            <string>TablaPerfilesPreInversiones</string> 
-          </parametros>
-        </ObtenerDatos>
-      </soap:Body>
-    </soap:Envelope>''';
+      <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Body>
+          <ObtenerDatos xmlns="http://alianzasproductivas.minagricultura.gov.co/">
+                <usuario>
+                  <UsuarioId>${usuario.usuarioId}</UsuarioId>
+                  <Nombre>${usuario.nombre}</Nombre>
+                  <Apellido>${usuario.apellido}</Apellido>
+                  <Direccion>${usuario.direccion}</Direccion>
+                  <TelefonoFijo>${usuario.telefonoFijo}</TelefonoFijo>
+                  <TelefonoMovil>${usuario.telefonoMovil}</TelefonoMovil>
+                  <Correo>${usuario.correo}</Correo>
+                  <Contrasena>${usuario.contrasena}</Contrasena>
+                  <FechaActivacion>${usuario.fechaActivacion}</FechaActivacion>
+                  <FechaDesactivacion>${usuario.fechaDesactivacion}</FechaDesactivacion>
+                  <FechaCambio>${usuario.fechaCambio}</FechaCambio>
+                  <Activo>${usuario.activo}</Activo>
+                </usuario>
+                <rol>
+              <RolId>400</RolId>
+              <Nombre>string</Nombre>
+            </rol>
+            <parametros>
+              <string>TablaPerfilesPreInversionesConsultores</string> 
+              <string>1</string>
+            </parametros>
+          </ObtenerDatos>
+        </soap:Body>
+      </soap:Envelope>''';
 
       final perfilesPreInversionResp = await client.post(uri,
           headers: {
@@ -71,63 +71,68 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
           },
           body: perfilesPreInversionSOAP);
 
-      if (perfilesPreInversionResp.statusCode == 200) {
-        final perfilesPreInversionDoc =
-            xml.XmlDocument.parse(perfilesPreInversionResp.body);
+      if (perfilesPreInversionResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los consultores del perfil preinversión']);
+      }
 
-        final respuesta = perfilesPreInversionDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
+      final perfilesPreInversionDoc =
+          xml.XmlDocument.parse(perfilesPreInversionResp.body);
+
+      final respuesta = perfilesPreInversionDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      final mensaje = perfilesPreInversionDoc
+          .findAllElements('mensaje')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        if (perfilesPreInversionDoc.findAllElements('NewDataSet').isEmpty) {
+          return [];
+        }
+
+        final xmlString = perfilesPreInversionDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
             .first;
 
-        final mensaje = perfilesPreInversionDoc
-            .findAllElements('mensaje')
-            .map((e) => e.text)
-            .first;
+        String res = Utils.convertXmlToJson(xmlString);
 
-        if (respuesta == 'true') {
-          final xmlString = perfilesPreInversionDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+        final Map<String, dynamic> decodedResp = json.decode(res);
 
-          String res = Utils.convertXmlToJson(xmlString);
+        final perfilesPreInversionRaw =
+            decodedResp.entries.first.value['Table'];
 
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilesPreInversionRaw =
-              decodedResp.entries.first.value['Table'];
-
-          List<PerfilPreInversionConsultorModel>
-              listPerfilPreInversionConsultor = [];
-          if (perfilesPreInversionRaw is List) {
-            final perfilesPreInversion = List.from(perfilesPreInversionRaw)
-                .map((e) => PerfilesPreInversionModel.fromJson(e))
-                .toList();
-            for (var perfilPreInversion in perfilesPreInversion) {
-              final dsPerfilPreInversionConsultor =
-                  await getPerfilPreInversionConsultorTable(
-                      usuario, perfilPreInversion.id);
-              if (dsPerfilPreInversionConsultor.isNotEmpty) {
-                for (var perfilPreInversionConsultor
-                    in dsPerfilPreInversionConsultor) {
-                  listPerfilPreInversionConsultor
-                      .add(perfilPreInversionConsultor);
-                }
+        List<PerfilPreInversionConsultorModel> listPerfilPreInversionConsultor =
+            [];
+        if (perfilesPreInversionRaw is List) {
+          final perfilesPreInversion = List.from(perfilesPreInversionRaw)
+              .map((e) => PerfilesPreInversionModel.fromJson(e))
+              .toList();
+          for (var perfilPreInversion in perfilesPreInversion) {
+            final dsPerfilPreInversionConsultor =
+                await getPerfilPreInversionConsultorTable(
+                    usuario, perfilPreInversion.id);
+            if (dsPerfilPreInversionConsultor.isNotEmpty) {
+              for (var perfilPreInversionConsultor
+                  in dsPerfilPreInversionConsultor) {
+                listPerfilPreInversionConsultor
+                    .add(perfilPreInversionConsultor);
               }
             }
-          } else {
-            listPerfilPreInversionConsultor.add(
-                PerfilPreInversionConsultorModel.fromJson(
-                    perfilesPreInversionRaw));
           }
-
-          return listPerfilPreInversionConsultor;
         } else {
-          throw ServerFailure([mensaje]);
+          listPerfilPreInversionConsultor.add(
+              PerfilPreInversionConsultorModel.fromJson(
+                  perfilesPreInversionRaw));
         }
+
+        return listPerfilPreInversionConsultor;
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -179,46 +184,51 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
           },
           body: perfilPreInversionConsultoresSOAP);
 
-      if (perfilPreInversionConsultorResp.statusCode == 200) {
-        final perfilPreInversionConsultorDoc =
-            xml.XmlDocument.parse(perfilPreInversionConsultorResp.body);
+      if (perfilPreInversionConsultorResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los consultores del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionConsultorDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionConsultorDoc =
+          xml.XmlDocument.parse(perfilPreInversionConsultorResp.body);
 
-        if (respuesta == 'true' &&
-            perfilPreInversionConsultorDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString = perfilPreInversionConsultorDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = perfilPreInversionConsultorDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilPreInversionConsultoresRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (perfilPreInversionConsultoresRaw is List) {
-            return List.from(perfilPreInversionConsultoresRaw)
-                .map((e) => PerfilPreInversionConsultorModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              PerfilPreInversionConsultorModel.fromJson(
-                  perfilPreInversionConsultoresRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (perfilPreInversionConsultorDoc
+            .findAllElements('NewDataSet')
+            .isEmpty) {
           return [];
         }
+
+        final xmlString = perfilPreInversionConsultorDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilPreInversionConsultoresRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (perfilPreInversionConsultoresRaw is List) {
+          return List.from(perfilPreInversionConsultoresRaw)
+              .map((e) => PerfilPreInversionConsultorModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            PerfilPreInversionConsultorModel.fromJson(
+                perfilPreInversionConsultoresRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener la de los consultores del perfil preinversión']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -302,20 +312,21 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
           },
           body: perfilPreInversionConsultorSOAP);
 
-      if (perfilPreInversionConsultorResp.statusCode == 200) {
-        final perfilPreInversionConsultorDoc =
-            xml.XmlDocument.parse(perfilPreInversionConsultorResp.body);
+      if (perfilPreInversionConsultorResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al guardar el consultor del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionConsultorDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionConsultorDoc =
+          xml.XmlDocument.parse(perfilPreInversionConsultorResp.body);
 
-        if (respuesta == 'true') {
-          return perfilPreInversionConsultorEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilPreInversionConsultorDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionConsultorEntity;
       } else {
         return null;
       }
@@ -373,20 +384,21 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
           },
           body: perfilPreInversionConsultorSOAP);
 
-      if (perfilPreInversionConsultorResp.statusCode == 200) {
-        final perfilPreInversionConsultorDoc =
-            xml.XmlDocument.parse(perfilPreInversionConsultorResp.body);
+      if (perfilPreInversionConsultorResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al borrar el consultor del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionConsultorDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionConsultorDoc =
+          xml.XmlDocument.parse(perfilPreInversionConsultorResp.body);
 
-        if (respuesta == 'true') {
-          return perfilPreInversionConsultorEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilPreInversionConsultorDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionConsultorEntity;
       } else {
         return null;
       }

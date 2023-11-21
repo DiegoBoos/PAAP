@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/criterio_model.dart';
 import '../../models/opcion_model.dart';
@@ -75,36 +75,39 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
           },
           body: criterioSOAP);
 
-      if (criterioResp.statusCode == 200) {
-        final criterioDoc = xml.XmlDocument.parse(criterioResp.body);
+      if (criterioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los criterios']);
+      }
 
-        final respuesta =
-            criterioDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final criterioDoc = xml.XmlDocument.parse(criterioResp.body);
 
-        if (respuesta == 'true' &&
-            criterioDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = criterioDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          criterioDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final criteriosRaw = decodedResp.entries.first.value['Table'];
-          if (criteriosRaw is List) {
-            return List.from(criteriosRaw)
-                .map((e) => CriterioModel.fromJson(e))
-                .toList();
-          } else {
-            return [CriterioModel.fromJson(criteriosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (criterioDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = criterioDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final criteriosRaw = decodedResp.entries.first.value['Table'];
+        if (criteriosRaw is List) {
+          return List.from(criteriosRaw)
+              .map((e) => CriterioModel.fromJson(e))
+              .toList();
+        } else {
+          return [CriterioModel.fromJson(criteriosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los criterios']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -154,37 +157,41 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
           },
           body: opcioneSOAP);
 
-      if (opcionResp.statusCode == 200) {
-        final opcionDoc = xml.XmlDocument.parse(opcionResp.body);
+      if (opcionResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las opciones']);
+      }
 
-        final respuesta =
-            opcionDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final opcionDoc = xml.XmlDocument.parse(opcionResp.body);
 
-        if (respuesta == 'true' &&
-            opcionDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = opcionDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          opcionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final opcionesRaw = decodedResp.entries.first.value['Table'];
-
-          if (opcionesRaw is List) {
-            return List.from(opcionesRaw)
-                .map((e) => OpcionModel.fromJson(e))
-                .toList();
-          } else {
-            return [OpcionModel.fromJson(opcionesRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (opcionDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = opcionDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final opcionesRaw = decodedResp.entries.first.value['Table'];
+
+        if (opcionesRaw is List) {
+          return List.from(opcionesRaw)
+              .map((e) => OpcionModel.fromJson(e))
+              .toList();
+        } else {
+          return [OpcionModel.fromJson(opcionesRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener las opciones por criterio']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

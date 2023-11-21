@@ -51,23 +51,4 @@ class ConsultorModel extends ConsultorEntity {
         usuarioId: json["UsuarioId"],
         consultor: json["Consultor"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "ConsultorId": consultorId,
-        "Nombre1": nombre1,
-        "Nombre2": nombre2,
-        "Apellido1": apellido1,
-        "Apellido2": apellido2,
-        "GeneroId": generoId,
-        "FechaNacimiento": fechaNacimiento,
-        "FechaExpedicionDocumento": fechaExpedicionDocumento,
-        "Direccion": direccion,
-        "TelefonoFijo": telefonoFijo,
-        "TelefonoMovil": telefonoMovil,
-        "Experiencia": experiencia,
-        "Activo": activo,
-        "UsuarioId": usuarioId,
-        "Consultor": consultor,
-      };
 }

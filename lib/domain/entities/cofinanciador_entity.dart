@@ -21,19 +21,6 @@ class CofinanciadorEntity {
   String departamento;
   String municipio;
 
-  factory CofinanciadorEntity.fromJson(Map<String, dynamic> json) =>
-      CofinanciadorEntity(
-        id: json["ID"],
-        nombre: json["Nombre"],
-        telefonoFijo: json["Teléfono_x0020_Fijo"],
-        telefonoMovil: json["Teléfono_x0020_Móvil"],
-        correo: json["Correo"],
-        direccion: json["Dirección"],
-        tipoEntidad: json["Tipo_x0020_Entidad"],
-        departamento: json["Departamento"],
-        municipio: json["Municipio"],
-      );
-
   Map<String, dynamic> toJson() => {
         "ID": id,
         "Nombre": nombre,

@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/perfil_preinversion_aliado_entity.dart';
 import '../../repositories/perfil_preinversion_aliado/perfil_preinversion_aliado_repository_db.dart';
 

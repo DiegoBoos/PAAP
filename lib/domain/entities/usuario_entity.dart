@@ -27,21 +27,6 @@ class UsuarioEntity {
   final String fechaCambio;
   final String activo;
 
-  factory UsuarioEntity.fromJson(Map<String, dynamic> json) => UsuarioEntity(
-        usuarioId: json["UsuarioId"],
-        nombre: json["Nombre"],
-        apellido: json["Apellido"],
-        direccion: json["Direccion"],
-        telefonoFijo: json["TelefonoFijo"],
-        telefonoMovil: json["TelefonoMovil"],
-        correo: json["Correo"],
-        contrasena: json["Contrasena"],
-        fechaActivacion: json["FechaActivacion"],
-        fechaDesactivacion: json["FechaDesactivacion"],
-        fechaCambio: json["FechaCambio"],
-        activo: json["Activo"],
-      );
-
   Map<String, dynamic> toJson() => {
         "UsuarioId": usuarioId,
         "Nombre": nombre,

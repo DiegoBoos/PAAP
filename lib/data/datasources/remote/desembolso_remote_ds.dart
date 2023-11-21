@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/desembolso_model.dart';
 import '../../utils.dart';
@@ -62,37 +62,40 @@ class DesembolsoRemoteDataSourceImpl implements DesembolsoRemoteDataSource {
           },
           body: desembolsoSOAP);
 
-      if (desembolsoResp.statusCode == 200) {
-        final desembolsoDoc = xml.XmlDocument.parse(desembolsoResp.body);
+      if (desembolsoResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los desembolsos']);
+      }
 
-        final respuesta =
-            desembolsoDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final desembolsoDoc = xml.XmlDocument.parse(desembolsoResp.body);
 
-        if (respuesta == 'true' &&
-            desembolsoDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = desembolsoDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          desembolsoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final desembolsosRaw = decodedResp.entries.first.value['Table'];
-
-          if (desembolsosRaw is List) {
-            return List.from(desembolsosRaw)
-                .map((e) => DesembolsoModel.fromJson(e))
-                .toList();
-          } else {
-            return [DesembolsoModel.fromJson(desembolsosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (desembolsoDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = desembolsoDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final desembolsosRaw = decodedResp.entries.first.value['Table'];
+
+        if (desembolsosRaw is List) {
+          return List.from(desembolsosRaw)
+              .map((e) => DesembolsoModel.fromJson(e))
+              .toList();
+        } else {
+          return [DesembolsoModel.fromJson(desembolsosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los desembolsos']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

@@ -33,26 +33,8 @@ class PerfilEntity {
   final String valorTotalProyecto;
   final String incentivoModular;
 
-  factory PerfilEntity.fromJson(Map<String, dynamic> json) => PerfilEntity(
-        perfilId: json["PerfilId"],
-        convocatoriaId: json["ConvocatoriaId"],
-        nombre: json["Nombre"],
-        abreviatura: json["Abreviatura"],
-        municipioId: json["MunicipioId"],
-        direccion: json["Direccion"],
-        contacto: json["Contacto"],
-        telefonoFijo: json["TelefonoFijo"],
-        telefonoMovil: json["TelefonoMovil"],
-        correo: json["Correo"],
-        tipoProyectoId: json["TipoProyectoId"],
-        productoId: json["ProductoId"],
-        productoAsociadoId: json["ProductoAsociadoId"],
-        valorTotalProyecto: json["ValorTotalProyecto"],
-        incentivoModular: json["IncentivoModular"],
-      );
-
   Map<String, dynamic> toJson() => {
-        "PerfilId": perfilId,
+        "ID": perfilId,
         "ConvocatoriaId": convocatoriaId,
         "Nombre": nombre,
         "Abreviatura": abreviatura,

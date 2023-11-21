@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/perfil_preinversion_beneficiario_model.dart';
 
 abstract class PerfilPreInversionBeneficiarioLocalDataSource {

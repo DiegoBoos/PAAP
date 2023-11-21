@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../domain/repositories/alianza_beneficiario/alianza_beneficiario_repository_db.dart';
 import '../../datasources/local/alianza_beneficiario_local_ds.dart';

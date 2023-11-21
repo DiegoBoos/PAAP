@@ -38,17 +38,6 @@ class PerfilPreInversionCofinanciadorActividadFinancieraEntity {
     );
   }
 
-  factory PerfilPreInversionCofinanciadorActividadFinancieraEntity.fromJson(
-          Map<String, dynamic> json) =>
-      PerfilPreInversionCofinanciadorActividadFinancieraEntity(
-        actividadFinancieraId: json["ActividadFinancieraId"],
-        perfilPreInversionId: json["PerfilPreInversionId"],
-        cofinanciadorId: json["CofinanciadorId"],
-        desembolsoId: json["DesembolsoId"],
-        valor: json["Valor"],
-        recordStatus: json["RecordStatus"],
-      );
-
   Map<String, dynamic> toJson() => {
         "ActividadFinancieraId": actividadFinancieraId,
         "PerfilPreInversionId": perfilPreInversionId,

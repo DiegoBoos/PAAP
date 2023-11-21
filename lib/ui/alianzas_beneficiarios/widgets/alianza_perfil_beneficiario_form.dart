@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/municipio_model.dart';
-import '../../../domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
-import '../../../domain/cubits/departamento/departamento_cubit.dart';
-import '../../../domain/cubits/municipio/municipio_cubit.dart';
-import '../../../domain/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
-import '../../../domain/cubits/vereda/vereda_cubit.dart';
+import '../../../ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
+import '../../../ui/cubits/departamento/departamento_cubit.dart';
+import '../../../ui/cubits/municipio/municipio_cubit.dart';
+import '../../../ui/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
+import '../../../ui/cubits/vereda/vereda_cubit.dart';
 import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/entities/municipio_entity.dart';
@@ -57,14 +57,6 @@ class _AlianzaPerfilBeneficiarioFormState
   Future<void> loadAccesories() async {
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
-
-    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
-
-    await municipioCubit.getMunicipiosDB();
-
-    if (municipioCubit.state is MunicipiosLoaded) {
-      municipiosFiltered = municipioCubit.state.municipios!;
-    }
 
     if (alianzaBeneficiarioCubit.state is AlianzaBeneficiarioLoaded) {
       final alianzaBeneficiarioLoaded =

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/tipo_tenencia_model.dart';
 import '../../utils.dart';
@@ -63,39 +63,40 @@ class TipoTenenciaRemoteDataSourceImpl implements TipoTenenciaRemoteDataSource {
           },
           body: tipoTenenciaSOAP);
 
-      if (tipoTenenciaResp.statusCode == 200) {
-        final tipoTenenciaDoc = xml.XmlDocument.parse(tipoTenenciaResp.body);
+      if (tipoTenenciaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los tipos de tenencia']);
+      }
 
-        final respuesta = tipoTenenciaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final tipoTenenciaDoc = xml.XmlDocument.parse(tipoTenenciaResp.body);
 
-        if (respuesta == 'true' &&
-            tipoTenenciaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = tipoTenenciaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          tipoTenenciaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final tiposTenenciasRaw = decodedResp.entries.first.value['Table'];
-
-          if (tiposTenenciasRaw is List) {
-            return List.from(tiposTenenciasRaw)
-                .map((e) => TipoTenenciaModel.fromJson(e))
-                .toList();
-          } else {
-            return [TipoTenenciaModel.fromJson(tiposTenenciasRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (tipoTenenciaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = tipoTenenciaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final tiposTenenciasRaw = decodedResp.entries.first.value['Table'];
+
+        if (tiposTenenciasRaw is List) {
+          return List.from(tiposTenenciasRaw)
+              .map((e) => TipoTenenciaModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoTenenciaModel.fromJson(tiposTenenciasRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los tipos de tenencia']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

@@ -58,25 +58,4 @@ class PerfilPreInversionModel extends PerfilPreInversionEntity {
         valorTotalProyecto: json["ValorTotalProyecto"],
         incentivoModular: json["IncentivoModular"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "PerfilPreInversionId": perfilPreInversionId,
-        "PerfilId": perfilId,
-        "ConvocatoriaId": convocatoriaId,
-        "Nombre": nombre,
-        "Abreviatura": abreviatura,
-        "NIT": nit,
-        "MunicipioId": municipioId,
-        "Direccion": direccion,
-        "Contacto": contacto,
-        "TelefonoFijo": telefonoFijo,
-        "TelefonoMovil": telefonoMovil,
-        "Correo": correo,
-        "TipoProyectoId": tipoProyectoId,
-        "ProductoId": productoId,
-        "ProductoAsociadoId": productoAsociadoId,
-        "ValorTotalProyecto": valorTotalProyecto,
-        "IncentivoModular": incentivoModular,
-      };
 }

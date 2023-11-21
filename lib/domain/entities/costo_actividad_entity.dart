@@ -17,17 +17,6 @@ class CostoActividadEntity {
   String year;
   String indicador;
 
-  factory CostoActividadEntity.fromJson(Map<String, dynamic> json) =>
-      CostoActividadEntity(
-        actividadId: json["ActividadId"],
-        metaIndicadorId: json["MetaIndicadorId"],
-        costo: json["Costo"],
-        actividad: json["Actividad"],
-        meta: json["Meta"],
-        year: json["Year"],
-        indicador: json["Indicador"],
-      );
-
   Map<String, dynamic> toJson() => {
         "ActividadId": actividadId,
         "MetaIndicadorId": metaIndicadorId,

@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/perfil_preinversion_beneficiario_model.dart';
 import '../../utils.dart';
@@ -71,46 +71,51 @@ class PerfilPreInversionBeneficiarioRemoteDataSourceImpl
           },
           body: perfilPreInversionBeneficiariosSOAP);
 
-      if (perfilPreInversionBeneficiarioResp.statusCode == 200) {
-        final perfilPreInversionBeneficiarioDoc =
-            xml.XmlDocument.parse(perfilPreInversionBeneficiarioResp.body);
+      if (perfilPreInversionBeneficiarioResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los beneficiarios del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionBeneficiarioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionBeneficiarioDoc =
+          xml.XmlDocument.parse(perfilPreInversionBeneficiarioResp.body);
 
-        if (respuesta == 'true' &&
-            perfilPreInversionBeneficiarioDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString = perfilPreInversionBeneficiarioDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = perfilPreInversionBeneficiarioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilPreInversionBeneficiariosRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (perfilPreInversionBeneficiariosRaw is List) {
-            return List.from(perfilPreInversionBeneficiariosRaw)
-                .map((e) => PerfilPreInversionBeneficiarioModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              PerfilPreInversionBeneficiarioModel.fromJson(
-                  perfilPreInversionBeneficiariosRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (perfilPreInversionBeneficiarioDoc
+            .findAllElements('NewDataSet')
+            .isEmpty) {
           return [];
         }
+
+        final xmlString = perfilPreInversionBeneficiarioDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilPreInversionBeneficiariosRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (perfilPreInversionBeneficiariosRaw is List) {
+          return List.from(perfilPreInversionBeneficiariosRaw)
+              .map((e) => PerfilPreInversionBeneficiarioModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            PerfilPreInversionBeneficiarioModel.fromJson(
+                perfilPreInversionBeneficiariosRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los beneficiarios del perfil preinversión']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -255,20 +260,21 @@ class PerfilPreInversionBeneficiarioRemoteDataSourceImpl
           },
           body: perfilPreInversionBeneficiarioSOAP);
 
-      if (perfilPreInversionBeneficiarioResp.statusCode == 200) {
-        final perfilPreInversionBeneficiarioDoc =
-            xml.XmlDocument.parse(perfilPreInversionBeneficiarioResp.body);
+      if (perfilPreInversionBeneficiarioResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al guardar el beneficiario del perfil preinversion']);
+      }
 
-        final respuesta = perfilPreInversionBeneficiarioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionBeneficiarioDoc =
+          xml.XmlDocument.parse(perfilPreInversionBeneficiarioResp.body);
 
-        if (respuesta == 'true') {
-          return perfilPreInversionBeneficiarioEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilPreInversionBeneficiarioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionBeneficiarioEntity;
       } else {
         return null;
       }

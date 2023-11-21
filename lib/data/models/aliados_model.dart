@@ -7,18 +7,18 @@ class AliadosModel extends AliadosEntity {
     String? nombreContacto,
     String? telefonoMovil,
     String? correo,
-    String? ciudad,
-    String? aniosExperiencia,
-    String? estado,
+    required String ciudad,
+    required String aniosExperiencia,
+    required String estado,
   }) : super(
             aliadoId: aliadoId,
             nombre: nombre ?? '',
             nombreContacto: nombreContacto ?? '',
             telefonoMovil: telefonoMovil ?? '',
             correo: correo ?? '',
-            ciudad: ciudad ?? '',
-            aniosExperiencia: aniosExperiencia ?? '',
-            estado: estado ?? '');
+            ciudad: ciudad,
+            aniosExperiencia: aniosExperiencia,
+            estado: estado);
   factory AliadosModel.fromJson(Map<String, dynamic> json) => AliadosModel(
         aliadoId: json["AliadoId"],
         nombre: json["Nombre"],

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/perfil_preinversion_planes_negocios/perfil_preinversion_planes_negocios_bloc.dart';
-import '../../../domain/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
-import '../../../domain/cubits/v_perfiles_preinversiones_plan_negocios/v_perfiles_preinversiones_plan_negocios_cubit.dart';
+import '../../../ui/blocs/perfil_preinversion_planes_negocios/perfil_preinversion_planes_negocios_bloc.dart';
+import '../../../ui/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/cubits/v_perfiles_preinversiones_plan_negocios/v_perfiles_preinversiones_plan_negocios_cubit.dart';
 import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/sync_pages.dart';
@@ -31,11 +31,12 @@ class _IngresosUPTPageState extends State<IngresosUPTPage> {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
 
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId;
+
     vPerfilesPreInversionesPlanNegociosCubit
         .getVPerfilesPreInversionesPlanNegociosDB(
-            vPerfilPreInversionCubit
-                .state.vPerfilPreInversion!.perfilPreInversionId,
-            tipoMovimientoId);
+            perfilPreInversionId, tipoMovimientoId);
   }
 
   @override
@@ -46,6 +47,9 @@ class _IngresosUPTPageState extends State<IngresosUPTPage> {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
 
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId;
+
     return BlocListener<PerfilPreInversionIngresosUPTCubit,
         PerfilPreInversionIngresosUPTState>(listener: (context, state) {
       if (state is PerfilPreInversionIngresosUPTSaved) {
@@ -54,9 +58,12 @@ class _IngresosUPTPageState extends State<IngresosUPTPage> {
 
         vPerfilesPreInversionesPlanNegociosCubit
             .getVPerfilesPreInversionesPlanNegociosDB(
-                vPerfilPreInversionCubit
-                    .state.vPerfilPreInversion!.perfilPreInversionId,
-                tipoMovimientoId);
+                perfilPreInversionId, tipoMovimientoId);
+      }
+
+      if (state is PerfilPreInversionIngresosUPTError) {
+        CustomSnackBar.showSnackBar(
+            context, 'Error al guardar datos', Colors.red);
       }
     }, child: BlocBuilder<VPerfilesPreInversionesPlanNegociosCubit,
         VPerfilesPreInversionesPlanNegociosState>(

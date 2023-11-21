@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/alianza_beneficiario_entity.dart';
 import '../../repositories/alianza_beneficiario/alianza_beneficiario_repository_db.dart';
 

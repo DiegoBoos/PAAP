@@ -1,8 +1,8 @@
 class ExperienciaPecuariaEntity {
   ExperienciaPecuariaEntity({
-    required this.tipoActividadProductivaId,
+    this.tipoActividadProductivaId,
     required this.beneficiarioId,
-    required this.frecuenciaId,
+    this.frecuenciaId,
     required this.cantidadAnimales,
     required this.cantidadCria,
     required this.cantidadLevante,
@@ -14,9 +14,9 @@ class ExperienciaPecuariaEntity {
     required this.recordStatus,
   });
 
-  String tipoActividadProductivaId;
+  String? tipoActividadProductivaId;
   String beneficiarioId;
-  String frecuenciaId;
+  String? frecuenciaId;
   String cantidadAnimales;
   String cantidadCria;
   String cantidadLevante;
@@ -55,22 +55,6 @@ class ExperienciaPecuariaEntity {
         costosInsumos: costosInsumos ?? this.costosInsumos,
         ingresos: ingresos ?? this.ingresos,
         recordStatus: recordStatus ?? this.recordStatus,
-      );
-
-  factory ExperienciaPecuariaEntity.fromJson(Map<String, dynamic> json) =>
-      ExperienciaPecuariaEntity(
-        tipoActividadProductivaId: json["TipoActividadProductivaId"],
-        beneficiarioId: json["BeneficiarioId"],
-        frecuenciaId: json["FrecuenciaId"],
-        cantidadAnimales: json["CantidadAnimales"],
-        cantidadCria: json["CantidadCria"],
-        cantidadLevante: json["CantidadLevante"],
-        cantidadCeba: json["CantidadCeba"],
-        cantidadLeche: json["CantidadLeche"],
-        valorJornal: json["ValorJornal"],
-        costosInsumos: json["CostosInsumos"],
-        ingresos: json["Ingresos"],
-        recordStatus: json["RecordStatus"],
       );
 
   Map<String, dynamic> toJson() => {

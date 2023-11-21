@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:paap/domain/cubits/internet/internet_cubit.dart';
+import 'package:paap/ui/cubits/internet/internet_cubit.dart';
 import 'package:paap/ui/utils/styles.dart';
 
-import '../../domain/blocs/auth/auth_bloc.dart';
-import '../../domain/blocs/sync/sync_bloc.dart';
-import '../../domain/cubits/sync_log/sync_log_cubit.dart';
+import '../../ui/blocs/auth/auth_bloc.dart';
+import '../../ui/blocs/sync/sync_bloc.dart';
+import '../../ui/cubits/sync_log/sync_log_cubit.dart';
 import '../../domain/entities/sync_log_entity.dart';
 import 'network_icon.dart';
 

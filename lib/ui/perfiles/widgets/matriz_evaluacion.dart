@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/agrupacion/agrupacion_cubit.dart';
-import '../../../domain/cubits/criterio/criterio_cubit.dart';
-import '../../../domain/cubits/evaluacion/evaluacion_cubit.dart';
-import '../../../domain/cubits/evaluacion_respuesta/evaluacion_respuesta_cubit.dart';
-import '../../../domain/cubits/opcion/opcion_cubit.dart';
+import '../../../ui/cubits/agrupacion/agrupacion_cubit.dart';
+import '../../../ui/cubits/criterio/criterio_cubit.dart';
+import '../../../ui/cubits/evaluacion/evaluacion_cubit.dart';
+import '../../../ui/cubits/evaluacion_respuesta/evaluacion_respuesta_cubit.dart';
+import '../../../ui/cubits/opcion/opcion_cubit.dart';
 import '../../../domain/entities/agrupacion_entity.dart';
 import '../../../domain/entities/criterio_entity.dart';
 import '../../../domain/entities/opcion_entity.dart';

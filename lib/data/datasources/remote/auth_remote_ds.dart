@@ -4,10 +4,9 @@ import 'package:http/http.dart' as http;
 
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 import '../../models/usuario_model.dart';
 import '../../utils.dart';
 
@@ -45,24 +44,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           },
           body: verificacionSOAP);
 
-      if (verificacionResp.statusCode == 200) {
-        final verificacionDoc = xml.XmlDocument.parse(verificacionResp.body);
+      if (verificacionResp.statusCode != 200) {
+        throw const ServerFailure(['Error de autenticación']);
+      }
 
-        final respuesta = verificacionDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final verificacionDoc = xml.XmlDocument.parse(verificacionResp.body);
 
-        final mensaje =
-            verificacionDoc.findAllElements('mensaje').map((e) => e.text).first;
+      final respuesta =
+          verificacionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-        if (respuesta == 'true') {
-          return await consultarUsuario(uri, usuario);
-        } else {
-          throw ServerFailure([mensaje]);
-        }
+      final mensaje =
+          verificacionDoc.findAllElements('mensaje').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        return await consultarUsuario(uri, usuario);
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -94,38 +91,38 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           },
           body: consultarUsuarioSOAP);
 
-      if (consultarUsuarioResp.statusCode == 200) {
-        final consultarUsuarioDoc =
-            xml.XmlDocument.parse(consultarUsuarioResp.body);
+      if (consultarUsuarioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener el usuario']);
+      }
 
-        final respuesta = consultarUsuarioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
+      final consultarUsuarioDoc =
+          xml.XmlDocument.parse(consultarUsuarioResp.body);
+
+      final respuesta = consultarUsuarioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      final mensaje = consultarUsuarioDoc
+          .findAllElements('mensaje')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        final xmlString = consultarUsuarioDoc
+            .findAllElements('objeto')
+            .map((xmlElement) => xmlElement.toXmlString())
             .first;
 
-        final mensaje = consultarUsuarioDoc
-            .findAllElements('mensaje')
-            .map((e) => e.text)
-            .first;
+        String res = Utils.convertXmlToJson(xmlString);
 
-        if (respuesta == 'true') {
-          final xmlString = consultarUsuarioDoc
-              .findAllElements('objeto')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+        final decodedResp = json.decode(res);
 
-          String res = Utils.convertXmlToJson(xmlString);
+        final usuario = UsuarioModel.fromJson(decodedResp['objeto']);
 
-          final decodedResp = json.decode(res);
-
-          final usuario = UsuarioModel.fromJson(decodedResp['objeto']);
-
-          return usuario;
-        } else {
-          throw ServerFailure([mensaje]);
-        }
+        return usuario;
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

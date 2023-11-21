@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/nivel_escolar_entity.dart';
 import '../../repositories/nivel_escolar/nivel_escolar_repository_db.dart';
 

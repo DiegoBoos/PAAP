@@ -28,14 +28,4 @@ class CostoActividadModel extends CostoActividadEntity {
         year: json["Year"],
         indicador: json["Indicador"],
       );
-  @override
-  Map<String, dynamic> toJson() => {
-        "ActividadId": actividadId,
-        "MetaIndicadorId": metaIndicadorId,
-        "Costo": costo,
-        "Actividad": actividad,
-        "Meta": meta,
-        "Year": year,
-        "Indicador": indicador,
-      };
 }

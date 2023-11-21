@@ -76,27 +76,6 @@ class PerfilPreInversionEntity {
         incentivoModular: incentivoModular ?? this.incentivoModular,
       );
 
-  factory PerfilPreInversionEntity.fromJson(Map<String, dynamic> json) =>
-      PerfilPreInversionEntity(
-        perfilPreInversionId: json["PerfilPreInversionId"],
-        perfilId: json["PerfilId"],
-        convocatoriaId: json["ConvocatoriaId"],
-        nombre: json["Nombre"],
-        abreviatura: json["Abreviatura"],
-        nit: json["NIT"],
-        municipioId: json["MunicipioId"],
-        direccion: json["Direccion"],
-        contacto: json["Contacto"],
-        telefonoFijo: json["TelefonoFijo"],
-        telefonoMovil: json["TelefonoMovil"],
-        correo: json["Correo"],
-        tipoProyectoId: json["TipoProyectoId"],
-        productoId: json["ProductoId"],
-        productoAsociadoId: json["ProductoAsociadoId"],
-        valorTotalProyecto: json["ValorTotalProyecto"],
-        incentivoModular: json["IncentivoModular"],
-      );
-
   Map<String, dynamic> toJson() => {
         "PerfilPreInversionId": perfilPreInversionId,
         "PerfilId": perfilId,

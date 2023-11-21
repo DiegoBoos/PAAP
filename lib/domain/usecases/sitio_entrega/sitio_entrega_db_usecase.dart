@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/sitio_entrega_entity.dart';
 import '../../repositories/sitio_entrega/sitio_entrega_repository_db.dart';
 

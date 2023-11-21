@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/beneficiario_entity.dart';
 import '../../../domain/repositories/beneficiario/beneficiario_repository_db.dart';
 import '../../datasources/local/beneficiario_local_ds.dart';
@@ -28,10 +28,10 @@ class BeneficiarioRepositoryDBImpl implements BeneficiarioRepositoryDB {
 
   @override
   Future<Either<Failure, List<BeneficiarioEntity>>>
-      getBeneficiariosRepositoryDB() async {
+      getBeneficiariosRepositoryDB(String perfilId) async {
     try {
       final beneficiariosDB =
-          await beneficiarioLocalDataSource.getBeneficiariosDB();
+          await beneficiarioLocalDataSource.getBeneficiariosDB(perfilId);
 
       return Right(beneficiariosDB);
     } on ServerFailure catch (e) {

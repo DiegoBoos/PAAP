@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:paap/data/models/vereda_model.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 
 import '../../../domain/entities/usuario_entity.dart';
 import '../../../domain/repositories/vereda/vereda_repository.dart';

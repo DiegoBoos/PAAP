@@ -16,11 +16,4 @@ class TipoTenenciaModel extends TipoTenenciaEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoTenenciaId": tipoTenenciaId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-      };
 }

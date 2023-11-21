@@ -1,11 +1,11 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/beneficiario_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/beneficiario_model.dart';
 
 abstract class BeneficiarioLocalDataSource {
-  Future<List<BeneficiarioModel>> getBeneficiariosDB();
+  Future<List<BeneficiarioModel>> getBeneficiariosDB(String perfilId);
   Future<List<BeneficiarioModel>> getBeneficiariosProduccionDB();
   Future<BeneficiarioModel?> getBeneficiarioDB(String id);
   Future<int> saveBeneficiarioDB(BeneficiarioEntity beneficiarioEntity);
@@ -19,17 +19,18 @@ class BeneficiarioLocalDataSourceImpl implements BeneficiarioLocalDataSource {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS Beneficiario (
         BeneficiarioId	TEXT NOT NULL,
+        TipoIdentificacionId	TEXT,
+        FechaExpedicionDocumento	TEXT,
+        FechaNacimiento	TEXT,
+        Edad	INTEGER,
         Nombre1	TEXT,
         Nombre2	TEXT,
         Apellido1	TEXT,
         Apellido2	TEXT,
         GeneroId	TEXT,
-        FechaNacimiento	TEXT,
-        FechaExpedicionDocumento	TEXT,
         GrupoEspecialId	TEXT,
         TelefonoMovil	TEXT,
         Activo	TEXT,
-        TipoIdentificacionId	TEXT,
         RecordStatus	TEXT,
         PRIMARY KEY(BeneficiarioId)
       )
@@ -37,10 +38,28 @@ class BeneficiarioLocalDataSourceImpl implements BeneficiarioLocalDataSource {
   }
 
   @override
-  Future<List<BeneficiarioModel>> getBeneficiariosDB() async {
+  Future<List<BeneficiarioModel>> getBeneficiariosDB(String perfilId) async {
     final db = await DBConfig.database;
+    //TODO: BeneficiarioId se asume como el documento
+    String sql = '''
+      select
+      Beneficiario.BeneficiarioId,
+      Beneficiario.TipoIdentificacionId,
+      Beneficiario.FechaExpedicionDocumento,
+      Beneficiario.FechaNacimiento,
+      cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', Beneficiario.FechaNacimiento ) as int) as Edad,
+      Beneficiario.Nombre1,
+      Beneficiario.Nombre2,
+      Beneficiario.Apellido1,
+      Beneficiario.Apellido2,
+      Beneficiario.GeneroId,
+      Beneficiario.GrupoEspecialId,
+      Beneficiario.TelefonoMovil,
+      Beneficiario.Activo
+      from Beneficiario
+    ''';
 
-    final res = await db.query('Beneficiario');
+    final res = await db.rawQuery(sql);
 
     final beneficiariosDB = List<BeneficiarioModel>.from(
         res.map((m) => BeneficiarioModel.fromJson(m))).toList();

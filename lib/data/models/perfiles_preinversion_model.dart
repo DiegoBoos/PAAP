@@ -28,15 +28,4 @@ class PerfilesPreInversionModel extends PerfilesEntity {
         ubicacion: json["Ubicación"],
         categorizacion: json["Categorización"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "ID": id,
-        "Nombre": nombre,
-        "Abreviatura": abreviatura,
-        "Valor_x0020_Proyécto": valorProyecto,
-        "Incentivo_x0020_Módular": incentivoModular,
-        "Ubicación": ubicacion,
-        "Categorización": categorizacion,
-      };
 }

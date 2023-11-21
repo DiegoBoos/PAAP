@@ -21,13 +21,4 @@ class RubroModel extends RubroEntity {
         activo: json["Activo"],
         actividadFinancieraId: json["ActividadFinancieraId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "RubroId": rubroId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-        "Activo": activo,
-        "ActividadFinancieraId": actividadFinancieraId,
-      };
 }

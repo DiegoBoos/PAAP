@@ -8,8 +8,4 @@ class BeneficioModel extends BeneficioEntity {
         beneficioId: json["BeneficioId"],
         nombre: json["Nombre"],
       );
-
-  @override
-  Map<String, dynamic> toJson() =>
-      {"BeneficioId": beneficioId, "Nombre": nombre};
 }

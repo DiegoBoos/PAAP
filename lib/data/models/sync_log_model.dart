@@ -8,8 +8,4 @@ class SyncLogModel extends SyncLogEntity {
         tabla: json["Tabla"],
         cantidadRegistros: json["CantidadRegistros"],
       );
-
-  @override
-  Map<String, dynamic> toJson() =>
-      {"Tabla": tabla, "CantidadRegistros": cantidadRegistros};
 }

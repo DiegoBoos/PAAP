@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/tipo_tenencia_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/tipo_tenencia_model.dart';
 
 abstract class TipoTenenciaLocalDataSource {

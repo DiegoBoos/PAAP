@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
-import '../../../domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
-import '../../../domain/cubits/actividad_financiera/actividad_financiera_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
+import '../../../ui/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
+import '../../../ui/cubits/actividad_financiera/actividad_financiera_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/actividad_financiera_entity.dart';
 
 import '../../../domain/entities/perfil_preinversion_cofinanciador_actividad_financiera_entity.dart';
@@ -19,7 +19,11 @@ import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorActividadFinancieraForm
     extends StatefulWidget {
-  const PerfilPreInversionCofinanciadorActividadFinancieraForm({super.key});
+  const PerfilPreInversionCofinanciadorActividadFinancieraForm(
+      {super.key,
+      required this.perfilPreInversionCofinanciadorActividadFinanciera});
+  final PerfilPreInversionCofinanciadorActividadFinancieraEntity?
+      perfilPreInversionCofinanciadorActividadFinanciera;
 
   @override
   State<PerfilPreInversionCofinanciadorActividadFinancieraForm> createState() =>
@@ -38,18 +42,17 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
   @override
   void initState() {
     super.initState();
-    final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
-        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
 
-    if (perfilPreInversionCofinanciadorActividadFinancieraCubit.state
-        is PerfilPreInversionCofinanciadorActividadFinancieraLoaded) {
-      final perfilPreInversionCofinanciadorActividadFinancieraLoaded =
-          perfilPreInversionCofinanciadorActividadFinancieraCubit
-              .state.perfilPreInversionCofinanciadorActividadFinanciera;
-
-      loadPerfilPreInversionCofinanciadorActividadFinanciera(
-          perfilPreInversionCofinanciadorActividadFinancieraLoaded);
-    }
+    setState(() {
+      actividadFinancieraId = widget
+          .perfilPreInversionCofinanciadorActividadFinanciera
+          ?.actividadFinancieraId;
+      desembolsoId = widget
+          .perfilPreInversionCofinanciadorActividadFinanciera?.desembolsoId;
+      valorCtrl.text =
+          widget.perfilPreInversionCofinanciadorActividadFinanciera?.valor ??
+              '';
+    });
   }
 
   @override
@@ -58,21 +61,6 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
     BlocProvider.of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(
       context,
     ).initState();
-  }
-
-  void loadPerfilPreInversionCofinanciadorActividadFinanciera(
-      PerfilPreInversionCofinanciadorActividadFinancieraEntity
-          perfilPreInversionCofinanciadorActividadFinancieraLoaded) {
-    actividadFinancieraId =
-        perfilPreInversionCofinanciadorActividadFinancieraLoaded
-            .actividadFinancieraId;
-
-    desembolsoId =
-        perfilPreInversionCofinanciadorActividadFinancieraLoaded.desembolsoId;
-    valorCtrl.text =
-        perfilPreInversionCofinanciadorActividadFinancieraLoaded.valor;
-
-    setState(() {});
   }
 
   @override
@@ -115,7 +103,7 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
             perfilPreInversionId: vPerfilPreInversionCubit
                 .state.vPerfilPreInversion!.perfilPreInversionId,
             cofinanciadorId: perfilPreInversionCofinanciadorCubit
-                .state.perfilPreInversionCofinanciador.cofinanciadorId,
+                .state.perfilPreInversionCofinanciador.cofinanciadorId!,
           ));
         }
       },
@@ -244,7 +232,7 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
                             .changePerfilPreInversionId(vPerfilPreInversionId);
 
                         perfilPreInversionCofinanciadorActividadFinancieraCubit
-                            .changeCofinanciador(cofinanciadorId);
+                            .changeCofinanciador(cofinanciadorId!);
 
                         perfilPreInversionCofinanciadorActividadFinancieraCubit
                             .savePerfilPreInversionCofinanciadorActividadFinancieraDB(

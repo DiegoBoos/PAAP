@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/unidad_model.dart';
 import '../../utils.dart';
@@ -62,37 +62,40 @@ class UnidadRemoteDataSourceImpl implements UnidadRemoteDataSource {
           },
           body: unidadSOAP);
 
-      if (unidadResp.statusCode == 200) {
-        final unidadDoc = xml.XmlDocument.parse(unidadResp.body);
+      if (unidadResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las unidades']);
+      }
 
-        final respuesta =
-            unidadDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final unidadDoc = xml.XmlDocument.parse(unidadResp.body);
 
-        if (respuesta == 'true' &&
-            unidadDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = unidadDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          unidadDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final unidadesRaw = decodedResp.entries.first.value['Table'];
-
-          if (unidadesRaw is List) {
-            return List.from(unidadesRaw)
-                .map((e) => UnidadModel.fromJson(e))
-                .toList();
-          } else {
-            return [UnidadModel.fromJson(unidadesRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (unidadDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = unidadDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final unidadesRaw = decodedResp.entries.first.value['Table'];
+
+        if (unidadesRaw is List) {
+          return List.from(unidadesRaw)
+              .map((e) => UnidadModel.fromJson(e))
+              .toList();
+        } else {
+          return [UnidadModel.fromJson(unidadesRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener las unidades']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

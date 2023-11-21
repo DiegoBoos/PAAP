@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/rubro_entity.dart';
 import '../../../domain/repositories/rubro/rubro_repository_db.dart';
 import '../../datasources/local/rubro_local_ds.dart';

@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/criterio_entity.dart';
 import '../../repositories/criterio/criterio_repository_db.dart';
 

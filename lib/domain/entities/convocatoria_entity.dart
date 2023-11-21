@@ -15,16 +15,6 @@ class ConvocatoriaEntity {
   String fechaFinal;
   String recursos;
 
-  factory ConvocatoriaEntity.fromJson(Map<String, dynamic> json) =>
-      ConvocatoriaEntity(
-        convocatoriaId: json["ConvocatoriaId"],
-        nombre: json["Nombre"],
-        descripcion: json["Descripcion"],
-        fechaInicial: json["FechaInicial"],
-        fechaFinal: json["FechaFinal"],
-        recursos: json["Recursos"],
-      );
-
   Map<String, dynamic> toJson() => {
         "ConvocatoriaId": convocatoriaId,
         "Nombre": nombre,

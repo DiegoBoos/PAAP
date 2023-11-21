@@ -1,6 +1,6 @@
 import 'package:paap/domain/entities/sync_log_entity.dart';
 
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/sync_log_model.dart';
 
 abstract class SyncLogLocalDataSource {

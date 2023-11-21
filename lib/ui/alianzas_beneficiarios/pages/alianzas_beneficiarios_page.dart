@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
-import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
+import '../../../ui/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
+import '../../../ui/cubits/menu/menu_cubit.dart';
+import '../../../ui/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';

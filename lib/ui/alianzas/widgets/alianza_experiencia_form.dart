@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
-import '../../../domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
-import '../../../domain/cubits/frecuencia/frecuencia_cubit.dart';
-import '../../../domain/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
+import '../../../ui/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
+import '../../../ui/cubits/frecuencia/frecuencia_cubit.dart';
+import '../../../ui/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/frecuencia_entity.dart';
 import '../../../domain/entities/tipo_actividad_productiva_entity.dart';
 import '../../utils/input_decoration.dart';
@@ -21,8 +21,8 @@ class AlianzaExperienciaForm extends StatefulWidget {
 }
 
 class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
-  String experienciaAgricolaTipoActividadProductivaId = '';
-  String experienciaAgricolaFrecuenciaId = '';
+  String? experienciaAgricolaTipoActividadProductivaId;
+  String? experienciaAgricolaFrecuenciaId;
 
   final areaCultivoCtrl = TextEditingController();
   final cantidadProducidaCtrl = TextEditingController();
@@ -37,8 +37,8 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
   final areaImplementacionCtrl = TextEditingController();
   final totalAreaPredioCtrl = TextEditingController();
 
-  String experienciaPecuariaTipoActividadProductivaId = '';
-  String experienciaPecuariaFrecuenciaId = '';
+  String? experienciaPecuariaTipoActividadProductivaId;
+  String? experienciaPecuariaFrecuenciaId;
 
   final cantidadAnimalesCtrl = TextEditingController();
   final cantidadCriaCtrl = TextEditingController();
@@ -58,18 +58,8 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
     final experienciaPecuariaCubit =
         BlocProvider.of<ExperienciaPecuariaCubit>(context);
 
-    if (experienciaAgricolaCubit.state is ExperienciaAgricolaLoaded) {
-      final experienciaAgricolaLoaded =
-          experienciaAgricolaCubit.state.experienciaAgricola;
-
-      loadExperienciaAgricola(experienciaAgricolaLoaded);
-    }
-    if (experienciaPecuariaCubit.state is ExperienciaPecuariaLoaded) {
-      final experienciaPecuariaLoaded =
-          experienciaPecuariaCubit.state.experienciaPecuaria;
-
-      loadExperienciaPecuaria(experienciaPecuariaLoaded);
-    }
+    loadExperienciaAgricola(experienciaAgricolaCubit.state.experienciaAgricola);
+    loadExperienciaPecuaria(experienciaPecuariaCubit.state.experienciaPecuaria);
   }
 
   @override
@@ -79,43 +69,46 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
     BlocProvider.of<ExperienciaPecuariaCubit>(context).initState();
   }
 
-  void loadExperienciaAgricola(
-      ExperienciaAgricolaEntity experienciaAgricolaLoaded) {
-    experienciaAgricolaTipoActividadProductivaId =
-        experienciaAgricolaLoaded.tipoActividadProductivaId;
-    experienciaAgricolaFrecuenciaId = experienciaAgricolaLoaded.frecuenciaId;
-    areaCultivoCtrl.text = experienciaAgricolaLoaded.areaCultivo;
-    cantidadProducidaCtrl.text = experienciaAgricolaLoaded.cantidadProducida;
-    cantidadVendidaCtrl.text = experienciaAgricolaLoaded.cantidadVendida;
-    cantidadAutoconsumoCtrl.text =
-        experienciaAgricolaLoaded.cantidadAutoconsumo;
-    costoImplementacionCtrl.text =
-        experienciaAgricolaLoaded.costoImplementacion;
-    experienciaAgricolaValorJornalCtrl.text =
-        experienciaAgricolaLoaded.valorJornal;
-    totalIngresoNetoCtrl.text = experienciaAgricolaLoaded.totalIngresoNeto;
-    areaPastoCtrl.text = experienciaAgricolaLoaded.areaPasto;
-    areaSinUsoCtrl.text = experienciaAgricolaLoaded.areaSinUso;
-    areaReservaConservacionCtrl.text =
-        experienciaAgricolaLoaded.areaReservaConservacion;
-    areaImplementacionCtrl.text = experienciaAgricolaLoaded.areaImplementacion;
-    totalAreaPredioCtrl.text = experienciaAgricolaLoaded.totalAreaPredio;
+  void loadExperienciaAgricola(ExperienciaAgricolaEntity? experienciaAgricola) {
+    setState(() {
+      experienciaAgricolaTipoActividadProductivaId =
+          experienciaAgricola?.tipoActividadProductivaId;
+      experienciaAgricolaFrecuenciaId = experienciaAgricola?.frecuenciaId;
+      areaCultivoCtrl.text = experienciaAgricola?.areaCultivo ?? '';
+      cantidadProducidaCtrl.text = experienciaAgricola?.cantidadProducida ?? '';
+      cantidadVendidaCtrl.text = experienciaAgricola?.cantidadVendida ?? '';
+      cantidadAutoconsumoCtrl.text =
+          experienciaAgricola?.cantidadAutoconsumo ?? '';
+      costoImplementacionCtrl.text =
+          experienciaAgricola?.costoImplementacion ?? '';
+      experienciaAgricolaValorJornalCtrl.text =
+          experienciaAgricola?.valorJornal ?? '';
+      totalIngresoNetoCtrl.text = experienciaAgricola?.totalIngresoNeto ?? '';
+      areaPastoCtrl.text = experienciaAgricola?.areaPasto ?? '';
+      areaSinUsoCtrl.text = experienciaAgricola?.areaSinUso ?? '';
+      areaReservaConservacionCtrl.text =
+          experienciaAgricola?.areaReservaConservacion ?? '';
+      areaImplementacionCtrl.text =
+          experienciaAgricola?.areaImplementacion ?? '';
+      totalAreaPredioCtrl.text = experienciaAgricola?.totalAreaPredio ?? '';
+    });
   }
 
-  void loadExperienciaPecuaria(
-      ExperienciaPecuariaEntity experienciaPecuariaLoaded) {
-    experienciaPecuariaTipoActividadProductivaId =
-        experienciaPecuariaLoaded.tipoActividadProductivaId;
-    experienciaPecuariaFrecuenciaId = experienciaPecuariaLoaded.frecuenciaId;
-    cantidadAnimalesCtrl.text = experienciaPecuariaLoaded.cantidadAnimales;
-    cantidadCriaCtrl.text = experienciaPecuariaLoaded.cantidadCria;
-    cantidadLevanteCtrl.text = experienciaPecuariaLoaded.cantidadLevante;
-    cantidadCebaCtrl.text = experienciaPecuariaLoaded.cantidadCeba;
-    cantidadLecheCtrl.text = experienciaPecuariaLoaded.cantidadLeche;
-    experienciaPecuariaValorJornalCtrl.text =
-        experienciaPecuariaLoaded.valorJornal;
-    costosInsumosCtrl.text = experienciaPecuariaLoaded.costosInsumos;
-    ingresosCtrl.text = experienciaPecuariaLoaded.ingresos;
+  void loadExperienciaPecuaria(ExperienciaPecuariaEntity? experienciaPecuaria) {
+    setState(() {
+      experienciaPecuariaTipoActividadProductivaId =
+          experienciaPecuaria?.tipoActividadProductivaId;
+      experienciaPecuariaFrecuenciaId = experienciaPecuaria?.frecuenciaId;
+      cantidadAnimalesCtrl.text = experienciaPecuaria?.cantidadAnimales ?? '';
+      cantidadCriaCtrl.text = experienciaPecuaria?.cantidadCria ?? '';
+      cantidadLevanteCtrl.text = experienciaPecuaria?.cantidadLevante ?? '';
+      cantidadCebaCtrl.text = experienciaPecuaria?.cantidadCeba ?? '';
+      cantidadLecheCtrl.text = experienciaPecuaria?.cantidadLeche ?? '';
+      experienciaPecuariaValorJornalCtrl.text =
+          experienciaPecuaria?.valorJornal ?? '';
+      costosInsumosCtrl.text = experienciaPecuaria?.costosInsumos ?? '';
+      ingresosCtrl.text = experienciaPecuaria?.ingresos ?? '';
+    });
   }
 
   @override

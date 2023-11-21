@@ -24,14 +24,4 @@ class CriterioModel extends CriterioEntity {
         valorMaximo: json["ValorMaximo"],
         agrupacionId: json["AgrupacionId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "CriterioId": criterioId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-        "Variable": variable,
-        "ValorMaximo": valorMaximo,
-        "AgrupacionId": agrupacionId,
-      };
 }

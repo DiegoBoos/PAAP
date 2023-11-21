@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/beneficiario_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/beneficiario_model.dart';
 import '../../utils.dart';
@@ -65,39 +65,40 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
           },
           body: beneficiarioSOAP);
 
-      if (beneficiarioResp.statusCode == 200) {
-        final beneficiarioDoc = xml.XmlDocument.parse(beneficiarioResp.body);
+      if (beneficiarioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los beneficiarios']);
+      }
 
-        final respuesta = beneficiarioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final beneficiarioDoc = xml.XmlDocument.parse(beneficiarioResp.body);
 
-        if (respuesta == 'true' &&
-            beneficiarioDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = beneficiarioDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          beneficiarioDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final beneficiariosRaw = decodedResp.entries.first.value['Table'];
-
-          if (beneficiariosRaw is List) {
-            return List.from(beneficiariosRaw)
-                .map((e) => BeneficiarioModel.fromJson(e))
-                .toList();
-          } else {
-            return [BeneficiarioModel.fromJson(beneficiariosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (beneficiarioDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = beneficiarioDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final beneficiariosRaw = decodedResp.entries.first.value['Table'];
+
+        if (beneficiariosRaw is List) {
+          return List.from(beneficiariosRaw)
+              .map((e) => BeneficiarioModel.fromJson(e))
+              .toList();
+        } else {
+          return [BeneficiarioModel.fromJson(beneficiariosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los beneficiarios']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -170,19 +171,17 @@ class BeneficiarioRemoteDataSourceImpl implements BeneficiarioRemoteDataSource {
           },
           body: beneficiarioSOAP);
 
-      if (beneficiarioResp.statusCode == 200) {
-        final beneficiarioDoc = xml.XmlDocument.parse(beneficiarioResp.body);
+      if (beneficiarioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al guardar el beneficiario']);
+      }
 
-        final respuesta = beneficiarioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final beneficiarioDoc = xml.XmlDocument.parse(beneficiarioResp.body);
 
-        if (respuesta == 'true') {
-          return beneficiarioEntity;
-        } else {
-          return null;
-        }
+      final respuesta =
+          beneficiarioDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        return beneficiarioEntity;
       } else {
         return null;
       }

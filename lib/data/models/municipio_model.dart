@@ -10,8 +10,4 @@ class MunicipioModel extends MunicipioEntity {
         nombre: json["Nombre"],
         departamentoid: json["DepartamentoId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() =>
-      {"MunicipioId": id, "Nombre": nombre, "DepartamentoId": departamentoid};
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/actividad_financiera/actividad_financiera_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
-import '../../../domain/cubits/rubro/rubro_cubit.dart';
-import '../../../domain/cubits/unidad/unidad_cubit.dart';
+import '../../../ui/cubits/actividad_financiera/actividad_financiera_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_ingresos_utp/perfil_preinversion_ingresos_utp_cubit.dart';
+import '../../../ui/cubits/rubro/rubro_cubit.dart';
+import '../../../ui/cubits/unidad/unidad_cubit.dart';
 import '../../../domain/entities/actividad_financiera_entity.dart';
 import '../../../domain/entities/rubro_entity.dart';
 import '../../../domain/entities/unidad_entity.dart';

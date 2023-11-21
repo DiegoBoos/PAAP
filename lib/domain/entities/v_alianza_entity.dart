@@ -38,26 +38,6 @@ class VAlianzaEntity {
   final String incentivoModular;
   final String legalizado;
 
-  factory VAlianzaEntity.fromJson(Map<String, dynamic> json) => VAlianzaEntity(
-      alianzaId: json["alianzaId"],
-      perfilPreInversionId: json["perfilPreInversionId"],
-      convocatoria: json["convocatoria"],
-      nombre: json["nombre"],
-      abreviatura: json["abreviatura"],
-      nit: json["nit"],
-      municipio: json["municipio"],
-      direccion: json["direccion"],
-      contacto: json["contacto"],
-      telefonoFijo: json["telefonoFijo"],
-      telefonoMovil: json["telefonoMovil"],
-      correo: json["correo"],
-      tipoProyecto: json["tipoProyecto"],
-      productoPrincipal: json["productoPrincipal"],
-      productoAsociado: json["productoAsociado"],
-      valorTotalProyecto: json["valorTotalProyecto"],
-      incentivoModular: json["incentivoModular"],
-      legalizado: json["legalizado"]);
-
   Map<String, dynamic> toJson() => {
         "alianzaId": alianzaId,
         "perfilPreInversionId": perfilPreInversionId,

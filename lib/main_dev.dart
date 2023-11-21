@@ -6,7 +6,8 @@ void main() async {
   final devAppConfig = AppConfig(
       appName: 'MA-TALLIN',
       flavor: 'QA',
-      url: 'http://172.20.50.193/PAAPServicioWeb.asmx');
+      url:
+          'http://161.97.105.205/PAAP/ServiciosDesarrollo/PAAPServicioWeb.asmx');
   Widget app = await initializeApp(devAppConfig);
   runApp(app);
 }

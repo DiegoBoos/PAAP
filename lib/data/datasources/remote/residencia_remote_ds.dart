@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/residencia_model.dart';
 import '../../utils.dart';
@@ -61,37 +61,40 @@ class ResidenciaRemoteDataSourceImpl implements ResidenciaRemoteDataSource {
           },
           body: residenciaSOAP);
 
-      if (residenciaResp.statusCode == 200) {
-        final residenciaDoc = xml.XmlDocument.parse(residenciaResp.body);
+      if (residenciaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las residencias']);
+      }
 
-        final respuesta =
-            residenciaDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final residenciaDoc = xml.XmlDocument.parse(residenciaResp.body);
 
-        if (respuesta == 'true' &&
-            residenciaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = residenciaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          residenciaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final residenciasRaw = decodedResp.entries.first.value['Table'];
-
-          if (residenciasRaw is List) {
-            return List.from(residenciasRaw)
-                .map((e) => ResidenciaModel.fromJson(e))
-                .toList();
-          } else {
-            return [ResidenciaModel.fromJson(residenciasRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (residenciaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = residenciaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final residenciasRaw = decodedResp.entries.first.value['Table'];
+
+        if (residenciasRaw is List) {
+          return List.from(residenciasRaw)
+              .map((e) => ResidenciaModel.fromJson(e))
+              .toList();
+        } else {
+          return [ResidenciaModel.fromJson(residenciasRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener las residencias']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

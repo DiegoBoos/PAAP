@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/core/error/exception.dart';
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/exception.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/frecuencia_entity.dart';
 import '../../../domain/repositories/frecuencia/frecuencia_repository_db.dart';
 import '../../datasources/local/frecuencia_local_ds.dart';

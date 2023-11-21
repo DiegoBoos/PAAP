@@ -38,17 +38,4 @@ class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
         aliado: json["aliado"],
         recordStatus: json["RecordStatus"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "PerfilPreInversionId": perfilPreInversionId,
-        "AliadoId": aliadoId,
-        "ProductoId": productoId,
-        "VolumenCompra": volumenCompra,
-        "UnidadId": unidadId,
-        "FrecuenciaId": frecuenciaId,
-        "PorcentajeCompra": porcentajeCompra,
-        "SitioEntregaId": sitioEntregaId,
-        "RecordStatus": recordStatus,
-      };
 }

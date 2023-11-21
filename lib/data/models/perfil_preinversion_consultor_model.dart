@@ -31,15 +31,4 @@ class PerfilPreInversionConsultorModel
         revision: json["Revision"],
         consultor: json["Consultor"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "PerfilPreInversionId": perfilPreInversionId,
-        "ConsultorId": consultorId,
-        "RevisionId": revisionId,
-        "FechaRevision": fechaRevision,
-        "RecordStatus": recordStatus,
-        "Revision": revision,
-        "Consultor": consultor,
-      };
 }

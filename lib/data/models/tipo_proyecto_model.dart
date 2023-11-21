@@ -14,11 +14,4 @@ class TipoProyectoModel extends TipoProyectoEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoProyectoId": tipoProyectoId,
-        "Nombre": nombre,
-        "Descripcion": descripcion
-      };
 }

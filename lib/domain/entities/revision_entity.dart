@@ -4,8 +4,5 @@ class RevisionEntity {
   String revisionId;
   String nombre;
 
-  factory RevisionEntity.fromJson(Map<String, dynamic> json) =>
-      RevisionEntity(revisionId: json["RevisionId"], nombre: json["Nombre"]);
-
   Map<String, dynamic> toJson() => {"RevisionId": revisionId, "Nombre": nombre};
 }

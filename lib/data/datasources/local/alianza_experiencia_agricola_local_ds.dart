@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../../domain/entities/alianza_experiencia_agricola_entity.dart';
 import '../../models/alianza_experiencia_agricola_model.dart';
 

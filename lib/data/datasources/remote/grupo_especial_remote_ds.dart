@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/grupo_especial_model.dart';
 import '../../utils.dart';
@@ -63,39 +63,42 @@ class GrupoEspecialRemoteDataSourceImpl
           },
           body: grupoEspecialSOAP);
 
-      if (grupoEspecialResp.statusCode == 200) {
-        final grupoEspecialDoc = xml.XmlDocument.parse(grupoEspecialResp.body);
+      if (grupoEspecialResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los grupos especiales']);
+      }
 
-        final respuesta = grupoEspecialDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final grupoEspecialDoc = xml.XmlDocument.parse(grupoEspecialResp.body);
 
-        if (respuesta == 'true' &&
-            grupoEspecialDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = grupoEspecialDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = grupoEspecialDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final gruposEspecialesRaw = decodedResp.entries.first.value['Table'];
-
-          if (gruposEspecialesRaw is List) {
-            return List.from(gruposEspecialesRaw)
-                .map((e) => GrupoEspecialModel.fromJson(e))
-                .toList();
-          } else {
-            return [GrupoEspecialModel.fromJson(gruposEspecialesRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (grupoEspecialDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = grupoEspecialDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final gruposEspecialesRaw = decodedResp.entries.first.value['Table'];
+
+        if (gruposEspecialesRaw is List) {
+          return List.from(gruposEspecialesRaw)
+              .map((e) => GrupoEspecialModel.fromJson(e))
+              .toList();
+        } else {
+          return [GrupoEspecialModel.fromJson(gruposEspecialesRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los grupos especiales']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

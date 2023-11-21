@@ -19,12 +19,4 @@ class TipoActividadProductivaModel extends TipoActividadProductivaEntity {
         descripcion: json["Descripcion"],
         tipoProyectoId: json["TipoProyectoId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoActividadProductivaId": tipoActividadProductivaId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-        "TipoProyectoId": tipoProyectoId,
-      };
 }

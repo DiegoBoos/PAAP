@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/perfil_beneficiario_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/perfil_beneficiario_model.dart';
 import '../../utils.dart';
@@ -68,41 +68,44 @@ class PerfilBeneficiarioRemoteDataSourceImpl
           },
           body: perfilBeneficiarioSOAP);
 
-      if (perfilBeneficiarioResp.statusCode == 200) {
-        final perfilBeneficiarioDoc =
-            xml.XmlDocument.parse(perfilBeneficiarioResp.body);
+      if (perfilBeneficiarioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los beneficiarios']);
+      }
 
-        final respuesta = perfilBeneficiarioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilBeneficiarioDoc =
+          xml.XmlDocument.parse(perfilBeneficiarioResp.body);
 
-        if (respuesta == 'true' &&
-            perfilBeneficiarioDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = perfilBeneficiarioDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = perfilBeneficiarioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilBeneficiariosRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (perfilBeneficiariosRaw is List) {
-            return List.from(perfilBeneficiariosRaw)
-                .map((e) => PerfilBeneficiarioModel.fromJson(e))
-                .toList();
-          } else {
-            return [PerfilBeneficiarioModel.fromJson(perfilBeneficiariosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (perfilBeneficiarioDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = perfilBeneficiarioDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilBeneficiariosRaw = decodedResp.entries.first.value['Table'];
+
+        if (perfilBeneficiariosRaw is List) {
+          return List.from(perfilBeneficiariosRaw)
+              .map((e) => PerfilBeneficiarioModel.fromJson(e))
+              .toList();
+        } else {
+          return [PerfilBeneficiarioModel.fromJson(perfilBeneficiariosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los beneficiarios del perfil']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -179,20 +182,20 @@ class PerfilBeneficiarioRemoteDataSourceImpl
           },
           body: perfilBeneficiarioSOAP);
 
-      if (perfilBeneficiarioResp.statusCode == 200) {
-        final perfilBeneficiarioDoc =
-            xml.XmlDocument.parse(perfilBeneficiarioResp.body);
+      if (perfilBeneficiarioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al guardar el beneficiario']);
+      }
 
-        final respuesta = perfilBeneficiarioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilBeneficiarioDoc =
+          xml.XmlDocument.parse(perfilBeneficiarioResp.body);
 
-        if (respuesta == 'true') {
-          return perfilBeneficiarioEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilBeneficiarioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilBeneficiarioEntity;
       } else {
         return null;
       }

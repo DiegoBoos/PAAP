@@ -34,13 +34,4 @@ class PerfilPreInversionCofinanciadorModel
         participacion: json["Participacion"].toString(),
         recordStatus: json["RecordStatus"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "PerfilPreInversionId": perfilPreInversionId,
-        "CofinanciadorId": cofinanciadorId,
-        "Monto": monto,
-        "Participacion": participacion,
-        "RecordStatus": recordStatus,
-      };
 }

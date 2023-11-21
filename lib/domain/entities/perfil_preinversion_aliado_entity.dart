@@ -2,24 +2,24 @@ class PerfilPreInversionAliadoEntity {
   PerfilPreInversionAliadoEntity({
     required this.perfilPreInversionId,
     required this.aliadoId,
-    required this.productoId,
+    this.productoId,
     required this.volumenCompra,
-    required this.unidadId,
-    required this.frecuenciaId,
+    this.unidadId,
+    this.frecuenciaId,
     required this.porcentajeCompra,
-    required this.sitioEntregaId,
+    this.sitioEntregaId,
     this.aliado,
     required this.recordStatus,
   });
 
   String perfilPreInversionId;
   String aliadoId;
-  String productoId;
+  String? productoId;
   String volumenCompra;
-  String unidadId;
-  String frecuenciaId;
+  String? unidadId;
+  String? frecuenciaId;
   String porcentajeCompra;
-  String sitioEntregaId;
+  String? sitioEntregaId;
   String? aliado;
   String recordStatus;
 
@@ -44,19 +44,6 @@ class PerfilPreInversionAliadoEntity {
           porcentajeCompra: porcentajeCompra ?? this.porcentajeCompra,
           sitioEntregaId: sitioEntregaId ?? this.sitioEntregaId,
           recordStatus: recordStatus ?? this.recordStatus);
-
-  factory PerfilPreInversionAliadoEntity.fromJson(Map<String, dynamic> json) =>
-      PerfilPreInversionAliadoEntity(
-        perfilPreInversionId: json["PerfilPreInversionId"],
-        aliadoId: json["AliadoId"],
-        productoId: json["ProductoId"],
-        volumenCompra: json["VolumenCompra"],
-        unidadId: json["UnidadId"],
-        frecuenciaId: json["FrecuenciaId"],
-        porcentajeCompra: json["PorcentajeCompra"],
-        sitioEntregaId: json["SitioEntregaId"],
-        recordStatus: json["RecordStatus"],
-      );
 
   Map<String, dynamic> toJson() => {
         "PerfilPreInversionId": perfilPreInversionId,

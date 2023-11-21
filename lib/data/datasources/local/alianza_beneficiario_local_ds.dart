@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/alianza_beneficiario_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/alianza_beneficiario_model.dart';
 
 abstract class AlianzaBeneficiarioLocalDataSource {

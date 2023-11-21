@@ -2,7 +2,7 @@ import 'package:paap/data/models/evaluacion_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/evaluacion_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 
 abstract class EvaluacionLocalDataSource {
   Future<EvaluacionModel?> getEvaluacionDB(String perfilId);

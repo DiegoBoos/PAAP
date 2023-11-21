@@ -17,16 +17,6 @@ class AlianzasEntity {
   String ubicacion;
   String categorizacion;
 
-  factory AlianzasEntity.fromJson(Map<String, dynamic> json) => AlianzasEntity(
-        id: json["ID"],
-        nombre: json["Nombre"],
-        abreviatura: json["Abreviatura"],
-        valorProyecto: json["Valor_x0020_Proyécto"],
-        incentivoModular: json["Incentivo_x0020_Módular"],
-        ubicacion: json["Ubicación"],
-        categorizacion: json["Categorización"],
-      );
-
   Map<String, dynamic> toJson() => {
         "ID": id,
         "Nombre": nombre,

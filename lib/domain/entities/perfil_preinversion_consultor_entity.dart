@@ -17,18 +17,6 @@ class PerfilPreInversionConsultorEntity {
   String? revision;
   String? consultor;
 
-  factory PerfilPreInversionConsultorEntity.fromJson(
-          Map<String, dynamic> json) =>
-      PerfilPreInversionConsultorEntity(
-        perfilPreInversionId: json["PerfilPreInversionId"],
-        consultorId: json["ConsultorId"],
-        revisionId: json["RevisionId"],
-        fechaRevision: json["FechaRevision"],
-        recordStatus: json["RecordStatus"],
-        revision: json["Revision"],
-        consultor: json["Consultor"],
-      );
-
   Map<String, dynamic> toJson() => {
         "PerfilPreInversionId": perfilPreInversionId,
         "ConsultorId": consultorId,

@@ -44,22 +44,6 @@ class UsuarioModel extends UsuarioEntity {
       );
 
   @override
-  Map<String, dynamic> toJson() => {
-        "UsuarioId": usuarioId,
-        "Nombre": nombre,
-        "Apellido": apellido,
-        "Direccion": direccion,
-        "TelefonoFijo": telefonoFijo,
-        "TelefonoMovil": telefonoMovil,
-        "Correo": correo,
-        "Contrasena": contrasena,
-        "FechaActivacion": fechaActivacion,
-        "FechaDesactivacion": fechaDesactivacion,
-        "FechaCambio": fechaCambio,
-        "Activo": activo
-      };
-
-  @override
   bool operator ==(Object other) =>
       other is UsuarioModel && other.usuarioId == usuarioId;
 

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/actividad_economica_model.dart';
 import '../../utils.dart';
@@ -65,41 +65,46 @@ class ActividadEconomicaRemoteDataSourceImpl
           },
           body: actividadEconomicaSOAP);
 
-      if (actividadEconomicaResp.statusCode == 200) {
-        final actividadEconomicaDoc =
-            xml.XmlDocument.parse(actividadEconomicaResp.body);
+      if (actividadEconomicaResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener las actividades económicas']);
+      }
 
-        final respuesta = actividadEconomicaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final actividadEconomicaDoc =
+          xml.XmlDocument.parse(actividadEconomicaResp.body);
 
-        if (respuesta == 'true' &&
-            actividadEconomicaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = actividadEconomicaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = actividadEconomicaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final actividadesEconomicasRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (actividadesEconomicasRaw is List) {
-            return List.from(actividadesEconomicasRaw)
-                .map((e) => ActividadEconomicaModel.fromJson(e))
-                .toList();
-          } else {
-            return [ActividadEconomicaModel.fromJson(actividadesEconomicasRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (actividadEconomicaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = actividadEconomicaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final actividadesEconomicasRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (actividadesEconomicasRaw is List) {
+          return List.from(actividadesEconomicasRaw)
+              .map((e) => ActividadEconomicaModel.fromJson(e))
+              .toList();
+        } else {
+          return [ActividadEconomicaModel.fromJson(actividadesEconomicasRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener las actividades económicas']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

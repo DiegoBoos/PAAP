@@ -3,7 +3,7 @@ export 'package:paap/domain/usecases/visita/visita_db_usecase.dart';
 export 'package:paap/domain/repositories/visita/visita_repository.dart';
 export 'package:paap/domain/repositories/visita/visita_repository_db.dart';
 export 'package:paap/domain/entities/visita_entity.dart';
-export 'package:paap/domain/cubits/visita/visita_cubit.dart';
+export 'package:paap/ui/cubits/visita/visita_cubit.dart';
 export 'package:paap/data/repositories/visita/visita_repository.dart';
 export 'package:paap/data/repositories/visita/visita_repository_db.dart';
 export 'package:paap/data/datasources/remote/visita_remote_ds.dart';

@@ -3,8 +3,8 @@ export 'package:paap/domain/usecases/alianza_beneficiario/alianza_beneficiario_d
 export 'package:paap/domain/repositories/alianza_beneficiario/alianza_beneficiario_repository.dart';
 export 'package:paap/domain/repositories/alianza_beneficiario/alianza_beneficiario_repository_db.dart';
 export 'package:paap/domain/entities/alianza_beneficiario_entity.dart';
-export 'package:paap/domain/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
-export 'package:paap/domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
+export 'package:paap/ui/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
+export 'package:paap/ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 export 'package:paap/data/repositories/alianza_beneficiario/alianza_beneficiario_repository.dart';
 export 'package:paap/data/repositories/alianza_beneficiario/alianza_beneficiario_repository_db.dart';
 export 'package:paap/data/datasources/remote/alianza_beneficiario_remote_ds.dart';

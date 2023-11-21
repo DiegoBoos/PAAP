@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
 import '../../../../domain/entities/usuario_entity.dart';
-import '../../../../domain/core/error/exception.dart';
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/experiencia_pecuaria_entity.dart';
 import '../../constants.dart';
 import '../../models/experiencia_pecuaria_model.dart';
@@ -68,43 +68,46 @@ class ExperienciaPecuariaRemoteDataSourceImpl
           },
           body: experienciaPecuariaSOAP);
 
-      if (experienciaPecuariaResp.statusCode == 200) {
-        final experienciaPecuariaDoc =
-            xml.XmlDocument.parse(experienciaPecuariaResp.body);
+      if (experienciaPecuariaResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener las experiencias pecuarias']);
+      }
 
-        final respuesta = experienciaPecuariaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final experienciaPecuariaDoc =
+          xml.XmlDocument.parse(experienciaPecuariaResp.body);
 
-        if (respuesta == 'true' &&
-            experienciaPecuariaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = experienciaPecuariaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = experienciaPecuariaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final experienciasPecuariasRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (experienciasPecuariasRaw is List) {
-            return List.from(experienciasPecuariasRaw)
-                .map((e) => ExperienciaPecuariaModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              ExperienciaPecuariaModel.fromJson(experienciasPecuariasRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (experienciaPecuariaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = experienciaPecuariaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final experienciasPecuariasRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (experienciasPecuariasRaw is List) {
+          return List.from(experienciasPecuariasRaw)
+              .map((e) => ExperienciaPecuariaModel.fromJson(e))
+              .toList();
+        } else {
+          return [ExperienciaPecuariaModel.fromJson(experienciasPecuariasRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener las experiencias pecuarias']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -179,20 +182,20 @@ class ExperienciaPecuariaRemoteDataSourceImpl
           },
           body: experienciaPecuariaSOAP);
 
-      if (experienciaPecuariaResp.statusCode == 200) {
-        final experienciaPecuariaDoc =
-            xml.XmlDocument.parse(experienciaPecuariaResp.body);
+      if (experienciaPecuariaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al guardar la experiencia pecuaria']);
+      }
 
-        final respuesta = experienciaPecuariaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final experienciaPecuariaDoc =
+          xml.XmlDocument.parse(experienciaPecuariaResp.body);
 
-        if (respuesta == 'true') {
-          return experienciaPecuariaEntity;
-        } else {
-          return null;
-        }
+      final respuesta = experienciaPecuariaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return experienciaPecuariaEntity;
       } else {
         return null;
       }

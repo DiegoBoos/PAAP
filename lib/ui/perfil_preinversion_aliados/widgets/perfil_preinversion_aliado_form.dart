@@ -4,14 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../data/models/municipio_model.dart';
-import '../../../domain/cubits/aliado/aliado_cubit.dart';
-import '../../../domain/cubits/departamento/departamento_cubit.dart';
-import '../../../domain/cubits/frecuencia/frecuencia_cubit.dart';
-import '../../../domain/cubits/municipio/municipio_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
-import '../../../domain/cubits/producto/producto_cubit.dart';
-import '../../../domain/cubits/sitio_entrega/sitio_entrega_cubit.dart';
-import '../../../domain/cubits/unidad/unidad_cubit.dart';
+import '../../../ui/cubits/aliado/aliado_cubit.dart';
+import '../../../ui/cubits/departamento/departamento_cubit.dart';
+import '../../../ui/cubits/frecuencia/frecuencia_cubit.dart';
+import '../../../ui/cubits/municipio/municipio_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
+import '../../../ui/cubits/producto/producto_cubit.dart';
+import '../../../ui/cubits/sitio_entrega/sitio_entrega_cubit.dart';
+import '../../../ui/cubits/unidad/unidad_cubit.dart';
 import '../../../domain/entities/aliado_entity.dart';
 import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/entities/frecuencia_entity.dart';
@@ -24,8 +24,10 @@ import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 
 class PerfilPreInversionAliadoForm extends StatefulWidget {
-  const PerfilPreInversionAliadoForm(this.formKey, {super.key});
-  final GlobalKey<FormState> formKey;
+  const PerfilPreInversionAliadoForm(
+      {super.key, this.perfilPreInversionAliado});
+
+  final PerfilPreInversionAliadoEntity? perfilPreInversionAliado;
 
   @override
   State<PerfilPreInversionAliadoForm> createState() =>
@@ -34,6 +36,7 @@ class PerfilPreInversionAliadoForm extends StatefulWidget {
 
 class _PerfilPreInversionAliadoFormState
     extends State<PerfilPreInversionAliadoForm> {
+  List<MunicipioEntity> allMunicipios = [];
   List<MunicipioEntity> municipiosFiltered = [];
 
   String? departamentoId;
@@ -60,7 +63,24 @@ class _PerfilPreInversionAliadoFormState
   @override
   void initState() {
     super.initState();
-    loadAccesories();
+
+    final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
+    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
+    allMunicipios = municipioCubit.state.municipios!;
+    municipiosFiltered = allMunicipios;
+
+    setState(() {
+      volumenCompraCtrl.text =
+          widget.perfilPreInversionAliado?.volumenCompra ?? '';
+      porcentajeCompraCtrl.text =
+          widget.perfilPreInversionAliado?.porcentajeCompra ?? '';
+      productoId = widget.perfilPreInversionAliado?.productoId;
+      unidadId = widget.perfilPreInversionAliado?.unidadId;
+      frecuenciaId = widget.perfilPreInversionAliado?.frecuenciaId;
+      sitioEntregaId = widget.perfilPreInversionAliado?.sitioEntregaId;
+    });
+
+    loadAliado(aliadoCubit.state.aliado);
   }
 
   @override
@@ -71,74 +91,36 @@ class _PerfilPreInversionAliadoFormState
     BlocProvider.of<AliadoCubit>(context).initState();
   }
 
-  Future<void> loadAccesories() async {
-    final perfilPreInversionAliadoCubit =
-        BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
-    final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
-    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
+  loadAliado(AliadoEntity? aliado) {
+    setState(() {
+      final aliadoMunicipioId = aliado?.municipioId;
 
-    await municipioCubit.getMunicipiosDB();
+      final municipio = municipiosFiltered.firstWhere(
+          (municipio) => municipio.id == aliadoMunicipioId,
+          orElse: () => MunicipioModel(id: '', nombre: '', departamentoid: ''));
 
-    if (municipioCubit.state is MunicipiosLoaded) {
-      municipiosFiltered = municipioCubit.state.municipios!;
-    }
+      if (municipio.id != '') {
+        departamentoId = municipio.departamentoid;
+        municipioId = aliadoMunicipioId;
 
-    if (aliadoCubit.state is AliadoLoaded) {
-      final aliadoLoaded = aliadoCubit.state.aliado;
+        municipiosFiltered = allMunicipios
+            .where(((municipio) => municipio.departamentoid == departamentoId))
+            .toList();
+      }
+      aliadoIdCtrl.text = aliado?.aliadoId ?? '';
+      nombreCtrl.text = aliado?.nombre ?? '';
+      experienciaCtrl.text = aliado?.experiencia ?? '';
+      nombreContactoCtrl.text = aliado?.nombreContacto ?? '';
+      direccionCtrl.text = aliado?.direccion ?? '';
+      correoCtrl.text = aliado?.correo ?? '';
+      telefonoFijoCtrl.text = aliado?.telefonoFijo ?? '';
+      telefonoMovilCtrl.text = aliado?.telefonoMovil ?? '';
 
-      loadAliado(aliadoLoaded);
-    }
-    if (perfilPreInversionAliadoCubit.state is PerfilPreInversionAliadoLoaded) {
-      final perfilPreInversionAliadoLoaded =
-          perfilPreInversionAliadoCubit.state.perfilPreInversionAliado;
-
-      loadPerfilPreInversionAliado(perfilPreInversionAliadoLoaded);
-    }
-  }
-
-  void loadAliado(AliadoEntity aliadoLoaded) {
-    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
-
-    final aliadoMunicipioId = aliadoLoaded.municipioId;
-
-    final municipio = municipiosFiltered.firstWhere(
-        (municipio) => municipio.id == aliadoMunicipioId,
-        orElse: () => MunicipioModel(id: '', nombre: '', departamentoid: ''));
-
-    if (municipio.id != '') {
-      departamentoId = municipio.departamentoid;
-      municipioId = aliadoMunicipioId;
-
-      municipiosFiltered = municipioCubit.state.municipios!
-          .where(((municipio) => municipio.departamentoid == departamentoId))
-          .toList();
-    }
-
-    aliadoIdCtrl.text = aliadoLoaded.aliadoId;
-    nombreCtrl.text = aliadoLoaded.nombre;
-    experienciaCtrl.text = aliadoLoaded.experiencia;
-    nombreContactoCtrl.text = aliadoLoaded.nombreContacto;
-    direccionCtrl.text = aliadoLoaded.direccion;
-    correoCtrl.text = aliadoLoaded.correo;
-    telefonoFijoCtrl.text = aliadoLoaded.telefonoFijo;
-    telefonoMovilCtrl.text = aliadoLoaded.telefonoMovil;
-    fechaDesactivacionCtrl.text =
-        dateFormat.format(DateTime.parse(aliadoLoaded.fechaDesactivacion));
-
-    setState(() {});
-  }
-
-  void loadPerfilPreInversionAliado(
-    PerfilPreInversionAliadoEntity perfilPreInversionAliadoLoaded,
-  ) {
-    volumenCompraCtrl.text = perfilPreInversionAliadoLoaded.volumenCompra;
-    porcentajeCompraCtrl.text = perfilPreInversionAliadoLoaded.porcentajeCompra;
-    productoId = perfilPreInversionAliadoLoaded.productoId;
-    unidadId = perfilPreInversionAliadoLoaded.unidadId;
-    frecuenciaId = perfilPreInversionAliadoLoaded.frecuenciaId;
-    sitioEntregaId = perfilPreInversionAliadoLoaded.sitioEntregaId;
-
-    setState(() {});
+      if (aliado != null && aliado.fechaDesactivacion != '') {
+        fechaDesactivacionCtrl.text =
+            dateFormat.format(DateTime.parse(aliado.fechaDesactivacion));
+      }
+    });
   }
 
   @override
@@ -148,7 +130,6 @@ class _PerfilPreInversionAliadoFormState
     final perfilPreInversionAliadoCubit =
         BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
     final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
-    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
 
     return MultiBlocListener(
         listeners: [
@@ -162,20 +143,6 @@ class _PerfilPreInversionAliadoFormState
               loadAliado(aliadoLoaded);
             }
           })),
-          BlocListener<PerfilPreInversionAliadoCubit,
-              PerfilPreInversionAliadoState>(
-            listener: (context, state) {
-              if (state is PerfilPreInversionAliadoError) {
-                CustomSnackBar.showSnackBar(context, state.message, Colors.red);
-              }
-
-              if (state is PerfilPreInversionAliadoLoaded) {
-                final perfilPreInversionAliadoLoaded =
-                    state.perfilPreInversionAliadoLoaded;
-                loadPerfilPreInversionAliado(perfilPreInversionAliadoLoaded);
-              }
-            },
-          )
         ],
         child: BlocBuilder<AliadoCubit, AliadoState>(
           builder: (context, state) {
@@ -261,7 +228,7 @@ class _PerfilPreInversionAliadoFormState
                       },
                       onChanged: (String? value) {
                         setState(() {
-                          municipiosFiltered = municipioCubit.state.municipios!
+                          municipiosFiltered = allMunicipios
                               .where(((municipio) =>
                                   municipio.departamentoid == value))
                               .toList();
@@ -277,35 +244,31 @@ class _PerfilPreInversionAliadoFormState
               ),
               if (departamentoId != null) const SizedBox(height: 20),
               if (departamentoId != null)
-                BlocBuilder<MunicipioCubit, MunicipioState>(
-                  builder: (context, state) {
-                    return DropdownButtonFormField(
-                      isExpanded: true,
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Municipio', labelText: 'Municipio'),
-                      value: municipioId,
-                      items: municipiosFiltered.map<DropdownMenuItem<String>>(
-                          (MunicipioEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.id,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido*';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        setState(() {
-                          municipioId = value;
-                        });
-                      },
-                      onSaved: (String? newValue) {
-                        aliadoCubit.changeMunicipio(newValue);
-                      },
+                DropdownButtonFormField(
+                  isExpanded: true,
+                  decoration: CustomInputDecoration.inputDecoration(
+                      hintText: 'Municipio', labelText: 'Municipio'),
+                  value: municipioId,
+                  items: municipiosFiltered
+                      .map<DropdownMenuItem<String>>((MunicipioEntity value) {
+                    return DropdownMenuItem<String>(
+                      value: value.id,
+                      child: Text(value.nombre),
                     );
+                  }).toList(),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Campo Requerido*';
+                    }
+                    return null;
+                  },
+                  onChanged: (String? value) {
+                    setState(() {
+                      municipioId = value;
+                    });
+                  },
+                  onSaved: (String? newValue) {
+                    aliadoCubit.changeMunicipio(newValue);
                   },
                 ),
               const SizedBox(height: 20),

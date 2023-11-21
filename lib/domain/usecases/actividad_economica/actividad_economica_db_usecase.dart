@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/actividad_economica_entity.dart';
 import '../../repositories/actividad_economica/actividad_economica_repository_db.dart';
 

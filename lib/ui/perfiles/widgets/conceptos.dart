@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/evaluacion/evaluacion_cubit.dart';
+import '../../../ui/cubits/evaluacion/evaluacion_cubit.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 

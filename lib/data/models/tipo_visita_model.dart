@@ -14,11 +14,4 @@ class TipoVisitaModel extends TipoVisitaEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoVisitaId": tipoVisitaId,
-        "Nombre": nombre,
-        "Descripcion": descripcion
-      };
 }

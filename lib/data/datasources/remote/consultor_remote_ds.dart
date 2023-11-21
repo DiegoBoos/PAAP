@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/consultor_model.dart';
 import '../../utils.dart';
@@ -61,37 +61,40 @@ class ConsultorRemoteDataSourceImpl implements ConsultorRemoteDataSource {
           },
           body: consultorSOAP);
 
-      if (consultorResp.statusCode == 200) {
-        final consultorDoc = xml.XmlDocument.parse(consultorResp.body);
+      if (consultorResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los consultores']);
+      }
 
-        final respuesta =
-            consultorDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final consultorDoc = xml.XmlDocument.parse(consultorResp.body);
 
-        if (respuesta == 'true' &&
-            consultorDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = consultorDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          consultorDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final consultoresRaw = decodedResp.entries.first.value['Table'];
-
-          if (consultoresRaw is List) {
-            return List.from(consultoresRaw)
-                .map((e) => ConsultorModel.fromJson(e))
-                .toList();
-          } else {
-            return [ConsultorModel.fromJson(consultoresRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (consultorDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = consultorDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final consultoresRaw = decodedResp.entries.first.value['Table'];
+
+        if (consultoresRaw is List) {
+          return List.from(consultoresRaw)
+              .map((e) => ConsultorModel.fromJson(e))
+              .toList();
+        } else {
+          return [ConsultorModel.fromJson(consultoresRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los consultores']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

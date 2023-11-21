@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 import '../../models/perfil_preinversion_cofinanciador_model.dart';
 import '../../utils.dart';
 
@@ -70,46 +70,51 @@ class PerfilPreInversionCofinanciadorRemoteDataSourceImpl
           },
           body: perfilPreInversionCofinanciadoresSOAP);
 
-      if (perfilPreInversionCofinanciadorResp.statusCode == 200) {
-        final perfilPreInversionCofinanciadorDoc =
-            xml.XmlDocument.parse(perfilPreInversionCofinanciadorResp.body);
+      if (perfilPreInversionCofinanciadorResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los cofinanciadores del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionCofinanciadorDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionCofinanciadorDoc =
+          xml.XmlDocument.parse(perfilPreInversionCofinanciadorResp.body);
 
-        if (respuesta == 'true' &&
-            perfilPreInversionCofinanciadorDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString = perfilPreInversionCofinanciadorDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = perfilPreInversionCofinanciadorDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilPreInversionCofinanciadoresRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (perfilPreInversionCofinanciadoresRaw is List) {
-            return List.from(perfilPreInversionCofinanciadoresRaw)
-                .map((e) => PerfilPreInversionCofinanciadorModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              PerfilPreInversionCofinanciadorModel.fromJson(
-                  perfilPreInversionCofinanciadoresRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (perfilPreInversionCofinanciadorDoc
+            .findAllElements('NewDataSet')
+            .isEmpty) {
           return [];
         }
+
+        final xmlString = perfilPreInversionCofinanciadorDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilPreInversionCofinanciadoresRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (perfilPreInversionCofinanciadoresRaw is List) {
+          return List.from(perfilPreInversionCofinanciadoresRaw)
+              .map((e) => PerfilPreInversionCofinanciadorModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            PerfilPreInversionCofinanciadorModel.fromJson(
+                perfilPreInversionCofinanciadoresRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los cofinanciadores del perfil preinversión']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -186,20 +191,21 @@ class PerfilPreInversionCofinanciadorRemoteDataSourceImpl
           },
           body: perfilPreInversionCofinanciadorSOAP);
 
-      if (perfilPreInversionCofinanciadorResp.statusCode == 200) {
-        final perfilPreInversionCofinanciadorDoc =
-            xml.XmlDocument.parse(perfilPreInversionCofinanciadorResp.body);
+      if (perfilPreInversionCofinanciadorResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al guardar el cofinanciador del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionCofinanciadorDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionCofinanciadorDoc =
+          xml.XmlDocument.parse(perfilPreInversionCofinanciadorResp.body);
 
-        if (respuesta == 'true') {
-          return perfilPreInversionCofinanciadorEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilPreInversionCofinanciadorDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionCofinanciadorEntity;
       } else {
         return null;
       }

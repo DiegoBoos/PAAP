@@ -14,11 +14,4 @@ class EstadoVisitaModel extends EstadoVisitaEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "EstadoVisitaId": estadoVisitaId,
-        "Nombre": nombre,
-        "Descripcion": descripcion
-      };
 }

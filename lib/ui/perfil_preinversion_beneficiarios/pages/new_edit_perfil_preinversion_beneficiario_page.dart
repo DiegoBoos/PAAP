@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
-import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
-import '../../../domain/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
-import '../../../domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
-import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
+import '../../../ui/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
+import '../../../ui/cubits/beneficiario/beneficiario_cubit.dart';
+import '../../../ui/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
+import '../../../ui/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
+import '../../../ui/cubits/menu/menu_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/floating_buttons.dart';
 import '../../utils/network_icon.dart';
-import '../../utils/styles.dart';
 import '../widgets/beneficiario_experiencia_form.dart';
 import '../widgets/beneficiario_form.dart';
 import '../widgets/perfil_beneficiario_form.dart';
@@ -30,31 +30,29 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
         BlocProvider.of<VPerfilPreInversionCubit>(context);
     final perfilPreInversionBeneficiariosBloc =
         BlocProvider.of<PerfilPreInversionBeneficiariosBloc>(context);
+    final perfilPreInversionBeneficiario = ModalRoute.of(context)!
+        .settings
+        .arguments as PerfilPreInversionBeneficiarioEntity?;
 
-    return BlocConsumer<PerfilPreInversionBeneficiarioCubit,
-        PerfilPreInversionBeneficiarioState>(
-      listener: (context, state) {
-        if (state is PerfilPreInversionBeneficiarioError) {
-          CustomSnackBar.showSnackBar(
-              context, 'Error al guardar datos', Colors.red);
-        }
-        if (state is PerfilPreInversionBeneficiarioSaved) {
-          CustomSnackBar.showSnackBar(
-              context, 'Datos guardados satisfactoriamente', Colors.green);
+    return BlocListener<PerfilPreInversionBeneficiarioCubit,
+            PerfilPreInversionBeneficiarioState>(
+        listener: (context, state) {
+          if (state is PerfilPreInversionBeneficiarioError) {
+            CustomSnackBar.showSnackBar(
+                context, 'Error al guardar datos', Colors.red);
+          }
+          if (state is PerfilPreInversionBeneficiarioSaved) {
+            CustomSnackBar.showSnackBar(
+                context, 'Datos guardados satisfactoriamente', Colors.green);
 
-          perfilPreInversionBeneficiariosBloc.add(
-              GetPerfilPreInversionBeneficiarios(vPerfilPreInversionCubit
-                  .state.vPerfilPreInversion!.perfilPreInversionId));
-        }
-      },
-      builder: (context, state) {
-        final perfilPreInversionBeneficiario =
-            state.perfilPreInversionBeneficiario;
+            final perfilPreInversionId = vPerfilPreInversionCubit
+                .state.vPerfilPreInversion!.perfilPreInversionId;
 
-        final beneficiarioId = perfilPreInversionBeneficiario.beneficiarioId;
-
-        final estadoCivilId = perfilPreInversionBeneficiario.estadoCivilId;
-        return Scaffold(
+            perfilPreInversionBeneficiariosBloc
+                .add(GetPerfilPreInversionBeneficiarios(perfilPreInversionId));
+          }
+        },
+        child: Scaffold(
             drawer: BlocBuilder<MenuCubit, MenuState>(
               builder: (context, state) {
                 final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
@@ -64,7 +62,9 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
               },
             ),
             appBar: AppBar(
-                title: Text(beneficiarioId == '' ? 'Crear' : 'Editar'),
+                title: Text(perfilPreInversionBeneficiario?.beneficiarioId == ''
+                    ? 'Crear'
+                    : 'Editar'),
                 actions: const [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -77,44 +77,47 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Form(
                   key: formKey,
-                  child: Column(children: [
-                    const Text(
-                      'BENEFICIARIO PREINVERSIÓN',
-                      style: Styles.titleStyle,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    Column(
-                      children: [
-                        const BeneficiarioForm(),
-                        const PerfilBeneficiarioForm(),
-                        const PerfilPreInversionBeneficiarioForm(),
-                        if (estadoCivilId == '2' || estadoCivilId == '5')
-                          const ConyugeForm(),
-                        const BeneficiarioExperienciaForm(),
-                        const SizedBox(height: 10),
-                        SaveBackButtons(
-                          onSaved: () {
-                            if (!formKey.currentState!.validate()) {
-                              return;
-                            }
-
-                            formKey.currentState!.save();
-
-                            saveBeneficiario(context);
-                            savePerfilPreInversionBeneficiario(context);
-                            saveExperiencia(context);
-                          },
+                  child: Column(
+                    children: [
+                      BeneficiarioForm(
+                          perfilPreInversionBeneficiario:
+                              perfilPreInversionBeneficiario),
+                      PerfilBeneficiarioForm(
+                        perfilPreInversionBeneficiario:
+                            perfilPreInversionBeneficiario,
+                      ),
+                      const PerfilPreInversionBeneficiarioForm(),
+                      if (perfilPreInversionBeneficiario?.estadoCivilId ==
+                              '2' ||
+                          perfilPreInversionBeneficiario?.estadoCivilId == '5')
+                        ConyugeForm(
+                          perfilPreInversionBeneficiario:
+                              perfilPreInversionBeneficiario,
                         ),
-                        const SizedBox(height: 10)
-                      ],
-                    ),
-                  ]),
+                      BeneficiarioExperienciaForm(
+                        perfilPreInversionBeneficiario:
+                            perfilPreInversionBeneficiario,
+                      ),
+                      const SizedBox(height: 10),
+                      SaveBackButtons(
+                        onSaved: () {
+                          if (!formKey.currentState!.validate()) {
+                            return;
+                          }
+
+                          formKey.currentState!.save();
+
+                          saveBeneficiario(context);
+                          savePerfilPreInversionBeneficiario(context);
+                          saveExperiencia(context);
+                        },
+                      ),
+                      const SizedBox(height: 10)
+                    ],
+                  ),
                 ),
               ),
-            ));
-      },
-    );
+            )));
   }
 
   void saveBeneficiario(BuildContext context) {
@@ -140,6 +143,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
 
     perfilPreInversionBeneficiarioCubit
         .changePerfilPreInversionId(perfilPreInversionId);
+
     perfilPreInversionBeneficiarioCubit.changeConocePerfil('true');
 
     if (perfilPreInversionBeneficiario.fueBeneficiado == '') {

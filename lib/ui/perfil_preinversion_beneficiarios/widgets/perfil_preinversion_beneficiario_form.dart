@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/actividad_economica/actividad_economica_cubit.dart';
-import '../../../domain/cubits/estado_civil/estado_civil_cubit.dart';
-import '../../../domain/cubits/nivel_escolar/nivel_escolar_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
-import '../../../domain/cubits/residencia/residencia_cubit.dart';
-import '../../../domain/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
+import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
+import '../../../ui/cubits/actividad_economica/actividad_economica_cubit.dart';
+import '../../../ui/cubits/estado_civil/estado_civil_cubit.dart';
+import '../../../ui/cubits/nivel_escolar/nivel_escolar_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
+import '../../../ui/cubits/residencia/residencia_cubit.dart';
+import '../../../ui/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
 import '../../../domain/entities/actividad_economica_entity.dart';
 import '../../../domain/entities/estado_civil_entity.dart';
 import '../../../domain/entities/nivel_escolar_entity.dart';
 import '../../../domain/entities/residencia_entity.dart';
 import '../../../domain/entities/tipo_discapacidad_entity.dart';
-import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
-import 'package:paap/domain/entities/perfil_preinversion_beneficiario_entity.dart';
 
 class PerfilPreInversionBeneficiarioForm extends StatefulWidget {
-  const PerfilPreInversionBeneficiarioForm({super.key});
+  const PerfilPreInversionBeneficiarioForm(
+      {super.key, this.perfilPreInversionBeneficiario});
+  final PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario;
 
   @override
   State<PerfilPreInversionBeneficiarioForm> createState() =>
@@ -56,17 +57,7 @@ class _PerfilPreInversionBeneficiarioFormState
   @override
   void initState() {
     super.initState();
-    final perfilPreInversionBeneficiarioCubit =
-        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
-
-    if (perfilPreInversionBeneficiarioCubit.state
-        is PerfilPreInversionBeneficiarioLoaded) {
-      final perfilPreInversionBeneficiarioLoaded =
-          perfilPreInversionBeneficiarioCubit
-              .state.perfilPreInversionBeneficiario;
-
-      loadPerfilPreInversionBeneficiario(perfilPreInversionBeneficiarioLoaded);
-    }
+    loadPerfilPreInversionBeneficiario(widget.perfilPreInversionBeneficiario);
   }
 
   @override
@@ -76,45 +67,61 @@ class _PerfilPreInversionBeneficiarioFormState
   }
 
   void loadPerfilPreInversionBeneficiario(
-      PerfilPreInversionBeneficiarioEntity
-          perfilPreInversionBeneficiarioLoaded) {
-    residenciaId = perfilPreInversionBeneficiarioLoaded.residenciaId;
-    estadoCivilId = perfilPreInversionBeneficiarioLoaded.estadoCivilId;
-    nivelEscolarId = perfilPreInversionBeneficiarioLoaded.nivelEscolarId;
-    actividadEconomicaId =
-        perfilPreInversionBeneficiarioLoaded.actividadEconomicaId;
-    tipoDiscapacidadId =
-        perfilPreInversionBeneficiarioLoaded.tipoDiscapacidadId;
-    ingresosDiariosCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.ingresosDiarios;
-    diasTrabajoCtrl.text = perfilPreInversionBeneficiarioLoaded.diasTrabajo;
-    calificacionSisbenCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.calificacionSisben;
-    latitudCtrl.text = perfilPreInversionBeneficiarioLoaded.latitud;
-    longitudCtrl.text = perfilPreInversionBeneficiarioLoaded.longitud;
-    cedulaCatastralCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.cedulaCatastral;
-    miembrosHogarCtrl.text = perfilPreInversionBeneficiarioLoaded.miembrosHogar;
-    miembrosEcoActivosCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.miembrosEcoActivos;
-    ingresosMensualesCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.ingresosMensuales;
-    gastosMensualesCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.gastosMensuales;
-    activoInmobiliarioCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.activoInmobiliario;
-    activoFinancieroCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.activoFinanciero;
-    activoProductivoCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.activoProductivo;
-    activoCorrienteCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.activoCorriente;
-    nombreFincaCtrl.text = perfilPreInversionBeneficiarioLoaded.nombreFinca;
-    nombreOrganizacionCtrl.text =
-        perfilPreInversionBeneficiarioLoaded.nombreOrganizacion;
-    mesesAsociadoCtrl.text = perfilPreInversionBeneficiarioLoaded.mesesAsociado;
-    notaCtrl.text = perfilPreInversionBeneficiarioLoaded.nota;
-    calculateTotalActivo(perfilPreInversionBeneficiarioLoaded);
+      PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario) {
+    setState(() {
+      residenciaId = perfilPreInversionBeneficiario?.residenciaId;
+      estadoCivilId = perfilPreInversionBeneficiario?.estadoCivilId;
+      nivelEscolarId = perfilPreInversionBeneficiario?.nivelEscolarId;
+      actividadEconomicaId =
+          perfilPreInversionBeneficiario?.actividadEconomicaId;
+      tipoDiscapacidadId = perfilPreInversionBeneficiario?.tipoDiscapacidadId;
+      ingresosDiariosCtrl.text =
+          perfilPreInversionBeneficiario?.ingresosDiarios ?? '';
+      diasTrabajoCtrl.text = perfilPreInversionBeneficiario?.diasTrabajo ?? '';
+      calificacionSisbenCtrl.text =
+          perfilPreInversionBeneficiario?.calificacionSisben ?? '';
+      latitudCtrl.text = perfilPreInversionBeneficiario?.latitud ?? '';
+      longitudCtrl.text = perfilPreInversionBeneficiario?.longitud ?? '';
+      cedulaCatastralCtrl.text =
+          perfilPreInversionBeneficiario?.cedulaCatastral ?? '';
+      miembrosHogarCtrl.text =
+          perfilPreInversionBeneficiario?.miembrosHogar ?? '';
+      miembrosEcoActivosCtrl.text =
+          perfilPreInversionBeneficiario?.miembrosEcoActivos ?? '';
+      ingresosMensualesCtrl.text =
+          perfilPreInversionBeneficiario?.ingresosMensuales ?? '';
+      gastosMensualesCtrl.text =
+          perfilPreInversionBeneficiario?.gastosMensuales ?? '';
+      activoInmobiliarioCtrl.text =
+          perfilPreInversionBeneficiario?.activoInmobiliario ?? '';
+      activoFinancieroCtrl.text =
+          perfilPreInversionBeneficiario?.activoFinanciero ?? '';
+      activoProductivoCtrl.text =
+          perfilPreInversionBeneficiario?.activoProductivo ?? '';
+      activoCorrienteCtrl.text =
+          perfilPreInversionBeneficiario?.activoCorriente ?? '';
+      nombreFincaCtrl.text = perfilPreInversionBeneficiario?.nombreFinca ?? '';
+      nombreOrganizacionCtrl.text =
+          perfilPreInversionBeneficiario?.nombreOrganizacion ?? '';
+      mesesAsociadoCtrl.text =
+          perfilPreInversionBeneficiario?.mesesAsociado ?? '';
+      notaCtrl.text = perfilPreInversionBeneficiario?.nota ?? '';
+      calculateTotalActivo(perfilPreInversionBeneficiario);
+    });
+  }
+
+  void calculateTotalActivo(
+      PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario) {
+    if (perfilPreInversionBeneficiario != null) {
+      final sum = double.parse(perfilPreInversionBeneficiario.activoCorriente) +
+          double.parse(perfilPreInversionBeneficiario.activoFinanciero) +
+          double.parse(perfilPreInversionBeneficiario.activoInmobiliario) +
+          double.parse(perfilPreInversionBeneficiario.activoInmobiliario) +
+          double.parse(perfilPreInversionBeneficiario.activoProductivo);
+      totalActivoCtrl.text = sum.toString();
+    } else {
+      totalActivoCtrl.text = '0';
+    }
   }
 
   @override
@@ -122,19 +129,7 @@ class _PerfilPreInversionBeneficiarioFormState
     final perfilPreInversionBeneficiarioCubit =
         BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
 
-    return BlocListener<PerfilPreInversionBeneficiarioCubit,
-        PerfilPreInversionBeneficiarioState>(listener: (context, state) {
-      if (state is PerfilPreInversionBeneficiarioError) {
-        CustomSnackBar.showSnackBar(context, state.message, Colors.red);
-      }
-      if (state is PerfilPreInversionBeneficiarioLoaded) {
-        final perfilPreInversionBeneficiarioLoaded =
-            state.perfilPreInversionBeneficiarioLoaded;
-
-        loadPerfilPreInversionBeneficiario(
-            perfilPreInversionBeneficiarioLoaded);
-      }
-    }, child: BlocBuilder<PerfilPreInversionBeneficiarioCubit,
+    return BlocBuilder<PerfilPreInversionBeneficiarioCubit,
         PerfilPreInversionBeneficiarioState>(builder: (context, state) {
       final perfilPreInversionBeneficiario =
           state.perfilPreInversionBeneficiario;
@@ -637,18 +632,6 @@ class _PerfilPreInversionBeneficiarioFormState
           ),
         ),
       );
-    }));
-  }
-
-  void calculateTotalActivo(
-      PerfilPreInversionBeneficiarioEntity
-          perfilPreInversionBeneficiarioLoaded) {
-    final sum = double.parse(
-            perfilPreInversionBeneficiarioLoaded.activoCorriente) +
-        double.parse(perfilPreInversionBeneficiarioLoaded.activoFinanciero) +
-        double.parse(perfilPreInversionBeneficiarioLoaded.activoInmobiliario) +
-        double.parse(perfilPreInversionBeneficiarioLoaded.activoInmobiliario) +
-        double.parse(perfilPreInversionBeneficiarioLoaded.activoProductivo);
-    totalActivoCtrl.text = sum.toString();
+    });
   }
 }

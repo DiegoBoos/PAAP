@@ -18,12 +18,4 @@ class VeredaModel extends VeredaEntity {
         codigoDane: json["CodigoDane"],
         municipioId: json["MunicipioId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "VeredaId": veredaId,
-        "Nombre": nombre,
-        "CodigoDane": codigoDane,
-        "MunicipioId": municipioId
-      };
 }

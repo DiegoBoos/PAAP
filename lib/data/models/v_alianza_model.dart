@@ -59,25 +59,4 @@ class VAlianzaModel extends VAlianzaEntity {
       valorTotalProyecto: json["valorTotalProyecto"],
       incentivoModular: json["incentivoModular"],
       legalizado: json["legalizado"]);
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "alianzaId": alianzaId,
-        "perfilPreInversionId": perfilPreInversionId,
-        "convocatoria": convocatoria,
-        "nombre": nombre,
-        "abreviatura": abreviatura,
-        "municipio": municipio,
-        "direccion": direccion,
-        "contacto": contacto,
-        "telefonoFijo": telefonoFijo,
-        "telefonoMovil": telefonoMovil,
-        "correo": correo,
-        "tipoProyecto": tipoProyecto,
-        "productoPrincipal": productoPrincipal,
-        "productoAsociado": productoAsociado,
-        "valorTotalProyecto": valorTotalProyecto,
-        "incentivoModular": incentivoModular,
-        "legalizado": legalizado,
-      };
 }

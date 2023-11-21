@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/rubro_model.dart';
 import '../../utils.dart';
@@ -62,37 +62,40 @@ class RubroRemoteDataSourceImpl implements RubroRemoteDataSource {
           },
           body: rubroSOAP);
 
-      if (rubroResp.statusCode == 200) {
-        final rubroDoc = xml.XmlDocument.parse(rubroResp.body);
+      if (rubroResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los rubros']);
+      }
 
-        final respuesta =
-            rubroDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final rubroDoc = xml.XmlDocument.parse(rubroResp.body);
 
-        if (respuesta == 'true' &&
-            rubroDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = rubroDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          rubroDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final rubrosRaw = decodedResp.entries.first.value['Table'];
-
-          if (rubrosRaw is List) {
-            return List.from(rubrosRaw)
-                .map((e) => RubroModel.fromJson(e))
-                .toList();
-          } else {
-            return [RubroModel.fromJson(rubrosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (rubroDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = rubroDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final rubrosRaw = decodedResp.entries.first.value['Table'];
+
+        if (rubrosRaw is List) {
+          return List.from(rubrosRaw)
+              .map((e) => RubroModel.fromJson(e))
+              .toList();
+        } else {
+          return [RubroModel.fromJson(rubrosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los rubros']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

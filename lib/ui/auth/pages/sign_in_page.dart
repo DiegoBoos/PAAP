@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paap/app_config.dart';
 
-import '../../../domain/blocs/auth/auth_bloc.dart';
-import '../../../domain/blocs/sync/sync_bloc.dart';
-import '../../../domain/cubits/internet/internet_cubit.dart';
-import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/db/db_config.dart';
+import '../../../ui/blocs/auth/auth_bloc.dart';
+import '../../../ui/blocs/sync/sync_bloc.dart';
+import '../../../ui/cubits/internet/internet_cubit.dart';
+import '../../../ui/cubits/menu/menu_cubit.dart';
+import '../../../data/db/db_config.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../utils/all_platform.dart';
 
@@ -33,8 +33,9 @@ class _SignInPageState extends State<SignInPage> {
   final localCaptchaController = LocalCaptchaController();
   final configFormData = ConfigFormData();
 
-  final usuarioIdCtrl = TextEditingController();
-  final contrasenaCtrl = TextEditingController();
+  final usuarioIdCtrl =
+      TextEditingController(text: 'hugo.suarez@minagricultura.gov.co');
+  final contrasenaCtrl = TextEditingController(text: 'MigracionPAAP*');
   var inputCode = '';
 
   Future<AppConfig> getAppConfig() async {
@@ -71,7 +72,7 @@ class _SignInPageState extends State<SignInPage> {
             if (internetCubit.state is InternetConnected) {
               final usuario = state.usuarioAutenticado!;
 
-              authBloc.add(SaveUsuario(usuario: usuario));
+              authBloc.add(SaveUsuario(usuario));
 
               showDialog(
                   context: context,

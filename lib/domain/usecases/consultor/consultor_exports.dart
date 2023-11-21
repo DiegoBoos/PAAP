@@ -3,7 +3,7 @@ export 'package:paap/domain/usecases/consultor/consultor_db_usecase.dart';
 export 'package:paap/domain/repositories/consultor/consultor_repository.dart';
 export 'package:paap/domain/repositories/consultor/consultor_repository_db.dart';
 export 'package:paap/domain/entities/consultor_entity.dart';
-export 'package:paap/domain/cubits/consultor/consultor_cubit.dart';
+export 'package:paap/ui/cubits/consultor/consultor_cubit.dart';
 export 'package:paap/data/repositories/consultor/consultor_repository.dart';
 export 'package:paap/data/repositories/consultor/consultor_repository_db.dart';
 export 'package:paap/data/datasources/remote/consultor_remote_ds.dart';

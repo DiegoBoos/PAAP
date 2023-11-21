@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 import '../../models/convocatoria.dart';
 import '../../utils.dart';
 
@@ -62,39 +62,40 @@ class ConvocatoriaRemoteDataSourceImpl implements ConvocatoriaRemoteDataSource {
           },
           body: convocatoriaSOAP);
 
-      if (convocatoriaResp.statusCode == 200) {
-        final convocatoriaDoc = xml.XmlDocument.parse(convocatoriaResp.body);
+      if (convocatoriaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las convocatorias']);
+      }
 
-        final respuesta = convocatoriaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final convocatoriaDoc = xml.XmlDocument.parse(convocatoriaResp.body);
 
-        if (respuesta == 'true' &&
-            convocatoriaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = convocatoriaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          convocatoriaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final convocatoriasRaw = decodedResp.entries.first.value['Table'];
-
-          if (convocatoriasRaw is List) {
-            return List.from(convocatoriasRaw)
-                .map((e) => ConvocatoriaModel.fromJson(e))
-                .toList();
-          } else {
-            return [ConvocatoriaModel.fromJson(convocatoriasRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (convocatoriaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = convocatoriaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final convocatoriasRaw = decodedResp.entries.first.value['Table'];
+
+        if (convocatoriasRaw is List) {
+          return List.from(convocatoriasRaw)
+              .map((e) => ConvocatoriaModel.fromJson(e))
+              .toList();
+        } else {
+          return [ConvocatoriaModel.fromJson(convocatoriasRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener las convocatorias']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/agrupacion_model.dart';
 import '../../utils.dart';
@@ -62,37 +62,40 @@ class AgrupacionRemoteDataSourceImpl implements AgrupacionRemoteDataSource {
           },
           body: agrupacioneSOAP);
 
-      if (agrupacionResp.statusCode == 200) {
-        final agrupacionDoc = xml.XmlDocument.parse(agrupacionResp.body);
+      if (agrupacionResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las agrupaciones']);
+      }
 
-        final respuesta =
-            agrupacionDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final agrupacionDoc = xml.XmlDocument.parse(agrupacionResp.body);
 
-        if (respuesta == 'true' &&
-            agrupacionDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = agrupacionDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          agrupacionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final agrupacionesRaw = decodedResp.entries.first.value['Table'];
-
-          if (agrupacionesRaw is List) {
-            return List.from(agrupacionesRaw)
-                .map((e) => AgrupacionModel.fromJson(e))
-                .toList();
-          } else {
-            return [AgrupacionModel.fromJson(agrupacionesRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (agrupacionDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = agrupacionDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final agrupacionesRaw = decodedResp.entries.first.value['Table'];
+
+        if (agrupacionesRaw is List) {
+          return List.from(agrupacionesRaw)
+              .map((e) => AgrupacionModel.fromJson(e))
+              .toList();
+        } else {
+          return [AgrupacionModel.fromJson(agrupacionesRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener las agrupaciones']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

@@ -68,24 +68,6 @@ class AliadoEntity {
         recordStatus: recordStatus ?? this.recordStatus,
       );
 
-  factory AliadoEntity.fromJson(Map<String, dynamic> json) => AliadoEntity(
-        aliadoId: json["AliadoId"],
-        nombre: json["Nombre"],
-        fechaCreacion: json["FechaCreacion"],
-        nombreContacto: json["NombreContacto"],
-        direccion: json["Direccion"],
-        telefonoFijo: json["TelefonoFijo"],
-        telefonoMovil: json["TelefonoMovil"],
-        correo: json["Correo"],
-        municipioId: json["MunicipioId"],
-        experiencia: json["Experiencia"],
-        fechaActivacion: json["FechaActivacion"],
-        fechaDesactivacion: json["FechaDesactivacion"],
-        fechaCambio: json["FechaCambio"],
-        activo: json["Activo"],
-        recordStatus: json["RecordStatus"],
-      );
-
   Map<String, dynamic> toJson() => {
         "AliadoId": aliadoId,
         "Nombre": nombre,

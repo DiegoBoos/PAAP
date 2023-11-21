@@ -34,17 +34,4 @@ class VisitaModel extends VisitaEntity {
         fechaRegistro: json["FechaRegistro"],
         recordStatus: json["RecordStatus"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "PerfilId": perfilId,
-        "TipoVisitaId": tipoVisitaId,
-        "FechaInicial": fechaInicial,
-        "FechaFinal": fechaFinal,
-        "EstadoVisitaId": estadoVisitaId,
-        "Observacion": observacion,
-        "UsuarioId": usuarioId,
-        "FechaRegistro": fechaRegistro,
-        "RecordStatus": recordStatus,
-      };
 }

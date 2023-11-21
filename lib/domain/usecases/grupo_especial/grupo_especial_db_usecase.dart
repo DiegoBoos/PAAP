@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/grupo_especial_entity.dart';
 import '../../repositories/grupo_especial/grupo_especial_repository_db.dart';
 

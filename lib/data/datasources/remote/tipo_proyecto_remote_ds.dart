@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/tipo_proyecto_model.dart';
 import '../../utils.dart';
@@ -63,39 +63,40 @@ class TipoProyectoRemoteDataSourceImpl implements TipoProyectoRemoteDataSource {
           },
           body: tipoProyectoSOAP);
 
-      if (tipoProyectoResp.statusCode == 200) {
-        final tipoProyectoDoc = xml.XmlDocument.parse(tipoProyectoResp.body);
+      if (tipoProyectoResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los tipos de proyectos']);
+      }
 
-        final respuesta = tipoProyectoDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final tipoProyectoDoc = xml.XmlDocument.parse(tipoProyectoResp.body);
 
-        if (respuesta == 'true' &&
-            tipoProyectoDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = tipoProyectoDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          tipoProyectoDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final tiposProyectosRaw = decodedResp.entries.first.value['Table'];
-
-          if (tiposProyectosRaw is List) {
-            return List.from(tiposProyectosRaw)
-                .map((e) => TipoProyectoModel.fromJson(e))
-                .toList();
-          } else {
-            return [TipoProyectoModel.fromJson(tiposProyectosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (tipoProyectoDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = tipoProyectoDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final tiposProyectosRaw = decodedResp.entries.first.value['Table'];
+
+        if (tiposProyectosRaw is List) {
+          return List.from(tiposProyectosRaw)
+              .map((e) => TipoProyectoModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoProyectoModel.fromJson(tiposProyectosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los tipos de proyectos']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

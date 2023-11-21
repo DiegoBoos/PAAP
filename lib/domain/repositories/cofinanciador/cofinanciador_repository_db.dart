@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/cofinanciador_entity.dart';
 
 abstract class CofinanciadorRepositoryDB {

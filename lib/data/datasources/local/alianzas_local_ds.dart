@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/alianza_entity.dart';
 
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/v_alianza_model.dart';
 
 abstract class AlianzasLocalDataSource {

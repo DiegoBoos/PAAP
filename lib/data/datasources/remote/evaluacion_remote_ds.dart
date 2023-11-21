@@ -5,10 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:paap/domain/entities/evaluacion_entity.dart';
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 import '../../models/evaluacion_model.dart';
 import '../../utils.dart';
 
@@ -67,39 +66,43 @@ class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
           },
           body: evaluacionSOAP);
 
-      if (evaluacionResp.statusCode == 200) {
-        final evaluacionDoc = xml.XmlDocument.parse(evaluacionResp.body);
+      if (evaluacionResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las evaluaciones']);
+      }
 
-        final respuesta =
-            evaluacionDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final evaluacionDoc = xml.XmlDocument.parse(evaluacionResp.body);
 
-        final mensaje =
-            evaluacionDoc.findAllElements('mensaje').map((e) => e.text).first;
+      final respuesta =
+          evaluacionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-        if (respuesta == 'true') {
-          final xmlString = evaluacionDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final mensaje =
+          evaluacionDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
+      if (respuesta == 'true') {
+        if (evaluacionDoc.findAllElements('NewDataSet').isEmpty) {
+          return [];
+        }
 
-          final Map<String, dynamic> decodedResp = json.decode(res);
+        final xmlString = evaluacionDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
 
-          final evaluacionesRaw = decodedResp.entries.first.value['Table'];
+        String res = Utils.convertXmlToJson(xmlString);
 
-          if (evaluacionesRaw is List) {
-            return List.from(evaluacionesRaw)
-                .map((e) => EvaluacionModel.fromJson(e))
-                .toList();
-          } else {
-            return [EvaluacionModel.fromJson(evaluacionesRaw)];
-          }
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final evaluacionesRaw = decodedResp.entries.first.value['Table'];
+
+        if (evaluacionesRaw is List) {
+          return List.from(evaluacionesRaw)
+              .map((e) => EvaluacionModel.fromJson(e))
+              .toList();
         } else {
-          throw ServerFailure([mensaje]);
+          return [EvaluacionModel.fromJson(evaluacionesRaw)];
         }
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -174,23 +177,23 @@ class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
           },
           body: evaluacionSOAP);
 
-      if (evaluacionResp.statusCode == 200) {
-        final evaluacionDoc = xml.XmlDocument.parse(evaluacionResp.body);
+      if (evaluacionResp.statusCode != 200) {
+        throw const ServerFailure(['Error al guardar la evaluación']);
+      }
 
-        final respuesta =
-            evaluacionDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final evaluacionDoc = xml.XmlDocument.parse(evaluacionResp.body);
 
-        if (respuesta == 'true') {
-          final evaluacionPorPerfil =
-              await getEvaluacionPorPerfil(usuario, evaluacionEntity.perfilId);
-          evaluacionPorPerfil?.remoteEvaluacionId =
-              evaluacionPorPerfil.evaluacionId;
-          evaluacionPorPerfil?.evaluacionId = evaluacionIdTable;
+      final respuesta =
+          evaluacionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          return evaluacionPorPerfil;
-        } else {
-          return null;
-        }
+      if (respuesta == 'true') {
+        final evaluacionPorPerfil =
+            await getEvaluacionPorPerfil(usuario, evaluacionEntity.perfilId);
+        evaluacionPorPerfil?.remoteEvaluacionId =
+            evaluacionPorPerfil.evaluacionId;
+        evaluacionPorPerfil?.evaluacionId = evaluacionIdTable;
+
+        return evaluacionPorPerfil;
       } else {
         return null;
       }
@@ -255,39 +258,43 @@ class EvaluacionRemoteDataSourceImpl implements EvaluacionRemoteDataSource {
           },
           body: evaluacionSOAP);
 
-      if (evaluacionResp.statusCode == 200) {
-        final evaluacionDoc = xml.XmlDocument.parse(evaluacionResp.body);
+      if (evaluacionResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las evaluaciones']);
+      }
 
-        final respuesta =
-            evaluacionDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final evaluacionDoc = xml.XmlDocument.parse(evaluacionResp.body);
 
-        final mensaje =
-            evaluacionDoc.findAllElements('mensaje').map((e) => e.text).first;
+      final respuesta =
+          evaluacionDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-        if (respuesta == 'true') {
-          final xmlString = evaluacionDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final mensaje =
+          evaluacionDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
+      if (respuesta == 'true') {
+        if (evaluacionDoc.findAllElements('NewDataSet').isEmpty) {
+          return null;
+        }
 
-          final Map<String, dynamic> decodedResp = json.decode(res);
+        final xmlString = evaluacionDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
 
-          final evaluacionesRaw = decodedResp.entries.first.value['Table'];
+        String res = Utils.convertXmlToJson(xmlString);
 
-          if (evaluacionesRaw is List) {
-            return List.from(evaluacionesRaw)
-                .map((e) => EvaluacionModel.fromJson(e))
-                .toList()[0];
-          } else {
-            return EvaluacionModel.fromJson(evaluacionesRaw);
-          }
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final evaluacionesRaw = decodedResp.entries.first.value['Table'];
+
+        if (evaluacionesRaw is List) {
+          return List.from(evaluacionesRaw)
+              .map((e) => EvaluacionModel.fromJson(e))
+              .toList()[0];
         } else {
-          throw ServerFailure([mensaje]);
+          return EvaluacionModel.fromJson(evaluacionesRaw);
         }
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

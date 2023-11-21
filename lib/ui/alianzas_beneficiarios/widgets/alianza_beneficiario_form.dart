@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/actividad_economica/actividad_economica_cubit.dart';
-import '../../../domain/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
-import '../../../domain/cubits/estado_civil/estado_civil_cubit.dart';
-import '../../../domain/cubits/nivel_escolar/nivel_escolar_cubit.dart';
-import '../../../domain/cubits/residencia/residencia_cubit.dart';
-import '../../../domain/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
+import '../../../ui/cubits/actividad_economica/actividad_economica_cubit.dart';
+import '../../../ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
+import '../../../ui/cubits/estado_civil/estado_civil_cubit.dart';
+import '../../../ui/cubits/nivel_escolar/nivel_escolar_cubit.dart';
+import '../../../ui/cubits/residencia/residencia_cubit.dart';
+import '../../../ui/cubits/tipo_discapacidad/tipo_discapacidad_cubit.dart';
 import '../../../domain/entities/actividad_economica_entity.dart';
 import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../domain/entities/estado_civil_entity.dart';

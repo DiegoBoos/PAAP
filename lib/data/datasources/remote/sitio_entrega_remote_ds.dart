@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/sitio_entrega_model.dart';
 import '../../utils.dart';
@@ -62,39 +62,40 @@ class SitioEntregaRemoteDataSourceImpl implements SitioEntregaRemoteDataSource {
           },
           body: sitioEntregaSOAP);
 
-      if (sitioEntregaResp.statusCode == 200) {
-        final sitioEntregaDoc = xml.XmlDocument.parse(sitioEntregaResp.body);
+      if (sitioEntregaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los sitios de entrega']);
+      }
 
-        final respuesta = sitioEntregaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final sitioEntregaDoc = xml.XmlDocument.parse(sitioEntregaResp.body);
 
-        if (respuesta == 'true' &&
-            sitioEntregaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = sitioEntregaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          sitioEntregaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final sitiosEntregasRaw = decodedResp.entries.first.value['Table'];
-
-          if (sitiosEntregasRaw is List) {
-            return List.from(sitiosEntregasRaw)
-                .map((e) => SitioEntregaModel.fromJson(e))
-                .toList();
-          } else {
-            return [SitioEntregaModel.fromJson(sitiosEntregasRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (sitioEntregaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = sitioEntregaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final sitiosEntregasRaw = decodedResp.entries.first.value['Table'];
+
+        if (sitiosEntregasRaw is List) {
+          return List.from(sitiosEntregasRaw)
+              .map((e) => SitioEntregaModel.fromJson(e))
+              .toList();
+        } else {
+          return [SitioEntregaModel.fromJson(sitiosEntregasRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los sitios de entrega']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

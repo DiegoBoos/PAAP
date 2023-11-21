@@ -17,17 +17,6 @@ class PerfilesPreInversionEntity {
   String ubicacion;
   String categorizacion;
 
-  factory PerfilesPreInversionEntity.fromJson(Map<String, dynamic> json) =>
-      PerfilesPreInversionEntity(
-        id: json["ID"],
-        nombre: json["Nombre"],
-        abreviatura: json["Abreviatura"],
-        valorProyecto: json["Valor_x0020_Proyécto"],
-        incentivoModular: json["Incentivo_x0020_Módular"],
-        ubicacion: json["Ubicación"],
-        categorizacion: json["Categorización"],
-      );
-
   Map<String, dynamic> toJson() => {
         "ID": id,
         "Nombre": nombre,

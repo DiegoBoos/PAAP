@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/alianza_beneficiario_model.dart';
 import '../../utils.dart';
@@ -70,43 +70,46 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
           },
           body: alianzasBeneficiariosSOAP);
 
-      if (alianzaBeneficiarioResp.statusCode == 200) {
-        final alianzaBeneficiarioDoc =
-            xml.XmlDocument.parse(alianzaBeneficiarioResp.body);
+      if (alianzaBeneficiarioResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener las alianzas de los beneficiarios']);
+      }
 
-        final respuesta = alianzaBeneficiarioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final alianzaBeneficiarioDoc =
+          xml.XmlDocument.parse(alianzaBeneficiarioResp.body);
 
-        if (respuesta == 'true' &&
-            alianzaBeneficiarioDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = alianzaBeneficiarioDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = alianzaBeneficiarioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final alianzasBeneficiariosRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (alianzasBeneficiariosRaw is List) {
-            return List.from(alianzasBeneficiariosRaw)
-                .map((e) => AlianzaBeneficiarioModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              AlianzaBeneficiarioModel.fromJson(alianzasBeneficiariosRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (alianzaBeneficiarioDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = alianzaBeneficiarioDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final alianzasBeneficiariosRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (alianzasBeneficiariosRaw is List) {
+          return List.from(alianzasBeneficiariosRaw)
+              .map((e) => AlianzaBeneficiarioModel.fromJson(e))
+              .toList();
+        } else {
+          return [AlianzaBeneficiarioModel.fromJson(alianzasBeneficiariosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener las alianzas beneficiarios']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -245,20 +248,21 @@ class AlianzaBeneficiarioRemoteDataSourceImpl
           },
           body: alianzaBeneficiarioSOAP);
 
-      if (alianzaBeneficiarioResp.statusCode == 200) {
-        final alianzaBeneficiarioDoc =
-            xml.XmlDocument.parse(alianzaBeneficiarioResp.body);
+      if (alianzaBeneficiarioResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al guardar la alianza del beneficiario']);
+      }
 
-        final respuesta = alianzaBeneficiarioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final alianzaBeneficiarioDoc =
+          xml.XmlDocument.parse(alianzaBeneficiarioResp.body);
 
-        if (respuesta == 'true') {
-          return alianzaBeneficiarioEntity;
-        } else {
-          return null;
-        }
+      final respuesta = alianzaBeneficiarioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return alianzaBeneficiarioEntity;
       } else {
         return null;
       }

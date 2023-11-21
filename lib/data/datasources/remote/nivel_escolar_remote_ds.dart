@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/nivel_escolar_model.dart';
 import '../../utils.dart';
@@ -63,45 +62,45 @@ class NivelEscolarRemoteDataSourceImpl implements NivelEscolarRemoteDataSource {
           },
           body: nivelesEscolarSOAP);
 
-      if (nivelesEscolarResp.statusCode == 200) {
-        final nivelesEscolarDoc =
-            xml.XmlDocument.parse(nivelesEscolarResp.body);
+      if (nivelesEscolarResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los niveles escolares']);
+      }
 
-        final respuesta = nivelesEscolarDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
+      final nivelesEscolarDoc = xml.XmlDocument.parse(nivelesEscolarResp.body);
+
+      final respuesta = nivelesEscolarDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      final mensaje =
+          nivelesEscolarDoc.findAllElements('mensaje').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        if (nivelesEscolarDoc.findAllElements('NewDataSet').isEmpty) {
+          return [];
+        }
+
+        final xmlString = nivelesEscolarDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
             .first;
 
-        final mensaje = nivelesEscolarDoc
-            .findAllElements('mensaje')
-            .map((e) => e.text)
-            .first;
+        String res = Utils.convertXmlToJson(xmlString);
 
-        if (respuesta == 'true' &&
-            nivelesEscolarDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = nivelesEscolarDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+        final Map<String, dynamic> decodedResp = json.decode(res);
 
-          String res = Utils.convertXmlToJson(xmlString);
+        final nivelesEscolaresRaw = decodedResp.entries.first.value['Table'];
 
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final nivelesEscolaresRaw = decodedResp.entries.first.value['Table'];
-
-          if (nivelesEscolaresRaw is List) {
-            return List.from(nivelesEscolaresRaw)
-                .map((e) => NivelEscolarModel.fromJson(e))
-                .toList();
-          } else {
-            return [NivelEscolarModel.fromJson(nivelesEscolaresRaw)];
-          }
+        if (nivelesEscolaresRaw is List) {
+          return List.from(nivelesEscolaresRaw)
+              .map((e) => NivelEscolarModel.fromJson(e))
+              .toList();
         } else {
-          throw ServerFailure([mensaje]);
+          return [NivelEscolarModel.fromJson(nivelesEscolaresRaw)];
         }
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

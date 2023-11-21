@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
 import '../../../../domain/entities/usuario_entity.dart';
-import '../../../../domain/core/error/exception.dart';
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/alianza_experiencia_agricola_entity.dart';
 import '../../constants.dart';
 import '../../models/alianza_experiencia_agricola_model.dart';
@@ -71,46 +71,51 @@ class AlianzaExperienciaAgricolaRemoteDataSourceImpl
           },
           body: alianzaExperienciaAgricolaSOAP);
 
-      if (alianzaExperienciaAgricolaResp.statusCode == 200) {
-        final alianzaExperienciaAgricolaDoc =
-            xml.XmlDocument.parse(alianzaExperienciaAgricolaResp.body);
+      if (alianzaExperienciaAgricolaResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener las experiencias agricolas de la alianza']);
+      }
 
-        final respuesta = alianzaExperienciaAgricolaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final alianzaExperienciaAgricolaDoc =
+          xml.XmlDocument.parse(alianzaExperienciaAgricolaResp.body);
 
-        if (respuesta == 'true' &&
-            alianzaExperienciaAgricolaDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString = alianzaExperienciaAgricolaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = alianzaExperienciaAgricolaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final alianzasExperienciasAgricolasRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (alianzasExperienciasAgricolasRaw is List) {
-            return List.from(alianzasExperienciasAgricolasRaw)
-                .map((e) => AlianzaExperienciaAgricolaModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              AlianzaExperienciaAgricolaModel.fromJson(
-                  alianzasExperienciasAgricolasRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (alianzaExperienciaAgricolaDoc
+            .findAllElements('NewDataSet')
+            .isEmpty) {
           return [];
         }
+
+        final xmlString = alianzaExperienciaAgricolaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final alianzasExperienciasAgricolasRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (alianzasExperienciasAgricolasRaw is List) {
+          return List.from(alianzasExperienciasAgricolasRaw)
+              .map((e) => AlianzaExperienciaAgricolaModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            AlianzaExperienciaAgricolaModel.fromJson(
+                alianzasExperienciasAgricolasRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener las experiencias agricolas de la alianza']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -196,20 +201,21 @@ class AlianzaExperienciaAgricolaRemoteDataSourceImpl
           },
           body: alianzaExperienciaAgricolaSOAP);
 
-      if (alianzaExperienciaAgricolaResp.statusCode == 200) {
-        final alianzaExperienciaAgricolaDoc =
-            xml.XmlDocument.parse(alianzaExperienciaAgricolaResp.body);
+      if (alianzaExperienciaAgricolaResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al guardar experiencia agricola de la alianza']);
+      }
 
-        final respuesta = alianzaExperienciaAgricolaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final alianzaExperienciaAgricolaDoc =
+          xml.XmlDocument.parse(alianzaExperienciaAgricolaResp.body);
 
-        if (respuesta == 'true') {
-          return alianzaExperienciaAgricolaEntity;
-        } else {
-          return null;
-        }
+      final respuesta = alianzaExperienciaAgricolaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return alianzaExperienciaAgricolaEntity;
       } else {
         return null;
       }

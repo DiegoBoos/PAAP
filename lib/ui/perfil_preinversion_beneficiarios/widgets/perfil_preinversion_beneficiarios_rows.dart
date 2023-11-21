@@ -1,157 +1,160 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/beneficiario/beneficiario_cubit.dart';
-import '../../../domain/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
-import '../../../domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
-import '../../../domain/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/cubits/beneficiario/beneficiario_cubit.dart';
+import '../../../ui/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
+import '../../../ui/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
+import '../../../ui/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 
-class PerfilPreInversionBeneficiariosRows extends StatelessWidget {
+class PerfilPreInversionBeneficiariosTableSource extends DataTableSource {
+  final BuildContext context;
+  final List<PerfilPreInversionBeneficiarioEntity>
+      perfilPreInversionBeneficiarios;
+
+  PerfilPreInversionBeneficiariosTableSource(
+      this.context, this.perfilPreInversionBeneficiarios);
+
+  @override
+  DataRow getRow(int index) {
+    final perfilPreInversionBeneficiario =
+        perfilPreInversionBeneficiarios[index];
+
+    return DataRow.byIndex(
+      index: index,
+      cells: <DataCell>[
+        DataCell(Text(perfilPreInversionBeneficiario.beneficiarioId)),
+        DataCell(TextButton(
+            onPressed: () {
+              final vPerfilPreinversionCubit =
+                  BlocProvider.of<VPerfilPreInversionCubit>(context);
+              final beneficiarioCubit =
+                  BlocProvider.of<BeneficiarioCubit>(context);
+              final perfilBeneficiarioCubit =
+                  BlocProvider.of<PerfilBeneficiarioCubit>(context);
+              final experienciaAgricolaCubit =
+                  BlocProvider.of<ExperienciaAgricolaCubit>(context);
+              final experienciaPecuariaCubit =
+                  BlocProvider.of<ExperienciaPecuariaCubit>(context);
+              final tipoProyecto = vPerfilPreinversionCubit
+                  .state.vPerfilPreInversion!.tipoProyecto;
+              final perfilId =
+                  vPerfilPreinversionCubit.state.vPerfilPreInversion!.perfilId;
+              final beneficiarioId =
+                  perfilPreInversionBeneficiario.beneficiarioId;
+
+              beneficiarioCubit.loadBeneficiario(beneficiarioId);
+
+              perfilBeneficiarioCubit.loadPerfilBeneficiario(
+                  perfilId, beneficiarioId);
+
+              if (tipoProyecto == 'Agrícola') {
+                experienciaAgricolaCubit.loadExperienciaAgricola(
+                    '1', beneficiarioId);
+              } else if (tipoProyecto == 'Pecuario') {
+                experienciaPecuariaCubit.loadExperienciaPecuaria(
+                    '1', beneficiarioId);
+              }
+
+              Navigator.pushNamed(context, 'NewEditVBeneficiarioPreInversion',
+                  arguments: perfilPreInversionBeneficiario);
+            },
+            child: Text(perfilPreInversionBeneficiario.nombre ?? ''))),
+
+        // Add more cells for each column
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => perfilPreInversionBeneficiarios.length;
+
+  @override
+  int get selectedRowCount => 0;
+}
+
+class PerfilPreInversionBeneficiariosRows extends StatefulWidget {
   const PerfilPreInversionBeneficiariosRows({
     Key? key,
     required this.perfilPreInversionBeneficiarios,
-    required this.subtitleStyle,
   }) : super(key: key);
 
   final List<PerfilPreInversionBeneficiarioEntity>
       perfilPreInversionBeneficiarios;
 
-  final TextStyle subtitleStyle;
+  @override
+  State<PerfilPreInversionBeneficiariosRows> createState() =>
+      _PerfilPreInversionBeneficiariosRowsState();
+}
+
+class _PerfilPreInversionBeneficiariosRowsState
+    extends State<PerfilPreInversionBeneficiariosRows> {
+  List<PerfilPreInversionBeneficiarioEntity>
+      perfilPreInversionBeneficiariosFiltered = [];
+  List<PerfilPreInversionBeneficiarioEntity>
+      allPerfilPreInversionBeneficiarios = [];
+
+  @override
+  void initState() {
+    super.initState();
+    allPerfilPreInversionBeneficiarios = widget.perfilPreInversionBeneficiarios;
+    perfilPreInversionBeneficiariosFiltered =
+        allPerfilPreInversionBeneficiarios;
+  }
+
+  void _buscar(String query) {
+    final lowerCaseQuery = query.toLowerCase();
+    final perfilPreInversionBeneficiarios = allPerfilPreInversionBeneficiarios
+        .where((perfilPreInversionBeneficiario) {
+      return perfilPreInversionBeneficiario.nombre!
+          .toLowerCase()
+          .contains(lowerCaseQuery);
+    }).toList();
+
+    setState(() {
+      perfilPreInversionBeneficiariosFiltered = perfilPreInversionBeneficiarios;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final vPerfilPreinversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
-    final perfilPreinversionBeneficiarioCubit =
-        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
-    final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
-    final perfilBeneficiarioCubit =
-        BlocProvider.of<PerfilBeneficiarioCubit>(context);
-    final experienciaAgricolaCubit =
-        BlocProvider.of<ExperienciaAgricolaCubit>(context);
-    final experienciaPecuariaCubit =
-        BlocProvider.of<ExperienciaPecuariaCubit>(context);
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: DataTable(
-            headingRowColor: MaterialStateProperty.all(
-                Theme.of(context).colorScheme.secondary),
-            dividerThickness: 1,
-            columnSpacing: 10,
-            dataRowHeight: 200,
-            columns: <DataColumn>[
-              DataColumn(label: Container()),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Documento',
-                      style: subtitleStyle.copyWith(color: Colors.white)),
-                ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Tipo Documento',
-                      style: subtitleStyle.copyWith(color: Colors.white)),
-                ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Nombre',
-                      style: subtitleStyle.copyWith(color: Colors.white)),
-                ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Edad',
-                      style: subtitleStyle.copyWith(color: Colors.white)),
-                ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Género',
-                      style: subtitleStyle.copyWith(color: Colors.white)),
-                ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Grupo Especial',
-                      style: subtitleStyle.copyWith(color: Colors.white)),
-                ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Ubicación',
-                      style: subtitleStyle.copyWith(color: Colors.white)),
-                ),
-              ),
-            ],
-            rows:
-                List.generate(perfilPreInversionBeneficiarios.length, (index) {
-              PerfilPreInversionBeneficiarioEntity
-                  perfilPreInversionBeneficiario =
-                  perfilPreInversionBeneficiarios[index];
-
-              return DataRow(cells: <DataCell>[
-                DataCell(IconButton(
-                    onPressed: () {
-                      final tipoProyecto = vPerfilPreinversionCubit
-                          .state.vPerfilPreInversion!.tipoProyecto;
-                      final perfilId = vPerfilPreinversionCubit
-                          .state.vPerfilPreInversion!.perfilId;
-                      final beneficiarioId =
-                          perfilPreInversionBeneficiario.beneficiarioId;
-
-                      perfilPreinversionBeneficiarioCubit
-                          .selectPerfilPreinversionBeneficiario(
-                              perfilPreInversionBeneficiario);
-
-                      beneficiarioCubit.loadBeneficiario(beneficiarioId);
-                      perfilBeneficiarioCubit.selectPerfilBeneficiario(
-                          perfilId, beneficiarioId);
-                      if (tipoProyecto == 'Agrícola') {
-                        experienciaAgricolaCubit.selectExperienciaAgricola(
-                            '1', beneficiarioId);
-                      } else if (tipoProyecto == 'Pecuario') {
-                        experienciaPecuariaCubit.selectExperienciaPecuaria(
-                            '1', beneficiarioId);
-                      }
-
-                      Navigator.pushNamed(
-                          context, 'NewEditVBeneficiarioPreInversion');
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                    ))),
-                DataCell(Center(
-                    child:
-                        Text(perfilPreInversionBeneficiario.beneficiarioId))),
-                DataCell(Center(
-                    child: Text(
-                        perfilPreInversionBeneficiario.tipoDocumento ?? ''))),
-                DataCell(Center(
-                    child: Text(perfilPreInversionBeneficiario.nombre ?? ''))),
-                DataCell(Center(
-                    child: Text(perfilPreInversionBeneficiario.edad ?? ''))),
-                DataCell(Center(
-                    child: Text(perfilPreInversionBeneficiario.genero ?? ''))),
-                DataCell(Center(
-                    child: Text(
-                        perfilPreInversionBeneficiario.grupoEspecial ?? ''))),
-                DataCell(Center(
-                    child:
-                        Text(perfilPreInversionBeneficiario.ubicacion ?? ''))),
-              ]);
-            }),
+    return ListView(
+      children: [
+        TextField(
+          onChanged: (value) => _buscar(value),
+          decoration: const InputDecoration(
+            labelText: 'Buscar',
+            suffixIcon: Icon(Icons.search),
           ),
         ),
-      ),
+        PaginatedDataTable(
+          header: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Beneficiarios'),
+              IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                        context, 'NewEditVBeneficiarioPreInversion');
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                  ))
+            ],
+          ),
+          rowsPerPage: 10,
+          columns: const <DataColumn>[
+            DataColumn(label: Text('ID')),
+            DataColumn(label: Text('Nombre')),
+          ],
+          source: PerfilPreInversionBeneficiariosTableSource(
+              context, perfilPreInversionBeneficiariosFiltered),
+        ),
+      ],
     );
   }
 }

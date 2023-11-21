@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/blocs/alianzas/alianzas_bloc.dart';
+import 'package:paap/ui/blocs/alianzas/alianzas_bloc.dart';
 
-import '../../domain/blocs/perfiles/perfiles_bloc.dart';
-import '../../domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
+import '../../ui/blocs/perfiles/perfiles_bloc.dart';
+import '../../ui/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
 import 'input_decoration.dart';
 
 class SearchCard extends StatelessWidget {

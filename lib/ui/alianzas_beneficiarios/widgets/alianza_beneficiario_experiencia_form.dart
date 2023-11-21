@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
-import '../../../domain/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
-import '../../../domain/cubits/frecuencia/frecuencia_cubit.dart';
-import '../../../domain/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
-import '../../../domain/cubits/v_alianza/v_alianza_cubit.dart';
+import '../../../ui/cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
+import '../../../ui/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
+import '../../../ui/cubits/frecuencia/frecuencia_cubit.dart';
+import '../../../ui/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
+import '../../../ui/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../../domain/entities/alianza_experiencia_agricola_entity.dart';
 import '../../../domain/entities/alianza_experiencia_pecuaria_entity.dart';
 import '../../../domain/entities/frecuencia_entity.dart';

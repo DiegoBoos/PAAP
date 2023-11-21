@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/domain/entities/usuario_entity.dart';
-import 'package:paap/ui/utils/styles.dart';
 
-import '../../../domain/blocs/alianzas/alianzas_bloc.dart';
-import '../../../domain/blocs/auth/auth_bloc.dart';
-import '../../../domain/blocs/perfiles/perfiles_bloc.dart';
-import '../../../domain/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
-import '../../../domain/blocs/sync/sync_bloc.dart';
-import '../../../domain/cubits/internet/internet_cubit.dart';
-import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/cubits/sync_log/sync_log_cubit.dart';
 import '../../../domain/entities/menu_entity.dart';
-
+import '../../../domain/entities/usuario_entity.dart';
 import '../../alianzas/pages/alianzas_page.dart';
+import '../../blocs/alianzas/alianzas_bloc.dart';
+import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/perfiles/perfiles_bloc.dart';
+import '../../blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart';
+import '../../blocs/sync/sync_bloc.dart';
+import '../../cubits/internet/internet_cubit.dart';
+import '../../cubits/menu/menu_cubit.dart';
+import '../../cubits/municipio/municipio_cubit.dart';
+import '../../cubits/sync_log/sync_log_cubit.dart';
 import '../../perfil_preinversion/pages/perfiles_preinversion_page.dart';
 import '../../perfiles/pages/perfiles_page.dart';
 import '../../utils/custom_general_dialog.dart';
 import '../../utils/custom_snack_bar.dart';
+import '../../utils/styles.dart';
 import '../../utils/sync_pages.dart';
 import 'home_page.dart';
 
@@ -45,6 +45,9 @@ class _TabsPageState extends State<TabsPage> {
 
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     menuCubit.getMenuDB();
+
+    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
+    municipioCubit.getMunicipiosDB();
   }
 
   @override
@@ -100,7 +103,7 @@ class _TabsPageState extends State<TabsPage> {
 
                 final widgetOptions = tabsMenu.map((menu) {
                   if (menu.nombre == 'Inicio') {
-                    return const PerfilesPage();
+                    return const HomePage();
                   } else if (menu.nombre == 'Perfiles') {
                     return const PerfilesPage();
                   } else if (menu.nombre == 'PreInversión') {

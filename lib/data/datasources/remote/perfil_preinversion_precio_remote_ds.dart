@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_precio_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/perfil_preinversion_precio_model.dart';
 import '../../utils.dart';
@@ -72,46 +72,48 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
           },
           body: perfilPreInversionPreciosSOAP);
 
-      if (perfilPreInversionPrecioResp.statusCode == 200) {
-        final perfilPreInversionPrecioDoc =
-            xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
+      if (perfilPreInversionPrecioResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los precios del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionPrecioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionPrecioDoc =
+          xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
 
-        if (respuesta == 'true' &&
-            perfilPreInversionPrecioDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString = perfilPreInversionPrecioDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = perfilPreInversionPrecioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilPreInversionPreciosRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (perfilPreInversionPreciosRaw is List) {
-            return List.from(perfilPreInversionPreciosRaw)
-                .map((e) => PerfilPreInversionPrecioModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              PerfilPreInversionPrecioModel.fromJson(
-                  perfilPreInversionPreciosRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (perfilPreInversionPrecioDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = perfilPreInversionPrecioDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilPreInversionPreciosRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (perfilPreInversionPreciosRaw is List) {
+          return List.from(perfilPreInversionPreciosRaw)
+              .map((e) => PerfilPreInversionPrecioModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            PerfilPreInversionPrecioModel.fromJson(perfilPreInversionPreciosRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los precios del perfil preinversión']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -185,20 +187,21 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
           },
           body: perfilPreInversionPrecioSOAP);
 
-      if (perfilPreInversionPrecioResp.statusCode == 200) {
-        final perfilPreInversionPrecioDoc =
-            xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
+      if (perfilPreInversionPrecioResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al guardar el precio del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionPrecioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionPrecioDoc =
+          xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
 
-        if (respuesta == 'true') {
-          return perfilPreInversionPrecioEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilPreInversionPrecioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionPrecioEntity;
       } else {
         return null;
       }
@@ -254,20 +257,21 @@ class PerfilPreInversionPrecioRemoteDataSourceImpl
           },
           body: perfilPreInversionPrecioSOAP);
 
-      if (perfilPreInversionPrecioResp.statusCode == 200) {
-        final perfilPreInversionPrecioDoc =
-            xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
+      if (perfilPreInversionPrecioResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al borrar el precio del perfil preinversión']);
+      }
 
-        final respuesta = perfilPreInversionPrecioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionPrecioDoc =
+          xml.XmlDocument.parse(perfilPreInversionPrecioResp.body);
 
-        if (respuesta == 'true') {
-          return perfilPreInversionPrecioEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilPreInversionPrecioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionPrecioEntity;
       } else {
         return null;
       }

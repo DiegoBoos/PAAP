@@ -37,17 +37,4 @@ class PerfilPreInversionPlanNegocioModel
         tipoCalidadId: json["TipoCalidadId"],
         recordStatus: json["RecordStatus"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "PerfilPreInversionId": perfilPreInversionId,
-        "RubroId": rubroId,
-        "Year": year,
-        "Valor": valor,
-        "Cantidad": cantidad,
-        "UnidadId": unidadId,
-        "ProductoId": productoId,
-        "TipoCalidadId": tipoCalidadId,
-        "RecordStatus": recordStatus,
-      };
 }

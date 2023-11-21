@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/evaluacion_entity.dart';
 import '../../../domain/entities/evaluacion_respuesta_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 
 abstract class EvaluacionRespuestaLocalDataSource {
   Future<List<EvaluacionRespuestaModel>> getEvaluacionesRespuestas(

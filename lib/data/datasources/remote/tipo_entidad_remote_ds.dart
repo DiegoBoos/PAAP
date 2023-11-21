@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/tipo_entidad_model.dart';
 import '../../utils.dart';
@@ -62,39 +62,40 @@ class TipoEntidadRemoteDataSourceImpl implements TipoEntidadRemoteDataSource {
           },
           body: tipoEntidadSOAP);
 
-      if (tipoEntidadResp.statusCode == 200) {
-        final tipoEntidadDoc = xml.XmlDocument.parse(tipoEntidadResp.body);
+      if (tipoEntidadResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los tipos de entidades']);
+      }
 
-        final respuesta = tipoEntidadDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final tipoEntidadDoc = xml.XmlDocument.parse(tipoEntidadResp.body);
 
-        if (respuesta == 'true' &&
-            tipoEntidadDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = tipoEntidadDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          tipoEntidadDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final tiposEntidadesRaw = decodedResp.entries.first.value['Table'];
-
-          if (tiposEntidadesRaw is List) {
-            return List.from(tiposEntidadesRaw)
-                .map((e) => TipoEntidadModel.fromJson(e))
-                .toList();
-          } else {
-            return [TipoEntidadModel.fromJson(tiposEntidadesRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (tipoEntidadDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = tipoEntidadDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final tiposEntidadesRaw = decodedResp.entries.first.value['Table'];
+
+        if (tiposEntidadesRaw is List) {
+          return List.from(tiposEntidadesRaw)
+              .map((e) => TipoEntidadModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoEntidadModel.fromJson(tiposEntidadesRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los tipos de entidades']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

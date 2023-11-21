@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/alianza_model.dart';
 import '../../models/alianzas_model.dart';
@@ -63,39 +62,42 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
           },
           body: alianzaSOAP);
 
-      if (alianzaResp.statusCode == 200) {
-        final alianzaDoc = xml.XmlDocument.parse(alianzaResp.body);
+      if (alianzaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener las alianzas']);
+      }
 
-        final respuesta =
-            alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final alianzaDoc = xml.XmlDocument.parse(alianzaResp.body);
 
-        if (respuesta == 'true' &&
-            alianzaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = alianzaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final alianzasRaw = decodedResp.entries.first.value['Table'];
-          final alianzas = List.from(alianzasRaw)
-              .map((e) => AlianzasModel.fromJson(e))
-              .toList();
-
-          List<AlianzaModel> listAlianza = [];
-          for (var alianza in alianzas) {
-            final dsAlianza = await getAlianzaTable(usuario, alianza.id);
-            listAlianza.add(dsAlianza);
-          }
-          return listAlianza;
-        } else {
+      if (respuesta == 'true') {
+        if (alianzaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = alianzaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final alianzasRaw = decodedResp.entries.first.value['Table'];
+        final alianzas = List.from(alianzasRaw)
+            .map((e) => AlianzasModel.fromJson(e))
+            .toList();
+
+        List<AlianzaModel> listAlianza = [];
+        for (var alianza in alianzas) {
+          final dsAlianza = await getAlianzaTable(usuario, alianza.id);
+          listAlianza.add(dsAlianza);
+        }
+        return listAlianza;
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener las alianzas']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -144,33 +146,33 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
           },
           body: alianzaSOAP);
 
-      if (alianzaResp.statusCode == 200) {
-        final alianzaDoc = xml.XmlDocument.parse(alianzaResp.body);
+      if (alianzaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener la alianza']);
+      }
 
-        final respuesta =
-            alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final alianzaDoc = xml.XmlDocument.parse(alianzaResp.body);
 
-        final mensaje =
-            alianzaDoc.findAllElements('mensaje').map((e) => e.text).first;
+      final respuesta =
+          alianzaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-        if (respuesta == 'true') {
-          final xmlString = alianzaDoc
-              .findAllElements('objeto')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final mensaje =
+          alianzaDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
+      if (respuesta == 'true') {
+        final xmlString = alianzaDoc
+            .findAllElements('objeto')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
 
-          final decodedResp = json.decode(res);
+        String res = Utils.convertXmlToJson(xmlString);
 
-          final alianza = AlianzaModel.fromJson(decodedResp['objeto']);
+        final decodedResp = json.decode(res);
 
-          return alianza;
-        } else {
-          throw ServerFailure([mensaje]);
-        }
+        final alianza = AlianzaModel.fromJson(decodedResp['objeto']);
+
+        return alianza;
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

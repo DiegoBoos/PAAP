@@ -4,10 +4,9 @@ import 'package:http/http.dart' as http;
 
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/perfil_model.dart';
 import '../../models/perfiles_model.dart';
@@ -64,40 +63,45 @@ class PerfilesRemoteDataSourceImpl implements PerfilRemoteDataSource {
           },
           body: perfilesSOAP);
 
-      if (perfilesResp.statusCode == 200) {
-        final perfilesDoc = xml.XmlDocument.parse(perfilesResp.body);
+      if (perfilesResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los perfiles']);
+      }
 
-        final respuesta =
-            perfilesDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final perfilesDoc = xml.XmlDocument.parse(perfilesResp.body);
 
-        if (respuesta == 'true' &&
-            perfilesDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = perfilesDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          perfilesDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilesRaw = decodedResp.entries.first.value['Table'];
-
-          final perfiles = List.from(perfilesRaw)
-              .map((e) => PerfilesModel.fromJson(e))
-              .toList();
-
-          List<PerfilModel> listPerfil = [];
-          for (var perfil in perfiles) {
-            final dsPerfil = await getPerfilTable(usuario, perfil.id);
-            listPerfil.add(dsPerfil);
-          }
-          return listPerfil;
-        } else {
+      if (respuesta == 'true') {
+        if (perfilesDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = perfilesDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilesRaw = decodedResp.entries.first.value['Table'];
+
+        final perfiles =
+            List.from(perfilesRaw).map((e) => PerfilModel.fromJson(e)).toList();
+
+        return perfiles;
+
+        //TODO: eliminar?
+        /*  List<PerfilModel> listPerfil = [];
+        for (var perfil in perfiles) {
+          final dsPerfil = await getPerfilTable(usuario, perfil.id);
+          listPerfil.add(dsPerfil);
+        }
+        return listPerfil; */
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los perfiles']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -146,33 +150,33 @@ class PerfilesRemoteDataSourceImpl implements PerfilRemoteDataSource {
           },
           body: perfilesSOAP);
 
-      if (perfilResp.statusCode == 200) {
-        final perfilDoc = xml.XmlDocument.parse(perfilResp.body);
+      if (perfilResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener el perfil']);
+      }
 
-        final respuesta =
-            perfilDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final perfilDoc = xml.XmlDocument.parse(perfilResp.body);
 
-        final mensaje =
-            perfilDoc.findAllElements('mensaje').map((e) => e.text).first;
+      final respuesta =
+          perfilDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-        if (respuesta == 'true') {
-          final xmlString = perfilDoc
-              .findAllElements('objeto')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final mensaje =
+          perfilDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
+      if (respuesta == 'true') {
+        final xmlString = perfilDoc
+            .findAllElements('objeto')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
 
-          final decodedResp = json.decode(res);
+        String res = Utils.convertXmlToJson(xmlString);
 
-          final perfil = PerfilModel.fromJson(decodedResp['objeto']);
+        final decodedResp = json.decode(res);
 
-          return perfil;
-        } else {
-          throw ServerFailure([mensaje]);
-        }
+        final perfil = PerfilModel.fromJson(decodedResp['objeto']);
+
+        return perfil;
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

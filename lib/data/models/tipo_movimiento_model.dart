@@ -16,11 +16,4 @@ class TipoMovimientoModel extends TipoMovimientoEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoMovimientoId": tipoMovimientoId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-      };
 }

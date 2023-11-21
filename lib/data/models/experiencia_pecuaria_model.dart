@@ -44,20 +44,4 @@ class ExperienciaPecuariaModel extends ExperienciaPecuariaEntity {
         ingresos: json["Ingresos"],
         recordStatus: json["RecordStatus"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoActividadProductivaId": tipoActividadProductivaId,
-        "BeneficiarioId": beneficiarioId,
-        "FrecuenciaId": frecuenciaId,
-        "CantidadAnimales": cantidadAnimales,
-        "CantidadCria": cantidadCria,
-        "CantidadLevante": cantidadLevante,
-        "CantidadCeba": cantidadCeba,
-        "CantidadLeche": cantidadLeche,
-        "ValorJornal": valorJornal,
-        "CostosInsumos": costosInsumos,
-        "Ingresos": ingresos,
-        "RecordStatus": recordStatus,
-      };
 }

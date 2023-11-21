@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_actividad_financiera_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/perfil_preinversion_cofinanciador_actividad_financiera_model.dart';
 import '../../utils.dart';
@@ -76,53 +76,56 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRemoteDataSourceImpl
               },
               body: perfilPreInversionCofinanciadorActividadesFinancierasSOAP);
 
-      if (perfilPreInversionCofinanciadorActividadFinancieraResp.statusCode ==
+      if (perfilPreInversionCofinanciadorActividadFinancieraResp.statusCode !=
           200) {
-        final perfilPreInversionCofinanciadorActividadFinancieraDoc =
-            xml.XmlDocument.parse(
-                perfilPreInversionCofinanciadorActividadFinancieraResp.body);
+        throw const ServerFailure(
+            ['Error al obtener las actividades financieras del cofinanciador']);
+      }
 
-        final respuesta = perfilPreInversionCofinanciadorActividadFinancieraDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionCofinanciadorActividadFinancieraDoc =
+          xml.XmlDocument.parse(
+              perfilPreInversionCofinanciadorActividadFinancieraResp.body);
 
-        if (respuesta == 'true' &&
-            perfilPreInversionCofinanciadorActividadFinancieraDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString =
-              perfilPreInversionCofinanciadorActividadFinancieraDoc
-                  .findAllElements('NewDataSet')
-                  .map((xmlElement) => xmlElement.toXmlString())
-                  .first;
+      final respuesta = perfilPreInversionCofinanciadorActividadFinancieraDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilPreInversionCofinanciadorActividadesFinancierasRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (perfilPreInversionCofinanciadorActividadesFinancierasRaw
-              is List) {
-            return List.from(
-                    perfilPreInversionCofinanciadorActividadesFinancierasRaw)
-                .map((e) =>
-                    PerfilPreInversionCofinanciadorActividadFinancieraModel
-                        .fromJson(e))
-                .toList();
-          } else {
-            return [
-              PerfilPreInversionCofinanciadorActividadFinancieraModel.fromJson(
-                  perfilPreInversionCofinanciadorActividadesFinancierasRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (perfilPreInversionCofinanciadorActividadFinancieraDoc
+            .findAllElements('NewDataSet')
+            .isEmpty) {
           return [];
         }
+
+        final xmlString = perfilPreInversionCofinanciadorActividadFinancieraDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilPreInversionCofinanciadorActividadesFinancierasRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (perfilPreInversionCofinanciadorActividadesFinancierasRaw is List) {
+          return List.from(
+                  perfilPreInversionCofinanciadorActividadesFinancierasRaw)
+              .map((e) =>
+                  PerfilPreInversionCofinanciadorActividadFinancieraModel
+                      .fromJson(e))
+              .toList();
+        } else {
+          return [
+            PerfilPreInversionCofinanciadorActividadFinancieraModel.fromJson(
+                perfilPreInversionCofinanciadorActividadesFinancierasRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener las actividades financieras del cofinanciador']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -202,22 +205,23 @@ class PerfilPreInversionCofinanciadorActividadFinancieraRemoteDataSourceImpl
               },
               body: perfilPreInversionCofinanciadorActividadFinancieraSOAP);
 
-      if (perfilPreInversionCofinanciadorActividadFinancieraResp.statusCode ==
+      if (perfilPreInversionCofinanciadorActividadFinancieraResp.statusCode !=
           200) {
-        final perfilPreInversionCofinanciadorActividadFinancieraDoc =
-            xml.XmlDocument.parse(
-                perfilPreInversionCofinanciadorActividadFinancieraResp.body);
+        throw const ServerFailure(
+            ['Error al guardar la actividad financiera del cofinanciador']);
+      }
 
-        final respuesta = perfilPreInversionCofinanciadorActividadFinancieraDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionCofinanciadorActividadFinancieraDoc =
+          xml.XmlDocument.parse(
+              perfilPreInversionCofinanciadorActividadFinancieraResp.body);
 
-        if (respuesta == 'true') {
-          return perfilPreInversionCofinanciadorActividadFinancieraEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilPreInversionCofinanciadorActividadFinancieraDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionCofinanciadorActividadFinancieraEntity;
       } else {
         return null;
       }

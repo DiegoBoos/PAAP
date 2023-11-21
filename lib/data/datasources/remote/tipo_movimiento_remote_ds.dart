@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/tipo_movimiento_model.dart';
 import '../../utils.dart';
@@ -64,40 +64,44 @@ class TipoMovimientoRemoteDataSourceImpl
           },
           body: tipoMovimientoSOAP);
 
-      if (tipoMovimientoResp.statusCode == 200) {
-        final tipoMovimientoDoc =
-            xml.XmlDocument.parse(tipoMovimientoResp.body);
+      if (tipoMovimientoResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los tipos de movimientos']);
+      }
 
-        final respuesta = tipoMovimientoDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final tipoMovimientoDoc = xml.XmlDocument.parse(tipoMovimientoResp.body);
 
-        if (respuesta == 'true' &&
-            tipoMovimientoDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = tipoMovimientoDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = tipoMovimientoDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final tiposMovimientosRaw = decodedResp.entries.first.value['Table'];
-
-          if (tiposMovimientosRaw is List) {
-            return List.from(tiposMovimientosRaw)
-                .map((e) => TipoMovimientoModel.fromJson(e))
-                .toList();
-          } else {
-            return [TipoMovimientoModel.fromJson(tiposMovimientosRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (tipoMovimientoDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = tipoMovimientoDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final tiposMovimientosRaw = decodedResp.entries.first.value['Table'];
+
+        if (tiposMovimientosRaw is List) {
+          return List.from(tiposMovimientosRaw)
+              .map((e) => TipoMovimientoModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoMovimientoModel.fromJson(tiposMovimientosRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los tipos de movimientos']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

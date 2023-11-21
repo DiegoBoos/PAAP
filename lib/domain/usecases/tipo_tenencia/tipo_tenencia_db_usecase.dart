@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/tipo_tenencia_entity.dart';
 import '../../repositories/tipo_tenencia/tipo_tenencia_repository_db.dart';
 

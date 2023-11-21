@@ -4,7 +4,7 @@ export 'package:paap/domain/repositories/experiencia_pecuaria/experiencia_pecuar
 export 'package:paap/domain/repositories/experiencia_pecuaria/experiencia_pecuaria_repository_db.dart';
 export 'package:paap/domain/entities/experiencia_pecuaria_entity.dart';
 export 'package:paap/domain/entities/experiencia_pecuaria_entity.dart';
-export 'package:paap/domain/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
+export 'package:paap/ui/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
 export 'package:paap/data/repositories/experiencia_pecuaria/experiencia_pecuaria_repository.dart';
 export 'package:paap/data/repositories/experiencia_pecuaria/experiencia_pecuaria_repository_db.dart';
 export 'package:paap/data/datasources/remote/experiencia_pecuaria_remote_ds.dart';

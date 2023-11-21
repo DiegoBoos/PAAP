@@ -74,27 +74,6 @@ class AlianzaExperienciaAgricolaEntity {
         recordStatus: recordStatus ?? this.recordStatus,
       );
 
-  factory AlianzaExperienciaAgricolaEntity.fromJson(
-          Map<String, dynamic> json) =>
-      AlianzaExperienciaAgricolaEntity(
-        tipoActividadProductivaId: json["TipoActividadProductivaId"],
-        beneficiarioId: json["BeneficiarioId"],
-        frecuenciaId: json["FrecuenciaId"],
-        areaCultivo: json["AreaCultivo"],
-        cantidadProducida: json["CantidadProducida"],
-        cantidadVendida: json["CantidadVendida"],
-        cantidadAutoconsumo: json["CantidadAutoconsumo"],
-        costoImplementacion: json["CostoImplementacion"],
-        valorJornal: json["ValorJornal"],
-        totalIngresoNeto: json["TotalIngresoNeto"],
-        areaPasto: json["AreaPasto"],
-        areaSinUso: json["AreaSinUso"],
-        areaReservaConservacion: json["AreaReservaConservacion"],
-        areaImplementacion: json["AreaImplementacion"],
-        totalAreaPredio: json["TotalAreaPredio"],
-        recordStatus: json["RecordStatus"],
-      );
-
   Map<String, dynamic> toJson() => {
         "TipoActividadProductivaId": tipoActividadProductivaId,
         "BeneficiarioId": beneficiarioId,

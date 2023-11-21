@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/actividad_economica_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/actividad_economica_model.dart';
 
 abstract class ActividadEconomicaLocalDataSource {

@@ -5,10 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:paap/domain/entities/visita_entity.dart';
 import 'package:xml/xml.dart' as xml;
 
-import '../../../domain/core/error/failure.dart';
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 import '../../models/perfiles_model.dart';
 import '../../models/visita_model.dart';
 import '../../utils.dart';
@@ -66,44 +65,48 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
           },
           body: perfilesSOAP);
 
-      if (perfilesResp.statusCode == 200) {
-        final perfilesDoc = xml.XmlDocument.parse(perfilesResp.body);
+      if (perfilesResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los perfiles de visita']);
+      }
 
-        final respuesta =
-            perfilesDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final perfilesDoc = xml.XmlDocument.parse(perfilesResp.body);
 
-        final mensaje =
-            perfilesDoc.findAllElements('mensaje').map((e) => e.text).first;
+      final respuesta =
+          perfilesDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-        if (respuesta == 'true') {
-          final xmlString = perfilesDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final mensaje =
+          perfilesDoc.findAllElements('mensaje').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilesRaw = decodedResp.entries.first.value['Table'];
-
-          final perfiles = List.from(perfilesRaw)
-              .map((e) => PerfilesModel.fromJson(e))
-              .toList();
-
-          List<VisitaModel> listVisita = [];
-          for (var perfil in perfiles) {
-            final dsVisita = await getVisitaTable(usuario, perfil.id);
-            if (dsVisita != null) {
-              listVisita.add(dsVisita);
-            }
-          }
-          return listVisita;
-        } else {
-          throw ServerFailure([mensaje]);
+      if (respuesta == 'true') {
+        if (perfilesDoc.findAllElements('NewDataSet').isEmpty) {
+          return [];
         }
+
+        final xmlString = perfilesDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilesRaw = decodedResp.entries.first.value['Table'];
+
+        final perfiles = List.from(perfilesRaw)
+            .map((e) => PerfilesModel.fromJson(e))
+            .toList();
+
+        List<VisitaModel> listVisita = [];
+        for (var perfil in perfiles) {
+          final dsVisita = await getVisitaTable(usuario, perfil.id);
+          if (dsVisita != null) {
+            listVisita.add(dsVisita);
+          }
+        }
+        return listVisita;
       } else {
-        throw ServerException();
+        throw ServerFailure([mensaje]);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -111,7 +114,7 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
   }
 
   Future<VisitaModel?> getVisitaTable(
-      UsuarioEntity usuario, String visitaId) async {
+      UsuarioEntity usuario, String perfilId) async {
     try {
       String url = await Constants.getAppUrl();
       final uri = Uri.parse(url);
@@ -139,7 +142,7 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
             <Nombre>string</Nombre>
           </rol>
           <objeto>
-            <PerfilId>$visitaId</PerfilId>
+            <PerfilId>$perfilId</PerfilId>
             <TipoVisitaId>1</TipoVisitaId>
           </objeto>
         </ConsultarVisita>
@@ -153,30 +156,30 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
           },
           body: visitasSOAP);
 
-      if (visitaResp.statusCode == 200) {
-        final visitaDoc = xml.XmlDocument.parse(visitaResp.body);
+      if (visitaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener la visita']);
+      }
 
-        final respuesta =
-            visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final visitaDoc = xml.XmlDocument.parse(visitaResp.body);
 
-        if (respuesta == 'true') {
-          final xmlString = visitaDoc
-              .findAllElements('objeto')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
+      if (respuesta == 'true') {
+        final xmlString = visitaDoc
+            .findAllElements('objeto')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
 
-          final decodedResp = json.decode(res);
+        String res = Utils.convertXmlToJson(xmlString);
 
-          final visita = VisitaModel.fromJson(decodedResp['objeto']);
+        final decodedResp = json.decode(res);
 
-          return visita;
-        } else {
-          return null;
-        }
+        final visita = VisitaModel.fromJson(decodedResp['objeto']);
+
+        return visita;
       } else {
-        throw ServerException();
+        return null;
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -246,17 +249,17 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
           },
           body: visitaSOAP);
 
-      if (visitaResp.statusCode == 200) {
-        final visitaDoc = xml.XmlDocument.parse(visitaResp.body);
+      if (visitaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al guardar la visita']);
+      }
 
-        final respuesta =
-            visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
+      final visitaDoc = xml.XmlDocument.parse(visitaResp.body);
 
-        if (respuesta == 'true') {
-          return visitaEntity;
-        } else {
-          return null;
-        }
+      final respuesta =
+          visitaDoc.findAllElements('respuesta').map((e) => e.text).first;
+
+      if (respuesta == 'true') {
+        return visitaEntity;
       } else {
         return null;
       }

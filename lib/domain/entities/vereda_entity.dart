@@ -10,13 +10,6 @@ class VeredaEntity {
   String codigoDane;
   String municipioId;
 
-  factory VeredaEntity.fromJson(Map<String, dynamic> json) => VeredaEntity(
-        veredaId: json["VeredaId"],
-        nombre: json["Nombre"],
-        codigoDane: json["CodigoDane"],
-        municipioId: json["MunicipioId"],
-      );
-
   Map<String, dynamic> toJson() => {
         "VeredaId": veredaId,
         "Nombre": nombre,

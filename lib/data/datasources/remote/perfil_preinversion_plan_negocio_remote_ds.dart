@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/perfil_preinversion_plan_negocio_entity.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/perfil_preinversion_plan_negocio_model.dart';
 import '../../utils.dart';
@@ -72,46 +72,50 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
           },
           body: perfilPreInversionPlanNegociosSOAP);
 
-      if (perfilPreInversionPlanNegocioResp.statusCode == 200) {
-        final perfilPreInversionPlanNegocioDoc =
-            xml.XmlDocument.parse(perfilPreInversionPlanNegocioResp.body);
+      if (perfilPreInversionPlanNegocioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los planes de negocio']);
+      }
 
-        final respuesta = perfilPreInversionPlanNegocioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionPlanNegocioDoc =
+          xml.XmlDocument.parse(perfilPreInversionPlanNegocioResp.body);
 
-        if (respuesta == 'true' &&
-            perfilPreInversionPlanNegocioDoc
-                .findAllElements('NewDataSet')
-                .isNotEmpty) {
-          final xmlString = perfilPreInversionPlanNegocioDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = perfilPreInversionPlanNegocioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final perfilPreInversionPlanNegociosRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (perfilPreInversionPlanNegociosRaw is List) {
-            return List.from(perfilPreInversionPlanNegociosRaw)
-                .map((e) => PerfilPreInversionPlanNegocioModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              PerfilPreInversionPlanNegocioModel.fromJson(
-                  perfilPreInversionPlanNegociosRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (perfilPreInversionPlanNegocioDoc
+            .findAllElements('NewDataSet')
+            .isEmpty) {
           return [];
         }
+
+        final xmlString = perfilPreInversionPlanNegocioDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final perfilPreInversionPlanNegociosRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (perfilPreInversionPlanNegociosRaw is List) {
+          return List.from(perfilPreInversionPlanNegociosRaw)
+              .map((e) => PerfilPreInversionPlanNegocioModel.fromJson(e))
+              .toList();
+        } else {
+          return [
+            PerfilPreInversionPlanNegocioModel.fromJson(
+                perfilPreInversionPlanNegociosRaw)
+          ];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los planes de negocio del perfil preinversión']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -200,20 +204,20 @@ class PerfilPreInversionPlanNegocioRemoteDataSourceImpl
           },
           body: perfilPreInversionPlanNegociosOAP);
 
-      if (perfilPreInversionPlanNegocioResp.statusCode == 200) {
-        final perfilPreInversionPlanNegocioDoc =
-            xml.XmlDocument.parse(perfilPreInversionPlanNegocioResp.body);
+      if (perfilPreInversionPlanNegocioResp.statusCode != 200) {
+        throw const ServerFailure(['Error al guardar el plan negocio']);
+      }
 
-        final respuesta = perfilPreInversionPlanNegocioDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final perfilPreInversionPlanNegocioDoc =
+          xml.XmlDocument.parse(perfilPreInversionPlanNegocioResp.body);
 
-        if (respuesta == 'true') {
-          return perfilPreInversionPlanNegocioEntity;
-        } else {
-          return null;
-        }
+      final respuesta = perfilPreInversionPlanNegocioDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return perfilPreInversionPlanNegocioEntity;
       } else {
         return null;
       }

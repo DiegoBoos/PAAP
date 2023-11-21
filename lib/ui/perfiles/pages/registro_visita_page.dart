@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/blocs/auth/auth_bloc.dart';
-import '../../../domain/cubits/agrupacion/agrupacion_cubit.dart';
-import '../../../domain/cubits/evaluacion/evaluacion_cubit.dart';
-import '../../../domain/cubits/evaluacion_respuesta/evaluacion_respuesta_cubit.dart';
-import '../../../domain/cubits/v_perfil/v_perfil_cubit.dart';
-import '../../../domain/cubits/visita/visita_cubit.dart';
+import '../../../ui/blocs/auth/auth_bloc.dart';
+import '../../../ui/cubits/agrupacion/agrupacion_cubit.dart';
+import '../../../ui/cubits/evaluacion/evaluacion_cubit.dart';
+import '../../../ui/cubits/evaluacion_respuesta/evaluacion_respuesta_cubit.dart';
+import '../../../ui/cubits/v_perfil/v_perfil_cubit.dart';
+import '../../../ui/cubits/visita/visita_cubit.dart';
 import '../../../domain/entities/visita_entity.dart';
 import '../../utils/custom_general_dialog.dart';
 import '../../utils/custom_snack_bar.dart';

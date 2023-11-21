@@ -9,13 +9,6 @@ class TipoVisitaEntity {
   String nombre;
   String descripcion;
 
-  factory TipoVisitaEntity.fromJson(Map<String, dynamic> json) =>
-      TipoVisitaEntity(
-        tipoVisitaId: json["TipoVisitaId"],
-        nombre: json["Nombre"],
-        descripcion: json["Descripcion"],
-      );
-
   Map<String, dynamic> toJson() => {
         "TipoVisitaId": tipoVisitaId,
         "Nombre": nombre,

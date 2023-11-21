@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/tipo_identificacion_model.dart';
 import '../../utils.dart';
@@ -64,41 +64,46 @@ class TipoIdentificacionRemoteDataSourceImpl
           },
           body: tipoIdentificacionSOAP);
 
-      if (tipoIdentificacionResp.statusCode == 200) {
-        final tipoIdentificacionDoc =
-            xml.XmlDocument.parse(tipoIdentificacionResp.body);
+      if (tipoIdentificacionResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener los tipos de identificación']);
+      }
 
-        final respuesta = tipoIdentificacionDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final tipoIdentificacionDoc =
+          xml.XmlDocument.parse(tipoIdentificacionResp.body);
 
-        if (respuesta == 'true' &&
-            tipoIdentificacionDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = tipoIdentificacionDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = tipoIdentificacionDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final tiposIdentificacionesRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (tiposIdentificacionesRaw is List) {
-            return List.from(tiposIdentificacionesRaw)
-                .map((e) => TipoIdentificacionModel.fromJson(e))
-                .toList();
-          } else {
-            return [TipoIdentificacionModel.fromJson(tiposIdentificacionesRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (tipoIdentificacionDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = tipoIdentificacionDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final tiposIdentificacionesRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (tiposIdentificacionesRaw is List) {
+          return List.from(tiposIdentificacionesRaw)
+              .map((e) => TipoIdentificacionModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoIdentificacionModel.fromJson(tiposIdentificacionesRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener los tipos de identificación']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

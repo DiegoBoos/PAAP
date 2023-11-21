@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
-import '../../../domain/cubits/desembolso/desembolso_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
-import '../../../domain/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
+import '../../../ui/cubits/desembolso/desembolso_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
+import '../../../ui/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/desembolso_entity.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../utils/custom_snack_bar.dart';
@@ -17,7 +17,10 @@ import '../../utils/sync_pages.dart';
 import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorDesembolsoForm extends StatefulWidget {
-  const PerfilPreInversionCofinanciadorDesembolsoForm({super.key});
+  const PerfilPreInversionCofinanciadorDesembolsoForm(
+      {super.key, required this.perfilPreInversionCofinanciadorDesembolso});
+  final PerfilPreInversionCofinanciadorDesembolsoEntity?
+      perfilPreInversionCofinanciadorDesembolso;
 
   @override
   State<PerfilPreInversionCofinanciadorDesembolsoForm> createState() =>
@@ -29,27 +32,24 @@ final dateFormat = DateFormat('yyyy-MM-dd');
 class _PerfilPreInversionCofinanciadorDesembolsoFormState
     extends State<PerfilPreInversionCofinanciadorDesembolsoForm> {
   final formKeyDesembolso = GlobalKey<FormState>();
-
   String? desembolsoId;
-
   final fechaCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    final perfilPreInversionCofinanciadorDesembolsoCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
-            context);
 
-    if (perfilPreInversionCofinanciadorDesembolsoCubit.state
-        is PerfilPreInversionCofinanciadorDesembolsoLoaded) {
-      final perfilPreInversionCofinanciadorDesembolsoLoaded =
-          perfilPreInversionCofinanciadorDesembolsoCubit
-              .state.perfilPreInversionCofinanciadorDesembolso;
-
-      loadPerfilPreInversionCofinanciadorDesembolso(
-          perfilPreInversionCofinanciadorDesembolsoLoaded);
-    }
+    setState(() {
+      desembolsoId =
+          widget.perfilPreInversionCofinanciadorDesembolso?.desembolsoId;
+      if (widget.perfilPreInversionCofinanciadorDesembolso != null &&
+          widget.perfilPreInversionCofinanciadorDesembolso!.fecha != '') {
+        fechaCtrl.text = dateFormat.format(DateTime.parse(
+            widget.perfilPreInversionCofinanciadorDesembolso!.fecha));
+      } else {
+        fechaCtrl.text = dateFormat.format(DateTime.now());
+      }
+    });
   }
 
   @override
@@ -58,20 +58,6 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
     BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
       context,
     ).initState();
-  }
-
-  void loadPerfilPreInversionCofinanciadorDesembolso(
-      PerfilPreInversionCofinanciadorDesembolsoEntity
-          perfilPreInversionCofinanciadorDesembolsoLoaded) {
-    desembolsoId = perfilPreInversionCofinanciadorDesembolsoLoaded.desembolsoId;
-    if (perfilPreInversionCofinanciadorDesembolsoLoaded.fecha != '') {
-      fechaCtrl.text = dateFormat.format(DateTime.parse(
-          perfilPreInversionCofinanciadorDesembolsoLoaded.fecha));
-    } else {
-      fechaCtrl.text = dateFormat.format(DateTime.now());
-    }
-
-    setState(() {});
   }
 
   @override
@@ -108,7 +94,7 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
               perfilPreInversionId: vPerfilPreInversionCubit
                   .state.vPerfilPreInversion!.perfilPreInversionId,
               cofinanciadorId: perfilPreInversionCofinanciadorCubit
-                  .state.perfilPreInversionCofinanciador.cofinanciadorId,
+                  .state.perfilPreInversionCofinanciador.cofinanciadorId!,
             ));
           }
         },
@@ -217,7 +203,7 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                                       vPerfilPreInversionId);
 
                               perfilPreInversionCofinanciadorDesembolsoCubit
-                                  .changeCofinanciador(cofinanciadorId);
+                                  .changeCofinanciador(cofinanciadorId!);
 
                               perfilPreInversionCofinanciadorDesembolsoCubit
                                   .savePerfilPreInversionCofinanciadorDesembolsoDB(

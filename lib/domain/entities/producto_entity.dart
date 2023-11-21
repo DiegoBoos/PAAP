@@ -14,15 +14,6 @@ class ProductoEntity {
   String esProducto;
   String esAsociado;
 
-  factory ProductoEntity.fromJson(Map<String, dynamic> json) => ProductoEntity(
-        id: json["ProductoId"],
-        nombre: json["Nombre"],
-        unidad: json["Unidad"],
-        simbolo: json["Simbolo"],
-        esProducto: json["EsProducto"],
-        esAsociado: json["EsAsociado"],
-      );
-
   Map<String, dynamic> toJson() => {
         "ProductoId": id,
         "Nombre": nombre,

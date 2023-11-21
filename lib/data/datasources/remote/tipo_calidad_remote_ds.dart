@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
-import '../../../domain/core/error/exception.dart';
 
 import '../../models/tipo_calidad_model.dart';
 import '../../utils.dart';
@@ -63,39 +63,40 @@ class TipoCalidadRemoteDataSourceImpl implements TipoCalidadRemoteDataSource {
           },
           body: tipoCalidadSOAP);
 
-      if (tipoCalidadResp.statusCode == 200) {
-        final tipoCalidadDoc = xml.XmlDocument.parse(tipoCalidadResp.body);
+      if (tipoCalidadResp.statusCode != 200) {
+        throw const ServerFailure(['Error al obtener los tipos de calidad']);
+      }
 
-        final respuesta = tipoCalidadDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final tipoCalidadDoc = xml.XmlDocument.parse(tipoCalidadResp.body);
 
-        if (respuesta == 'true' &&
-            tipoCalidadDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = tipoCalidadDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta =
+          tipoCalidadDoc.findAllElements('respuesta').map((e) => e.text).first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final tiposCalidadesRaw = decodedResp.entries.first.value['Table'];
-
-          if (tiposCalidadesRaw is List) {
-            return List.from(tiposCalidadesRaw)
-                .map((e) => TipoCalidadModel.fromJson(e))
-                .toList();
-          } else {
-            return [TipoCalidadModel.fromJson(tiposCalidadesRaw)];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (tipoCalidadDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = tipoCalidadDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final tiposCalidadesRaw = decodedResp.entries.first.value['Table'];
+
+        if (tiposCalidadesRaw is List) {
+          return List.from(tiposCalidadesRaw)
+              .map((e) => TipoCalidadModel.fromJson(e))
+              .toList();
+        } else {
+          return [TipoCalidadModel.fromJson(tiposCalidadesRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(['Error al obtener los tipos de calidad']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());

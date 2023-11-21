@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paap/ui/utils/custom_snack_bar.dart';
 
-import '../../../domain/blocs/perfil_preinversion_planes_negocios/perfil_preinversion_planes_negocios_bloc.dart';
-import '../../../domain/cubits/perfil_preinversion_costos_utp/perfil_preinversion_costos_utp_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
-import '../../../domain/cubits/v_perfiles_preinversiones_plan_negocios/v_perfiles_preinversiones_plan_negocios_cubit.dart';
+import '../../../ui/blocs/perfil_preinversion_planes_negocios/perfil_preinversion_planes_negocios_bloc.dart';
+import '../../../ui/cubits/perfil_preinversion_costos_utp/perfil_preinversion_costos_utp_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/cubits/v_perfiles_preinversiones_plan_negocios/v_perfiles_preinversiones_plan_negocios_cubit.dart';
 import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/no_data_svg.dart';
@@ -30,19 +30,25 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
 
     final vPerfilesPreInversionesPlanNegociosCubit =
         BlocProvider.of<VPerfilesPreInversionesPlanNegociosCubit>(context);
+
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId;
+
     vPerfilesPreInversionesPlanNegociosCubit
         .getVPerfilesPreInversionesPlanNegociosDB(
-            vPerfilPreInversionCubit
-                .state.vPerfilPreInversion!.perfilPreInversionId,
-            tipoMovimientoId);
+            perfilPreInversionId, tipoMovimientoId);
   }
 
   @override
   Widget build(BuildContext context) {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
+
     final vPerfilesPreInversionesPlanNegociosCubit =
         BlocProvider.of<VPerfilesPreInversionesPlanNegociosCubit>(context);
+
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId;
 
     return BlocListener<PerfilPreInversionCostosUPTCubit,
         PerfilPreInversionCostosUPTState>(listener: (context, state) {
@@ -52,9 +58,12 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
 
         vPerfilesPreInversionesPlanNegociosCubit
             .getVPerfilesPreInversionesPlanNegociosDB(
-                vPerfilPreInversionCubit
-                    .state.vPerfilPreInversion!.perfilPreInversionId,
-                tipoMovimientoId);
+                perfilPreInversionId, tipoMovimientoId);
+      }
+
+      if (state is PerfilPreInversionCostosUPTError) {
+        CustomSnackBar.showSnackBar(
+            context, 'Error al guardar datos', Colors.red);
       }
     }, child: BlocBuilder<VPerfilesPreInversionesPlanNegociosCubit,
         VPerfilesPreInversionesPlanNegociosState>(

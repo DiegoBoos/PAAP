@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/perfil_beneficiario_entity.dart';
 import '../../entities/usuario_entity.dart';
 import '../../repositories/perfil_beneficiario/perfil_beneficiario_repository.dart';

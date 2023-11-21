@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 
 import '../../entities/alianza_experiencia_pecuaria_entity.dart';
 import '../../repositories/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_repository_db.dart';

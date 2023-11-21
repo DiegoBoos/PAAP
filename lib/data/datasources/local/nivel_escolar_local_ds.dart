@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/entities/nivel_escolar_entity.dart';
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../models/nivel_escolar_model.dart';
 
 abstract class NivelEscolarLocalDataSource {

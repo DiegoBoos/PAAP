@@ -16,11 +16,4 @@ class NivelEscolarModel extends NivelEscolarEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "NivelEscolarId": nivelEscolarId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-      };
 }

@@ -21,18 +21,6 @@ class VisitaEntity {
   String fechaRegistro;
   String recordStatus;
 
-  factory VisitaEntity.fromJson(Map<String, dynamic> json) => VisitaEntity(
-        perfilId: json["PerfilId"],
-        tipoVisitaId: json["TipoVisitaId"],
-        fechaInicial: json["FechaInicial"],
-        fechaFinal: json["FechaFinal"],
-        estadoVisitaId: json["EstadoVisitaId"],
-        observacion: json["Observacion"],
-        usuarioId: json["UsuarioId"],
-        fechaRegistro: json["FechaRegistro"],
-        recordStatus: json["FechaRegistro"],
-      );
-
   Map<String, dynamic> toJson() => {
         "PerfilId": perfilId,
         "TipoVisitaId": tipoVisitaId,

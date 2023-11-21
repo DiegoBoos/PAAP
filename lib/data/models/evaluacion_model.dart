@@ -45,21 +45,6 @@ class EvaluacionModel extends EvaluacionEntity {
       );
 
   @override
-  Map<String, dynamic> toJson() => {
-        "EvaluacionId": evaluacionId,
-        "PerfilId": perfilId,
-        "Resumen": resumen,
-        "Fortalezas": fortalezas,
-        "Debilidades": debilidades,
-        "Riesgos": riesgos,
-        "Finalizado": finalizado,
-        "UsuarioIdCoordinador": usuarioIdCoordinador,
-        "FechaEvaluacion": fechaEvaluacion,
-        "PreAprobado": preAprobado,
-        "RecordStatus": recordStatus,
-        "RemoteEvaluacionId": remoteEvaluacionId,
-      };
-  @override
   bool operator ==(Object other) =>
       other is EvaluacionModel && other.evaluacionId == evaluacionId;
 

@@ -18,15 +18,4 @@ class AliadosEntity {
   String ciudad;
   String aniosExperiencia;
   String estado;
-
-  factory AliadosEntity.fromJson(Map<String, dynamic> json) => AliadosEntity(
-        aliadoId: json["AliadoId"],
-        nombre: json["Nombre"],
-        nombreContacto: json["NombreContacto"],
-        telefonoMovil: json["TelefonoMovil"],
-        correo: json["Correo"],
-        ciudad: json["Ciudad"],
-        aniosExperiencia: json["Años_x0020_Experiencia"],
-        estado: json["Estado"],
-      );
 }

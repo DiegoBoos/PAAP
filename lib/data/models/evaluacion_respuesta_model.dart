@@ -26,14 +26,4 @@ class EvaluacionRespuestaModel extends EvaluacionRespuestaEntity {
         recordStatus: json["RecordStatus"],
         remoteEvaluacionId: json["RemoteEvaluacionId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "CriterioId": criterioId,
-        "EvaluacionId": evaluacionId,
-        "OpcionId": opcionId,
-        "Observacion": observacion,
-        "RecordStatus": recordStatus,
-        "RemoteEvaluacionId": remoteEvaluacionId,
-      };
 }

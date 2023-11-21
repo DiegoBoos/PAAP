@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../../domain/entities/perfil_preinversion_entity.dart';
 import '../../models/perfil_preinversion_model.dart';
 import '../../models/v_perfil_preinversion_model.dart';
@@ -72,7 +72,7 @@ class PerfilPreInversionLocalDataSourceImpl
     PerfilPreInversion.IncentivoModular as incentivoModular,
     Departamento.Nombre as Departamento
     from PerfilPreInversion
-    left join Perfil on (Perfil.PerfilId=PerfilPreInversion.PerfilId)
+    left join Perfil on (Perfil.ID=PerfilPreInversion.PerfilId)
     left join Convocatoria on (Convocatoria.ConvocatoriaId=PerfilPreInversion.ConvocatoriaId)
     left join Municipio on (Municipio.MunicipioId=PerfilPreInversion.MunicipioId)
     left join Departamento on (Departamento.DepartamentoId=Municipio.DepartamentoId)
@@ -117,7 +117,7 @@ class PerfilPreInversionLocalDataSourceImpl
     PerfilPreInversion.IncentivoModular as incentivoModular,
     Departamento.Nombre as Departamento
     from PerfilPreInversion
-    left join Perfil on (Perfil.PerfilId=PerfilPreInversion.PerfilId)
+    left join Perfil on (Perfil.ID=PerfilPreInversion.PerfilId)
     left join Convocatoria on (Convocatoria.ConvocatoriaId=PerfilPreInversion.ConvocatoriaId)
     left join Municipio on (Municipio.MunicipioId=PerfilPreInversion.MunicipioId)
     left join Departamento on (Departamento.DepartamentoId=Municipio.DepartamentoId)

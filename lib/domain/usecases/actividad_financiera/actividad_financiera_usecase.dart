@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../core/error/failure.dart';
+import '../../../data/core/error/failure.dart';
 import '../../entities/actividad_financiera_entity.dart';
 import '../../entities/usuario_entity.dart';
 import '../../repositories/actividad_financiera/actividad_financiera_repository.dart';

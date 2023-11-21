@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../../domain/db/db_config.dart';
+import '../../db/db_config.dart';
 import '../../../domain/entities/tipo_actividad_productiva_entity.dart';
 import '../../models/tipo_actividad_productiva_model.dart';
 

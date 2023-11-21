@@ -18,12 +18,4 @@ class OpcionModel extends OpcionEntity {
         calificacion: json["Calificacion"],
         criterioId: json["CriterioId"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "OpcionId": opcionId,
-        "Nombre": nombre,
-        "Calificacion": calificacion,
-        "CriterioId": criterioId
-      };
 }

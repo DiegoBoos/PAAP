@@ -16,11 +16,4 @@ class ActividadEconomicaModel extends ActividadEconomicaEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "ActividadEconomicaId": actividadEconomicaId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-      };
 }

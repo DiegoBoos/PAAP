@@ -16,11 +16,4 @@ class TipoCalidadModel extends TipoCalidadEntity {
         nombre: json["Nombre"],
         descripcion: json["Descripcion"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoCalidadId": tipoCalidadId,
-        "Nombre": nombre,
-        "Descripcion": descripcion,
-      };
 }

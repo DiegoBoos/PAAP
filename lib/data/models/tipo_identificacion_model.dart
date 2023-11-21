@@ -10,10 +10,4 @@ class TipoIdentificacionModel extends TipoIdentificacionEntity {
         tipoIdentificacionId: json["TipoIdentificacionId"],
         nombre: json["Nombre"],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        "TipoIdentificacionId": tipoIdentificacionId,
-        "Nombre": nombre,
-      };
 }

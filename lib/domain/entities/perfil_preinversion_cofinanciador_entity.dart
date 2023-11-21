@@ -1,7 +1,7 @@
 class PerfilPreInversionCofinanciadorEntity {
   PerfilPreInversionCofinanciadorEntity({
     required this.perfilPreInversionId,
-    required this.cofinanciadorId,
+    this.cofinanciadorId,
     this.nombre,
     this.telefonoMovil,
     this.correo,
@@ -11,7 +11,7 @@ class PerfilPreInversionCofinanciadorEntity {
   });
 
   String perfilPreInversionId;
-  String cofinanciadorId;
+  String? cofinanciadorId;
   String? nombre;
   String? telefonoMovil;
   String? correo;
@@ -34,16 +34,6 @@ class PerfilPreInversionCofinanciadorEntity {
       recordStatus: recordStatus ?? this.recordStatus,
     );
   }
-
-  factory PerfilPreInversionCofinanciadorEntity.fromJson(
-          Map<String, dynamic> json) =>
-      PerfilPreInversionCofinanciadorEntity(
-        perfilPreInversionId: json["PerfilPreInversionId"],
-        cofinanciadorId: json["CofinanciadorId"],
-        monto: json["Monto"],
-        participacion: json["Participacion"],
-        recordStatus: json["RecordStatus"],
-      );
 
   Map<String, dynamic> toJson() => {
         "PerfilPreInversionId": perfilPreInversionId,

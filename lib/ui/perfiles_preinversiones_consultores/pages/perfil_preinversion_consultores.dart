@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/blocs/perfil_preinversion_consultores/perfil_preinversion_consultores_bloc.dart';
-import '../../../domain/cubits/consultor/consultor_cubit.dart';
-import '../../../domain/cubits/menu/menu_cubit.dart';
-import '../../../domain/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../../ui/blocs/perfil_preinversion_consultores/perfil_preinversion_consultores_bloc.dart';
+import '../../../ui/cubits/consultor/consultor_cubit.dart';
+import '../../../ui/cubits/menu/menu_cubit.dart';
+import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/consultor_entity.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
-import '../../utils/styles.dart';
 import '../widgets/perfil_preinversion_consultores_rows.dart';
 
 class PerfilPreInversionConsultoresPage extends StatefulWidget {
@@ -40,143 +39,91 @@ class _PerfilPreInversionConsultoresPageState
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
     return Scaffold(
-        drawer: BlocBuilder<MenuCubit, MenuState>(
-          builder: (context, state) {
-            final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
-            return PerfilPreInversionDrawer(
-              menuHijo: menuHijo,
-            );
-          },
-        ),
-        appBar:
-            AppBar(title: const Text('Asignación Consultor'), actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: NetworkIcon(),
-          )
-        ]),
-        body: ListView(children: [
-          const SizedBox(height: 30),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text(
-              'CONSULTORES',
-              style: Styles.titleStyle,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 20),
-          BlocBuilder<PerfilPreInversionConsultoresBloc,
-              PerfilPreInversionConsultoresState>(builder: (context, state) {
-            if (state is PerfilPreInversionConsultoresLoading) {
-              return const CustomCircularProgress(alignment: Alignment.center);
-            }
-            if (state is PerfilPreInversionConsultoresLoaded) {
-              final perfilPreInversionConsultoresLoaded =
-                  state.perfilPreInversionConsultoresLoaded!;
+      drawer: BlocBuilder<MenuCubit, MenuState>(
+        builder: (context, state) {
+          final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
+          return PerfilPreInversionDrawer(
+            menuHijo: menuHijo,
+          );
+        },
+      ),
+      appBar: AppBar(title: const Text('Asignación Consultor'), actions: const [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30.0),
+          child: NetworkIcon(),
+        )
+      ]),
+      body: BlocBuilder<PerfilPreInversionConsultoresBloc,
+          PerfilPreInversionConsultoresState>(builder: (context, state) {
+        if (state is PerfilPreInversionConsultoresLoading) {
+          return const CustomCircularProgress(alignment: Alignment.center);
+        }
+        if (state is PerfilPreInversionConsultoresLoaded) {
+          final perfilPreInversionConsultoresLoaded =
+              state.perfilPreInversionConsultoresLoaded!;
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                      horizontalMargin: 3,
-                      columnSpacing: 10,
-                      headingRowColor: MaterialStateProperty.all(
-                          Theme.of(context).colorScheme.secondary),
-                      columns: <DataColumn>[
-                        DataColumn(
-                          label: Container(),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text('Revisión',
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text('Consultor',
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text('Fecha Asignación',
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text('Identificación',
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      ],
-                      rows: [
-                        DataRow(cells: <DataCell>[
-                          DataCell(IconButton(
-                              alignment: Alignment.centerLeft,
-                              onPressed: () {
-                                BlocProvider.of<
-                                            PerfilPreInversionConsultoresBloc>(
-                                        context)
-                                    .add(DeletePerfilPreInversionConsultores(
-                                        perfilPreInversionConsultoresLoaded[0]
-                                            .perfilPreInversionId,
-                                        perfilPreInversionConsultoresLoaded[0]
-                                            .consultorId,
-                                        '2'));
-                              },
-                              icon: const Icon(Icons.delete_forever))),
-                          DataCell(Container(
-                              alignment: AlignmentDirectional.center,
-                              child: Text(
-                                perfilPreInversionConsultoresLoaded[0]
-                                    .revision!,
-                              ))),
-                          DataCell(Container(
-                              alignment: AlignmentDirectional.center,
-                              child: Text(perfilPreInversionConsultoresLoaded[0]
-                                  .consultor!))),
-                          DataCell(Container(
-                              alignment: AlignmentDirectional.center,
-                              child: Text(perfilPreInversionConsultoresLoaded[0]
-                                  .fechaRevision
-                                  .substring(0, 10)))),
-                          DataCell(Container(
-                              alignment: AlignmentDirectional.center,
-                              child: Text(perfilPreInversionConsultoresLoaded[0]
-                                  .consultorId))),
-                        ]),
-                      ]),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(columns: const <DataColumn>[
+                DataColumn(
+                  label: Text(
+                    'Consultor',
+                  ),
                 ),
-              );
-            }
-            if (state is PerfilPreInversionConsultoresInitial) {
-              return BlocBuilder<ConsultorCubit, ConsultorState>(
-                builder: (context, state) {
-                  if (state is ConsultoresLoading) {
-                    return const CustomCircularProgress(
-                        alignment: Alignment.center);
-                  } else if (state is ConsultoresLoaded) {
-                    List<ConsultorEntity> consultores =
-                        state.consultoresLoaded!;
-                    if (consultores.isEmpty) {
-                      return const SizedBox(
-                          child: Center(
-                              child: NoDataSvg(title: 'No hay resultados')));
-                    }
-                    return PerfilPreInversionConsultoresRows(
-                        consultores: consultores,
-                        subtitleStyle: Styles.subtitleStyle);
-                  }
-                  return Container();
-                },
-              );
-            }
-            return Container();
-          }),
-        ]));
+                DataColumn(
+                  label: Text(
+                    'Acción',
+                  ),
+                ),
+              ], rows: [
+                DataRow(cells: <DataCell>[
+                  DataCell(Container(
+                      alignment: AlignmentDirectional.center,
+                      child: Text(
+                          perfilPreInversionConsultoresLoaded[0].consultor!))),
+                  DataCell(IconButton(
+                      alignment: Alignment.centerLeft,
+                      onPressed: () {
+                        BlocProvider.of<PerfilPreInversionConsultoresBloc>(
+                                context)
+                            .add(DeletePerfilPreInversionConsultores(
+                                perfilPreInversionConsultoresLoaded[0]
+                                    .perfilPreInversionId,
+                                perfilPreInversionConsultoresLoaded[0]
+                                    .consultorId,
+                                '2'));
+                      },
+                      icon: const Icon(Icons.delete_forever))),
+                ]),
+              ]),
+            ),
+          );
+        }
+        if (state is PerfilPreInversionConsultoresInitial) {
+          return BlocBuilder<ConsultorCubit, ConsultorState>(
+            builder: (context, state) {
+              if (state is ConsultoresLoading) {
+                return const CustomCircularProgress(
+                    alignment: Alignment.center);
+              } else if (state is ConsultoresLoaded) {
+                List<ConsultorEntity> consultores = state.consultoresLoaded!;
+                if (consultores.isEmpty) {
+                  return const SizedBox(
+                      child:
+                          Center(child: NoDataSvg(title: 'No hay resultados')));
+                }
+                return PerfilPreInversionConsultoresRows(
+                  consultores: consultores,
+                );
+              }
+              return Container();
+            },
+          );
+        }
+        return Container();
+      }),
+    );
   }
 }

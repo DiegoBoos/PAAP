@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
 import '../../../../domain/entities/usuario_entity.dart';
-import '../../../../domain/core/error/exception.dart';
 
+import '../../core/error/failure.dart';
 import '../../../domain/entities/experiencia_agricola_entity.dart';
 import '../../constants.dart';
 import '../../models/experiencia_agricola_model.dart';
@@ -68,43 +68,46 @@ class ExperienciaAgricolaRemoteDataSourceImpl
           },
           body: experienciaAgricolaSOAP);
 
-      if (experienciaAgricolaResp.statusCode == 200) {
-        final experienciaAgricolaDoc =
-            xml.XmlDocument.parse(experienciaAgricolaResp.body);
+      if (experienciaAgricolaResp.statusCode != 200) {
+        throw const ServerFailure(
+            ['Error al obtener las experiencias agricolas']);
+      }
 
-        final respuesta = experienciaAgricolaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final experienciaAgricolaDoc =
+          xml.XmlDocument.parse(experienciaAgricolaResp.body);
 
-        if (respuesta == 'true' &&
-            experienciaAgricolaDoc.findAllElements('NewDataSet').isNotEmpty) {
-          final xmlString = experienciaAgricolaDoc
-              .findAllElements('NewDataSet')
-              .map((xmlElement) => xmlElement.toXmlString())
-              .first;
+      final respuesta = experienciaAgricolaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
 
-          String res = Utils.convertXmlToJson(xmlString);
-
-          final Map<String, dynamic> decodedResp = json.decode(res);
-
-          final experienciasAgricolasRaw =
-              decodedResp.entries.first.value['Table'];
-
-          if (experienciasAgricolasRaw is List) {
-            return List.from(experienciasAgricolasRaw)
-                .map((e) => ExperienciaAgricolaModel.fromJson(e))
-                .toList();
-          } else {
-            return [
-              ExperienciaAgricolaModel.fromJson(experienciasAgricolasRaw)
-            ];
-          }
-        } else {
+      if (respuesta == 'true') {
+        if (experienciaAgricolaDoc.findAllElements('NewDataSet').isEmpty) {
           return [];
         }
+
+        final xmlString = experienciaAgricolaDoc
+            .findAllElements('NewDataSet')
+            .map((xmlElement) => xmlElement.toXmlString())
+            .first;
+
+        String res = Utils.convertXmlToJson(xmlString);
+
+        final Map<String, dynamic> decodedResp = json.decode(res);
+
+        final experienciasAgricolasRaw =
+            decodedResp.entries.first.value['Table'];
+
+        if (experienciasAgricolasRaw is List) {
+          return List.from(experienciasAgricolasRaw)
+              .map((e) => ExperienciaAgricolaModel.fromJson(e))
+              .toList();
+        } else {
+          return [ExperienciaAgricolaModel.fromJson(experienciasAgricolasRaw)];
+        }
       } else {
-        throw ServerException();
+        throw const ServerFailure(
+            ['Error al obtener las experiencias agricolas']);
       }
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -184,20 +187,20 @@ class ExperienciaAgricolaRemoteDataSourceImpl
           },
           body: experienciaAgricolaSOAP);
 
-      if (experienciaAgricolaResp.statusCode == 200) {
-        final experienciaAgricolaDoc =
-            xml.XmlDocument.parse(experienciaAgricolaResp.body);
+      if (experienciaAgricolaResp.statusCode != 200) {
+        throw const ServerFailure(['Error al guardar la experiencia agricola']);
+      }
 
-        final respuesta = experienciaAgricolaDoc
-            .findAllElements('respuesta')
-            .map((e) => e.text)
-            .first;
+      final experienciaAgricolaDoc =
+          xml.XmlDocument.parse(experienciaAgricolaResp.body);
 
-        if (respuesta == 'true') {
-          return experienciaAgricolaEntity;
-        } else {
-          return null;
-        }
+      final respuesta = experienciaAgricolaDoc
+          .findAllElements('respuesta')
+          .map((e) => e.text)
+          .first;
+
+      if (respuesta == 'true') {
+        return experienciaAgricolaEntity;
       } else {
         return null;
       }
