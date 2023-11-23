@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/ui/cubits/cofinanciador/cofinanciador_cubit.dart';
 
 import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 import '../../../ui/blocs/perfil_preinversion_cofinanciadores/perfil_preinversion_cofinanciadores_bloc.dart';
@@ -9,6 +8,8 @@ import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion
 import '../../../ui/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 import '../../../ui/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
 import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../cubits/actividad_financiera/actividad_financiera_cubit.dart';
+import '../../cubits/cofinanciador/cofinanciador_cubit.dart';
 import '../../cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
 import '../../cubits/rubro/rubro_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
@@ -32,33 +33,9 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
     extends State<NewEditPerfilPreInversionCofinanciadorPage> {
   final formKeyCofinanciador = GlobalKey<FormState>();
 
-  bool isPerfilPreInversionCofinanciadorDesembolsoEnabled = false;
-  bool isPerfilPreInversionCofinanciadorActividadFinancieraEnabled = false;
-  bool isPerfilPreInversionCofinanciadorRubroEnabled = false;
-
   @override
   void initState() {
     super.initState();
-    final perfilPreInversionCofinanciadorDesembolsoCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
-            context);
-
-    final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
-        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
-
-    setState(() {
-      if (perfilPreInversionCofinanciadorDesembolsoCubit.state
-          is PerfilPreInversionCofinanciadorDesembolsoLoaded) {
-        isPerfilPreInversionCofinanciadorDesembolsoEnabled = true;
-        isPerfilPreInversionCofinanciadorActividadFinancieraEnabled = true;
-      }
-
-      if (perfilPreInversionCofinanciadorActividadFinancieraCubit.state
-          is PerfilPreInversionCofinanciadorActividadFinancieraLoaded) {
-        isPerfilPreInversionCofinanciadorActividadFinancieraEnabled = true;
-        isPerfilPreInversionCofinanciadorRubroEnabled = true;
-      }
-    });
 
     BlocProvider.of<CofinanciadorCubit>(context).getCofinanciadores();
     BlocProvider.of<RubroCubit>(context).getRubrosDB();
@@ -71,13 +48,13 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
 
-    final perfilPreInversionCofinanciadorCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
     final perfilPreInversionCofinanciadorDesembolsoCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
             context);
+
     final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
         .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
+
     final perfilPreInversionCofinanciadorRubroCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorRubroCubit>(context);
 
@@ -87,18 +64,21 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
     final perfilPreInversion =
         vPerfilPreInversionCubit.state.vPerfilPreInversion!;
 
-    final perfilPreInversionCofinanciador = ModalRoute.of(context)!
-        .settings
-        .arguments as PerfilPreInversionCofinanciadorEntity?;
     final perfilPreInversionCofinanciadorDesembolso =
         perfilPreInversionCofinanciadorDesembolsoCubit
             .state.perfilPreInversionCofinanciadorDesembolso;
+
     final perfilPreInversionCofinanciadorActividadFinanciera =
         perfilPreInversionCofinanciadorActividadFinancieraCubit
             .state.perfilPreInversionCofinanciadorActividadFinanciera;
+
     final perfilPreInversionCofinanciadorRubro =
         perfilPreInversionCofinanciadorRubroCubit
             .state.perfilPreInversionCofinanciadorRubro;
+
+    final perfilPreInversionCofinanciador = ModalRoute.of(context)!
+        .settings
+        .arguments as PerfilPreInversionCofinanciadorEntity?;
 
     return MultiBlocListener(
       listeners: [
@@ -109,13 +89,21 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
               CustomSnackBar.showSnackBar(
                   context, 'Datos guardados satisfactoriamente', Colors.green);
 
-              setState(() {
-                isPerfilPreInversionCofinanciadorDesembolsoEnabled = true;
-              });
-
               perfilPreInversionCofinanciadoresBloc.add(
                   GetPerfilPreInversionCofinanciadores(
                       perfilPreInversion.perfilPreInversionId));
+
+              final perfilPreInversionCofinanciadorSaved =
+                  state.perfilPreInversionCofinanciador;
+
+              BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context)
+                  .changeMonto(perfilPreInversionCofinanciadorSaved.monto);
+
+              perfilPreInversionCofinanciadorDesembolsoCubit
+                  .getPerfilPreInversionCofinanciadorDesembolso(
+                      perfilPreInversionCofinanciadorSaved
+                          .perfilPreInversionId!,
+                      perfilPreInversionCofinanciadorSaved.cofinanciadorId!);
             }
           },
         ),
@@ -123,10 +111,15 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
             PerfilPreInversionCofinanciadorDesembolsoState>(
           listener: (context, state) {
             if (state is PerfilPreInversionCofinanciadorDesembolsoSaved) {
-              setState(() {
-                isPerfilPreInversionCofinanciadorActividadFinancieraEnabled =
-                    true;
-              });
+              final perfilPreInversionCofinanciadorDesembolsoSaved =
+                  state.perfilPreInversionCofinanciadorDesembolso;
+
+              perfilPreInversionCofinanciadorActividadFinancieraCubit
+                  .getPerfilPreInversionCofinanciadorActividadFinanciera(
+                      perfilPreInversionCofinanciadorDesembolsoSaved
+                          .perfilPreInversionId!,
+                      perfilPreInversionCofinanciadorDesembolsoSaved
+                          .cofinanciadorId!);
             }
           },
         ),
@@ -135,9 +128,15 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
           listener: (context, state) {
             if (state
                 is PerfilPreInversionCofinanciadorActividadFinancieraSaved) {
-              setState(() {
-                isPerfilPreInversionCofinanciadorRubroEnabled = true;
-              });
+              final perfilPreInversionCofinanciadorActividadFinancieraSaved =
+                  state.perfilPreInversionCofinanciadorActividadFinanciera;
+
+              perfilPreInversionCofinanciadorRubroCubit
+                  .getPerfilPreInversionCofinanciadorRubro(
+                      perfilPreInversionCofinanciadorActividadFinancieraSaved
+                          .perfilPreInversionId,
+                      perfilPreInversionCofinanciadorActividadFinancieraSaved
+                          .cofinanciadorId!);
             }
           },
         ),
@@ -183,25 +182,42 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                         cofinanciadores: state.cofinanciadoresLoaded!,
                       );
                     } else {
-                      return const Center(child: CircularProgressIndicator());
+                      return const SizedBox();
                     }
                   },
                 ),
-                if (isPerfilPreInversionCofinanciadorDesembolsoEnabled)
-                  PerfilPreInversionCofinanciadorDesembolsoForm(
-                    perfilPreInversionCofinanciadorDesembolso:
-                        perfilPreInversionCofinanciadorDesembolso,
-                  ),
-                if (isPerfilPreInversionCofinanciadorActividadFinancieraEnabled)
-                  PerfilPreInversionCofinanciadorActividadFinancieraForm(
-                    perfilPreInversionCofinanciadorActividadFinanciera:
-                        perfilPreInversionCofinanciadorActividadFinanciera,
-                  ),
-                if (isPerfilPreInversionCofinanciadorRubroEnabled)
-                  PerfilPreInversionCofinanciadorRubroForm(
-                    perfilPreInversionCofinanciadorRubro:
-                        perfilPreInversionCofinanciadorRubro,
-                  ),
+                BlocBuilder<PerfilPreInversionCofinanciadorDesembolsoCubit,
+                    PerfilPreInversionCofinanciadorDesembolsoState>(
+                  builder: (context, state) {
+                    if (state
+                        is PerfilPreInversionCofinanciadorDesembolsoLoaded) {
+                      return PerfilPreInversionCofinanciadorDesembolsoForm(
+                          perfilPreInversionCofinanciadorDesembolso);
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+                BlocBuilder<ActividadFinancieraCubit, ActividadFinancieraState>(
+                  builder: (context, state) {
+                    if (state is ActividadesFinancierasLoaded) {
+                      return PerfilPreInversionCofinanciadorActividadFinancieraForm(
+                          perfilPreInversionCofinanciadorActividadFinanciera);
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+                BlocBuilder<RubroCubit, RubroState>(
+                  builder: (context, state) {
+                    if (state is RubrosLoaded) {
+                      return PerfilPreInversionCofinanciadorRubroForm(
+                          perfilPreInversionCofinanciadorRubro);
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
                 const SizedBox(height: 20),
                 SaveBackButtons(
                   onSaved: () async {
@@ -211,22 +227,25 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
 
                     formKeyCofinanciador.currentState!.save();
 
+                    final perfilPreInversionCofinanciadorCubit =
+                        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
+                            context);
+
+                    final participacion =
+                        double.parse(perfilPreInversionCofinanciador!.monto) *
+                            100 /
+                            double.parse(perfilPreInversion.valorTotalProyecto);
+
                     perfilPreInversionCofinanciadorCubit
                         .changePerfilPreInversionId(
                             perfilPreInversion.perfilPreInversionId);
-
-                    final participacion = double.parse(
-                            perfilPreInversionCofinanciadorCubit
-                                .state.perfilPreInversionCofinanciador.monto) *
-                        100 /
-                        double.parse(perfilPreInversion.valorTotalProyecto);
 
                     perfilPreInversionCofinanciadorCubit
                         .changeParticipacion(participacion.toString());
 
                     perfilPreInversionCofinanciadorCubit
                         .savePerfilPreInversionCofinanciadorDB(
-                            perfilPreInversionCofinanciador!);
+                            perfilPreInversionCofinanciador);
                   },
                 )
               ],

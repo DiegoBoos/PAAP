@@ -40,7 +40,6 @@ class BeneficiarioLocalDataSourceImpl implements BeneficiarioLocalDataSource {
   @override
   Future<List<BeneficiarioModel>> getBeneficiariosDB(String perfilId) async {
     final db = await DBConfig.database;
-    //TODO: BeneficiarioId se asume como el documento
     String sql = '''
       select
       Beneficiario.BeneficiarioId,

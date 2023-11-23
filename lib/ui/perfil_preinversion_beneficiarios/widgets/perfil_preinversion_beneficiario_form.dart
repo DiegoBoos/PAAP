@@ -113,11 +113,12 @@ class _PerfilPreInversionBeneficiarioFormState
   void calculateTotalActivo(
       PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario) {
     if (perfilPreInversionBeneficiario != null) {
-      final sum = double.parse(perfilPreInversionBeneficiario.activoCorriente) +
-          double.parse(perfilPreInversionBeneficiario.activoFinanciero) +
-          double.parse(perfilPreInversionBeneficiario.activoInmobiliario) +
-          double.parse(perfilPreInversionBeneficiario.activoInmobiliario) +
-          double.parse(perfilPreInversionBeneficiario.activoProductivo);
+      final sum =
+          double.parse(perfilPreInversionBeneficiario.activoCorriente!) +
+              double.parse(perfilPreInversionBeneficiario.activoFinanciero!) +
+              double.parse(perfilPreInversionBeneficiario.activoInmobiliario!) +
+              double.parse(perfilPreInversionBeneficiario.activoInmobiliario!) +
+              double.parse(perfilPreInversionBeneficiario.activoProductivo!);
       totalActivoCtrl.text = sum.toString();
     } else {
       totalActivoCtrl.text = '0';

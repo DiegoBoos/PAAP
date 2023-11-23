@@ -5,7 +5,7 @@ import '../../../ui/blocs/alianzas/alianzas_bloc.dart';
 import '../../../domain/entities/v_alianza_entity.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/no_data_svg.dart';
-import '../widgets/alianzas_rows.dart';
+import 'alianzas_rows.dart';
 
 class AlianzasPage extends StatefulWidget {
   const AlianzasPage({super.key});

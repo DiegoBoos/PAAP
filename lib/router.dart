@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:paap/ui/perfil_cofinanciadores/pages/new_edit_perfil_cofinanciador_page.dart';
 
-import 'ui/aliados/pages/new_edit_aliado_page.dart';
-import 'ui/aliados/pages/aliados_page.dart';
+import 'ui/perfil_aliados/pages/new_edit_perfil_aliado_page.dart';
+import 'ui/perfil_aliados/pages/perfil_aliados_page.dart';
 import 'ui/alianzas/pages/alianza_detail_page.dart';
 import 'ui/alianzas_beneficiarios/pages/alianzas_beneficiarios_page.dart';
 import 'ui/alianzas_beneficiarios/pages/new_edit_alianza_beneficiario_page.dart';
-import 'ui/beneficiarios/pages/new_edit_beneficiario_page.dart';
+import 'ui/perfil_beneficiarios/pages/new_edit_perfil_beneficiario_page.dart';
 import 'ui/modelo_financiero/pages/new_edit_perfil_preinversion_costos_upt.dart';
 import 'ui/modelo_financiero/pages/new_edit_perfil_preinversion_ingresos_upt.dart';
-import 'ui/beneficiarios/pages/beneficiarios_page.dart';
+import 'ui/perfil_beneficiarios/pages/perfil_beneficiarios_page.dart';
+import 'ui/perfil_cofinanciadores/pages/perfiles_cofinanciadores_page.dart';
 import 'ui/perfiles_preinversiones_consultores/pages/perfil_preinversion_consultores.dart';
 import 'ui/modelo_financiero/pages/modelo_financiero_page.dart';
 import 'ui/perfil_preinversion_aliados/pages/new_edit_perfil_preinversion_aliado_page.dart';
@@ -30,11 +32,15 @@ class AppRouter {
     'sign-in': (BuildContext context) => const SignInPage(),
     'tabs': (BuildContext context) => const TabsPage(),
     'VPerfil': (BuildContext context) => const PerfilDetailPage(),
-    'VBeneficiario': (BuildContext context) => const BeneficiariosPage(),
+    'VBeneficiario': (BuildContext context) => const PerfilBeneficiariosPage(),
+    'VAliado': (BuildContext context) => const PerfilAliadosPage(),
+    'VCofinanciador': (BuildContext context) =>
+        const PerfilCofinanciadoresPage(),
+    'NewEditVAliado': (BuildContext context) => const NewEditPerfilAliadoPage(),
     'NewEditVBeneficiario': (BuildContext context) =>
-        const NewEditBeneficiarioPage(),
-    'VAliado': (BuildContext context) => const AliadosPage(),
-    'NewEditVAliado': (BuildContext context) => const NewEditAliadoPage(),
+        const NewEditPerfilBeneficiarioPage(),
+    'NewEditVCofinanciador': (BuildContext context) =>
+        const NewEditPerfilCofinanciadorPage(),
     'VPrimeraVisita': (BuildContext context) => const RegistroVisitaPage(),
     'VPerfilPreInversion': (BuildContext context) {
       return const PerfilPreInversionDetailPage();

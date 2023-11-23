@@ -35,7 +35,9 @@ import '../datasources/local/menu_local_ds.dart';
 import '../datasources/local/municipio_local_ds.dart';
 import '../datasources/local/nivel_escolar_local_ds.dart';
 import '../datasources/local/opcion_local_ds.dart';
+import '../datasources/local/perfil_aliado_local_ds.dart';
 import '../datasources/local/perfil_beneficiario_local_ds.dart';
+import '../datasources/local/perfil_cofinanciador_local_ds.dart';
 import '../datasources/local/perfil_local_ds.dart';
 import '../datasources/local/perfil_preinversion_aliado_local_ds.dart';
 import '../datasources/local/perfil_preinversion_beneficiario_local_ds.dart';
@@ -178,7 +180,10 @@ class DBConfig {
         .createPerfilPreInversionPrecioTable(db);
     await PerfilPreInversionPlanNegocioLocalDataSourceImpl
         .createPerfilPreInversionPlanNegocioTable(db);
+    await PerfilAliadoLocalDataSourceImpl.createPerfilAliadoTable(db);
     await PerfilBeneficiarioLocalDataSourceImpl.createPerfilBeneficiarioTable(
+        db);
+    await PerfilCofinanciadorLocalDataSourceImpl.createPerfilCofinanciadorTable(
         db);
     await ExperienciaAgricolaLocalDataSourceImpl.createExperienciaAgricolaTable(
         db);

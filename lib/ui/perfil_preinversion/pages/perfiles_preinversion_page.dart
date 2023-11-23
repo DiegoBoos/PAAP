@@ -5,7 +5,7 @@ import '../../../ui/blocs/perfiles_preinversion/perfiles_preinversion_bloc.dart'
 import '../../../domain/entities/v_perfil_preinversion_entity.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/no_data_svg.dart';
-import '../widgets/perfiles_preinversion_rows.dart';
+import 'perfiles_preinversion_rows.dart';
 
 class PerfilesPreInversionPage extends StatefulWidget {
   const PerfilesPreInversionPage({super.key});

@@ -8,7 +8,7 @@ import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
-import '../widgets/perfil_preinversion_cofinanciador_rows.dart';
+import 'perfil_preinversion_cofinanciador_rows.dart';
 
 class PerfilesPreInversionesCofinanciadoresPage extends StatefulWidget {
   const PerfilesPreInversionesCofinanciadoresPage({super.key});
@@ -30,9 +30,11 @@ class _PerfilesPreInversionesCofinanciadoresPageState
     final perfilPreInversionCofinanciadoresBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadoresBloc>(context);
 
-    perfilPreInversionCofinanciadoresBloc.add(
-        GetPerfilPreInversionCofinanciadores(vPerfilPreInversionCubit
-            .state.vPerfilPreInversion!.perfilPreInversionId));
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId;
+
+    perfilPreInversionCofinanciadoresBloc
+        .add(GetPerfilPreInversionCofinanciadores(perfilPreInversionId));
   }
 
   @override
@@ -41,6 +43,7 @@ class _PerfilesPreInversionesCofinanciadoresPageState
     final perfilPreInversionCofinanciadoresBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadoresBloc>(context,
             listen: true);
+
     final perfilPreInversionCofinanciadores =
         perfilPreInversionCofinanciadoresBloc
             .state.perfilPreInversionCofinanciadores;

@@ -27,24 +27,23 @@ class PerfilPreInversionCofinanciadorRubroCubit
             failure.properties.first)), (data) {
       if (data != null) {
         emit(PerfilPreInversionCofinanciadorRubroLoaded(data));
-      } else {
-        emit(PerfilPreInversionCofinanciadorRubroInitial());
       }
     });
   }
 
   void savePerfilPreInversionCofinanciadorRubroDB(
       PerfilPreInversionCofinanciadorRubroEntity
-          perfilPreInversionCofinanciadorRubroEntity) async {
+          perfilPreInversionCofinanciadorRubro) async {
     final result = await perfilPreInversionCofinanciadorRubroDB
         .savePerfilPreInversionCofinanciadorRubroUsecaseDB(
-            perfilPreInversionCofinanciadorRubroEntity);
-    result.fold(
-        (failure) => emit(PerfilPreInversionCofinanciadorRubroError(
-            failure.properties.first)),
-        (data) => emit(PerfilPreInversionCofinanciadorRubroSaved(
-            perfilPreInversionCofinanciadorRubro:
-                perfilPreInversionCofinanciadorRubroEntity)));
+            perfilPreInversionCofinanciadorRubro);
+    result.fold((failure) {
+      emit(PerfilPreInversionCofinanciadorRubroError(failure.properties.first));
+    }, (data) {
+      emit(PerfilPreInversionCofinanciadorRubroSaved(
+          perfilPreInversionCofinanciadorRubro:
+              perfilPreInversionCofinanciadorRubro));
+    });
   }
 
   void changePerfilPreInversionId(String value) {

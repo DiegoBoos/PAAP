@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
-import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/cofinanciador_entity.dart';
 import '../../utils/input_decoration.dart';
 
@@ -25,18 +24,13 @@ class _PerfilPreInversionCofinanciadorFormState
   List<CofinanciadorEntity> cofinanciadoresFiltered = [];
 
   String? cofinanciadorId;
+  TextEditingController _cofinanciadorController = TextEditingController();
   final participacionCtrl = TextEditingController();
   final montoCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-
-    // final vPerfilPreInversionCubit =
-    //     BlocProvider.of<VPerfilPreInversionCubit>(context);
-
-    // final municipio =
-    //     vPerfilPreInversionCubit.state.vPerfilPreInversion!.municipio;
 
     setState(() {
       cofinanciadoresFiltered = widget.cofinanciadores
@@ -46,9 +40,27 @@ class _PerfilPreInversionCofinanciadorFormState
           .toList();
 
       cofinanciadorId = widget.perfilPreInversionCofinanciador?.cofinanciadorId;
+
+      if (cofinanciadorId != null) {
+        final initialCofinanciador = cofinanciadoresFiltered.firstWhere(
+          (cofinanciador) =>
+              cofinanciador.id ==
+              widget.perfilPreInversionCofinanciador?.cofinanciadorId,
+        );
+        _cofinanciadorController =
+            TextEditingController(text: initialCofinanciador.nombre);
+      }
+
       participacionCtrl.text =
           widget.perfilPreInversionCofinanciador?.participacion ?? '';
       montoCtrl.text = widget.perfilPreInversionCofinanciador?.monto ?? '';
+    });
+  }
+
+  void clearSelection() {
+    setState(() {
+      cofinanciadorId = null;
+      _cofinanciadorController.clear();
     });
   }
 
@@ -69,28 +81,49 @@ class _PerfilPreInversionCofinanciadorFormState
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
         child: Column(children: [
-          DropdownButtonFormField(
-            decoration: CustomInputDecoration.inputDecoration(
-                hintText: 'Cofinanciador', labelText: 'Cofinanciador'),
-            isExpanded: true,
-            value: cofinanciadorId,
-            items: cofinanciadoresFiltered
-                .map<DropdownMenuItem<String>>((CofinanciadorEntity value) {
-              return DropdownMenuItem<String>(
-                value: value.id,
-                child: Text(value.nombre),
-              );
-            }).toList(),
-            validator: (value) {
-              if (value == null) {
-                return 'Debe seleccionar un cofinanciador';
-              }
-              return null;
-            },
-            onChanged: (String? value) {
-              perfilPreInversionCofinanciadorCubit.changeCofinanciador(value);
-            },
-          ),
+          Autocomplete<CofinanciadorEntity>(
+              optionsBuilder: (TextEditingValue textEditingValue) {
+                return cofinanciadoresFiltered.where((cofinanciador) {
+                  return cofinanciador.nombre
+                      .toLowerCase()
+                      .contains(textEditingValue.text.toLowerCase());
+                });
+              },
+              displayStringForOption: (CofinanciadorEntity option) =>
+                  option.nombre,
+              fieldViewBuilder: (BuildContext context,
+                  TextEditingController textEditingController,
+                  FocusNode focusNode,
+                  VoidCallback onFieldSubmitted) {
+                _cofinanciadorController = textEditingController;
+                return Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          hintText: 'Cofinanciador',
+                          labelText: 'Cofinanciador',
+                        ),
+                        controller: _cofinanciadorController,
+                        focusNode: focusNode,
+                        onFieldSubmitted: (value) {
+                          onFieldSubmitted();
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: clearSelection,
+                    ),
+                  ],
+                );
+              },
+              onSelected: (CofinanciadorEntity value) {
+                setState(() {
+                  cofinanciadorId = value.id;
+                });
+              },
+              initialValue: _cofinanciadorController.value),
           const SizedBox(height: 20),
           TextFormField(
               controller: montoCtrl,

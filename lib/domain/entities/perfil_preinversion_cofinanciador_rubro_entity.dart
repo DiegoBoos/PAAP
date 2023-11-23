@@ -1,10 +1,10 @@
 class PerfilPreInversionCofinanciadorRubroEntity {
   PerfilPreInversionCofinanciadorRubroEntity({
     required this.perfilPreInversionId,
-    required this.cofinanciadorId,
-    required this.desembolsoId,
-    required this.actividadFinancieraId,
-    required this.rubroId,
+    this.cofinanciadorId,
+    this.desembolsoId,
+    this.actividadFinancieraId,
+    this.rubroId,
     required this.valor,
     this.actividadFinanciera,
     this.rubro,
@@ -13,10 +13,10 @@ class PerfilPreInversionCofinanciadorRubroEntity {
   });
 
   String perfilPreInversionId;
-  String cofinanciadorId;
-  String desembolsoId;
-  String actividadFinancieraId;
-  String rubroId;
+  String? cofinanciadorId;
+  String? desembolsoId;
+  String? actividadFinancieraId;
+  String? rubroId;
   String valor;
   String? actividadFinanciera;
   String? rubro;

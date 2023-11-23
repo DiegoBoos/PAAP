@@ -5,7 +5,8 @@ import '../../../domain/entities/perfil_beneficiario_entity.dart';
 import '../../models/perfil_beneficiario_model.dart';
 
 abstract class PerfilBeneficiarioLocalDataSource {
-  Future<List<PerfilBeneficiarioModel>> getPerfilBeneficiariosDB();
+  Future<List<PerfilBeneficiarioModel>> getPerfilBeneficiariosDB(
+      String perfilId);
   Future<List<PerfilBeneficiarioModel>> getPerfilesBeneficiariosProduccionDB();
   Future<PerfilBeneficiarioModel?> getPerfilBeneficiarioDB(
       String perfilId, String beneficiarioId);
@@ -38,7 +39,7 @@ class PerfilBeneficiarioLocalDataSourceImpl
         Activo	TEXT,
         RecordStatus	TEXT,
         PRIMARY KEY(PerfilBeneficiarioId),
-        FOREIGN KEY(PerfilId) REFERENCES Perfil(PerfilId),
+        FOREIGN KEY(PerfilId) REFERENCES Perfil(ID),
         FOREIGN KEY(BeneficiarioId) REFERENCES Beneficiario(BeneficiarioId),
         FOREIGN KEY(MunicipioId) REFERENCES Municipio(MunicipioId),
         FOREIGN KEY(VeredaId) REFERENCES Vereda(VeredaId),
@@ -48,10 +49,31 @@ class PerfilBeneficiarioLocalDataSourceImpl
   }
 
   @override
-  Future<List<PerfilBeneficiarioModel>> getPerfilBeneficiariosDB() async {
+  Future<List<PerfilBeneficiarioModel>> getPerfilBeneficiariosDB(
+      String perfilId) async {
     final db = await DBConfig.database;
 
-    final res = await db.query('PerfilBeneficiario');
+    String sql = '''
+      select
+      Beneficiario.BeneficiarioId,
+      Beneficiario.TipoIdentificacionId,
+      Beneficiario.FechaExpedicionDocumento,
+      Beneficiario.FechaNacimiento,
+      cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', Beneficiario.FechaNacimiento ) as int) as Edad,
+      Beneficiario.Nombre1,
+      Beneficiario.Nombre2,
+      Beneficiario.Apellido1,
+      Beneficiario.Apellido2,
+      Beneficiario.GeneroId,
+      Beneficiario.GrupoEspecialId,
+      Beneficiario.TelefonoMovil,
+      Beneficiario.Activo,
+      Beneficiario.Nombre1 || " " || Beneficiario.Nombre2 || " " || Beneficiario.Apellido1 || " " || Beneficiario.Apellido2 as Nombre,
+      cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', Beneficiario.FechaNacimiento ) as int) as Edad
+      from Beneficiario
+    ''';
+
+    final res = await db.rawQuery(sql);
 
     final beneficiariosDB = List<PerfilBeneficiarioModel>.from(
         res.map((m) => PerfilBeneficiarioModel.fromJson(m))).toList();

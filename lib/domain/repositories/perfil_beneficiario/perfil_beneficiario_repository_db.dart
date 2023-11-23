@@ -8,7 +8,7 @@ abstract class PerfilBeneficiarioRepositoryDB {
       getPerfilesBeneficiariosProduccionRepositoryDB();
 
   Future<Either<Failure, List<PerfilBeneficiarioEntity>>>
-      getPerfilBeneficiariosRepositoryDB();
+      getPerfilBeneficiariosRepositoryDB(String perfilId);
 
   Future<Either<Failure, PerfilBeneficiarioEntity?>>
       getPerfilBeneficiarioRepositoryDB(String perfilId, String beneficiarioId);

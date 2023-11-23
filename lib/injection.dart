@@ -1,7 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
-import 'ui/blocs/aliados/aliados_bloc.dart';
+import 'domain/usecases/perfil_aliado/perfil_aliado_exports.dart';
+import 'domain/usecases/perfil_cofinanciador/perfil_cofinanciador_exports.dart';
+import 'ui/blocs/perfil_aliados/perfil_aliados_bloc.dart';
 import 'ui/blocs/sync/sync_bloc.dart';
 import 'ui/cubits/internet/internet_cubit.dart';
 import 'ui/cubits/slider/slider_cubit.dart';
@@ -182,8 +184,6 @@ agrupacionInit() {
 }
 
 aliadoInit() {
-  // bloc
-  locator.registerFactory(() => AliadosBloc(aliadoUsecaseDB: locator()));
   // cubit
   locator.registerFactory(() => AliadoCubit(aliadoUsecaseDB: locator()));
   // remote usecase
@@ -302,7 +302,7 @@ authBlocInit() {
 beneficiarioInit() {
   // cubit
   locator.registerFactory(
-      () => BeneficiariosBloc(beneficiarioUsecaseDB: locator()));
+      () => PerfilBeneficiariosBloc(perfilBeneficiarioUsecaseDB: locator()));
 
   // cubit
   locator.registerFactory(() => BeneficiarioCubit(beneficiarioDB: locator()));
@@ -652,8 +652,12 @@ syncInit() {
         experienciaAgricolaDB: locator(),
         experienciaPecuaria: locator(),
         experienciaPecuariaDB: locator(),
+        perfilAliado: locator(),
+        perfilAliadoDB: locator(),
         perfilBeneficiario: locator(),
         perfilBeneficiarioDB: locator(),
+        perfilCofinanciador: locator(),
+        perfilCofinanciadorDB: locator(),
         perfilPreInversion: locator(),
         perfilPreInversionDB: locator(),
         rubro: locator(),
@@ -1140,7 +1144,9 @@ void init() {
   municipiosInit();
   nivelEscolarInit();
   perfilesInit();
+  perfilAliadoInit();
   perfilBeneficiarioInit();
+  perfilCofinanciadorInit();
   perfilesPreInversionInit();
   perfilPreInversionAliadosInit();
   productosInit();
@@ -1334,7 +1340,48 @@ opcionInit() {
   );
 }
 
+perfilAliadoInit() {
+  // cubit
+  locator.registerFactory(() => PerfilAliadoCubit(perfilAliadoDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => PerfilAliadoUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => PerfilAliadoUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<PerfilAliadoRepository>(
+    () => PerfilAliadoRepositoryImpl(
+      perfilAliadoRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<PerfilAliadoRepositoryDB>(
+    () => PerfilAliadoRepositoryDBImpl(
+      perfilAliadoLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<PerfilAliadoRemoteDataSource>(
+    () => PerfilAliadoRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<PerfilAliadoLocalDataSource>(
+    () => PerfilAliadoLocalDataSourceImpl(),
+  );
+}
+
 perfilBeneficiarioInit() {
+  // bloc
+  locator.registerFactory(
+      () => PerfilAliadosBloc(perfilAliadoUsecaseDB: locator()));
+
   // cubit
   locator.registerFactory(
       () => PerfilBeneficiarioCubit(perfilBeneficiarioDB: locator()));
@@ -1369,6 +1416,44 @@ perfilBeneficiarioInit() {
   // local data source
   locator.registerLazySingleton<PerfilBeneficiarioLocalDataSource>(
     () => PerfilBeneficiarioLocalDataSourceImpl(),
+  );
+}
+
+perfilCofinanciadorInit() {
+  // cubit
+  locator.registerFactory(
+      () => PerfilCofinanciadorCubit(perfilCofinanciadorDB: locator()));
+
+  // remote usecase
+  locator.registerLazySingleton(() => PerfilCofinanciadorUsecase(locator()));
+
+  // local usecase
+  locator.registerLazySingleton(() => PerfilCofinanciadorUsecaseDB(locator()));
+
+  // repository
+  locator.registerLazySingleton<PerfilCofinanciadorRepository>(
+    () => PerfilCofinanciadorRepositoryImpl(
+      perfilCofinanciadorRemoteDataSource: locator(),
+    ),
+  );
+
+  // repository DB
+  locator.registerLazySingleton<PerfilCofinanciadorRepositoryDB>(
+    () => PerfilCofinanciadorRepositoryDBImpl(
+      perfilCofinanciadorLocalDataSource: locator(),
+    ),
+  );
+
+  // remote data source
+  locator.registerLazySingleton<PerfilCofinanciadorRemoteDataSource>(
+    () => PerfilCofinanciadorRemoteDataSourceImpl(
+      client: locator(),
+    ),
+  );
+
+  // local data source
+  locator.registerLazySingleton<PerfilCofinanciadorLocalDataSource>(
+    () => PerfilCofinanciadorLocalDataSourceImpl(),
   );
 }
 

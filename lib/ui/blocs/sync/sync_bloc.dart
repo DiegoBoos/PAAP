@@ -32,7 +32,9 @@ import '../../../domain/usecases/municipio/municipio_exports.dart';
 import '../../../domain/usecases/nivel_escolar/nivel_escolar_exports.dart';
 import '../../../domain/usecases/opcion/opcion_exports.dart';
 import '../../../domain/usecases/perfil/perfil_exports.dart';
+import '../../../domain/usecases/perfil_aliado/perfil_aliado_exports.dart';
 import '../../../domain/usecases/perfil_beneficiario/perfil_beneficiario_exports.dart';
+import '../../../domain/usecases/perfil_cofinanciador/perfil_cofinanciador_exports.dart';
 import '../../../domain/usecases/perfil_preinversion/perfil_preinversion_exports.dart';
 import '../../../domain/usecases/perfil_preinversion_aliado/perfil_preinversion_aliado_exports.dart';
 import '../../../domain/usecases/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_exports.dart';
@@ -142,7 +144,6 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   final RubroUsecaseDB rubroDB;
   final BeneficioUsecase beneficio;
   final BeneficioUsecaseDB beneficioDB;
-
   final AliadoUsecase aliado;
   final AliadoUsecaseDB aliadoDB;
   final AlianzaBeneficiarioUsecase alianzaBeneficiario;
@@ -161,8 +162,12 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   final ExperienciaAgricolaUsecaseDB experienciaAgricolaDB;
   final ExperienciaPecuariaUsecase experienciaPecuaria;
   final ExperienciaPecuariaUsecaseDB experienciaPecuariaDB;
+  final PerfilAliadoUsecase perfilAliado;
+  final PerfilAliadoUsecaseDB perfilAliadoDB;
   final PerfilBeneficiarioUsecase perfilBeneficiario;
   final PerfilBeneficiarioUsecaseDB perfilBeneficiarioDB;
+  final PerfilCofinanciadorUsecase perfilCofinanciador;
+  final PerfilCofinanciadorUsecaseDB perfilCofinanciadorDB;
   final PerfilPreInversionAliadoUsecase perfilPreInversionAliado;
   final PerfilPreInversionAliadoUsecaseDB perfilPreInversionAliadoDB;
   final PerfilPreInversionBeneficiarioUsecase perfilPreInversionBeneficiario;
@@ -291,8 +296,12 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     required this.experienciaAgricolaDB,
     required this.experienciaPecuaria,
     required this.experienciaPecuariaDB,
+    required this.perfilAliado,
+    required this.perfilAliadoDB,
     required this.perfilBeneficiario,
     required this.perfilBeneficiarioDB,
+    required this.perfilCofinanciador,
+    required this.perfilCofinanciadorDB,
     required this.perfilPreInversionAliado,
     required this.perfilPreInversionAliadoDB,
     required this.perfilPreInversionBeneficiario,
@@ -318,7 +327,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     on<SyncStarted>((event, emit) async {
       final usuario = event.usuario;
       if (event.mode == 'A') {
-        gTotal = 58;
+        //TODO: revisar total
+        gTotal = 60;
         add(SyncStatusChanged(state.syncProgressModel.copyWith(
             title: 'Sincronizando Actividades',
             counter: state.syncProgressModel.counter + 1,
@@ -326,6 +336,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
             percent: calculatePercent())));
         await syncActividadesEconomicas(usuario, emit);
       } else {
+        //TODO: revisar total
         gTotal = 20;
         add(SyncStatusChanged(state.syncProgressModel.copyWith(
             title: 'Sincronizando Aliados',
@@ -1569,11 +1580,11 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         (_) async => await uploadExperienciaPecuaria(usuario, emit));
   }
 
-  // Sync  ExperienciaPecuaria
+  // Sync ExperienciaPecuaria
   Future<void> uploadExperienciaPecuaria(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
     add(SyncStatusChanged(state.syncProgressModel.copyWith(
-        title: 'Sincronizando  Experiencias Pecuarias',
+        title: 'Sincronizando Experiencias Pecuarias',
         counter: state.syncProgressModel.counter + 1,
         total: gTotal,
         percent: calculatePercent())));
@@ -1613,7 +1624,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
           (data) async =>
               await saveSyncExperienciasPecuarias(data, emit, usuario));
     } else {
-      await uploadPerfilBeneficiario(usuario, emit);
+      await uploadPerfilAliado(usuario, emit);
     }
   }
 
@@ -1624,9 +1635,58 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     final result =
         await experienciaPecuariaDB.saveExperienciasPecuariasUsecaseDB(data);
     return result.fold((failure) => add(SyncError(failure.properties.first)),
+        (_) async => await uploadPerfilAliado(usuario, emit));
+  }
+
+  // Sync PerfilAliado
+  Future<void> uploadPerfilAliado(
+      UsuarioEntity usuario, Emitter<SyncState> emit) async {
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
+        title: 'Sincronizando Perfiles Aliados',
+        counter: state.syncProgressModel.counter + 1,
+        total: gTotal,
+        percent: calculatePercent())));
+    final result = await perfilAliadoDB.getPerfilesAliadosProduccionUsecaseDB();
+    result.fold((failure) => add(SyncError(failure.properties.first)),
+        (data) async => await savePerfilesAliadosRemote(usuario, data, emit));
+  }
+
+  Future<void> savePerfilesAliadosRemote(UsuarioEntity usuario,
+      List<PerfilAliadoEntity> data, Emitter<SyncState> emit) async {
+    final result = await perfilAliado.savePerfilesAliadosUsecase(usuario, data);
+    return result.fold(
+        (failure) => add(SyncError(failure.properties.first)),
+        (data) async =>
+            await updatePerfilesAliadosProduccion(usuario, data, emit));
+  }
+
+  Future<void> updatePerfilesAliadosProduccion(UsuarioEntity usuario,
+      List<PerfilAliadoEntity> data, Emitter<SyncState> emit) async {
+    final result =
+        await perfilAliadoDB.updatePerfilesAliadosProduccionUsecaseDB(data);
+    result.fold((failure) => add(SyncError(failure.properties.first)),
+        (data) async => await syncPerfilesAliados(usuario, emit, data));
+  }
+
+  Future<void> syncPerfilesAliados(
+      UsuarioEntity usuario, Emitter<SyncState> emit, int result) async {
+    if (result == 0) {
+      final result = await perfilAliado.getPerfilAliadosUsecase(usuario);
+      return result.fold((failure) => add(SyncError(failure.properties.first)),
+          (data) async => await saveSyncPerfilesAliados(data, emit, usuario));
+    } else {
+      await uploadPerfilBeneficiario(usuario, emit);
+    }
+  }
+
+  Future<void> saveSyncPerfilesAliados(List<PerfilAliadoEntity> data,
+      Emitter<SyncState> emit, UsuarioEntity usuario) async {
+    final result = await perfilAliadoDB.savePerfilAliadosUsecaseDB(data);
+    return result.fold((failure) => add(SyncError(failure.properties.first)),
         (_) async => await uploadPerfilBeneficiario(usuario, emit));
   }
 
+  // Sync PerfilBeneficiario
   Future<void> uploadPerfilBeneficiario(
       UsuarioEntity usuario, Emitter<SyncState> emit) async {
     add(SyncStatusChanged(state.syncProgressModel.copyWith(
@@ -1670,7 +1730,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
           (data) async =>
               await saveSyncPerfilesBeneficiarios(data, emit, usuario));
     } else {
-      await uploadPerfilPreInversionAliado(usuario, emit);
+      await uploadPerfilCofinanciador(usuario, emit);
     }
   }
 
@@ -1680,6 +1740,65 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       UsuarioEntity usuario) async {
     final result =
         await perfilBeneficiarioDB.savePerfilBeneficiariosUsecaseDB(data);
+    return result.fold((failure) => add(SyncError(failure.properties.first)),
+        (_) async => await uploadPerfilCofinanciador(usuario, emit));
+  }
+
+  // Sync PerfilCofinanciador
+
+  Future<void> uploadPerfilCofinanciador(
+      UsuarioEntity usuario, Emitter<SyncState> emit) async {
+    add(SyncStatusChanged(state.syncProgressModel.copyWith(
+        title: 'Sincronizando Perfiles Cofinanciadores',
+        counter: state.syncProgressModel.counter + 1,
+        total: gTotal,
+        percent: calculatePercent())));
+    final result = await perfilCofinanciadorDB
+        .getPerfilesCofinanciadoresProduccionUsecaseDB();
+    result.fold(
+        (failure) => add(SyncError(failure.properties.first)),
+        (data) async =>
+            await savePerfilesCofinanciadoresRemote(usuario, data, emit));
+  }
+
+  Future<void> savePerfilesCofinanciadoresRemote(UsuarioEntity usuario,
+      List<PerfilCofinanciadorEntity> data, Emitter<SyncState> emit) async {
+    final result = await perfilCofinanciador.savePerfilesCofinanciadoresUsecase(
+        usuario, data);
+    return result.fold(
+        (failure) => add(SyncError(failure.properties.first)),
+        (data) async =>
+            await updatePerfilesCofinanciadoresProduccion(usuario, data, emit));
+  }
+
+  Future<void> updatePerfilesCofinanciadoresProduccion(UsuarioEntity usuario,
+      List<PerfilCofinanciadorEntity> data, Emitter<SyncState> emit) async {
+    final result = await perfilCofinanciadorDB
+        .updatePerfilesCofinanciadoresProduccionUsecaseDB(data);
+    result.fold((failure) => add(SyncError(failure.properties.first)),
+        (data) async => await syncPerfilesCofinanciadores(usuario, emit, data));
+  }
+
+  Future<void> syncPerfilesCofinanciadores(
+      UsuarioEntity usuario, Emitter<SyncState> emit, int result) async {
+    if (result == 0) {
+      final result =
+          await perfilCofinanciador.getPerfilCofinanciadoresUsecase(usuario);
+      return result.fold(
+          (failure) => add(SyncError(failure.properties.first)),
+          (data) async =>
+              await saveSyncPerfilesCofinanciadores(data, emit, usuario));
+    } else {
+      await uploadPerfilPreInversionAliado(usuario, emit);
+    }
+  }
+
+  Future<void> saveSyncPerfilesCofinanciadores(
+      List<PerfilCofinanciadorEntity> data,
+      Emitter<SyncState> emit,
+      UsuarioEntity usuario) async {
+    final result =
+        await perfilCofinanciadorDB.savePerfilCofinanciadoresUsecaseDB(data);
     return result.fold((failure) => add(SyncError(failure.properties.first)),
         (_) async => await uploadPerfilPreInversionAliado(usuario, emit));
   }

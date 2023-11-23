@@ -4,25 +4,25 @@ class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
   PerfilPreInversionAliadoModel({
     required String perfilPreInversionId,
     required String aliadoId,
-    required String productoId,
+    String? productoId,
     String? volumenCompra,
-    required String unidadId,
-    required String frecuenciaId,
+    String? unidadId,
+    String? frecuenciaId,
     String? porcentajeCompra,
-    required String sitioEntregaId,
+    String? sitioEntregaId,
     String? aliado,
     String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
           aliadoId: aliadoId,
           productoId: productoId,
-          volumenCompra: volumenCompra ?? '',
+          volumenCompra: volumenCompra,
           unidadId: unidadId,
           frecuenciaId: frecuenciaId,
-          porcentajeCompra: porcentajeCompra ?? '',
+          porcentajeCompra: porcentajeCompra,
           sitioEntregaId: sitioEntregaId,
-          aliado: aliado ?? '',
-          recordStatus: recordStatus ?? '',
+          aliado: aliado,
+          recordStatus: recordStatus,
         );
 
   factory PerfilPreInversionAliadoModel.fromJson(Map<String, dynamic> json) =>

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../ui/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
-import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../ui/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
-import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../../domain/usecases/actividad_financiera/actividad_financiera_exports.dart';
 import '../../../domain/usecases/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_exports.dart';
@@ -16,7 +14,8 @@ import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorRubroForm extends StatefulWidget {
   const PerfilPreInversionCofinanciadorRubroForm(
-      {super.key, required this.perfilPreInversionCofinanciadorRubro});
+      this.perfilPreInversionCofinanciadorRubro,
+      {super.key});
 
   final PerfilPreInversionCofinanciadorRubroEntity?
       perfilPreInversionCofinanciadorRubro;
@@ -30,6 +29,7 @@ class _PerfilPreInversionCofinanciadorRubroFormState
     extends State<PerfilPreInversionCofinanciadorRubroForm> {
   final formKeyRubro = GlobalKey<FormState>();
 
+  List<RubroEntity> allRubros = [];
   List<RubroEntity> rubrosFiltered = [];
 
   String? actividadFinancieraId;
@@ -42,6 +42,7 @@ class _PerfilPreInversionCofinanciadorRubroFormState
   void initState() {
     super.initState();
     final rubroCubit = BlocProvider.of<RubroCubit>(context);
+    allRubros = rubroCubit.state.rubros!;
 
     setState(() {
       actividadFinancieraId =
@@ -50,12 +51,10 @@ class _PerfilPreInversionCofinanciadorRubroFormState
       rubroId = widget.perfilPreInversionCofinanciadorRubro?.rubroId;
       valorCtrl.text = widget.perfilPreInversionCofinanciadorRubro?.valor ?? '';
 
-      if (rubroCubit.state is RubrosLoaded) {
-        rubrosFiltered = rubroCubit.state.rubros!
-            .where(((rubro) =>
-                rubro.actividadFinancieraId == actividadFinancieraId))
-            .toList();
-      }
+      rubrosFiltered = allRubros
+          .where(
+              ((rubro) => rubro.actividadFinancieraId == actividadFinancieraId))
+          .toList();
     });
   }
 
@@ -69,14 +68,6 @@ class _PerfilPreInversionCofinanciadorRubroFormState
 
   @override
   Widget build(BuildContext context) {
-    final vPerfilPreInversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
-
-    final rubroCubit = BlocProvider.of<RubroCubit>(context);
-
-    final perfilPreInversionCofinanciadorCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
-
     final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
         .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
 
@@ -86,10 +77,6 @@ class _PerfilPreInversionCofinanciadorRubroFormState
 
     final perfilPreInversionCofinanciadorRubrosBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadorRubrosBloc>(context,
-            listen: true);
-
-    final perfilPreInversionCofinanciadorDesembolsosBloc =
-        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsosBloc>(context,
             listen: true);
 
     final valorActividad =
@@ -103,12 +90,16 @@ class _PerfilPreInversionCofinanciadorRubroFormState
           CustomSnackBar.showSnackBar(
               context, 'Datos guardados satisfactoriamente', Colors.green);
 
+          final perfilPreInversionId =
+              state.perfilPreInversionCofinanciadorRubro.perfilPreInversionId;
+
+          final cofinanciadorId =
+              state.perfilPreInversionCofinanciadorRubro.cofinanciadorId!;
+
           perfilPreInversionCofinanciadorRubrosBloc.add(
               GetPerfilPreInversionCofinanciadorRubrosByCofinanciador(
-                  perfilPreInversionId: vPerfilPreInversionCubit
-                      .state.vPerfilPreInversion!.perfilPreInversionId,
-                  cofinanciadorId: state
-                      .perfilPreInversionCofinanciadorRubro.cofinanciadorId));
+                  perfilPreInversionId: perfilPreInversionId,
+                  cofinanciadorId: cofinanciadorId));
         }
       },
       child: Form(
@@ -145,7 +136,7 @@ class _PerfilPreInversionCofinanciadorRubroFormState
                             .changeActividadFinanciera(value);
 
                         setState(() {
-                          rubrosFiltered = rubroCubit.state.rubros!
+                          rubrosFiltered = allRubros
                               .where(((rubro) =>
                                   rubro.actividadFinancieraId == value))
                               .toList();
@@ -195,8 +186,8 @@ class _PerfilPreInversionCofinanciadorRubroFormState
                           hintText: 'Desembolso', labelText: 'Desembolso'),
                       isExpanded: true,
                       value: desembolsoId,
-                      items: perfilPreInversionCofinanciadorDesembolsosBloc
-                          .state.perfilPreInversionCofinanciadorDesembolsos!
+                      items: state
+                          .perfilPreInversionCofinanciadorDesembolsosLoaded!
                           .map<DropdownMenuItem<String>>(
                               (PerfilPreInversionCofinanciadorDesembolsoEntity
                                   value) {
@@ -253,21 +244,6 @@ class _PerfilPreInversionCofinanciadorRubroFormState
                         }
 
                         formKeyRubro.currentState!.save();
-
-                        final vPerfilPreInversionId = vPerfilPreInversionCubit
-                            .state.vPerfilPreInversion!.perfilPreInversionId;
-
-                        final cofinanciadorId =
-                            perfilPreInversionCofinanciadorCubit
-                                .state
-                                .perfilPreInversionCofinanciador
-                                .cofinanciadorId!;
-
-                        perfilPreInversionCofinanciadorRubroCubit
-                            .changePerfilPreInversionId(vPerfilPreInversionId);
-
-                        perfilPreInversionCofinanciadorRubroCubit
-                            .changeCofinanciador(cofinanciadorId);
 
                         perfilPreInversionCofinanciadorRubroCubit
                             .savePerfilPreInversionCofinanciadorRubroDB(

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app_config.dart';
-import 'ui/blocs/aliados/aliados_bloc.dart';
 import 'ui/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
 import 'ui/blocs/alianzas/alianzas_bloc.dart';
 import 'ui/blocs/auth/auth_bloc.dart';
-import 'ui/blocs/beneficiarios/beneficiarios_bloc.dart';
+import 'ui/blocs/perfil_aliados/perfil_aliados_bloc.dart';
+import 'ui/blocs/perfil_beneficiarios/perfil_beneficiarios_bloc.dart';
 import 'ui/blocs/perfil_preinversion_aliados/perfil_preinversion_aliados_bloc.dart';
 import 'ui/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
 import 'ui/blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
@@ -47,7 +47,9 @@ import 'ui/cubits/menu/menu_cubit.dart';
 import 'ui/cubits/municipio/municipio_cubit.dart';
 import 'ui/cubits/nivel_escolar/nivel_escolar_cubit.dart';
 import 'ui/cubits/opcion/opcion_cubit.dart';
+import 'ui/cubits/perfil_aliado/perfil_aliado_cubit.dart';
 import 'ui/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
+import 'ui/cubits/perfil_cofinanciador/perfil_cofinanciador_cubit.dart';
 import 'ui/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
 import 'ui/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import 'ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
@@ -166,7 +168,7 @@ class _MyAppState extends State<MyApp> {
             create: (_) => di.locator<AgrupacionCubit>(),
           ),
           BlocProvider(
-            create: (_) => di.locator<AliadosBloc>(),
+            create: (_) => di.locator<PerfilAliadosBloc>(),
           ),
           BlocProvider(
             create: (_) => di.locator<AliadoCubit>(),
@@ -187,7 +189,7 @@ class _MyAppState extends State<MyApp> {
             create: (_) => di.locator<AuthBloc>(),
           ),
           BlocProvider(
-            create: (_) => di.locator<BeneficiariosBloc>(),
+            create: (_) => di.locator<PerfilBeneficiariosBloc>(),
           ),
           BlocProvider(
             create: (_) => di.locator<BeneficiarioCubit>(),
@@ -253,7 +255,13 @@ class _MyAppState extends State<MyApp> {
             create: (_) => di.locator<PerfilesBloc>(),
           ),
           BlocProvider(
+            create: (_) => di.locator<PerfilAliadoCubit>(),
+          ),
+          BlocProvider(
             create: (_) => di.locator<PerfilBeneficiarioCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<PerfilCofinanciadorCubit>(),
           ),
           BlocProvider(
             create: (_) => di.locator<VPerfilCubit>(),

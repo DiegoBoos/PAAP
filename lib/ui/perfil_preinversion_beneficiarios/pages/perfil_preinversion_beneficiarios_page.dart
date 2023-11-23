@@ -8,7 +8,7 @@ import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
-import '../widgets/perfil_preinversion_beneficiarios_rows.dart';
+import 'perfil_preinversion_beneficiarios_rows.dart';
 
 class PerfilPreInversionBeneficiariosPage extends StatefulWidget {
   const PerfilPreInversionBeneficiariosPage({super.key});

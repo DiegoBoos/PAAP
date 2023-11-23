@@ -17,12 +17,6 @@ class PerfilPreInversionCofinanciadorCubit
 
   void initState() => emit(PerfilPreInversionCofinanciadorInitial());
 
-  void selectPerfilPreInversionCofinanciador(
-      PerfilPreInversionCofinanciadorEntity perfilPreInversionCofinanciador) {
-    emit(
-        PerfilPreInversionCofinanciadorLoaded(perfilPreInversionCofinanciador));
-  }
-
   void getPerfilPreInversionCofinanciador(String perfilPreInversionId) async {
     final result = await perfilPreInversionCofinanciadorDB
         .getPerfilPreInversionCofinanciadorUsecaseDB(perfilPreInversionId);
@@ -34,16 +28,15 @@ class PerfilPreInversionCofinanciadorCubit
 
   void savePerfilPreInversionCofinanciadorDB(
       PerfilPreInversionCofinanciadorEntity
-          perfilPreInversionCofinanciadorEntity) async {
+          perfilPreInversionCofinanciador) async {
     final result = await perfilPreInversionCofinanciadorDB
         .savePerfilPreInversionCofinanciadorUsecaseDB(
-            perfilPreInversionCofinanciadorEntity);
+            perfilPreInversionCofinanciador);
     result.fold(
         (failure) => emit(
             PerfilPreInversionCofinanciadorError(failure.properties.first)),
         (data) => emit(PerfilPreInversionCofinanciadorSaved(
-            perfilPreInversionCofinanciador:
-                perfilPreInversionCofinanciadorEntity)));
+            perfilPreInversionCofinanciador: perfilPreInversionCofinanciador)));
   }
 
   void changePerfilPreInversionId(String? value) {
@@ -53,9 +46,9 @@ class PerfilPreInversionCofinanciadorCubit
   }
 
   void changeCofinanciador(String? newValue) {
-    final cofinanciadorIdLoaded = state.perfilPreInversionCofinanciador
+    final cofinanciadorIdChanged = state.perfilPreInversionCofinanciador
         .copyWith(cofinanciadorId: newValue);
-    emit(PerfilPreInversionCofinanciadorChanged(cofinanciadorIdLoaded));
+    emit(PerfilPreInversionCofinanciadorChanged(cofinanciadorIdChanged));
   }
 
   void changeMonto(String? newValue) {

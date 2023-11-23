@@ -37,7 +37,7 @@ class PerfilPreInversionLocalDataSourceImpl
         ValorTotalProyecto	TEXT,
         IncentivoModular	TEXT,
         PRIMARY KEY(PerfilPreInversionId),
-        FOREIGN KEY(PerfilId) REFERENCES Perfil(PerfilId),
+        FOREIGN KEY(PerfilId) REFERENCES Perfil(ID),
         FOREIGN KEY(ProductoAsociadoId) REFERENCES ProductoAsociado(ProductoAsociadoId),
         FOREIGN KEY(TipoProyectoId) REFERENCES TipoProyecto(TipoProyectoId),
         FOREIGN KEY(ConvocatoriaId) REFERENCES Convocatoria(ConvocatoriaId),

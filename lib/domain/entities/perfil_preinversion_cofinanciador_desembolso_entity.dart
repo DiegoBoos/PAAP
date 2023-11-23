@@ -1,19 +1,19 @@
 class PerfilPreInversionCofinanciadorDesembolsoEntity {
   PerfilPreInversionCofinanciadorDesembolsoEntity({
-    required this.perfilPreInversionId,
-    required this.cofinanciadorId,
-    required this.desembolsoId,
-    required this.fecha,
+    this.perfilPreInversionId,
+    this.cofinanciadorId,
+    this.desembolsoId,
+    this.fecha,
     this.desembolso,
-    required this.recordStatus,
+    this.recordStatus,
   });
 
-  String perfilPreInversionId;
-  String cofinanciadorId;
-  String desembolsoId;
-  String fecha;
+  String? perfilPreInversionId;
+  String? cofinanciadorId;
+  String? desembolsoId;
+  String? fecha;
   String? desembolso;
-  String recordStatus;
+  String? recordStatus;
 
   PerfilPreInversionCofinanciadorDesembolsoEntity copyWith({
     String? perfilPreInversionId,

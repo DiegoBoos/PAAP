@@ -2,34 +2,39 @@ class PerfilBeneficiarioEntity {
   PerfilBeneficiarioEntity({
     required this.perfilId,
     required this.beneficiarioId,
-    required this.municipioId,
-    required this.veredaId,
-    required this.areaFinca,
-    required this.areaProyecto,
-    required this.tipoTenenciaId,
-    required this.experiencia,
-    required this.asociado,
-    required this.conocePerfil,
-    required this.fueBeneficiado,
-    required this.cualBeneficio,
-    required this.activo,
-    required this.recordStatus,
+    this.municipioId,
+    this.veredaId,
+    this.areaFinca,
+    this.areaProyecto,
+    this.tipoTenenciaId,
+    this.experiencia,
+    this.asociado,
+    this.conocePerfil,
+    this.fueBeneficiado,
+    this.cualBeneficio,
+    this.activo,
+    this.nombre,
+    this.edad,
+    this.recordStatus,
   });
 
   String perfilId;
   String beneficiarioId;
-  String municipioId;
-  String veredaId;
-  String areaFinca;
-  String areaProyecto;
-  String tipoTenenciaId;
-  String experiencia;
-  String asociado;
-  String conocePerfil;
-  String fueBeneficiado;
-  String cualBeneficio;
-  String activo;
-  String recordStatus;
+  String? municipioId;
+  String? veredaId;
+  String? areaFinca;
+  String? areaProyecto;
+  String? tipoTenenciaId;
+  String? experiencia;
+  String? asociado;
+  String? conocePerfil;
+  String? fueBeneficiado;
+  String? cualBeneficio;
+  String? beneficioId;
+  String? activo;
+  String? nombre;
+  String? edad;
+  String? recordStatus;
 
   PerfilBeneficiarioEntity copyWith({
     String? perfilId,

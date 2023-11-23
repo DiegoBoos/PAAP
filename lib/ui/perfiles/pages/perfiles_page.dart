@@ -5,7 +5,7 @@ import '../../../ui/blocs/perfiles/perfiles_bloc.dart';
 import '../../../domain/entities/v_perfil_entity.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/no_data_svg.dart';
-import '../widgets/perfiles_rows.dart';
+import 'perfiles_rows.dart';
 
 class PerfilesPage extends StatelessWidget {
   const PerfilesPage({super.key});

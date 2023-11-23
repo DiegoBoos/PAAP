@@ -25,31 +25,30 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
     final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
         .getPerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
             perfilPreInversionId, cofinanciadorId);
-    result.fold(
-        (failure) => emit(
-            PerfilPreInversionCofinanciadorActividadFinancieraError(
-                failure.properties.first)), (data) {
+    result.fold((failure) {
+      emit(PerfilPreInversionCofinanciadorActividadFinancieraError(
+          failure.properties.first));
+    }, (data) {
       if (data != null) {
         emit(PerfilPreInversionCofinanciadorActividadFinancieraLoaded(data));
-      } else {
-        emit(PerfilPreInversionCofinanciadorActividadFinancieraInitial());
       }
     });
   }
 
   void savePerfilPreInversionCofinanciadorActividadFinancieraDB(
       PerfilPreInversionCofinanciadorActividadFinancieraEntity
-          perfilPreInversionCofinanciadorActividadFinancieraEntity) async {
+          perfilPreInversionCofinanciadorActividadFinanciera) async {
     final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
         .savePerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
-            perfilPreInversionCofinanciadorActividadFinancieraEntity);
-    result.fold(
-        (failure) => emit(
-            PerfilPreInversionCofinanciadorActividadFinancieraError(
-                failure.properties.first)),
-        (data) => emit(PerfilPreInversionCofinanciadorActividadFinancieraSaved(
-            perfilPreInversionCofinanciadorActividadFinanciera:
-                perfilPreInversionCofinanciadorActividadFinancieraEntity)));
+            perfilPreInversionCofinanciadorActividadFinanciera);
+    result.fold((failure) {
+      emit(PerfilPreInversionCofinanciadorActividadFinancieraError(
+          failure.properties.first));
+    }, (data) {
+      emit(PerfilPreInversionCofinanciadorActividadFinancieraSaved(
+          perfilPreInversionCofinanciadorActividadFinanciera:
+              perfilPreInversionCofinanciadorActividadFinanciera));
+    });
   }
 
   void changePerfilPreInversionId(String value) {

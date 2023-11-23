@@ -60,8 +60,4 @@ class PerfilPreInversionCofinanciadorDesembolsoError
 
 PerfilPreInversionCofinanciadorDesembolsoEntity initObject() =>
     PerfilPreInversionCofinanciadorDesembolsoEntity(
-        perfilPreInversionId: '',
-        cofinanciadorId: '',
-        desembolsoId: '',
-        fecha: '',
-        recordStatus: '');
+        perfilPreInversionId: '', recordStatus: '');

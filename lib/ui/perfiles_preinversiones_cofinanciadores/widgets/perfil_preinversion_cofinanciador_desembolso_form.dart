@@ -4,11 +4,9 @@ import 'package:intl/intl.dart';
 
 import '../../../ui/blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
 import '../../../ui/cubits/desembolso/desembolso_cubit.dart';
-import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../ui/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 import '../../../ui/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
 import '../../../ui/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
-import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/desembolso_entity.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../utils/custom_snack_bar.dart';
@@ -18,7 +16,8 @@ import '../../utils/styles.dart';
 
 class PerfilPreInversionCofinanciadorDesembolsoForm extends StatefulWidget {
   const PerfilPreInversionCofinanciadorDesembolsoForm(
-      {super.key, required this.perfilPreInversionCofinanciadorDesembolso});
+      this.perfilPreInversionCofinanciadorDesembolso,
+      {super.key});
   final PerfilPreInversionCofinanciadorDesembolsoEntity?
       perfilPreInversionCofinanciadorDesembolso;
 
@@ -32,8 +31,8 @@ final dateFormat = DateFormat('yyyy-MM-dd');
 class _PerfilPreInversionCofinanciadorDesembolsoFormState
     extends State<PerfilPreInversionCofinanciadorDesembolsoForm> {
   final formKeyDesembolso = GlobalKey<FormState>();
-  String? desembolsoId;
   final fechaCtrl = TextEditingController();
+  String? desembolsoId;
 
   @override
   void initState() {
@@ -42,10 +41,10 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
     setState(() {
       desembolsoId =
           widget.perfilPreInversionCofinanciadorDesembolso?.desembolsoId;
-      if (widget.perfilPreInversionCofinanciadorDesembolso != null &&
-          widget.perfilPreInversionCofinanciadorDesembolso!.fecha != '') {
+      if (widget.perfilPreInversionCofinanciadorDesembolso?.fecha != null &&
+          widget.perfilPreInversionCofinanciadorDesembolso?.fecha != '') {
         fechaCtrl.text = dateFormat.format(DateTime.parse(
-            widget.perfilPreInversionCofinanciadorDesembolso!.fecha));
+            widget.perfilPreInversionCofinanciadorDesembolso!.fecha!));
       } else {
         fechaCtrl.text = dateFormat.format(DateTime.now());
       }
@@ -62,12 +61,6 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
 
   @override
   Widget build(BuildContext context) {
-    final vPerfilPreInversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
-
-    final perfilPreInversionCofinanciadorCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
-
     final perfilPreInversionCofinanciadorDesembolsoCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
             context);
@@ -89,12 +82,17 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
             CustomSnackBar.showSnackBar(
                 context, 'Datos guardados satisfactoriamente', Colors.green);
 
+            final perfilPreInversionId = state
+                .perfilPreInversionCofinanciadorDesembolso
+                .perfilPreInversionId!;
+
+            final cofinanciadorId = state
+                .perfilPreInversionCofinanciadorDesembolso.cofinanciadorId!;
+
             perfilPreInversionCofinanciadorDesembolsosBloc.add(
                 GetPerfilPreInversionCofinanciadorDesembolsosByCofinanciador(
-              perfilPreInversionId: vPerfilPreInversionCubit
-                  .state.vPerfilPreInversion!.perfilPreInversionId,
-              cofinanciadorId: perfilPreInversionCofinanciadorCubit
-                  .state.perfilPreInversionCofinanciador.cofinanciadorId!,
+              perfilPreInversionId: perfilPreInversionId,
+              cofinanciadorId: cofinanciadorId,
             ));
           }
         },
@@ -186,25 +184,6 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                               }
                               formKeyDesembolso.currentState!.save();
 
-                              final vPerfilPreInversionId =
-                                  vPerfilPreInversionCubit
-                                      .state
-                                      .vPerfilPreInversion!
-                                      .perfilPreInversionId;
-
-                              final cofinanciadorId =
-                                  perfilPreInversionCofinanciadorCubit
-                                      .state
-                                      .perfilPreInversionCofinanciador
-                                      .cofinanciadorId;
-
-                              perfilPreInversionCofinanciadorDesembolsoCubit
-                                  .changePerfilPreInversionId(
-                                      vPerfilPreInversionId);
-
-                              perfilPreInversionCofinanciadorDesembolsoCubit
-                                  .changeCofinanciador(cofinanciadorId!);
-
                               perfilPreInversionCofinanciadorDesembolsoCubit
                                   .savePerfilPreInversionCofinanciadorDesembolsoDB(
                                       perfilPreInversionCofinanciadorDesembolsoCubit
@@ -245,13 +224,6 @@ class PerfilPreInversionCofinanciadorDesembolsosRows extends StatelessWidget {
               columns: <DataColumn>[
                 DataColumn(
                   label: Expanded(
-                    child: Text('ID',
-                        style:
-                            Styles.subtitleStyle.copyWith(color: Colors.white)),
-                  ),
-                ),
-                DataColumn(
-                  label: Expanded(
                     child: Text('Nombre',
                         style:
                             Styles.subtitleStyle.copyWith(color: Colors.white)),
@@ -271,13 +243,18 @@ class PerfilPreInversionCofinanciadorDesembolsosRows extends StatelessWidget {
                     perfilPreInversionCofinanciadorDesembolso =
                     perfilPreInversionCofinanciadorDesembolsos[index];
 
+                final fecha = perfilPreInversionCofinanciadorDesembolso.fecha !=
+                            null &&
+                        perfilPreInversionCofinanciadorDesembolso.fecha != ''
+                    ? dateFormat.format(DateTime.parse(
+                        perfilPreInversionCofinanciadorDesembolso.fecha!))
+                    : '';
+
                 return DataRow(cells: <DataCell>[
                   DataCell(Text(
-                      perfilPreInversionCofinanciadorDesembolso.desembolsoId)),
-                  DataCell(Text(
-                      perfilPreInversionCofinanciadorDesembolso.desembolso!)),
-                  DataCell(Text(dateFormat.format(DateTime.parse(
-                      perfilPreInversionCofinanciadorDesembolso.fecha))))
+                      perfilPreInversionCofinanciadorDesembolso.desembolso ??
+                          '')),
+                  DataCell(Text(fecha))
                 ]);
               }),
             ),

@@ -61,9 +61,4 @@ class PerfilPreInversionCofinanciadorActividadFinancieraError
 
 PerfilPreInversionCofinanciadorActividadFinancieraEntity initObject() =>
     PerfilPreInversionCofinanciadorActividadFinancieraEntity(
-        actividadFinancieraId: '',
-        perfilPreInversionId: '',
-        cofinanciadorId: '',
-        desembolsoId: '',
-        valor: '',
-        recordStatus: '');
+        perfilPreInversionId: '', valor: '', recordStatus: '');

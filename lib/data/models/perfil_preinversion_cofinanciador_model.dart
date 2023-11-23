@@ -4,7 +4,7 @@ class PerfilPreInversionCofinanciadorModel
     extends PerfilPreInversionCofinanciadorEntity {
   PerfilPreInversionCofinanciadorModel({
     String? perfilPreInversionId,
-    required String cofinanciadorId,
+    String? cofinanciadorId,
     String? nombre,
     String? telefonoMovil,
     String? correo,
@@ -13,15 +13,15 @@ class PerfilPreInversionCofinanciadorModel
     String? participacion,
     String? recordStatus,
   }) : super(
-          perfilPreInversionId: perfilPreInversionId ?? '',
+          perfilPreInversionId: perfilPreInversionId,
           cofinanciadorId: cofinanciadorId,
-          nombre: nombre ?? '',
-          telefonoMovil: telefonoMovil ?? '',
-          correo: correo ?? '',
-          municipio: municipio ?? '',
-          monto: monto ?? '',
-          participacion: participacion ?? '',
-          recordStatus: recordStatus ?? '',
+          nombre: nombre,
+          telefonoMovil: telefonoMovil,
+          correo: correo,
+          municipio: municipio,
+          monto: monto ?? '0',
+          participacion: participacion,
+          recordStatus: recordStatus,
         );
 
   factory PerfilPreInversionCofinanciadorModel.fromJson(

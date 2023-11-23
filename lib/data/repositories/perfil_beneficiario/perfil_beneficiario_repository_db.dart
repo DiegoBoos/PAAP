@@ -30,10 +30,10 @@ class PerfilBeneficiarioRepositoryDBImpl
 
   @override
   Future<Either<Failure, List<PerfilBeneficiarioEntity>>>
-      getPerfilBeneficiariosRepositoryDB() async {
+      getPerfilBeneficiariosRepositoryDB(String perfilId) async {
     try {
-      final perfilBeneficiariosDB =
-          await perfilBeneficiarioLocalDataSource.getPerfilBeneficiariosDB();
+      final perfilBeneficiariosDB = await perfilBeneficiarioLocalDataSource
+          .getPerfilBeneficiariosDB(perfilId);
 
       return Right(perfilBeneficiariosDB);
     } on ServerFailure catch (e) {

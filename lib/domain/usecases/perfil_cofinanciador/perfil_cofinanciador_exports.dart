@@ -1,0 +1,11 @@
+export 'package:paap/domain/usecases/perfil_cofinanciador/perfil_cofinanciador_usecase.dart';
+export 'package:paap/domain/usecases/perfil_cofinanciador/perfil_cofinanciador_db_usecase.dart';
+export 'package:paap/domain/repositories/perfil_cofinanciador/perfil_cofinanciador_repository.dart';
+export 'package:paap/domain/repositories/perfil_cofinanciador/perfil_cofinanciador_repository_db.dart';
+export 'package:paap/domain/entities/perfil_cofinanciador_entity.dart';
+export 'package:paap/domain/entities/perfil_cofinanciador_entity.dart';
+export 'package:paap/ui/cubits/perfil_cofinanciador/perfil_cofinanciador_cubit.dart';
+export 'package:paap/data/repositories/perfil_cofinanciador/perfil_cofinanciador_repository.dart';
+export 'package:paap/data/repositories/perfil_cofinanciador/perfil_cofinanciador_repository_db.dart';
+export 'package:paap/data/datasources/remote/perfil_cofinanciador_remote_ds.dart';
+export 'package:paap/data/datasources/local/perfil_cofinanciador_local_ds.dart';

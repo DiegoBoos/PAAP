@@ -22,29 +22,30 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
     final result = await perfilPreInversionCofinanciadorDesembolsoDB
         .getPerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
             perfilPreInversionId, cofinanciadorId);
-    result.fold(
-        (failure) => emit(PerfilPreInversionCofinanciadorDesembolsoError(
-            failure.properties.first)), (data) {
+    result.fold((failure) {
+      emit(PerfilPreInversionCofinanciadorDesembolsoError(
+          failure.properties.first));
+    }, (data) {
       if (data != null) {
         emit(PerfilPreInversionCofinanciadorDesembolsoLoaded(data));
-      } else {
-        emit(PerfilPreInversionCofinanciadorDesembolsoInitial());
       }
     });
   }
 
   void savePerfilPreInversionCofinanciadorDesembolsoDB(
       PerfilPreInversionCofinanciadorDesembolsoEntity
-          perfilPreInversionCofinanciadorDesembolsoEntity) async {
+          perfilPreInversionCofinanciadorDesembolso) async {
     final result = await perfilPreInversionCofinanciadorDesembolsoDB
         .savePerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
-            perfilPreInversionCofinanciadorDesembolsoEntity);
-    result.fold(
-        (failure) => emit(PerfilPreInversionCofinanciadorDesembolsoError(
-            failure.properties.first)),
-        (data) => emit(PerfilPreInversionCofinanciadorDesembolsoSaved(
-            perfilPreInversionCofinanciadorDesembolso:
-                perfilPreInversionCofinanciadorDesembolsoEntity)));
+            perfilPreInversionCofinanciadorDesembolso);
+    result.fold((failure) {
+      emit(PerfilPreInversionCofinanciadorDesembolsoError(
+          failure.properties.first));
+    }, (data) {
+      emit(PerfilPreInversionCofinanciadorDesembolsoSaved(
+          perfilPreInversionCofinanciadorDesembolso:
+              perfilPreInversionCofinanciadorDesembolso));
+    });
   }
 
   void changePerfilPreInversionId(String value) {

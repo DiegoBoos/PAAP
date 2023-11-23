@@ -1,19 +1,19 @@
 class PerfilPreInversionCofinanciadorActividadFinancieraEntity {
   PerfilPreInversionCofinanciadorActividadFinancieraEntity({
-    required this.actividadFinancieraId,
+    this.actividadFinancieraId,
     required this.perfilPreInversionId,
-    required this.cofinanciadorId,
-    required this.desembolsoId,
+    this.cofinanciadorId,
+    this.desembolsoId,
     required this.valor,
     this.actividadFinanciera,
     this.desembolso,
     required this.recordStatus,
   });
 
-  String actividadFinancieraId;
+  String? actividadFinancieraId;
   String perfilPreInversionId;
-  String cofinanciadorId;
-  String desembolsoId;
+  String? cofinanciadorId;
+  String? desembolsoId;
   String valor;
   String recordStatus;
   String? actividadFinanciera;

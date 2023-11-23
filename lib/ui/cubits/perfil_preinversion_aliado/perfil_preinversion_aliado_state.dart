@@ -48,11 +48,5 @@ class PerfilPreInversionAliadoError extends PerfilPreInversionAliadoState {
 }
 
 PerfilPreInversionAliadoEntity initObject() {
-  return PerfilPreInversionAliadoEntity(
-      perfilPreInversionId: '',
-      aliadoId: '',
-      volumenCompra: '',
-      porcentajeCompra: '',
-      sitioEntregaId: '',
-      recordStatus: '');
+  return PerfilPreInversionAliadoEntity(perfilPreInversionId: '', aliadoId: '');
 }

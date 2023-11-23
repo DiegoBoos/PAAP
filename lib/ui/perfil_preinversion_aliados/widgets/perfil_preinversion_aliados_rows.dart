@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paap/ui/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
 
 import '../../../domain/entities/perfil_preinversion_aliado_entity.dart';
 
@@ -21,15 +19,10 @@ class PerfilPreInversionAliadosTableSource extends DataTableSource {
         DataCell(Text(perfilPreInversionAliado.aliadoId)),
         DataCell(TextButton(
             onPressed: () {
-              final perfilPreInversionAliadoCubit =
-                  BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
-              perfilPreInversionAliadoCubit
-                  .selectAliadoPreinversion(perfilPreInversionAliado);
-
               Navigator.pushNamed(context, 'NewEditAliadoPreInversion',
                   arguments: perfilPreInversionAliado);
             },
-            child: Text(perfilPreInversionAliado.aliado!))),
+            child: Text(perfilPreInversionAliado.aliado ?? ''))),
       ],
     );
   }

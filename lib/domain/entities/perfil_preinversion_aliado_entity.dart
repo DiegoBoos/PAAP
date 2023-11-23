@@ -3,25 +3,25 @@ class PerfilPreInversionAliadoEntity {
     required this.perfilPreInversionId,
     required this.aliadoId,
     this.productoId,
-    required this.volumenCompra,
+    this.volumenCompra,
     this.unidadId,
     this.frecuenciaId,
-    required this.porcentajeCompra,
+    this.porcentajeCompra,
     this.sitioEntregaId,
     this.aliado,
-    required this.recordStatus,
+    this.recordStatus,
   });
 
   String perfilPreInversionId;
   String aliadoId;
   String? productoId;
-  String volumenCompra;
+  String? volumenCompra;
   String? unidadId;
   String? frecuenciaId;
-  String porcentajeCompra;
+  String? porcentajeCompra;
   String? sitioEntregaId;
   String? aliado;
-  String recordStatus;
+  String? recordStatus;
 
   PerfilPreInversionAliadoEntity copyWith(
           {String? perfilPreInversionId,

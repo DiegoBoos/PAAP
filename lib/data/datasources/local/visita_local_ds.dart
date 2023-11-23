@@ -30,7 +30,7 @@ class VisitaLocalDataSourceImpl implements VisitaLocalDataSource {
         FOREIGN KEY(EstadoVisitaId) REFERENCES EstadoVisita(EstadoVisitaId),
         FOREIGN KEY(TipoVisitaId) REFERENCES TipoVisita(TipoVisitaId),
         FOREIGN KEY(UsuarioId) REFERENCES Usuario(UsuarioId),
-        FOREIGN KEY(PerfilId) REFERENCES Perfil(PerfilId)
+        FOREIGN KEY(PerfilId) REFERENCES Perfil(ID)
       )
     ''');
   }

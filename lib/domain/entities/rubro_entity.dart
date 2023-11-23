@@ -1,17 +1,17 @@
 class RubroEntity {
   RubroEntity({
-    required this.rubroId,
+    this.rubroId,
     required this.nombre,
     required this.descripcion,
-    required this.activo,
-    required this.actividadFinancieraId,
+    this.activo,
+    this.actividadFinancieraId,
   });
 
-  String rubroId;
+  String? rubroId;
   String nombre;
   String descripcion;
-  String activo;
-  String actividadFinancieraId;
+  String? activo;
+  String? actividadFinancieraId;
 
   Map<String, dynamic> toJson() => {
         "RubroId": rubroId,

@@ -9,7 +9,6 @@ import '../../../domain/entities/usuario_entity.dart';
 import '../../constants.dart';
 
 import '../../models/perfil_model.dart';
-import '../../models/perfiles_model.dart';
 import '../../utils.dart';
 
 abstract class PerfilRemoteDataSource {
@@ -92,14 +91,6 @@ class PerfilesRemoteDataSourceImpl implements PerfilRemoteDataSource {
             List.from(perfilesRaw).map((e) => PerfilModel.fromJson(e)).toList();
 
         return perfiles;
-
-        //TODO: eliminar?
-        /*  List<PerfilModel> listPerfil = [];
-        for (var perfil in perfiles) {
-          final dsPerfil = await getPerfilTable(usuario, perfil.id);
-          listPerfil.add(dsPerfil);
-        }
-        return listPerfil; */
       } else {
         throw const ServerFailure(['Error al obtener los perfiles']);
       }

@@ -14,11 +14,6 @@ class PerfilPreInversionAliadoCubit
 
   void initState() => emit(PerfilPreInversionAliadoInitial());
 
-  void selectAliadoPreinversion(
-      PerfilPreInversionAliadoEntity perfilPreInversionAliado) {
-    emit(PerfilPreInversionAliadoLoaded(perfilPreInversionAliado));
-  }
-
   void savePerfilPreInversionAliadoDB(
       PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity) async {
     final result = await perfilPreInversionAliadoDB
