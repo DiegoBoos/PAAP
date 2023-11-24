@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/models/municipio_model.dart';
 import '../../../ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import '../../../ui/cubits/departamento/departamento_cubit.dart';
 import '../../../ui/cubits/municipio/municipio_cubit.dart';
 import '../../../ui/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
 import '../../../ui/cubits/vereda/vereda_cubit.dart';
-import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../domain/entities/departamento_entity.dart';
 import '../../../domain/entities/municipio_entity.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
 import '../../../domain/entities/vereda_entity.dart';
 import '../../../domain/usecases/beneficio/beneficio_exports.dart';
-import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
@@ -44,7 +41,39 @@ class _AlianzaPerfilBeneficiarioFormState
   @override
   void initState() {
     super.initState();
-    loadAccesories();
+    final alianzaBeneficiarioCubit =
+        BlocProvider.of<AlianzaBeneficiarioCubit>(context);
+
+    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
+
+    final alianzaBeneficiario =
+        alianzaBeneficiarioCubit.state.alianzaBeneficiario;
+
+    final alianzaBeneficiarioMunicipioId = alianzaBeneficiario.municipioId;
+
+    final alianzaBeneficiarioVeredaId = alianzaBeneficiario.veredaId;
+
+    setState(() {
+      final municipio = municipiosFiltered.firstWhere(
+        (municipio) => municipio.id == alianzaBeneficiarioMunicipioId,
+      );
+
+      if (municipio.id != '') {
+        departamentoId = municipio.departamentoid;
+        municipioId = alianzaBeneficiarioMunicipioId;
+        municipiosFiltered = municipioCubit.state.municipios!
+            .where((municipio) => municipio.departamentoid == departamentoId)
+            .toList();
+        loadVeredasByMunicipio(municipioId!, alianzaBeneficiarioVeredaId!);
+      }
+
+      experienciaCtrl.text = alianzaBeneficiario.experiencia ?? '';
+      cualBeneficioCtrl.text = alianzaBeneficiario.cualBeneficio ?? '';
+      areaProyectoCtrl.text = alianzaBeneficiario.areaProyecto ?? '';
+      areaFincaCtrl.text = alianzaBeneficiario.areaFinca ?? '';
+      tipoTenenciaId = alianzaBeneficiario.tipoTenenciaId;
+      beneficioId = alianzaBeneficiario.beneficioId;
+    });
   }
 
   @override
@@ -54,54 +83,11 @@ class _AlianzaPerfilBeneficiarioFormState
     BlocProvider.of<AlianzaBeneficiarioCubit>(context).initState();
   }
 
-  Future<void> loadAccesories() async {
-    final alianzaBeneficiarioCubit =
-        BlocProvider.of<AlianzaBeneficiarioCubit>(context);
-
-    if (alianzaBeneficiarioCubit.state is AlianzaBeneficiarioLoaded) {
-      final alianzaBeneficiarioLoaded =
-          alianzaBeneficiarioCubit.state.alianzaBeneficiario;
-
-      loadAlianzaBeneficiario(alianzaBeneficiarioLoaded);
-    }
-  }
-
-  void loadAlianzaBeneficiario(
-      AlianzaBeneficiarioEntity alianzaBeneficiarioLoaded) {
-    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
-
-    final alianzaBeneficiarioMunicipioId =
-        alianzaBeneficiarioLoaded.municipioId;
-    final alianzaBeneficiarioVeredaId = alianzaBeneficiarioLoaded.veredaId;
-
-    final municipio = municipiosFiltered.firstWhere(
-        (municipio) => municipio.id == alianzaBeneficiarioMunicipioId,
-        orElse: () => MunicipioModel(id: '', nombre: '', departamentoid: ''));
-
-    if (municipio.id != '') {
-      departamentoId = municipio.departamentoid;
-      municipioId = alianzaBeneficiarioMunicipioId;
-      municipiosFiltered = municipioCubit.state.municipios!
-          .where((municipio) => municipio.departamentoid == departamentoId)
-          .toList();
-      loadVeredasByMunicipio(municipioId!, alianzaBeneficiarioVeredaId);
-    }
-
-    experienciaCtrl.text = alianzaBeneficiarioLoaded.experiencia;
-    cualBeneficioCtrl.text = alianzaBeneficiarioLoaded.cualBeneficio;
-    areaProyectoCtrl.text = alianzaBeneficiarioLoaded.areaProyecto;
-    areaFincaCtrl.text = alianzaBeneficiarioLoaded.areaFinca;
-    tipoTenenciaId = alianzaBeneficiarioLoaded.tipoTenenciaId;
-    beneficioId = alianzaBeneficiarioLoaded.beneficioId;
-
-    setState(() {});
-  }
-
   void loadVeredasByMunicipio(
       String municipioId, String alianzaBeneficiarioVeredaId) async {
     final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
-    await veredaCubit.getVeredasByMunicipioDB(municipioId);
+    veredaCubit.getVeredasByMunicipioDB(municipioId);
     veredaId =
         alianzaBeneficiarioVeredaId != '' ? alianzaBeneficiarioVeredaId : null;
   }
@@ -117,18 +103,8 @@ class _AlianzaPerfilBeneficiarioFormState
     final alianzaBeneficiario =
         alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
-    return BlocListener<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
-        listener: (context, state) {
-      if (state is AlianzaBeneficiarioError) {
-        CustomSnackBar.showSnackBar(context, state.message, Colors.red);
-      }
-
-      if (state is AlianzaBeneficiarioLoaded) {
-        final alianzaBeneficiarioLoaded = state.alianzaBeneficiarioLoaded;
-        loadAlianzaBeneficiario(alianzaBeneficiarioLoaded);
-      }
-    }, child: BlocBuilder<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
-            builder: (context, state) {
+    return BlocBuilder<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
+        builder: (context, state) {
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -151,7 +127,7 @@ class _AlianzaPerfilBeneficiarioFormState
                           (DepartamentoEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.id,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -190,7 +166,7 @@ class _AlianzaPerfilBeneficiarioFormState
                           (MunicipioEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.id,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -200,7 +176,7 @@ class _AlianzaPerfilBeneficiarioFormState
                         return null;
                       },
                       onChanged: (String? value) async {
-                        await veredaCubit.getVeredasByMunicipioDB(value!);
+                        veredaCubit.getVeredasByMunicipioDB(value!);
 
                         setState(() {
                           municipioId = value;
@@ -228,7 +204,7 @@ class _AlianzaPerfilBeneficiarioFormState
                                 (VeredaEntity value) {
                           return DropdownMenuItem<String>(
                             value: value.veredaId,
-                            child: Text(value.nombre),
+                            child: Text(value.nombre!),
                           );
                         }).toList(),
                         onChanged: (String? value) {
@@ -258,7 +234,7 @@ class _AlianzaPerfilBeneficiarioFormState
                               (TipoTenenciaEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.tipoTenenciaId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -355,7 +331,7 @@ class _AlianzaPerfilBeneficiarioFormState
                           (BeneficioEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.beneficioId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -392,6 +368,6 @@ class _AlianzaPerfilBeneficiarioFormState
           ),
         ),
       );
-    }));
+    });
   }
 }

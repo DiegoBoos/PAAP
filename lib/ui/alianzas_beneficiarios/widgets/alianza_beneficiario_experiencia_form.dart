@@ -60,20 +60,14 @@ class _AlianzaBeneficiarioExperienciaFormState
     final alianzaExperienciaPecuariaCubit =
         BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context);
 
-    if (alianzaExperienciaAgricolaCubit.state
-        is AlianzaExperienciaAgricolaLoaded) {
-      final alianzaExperienciaAgricolaLoaded =
-          alianzaExperienciaAgricolaCubit.state.alianzaExperienciaAgricola;
+    final alianzaExperienciaAgricola =
+        alianzaExperienciaAgricolaCubit.state.alianzaExperienciaAgricola;
 
-      loadAlianzaExperienciaAgricola(alianzaExperienciaAgricolaLoaded);
-    }
-    if (alianzaExperienciaPecuariaCubit.state
-        is AlianzaExperienciaPecuariaLoaded) {
-      final alianzaExperienciaPecuariaLoaded =
-          alianzaExperienciaPecuariaCubit.state.alianzaExperienciaPecuaria;
+    final alianzaExperienciaPecuaria =
+        alianzaExperienciaPecuariaCubit.state.alianzaExperienciaPecuaria;
 
-      loadAlianzaExperienciaPecuaria(alianzaExperienciaPecuariaLoaded);
-    }
+    loadAlianzaExperienciaAgricola(alianzaExperienciaAgricola);
+    loadAlianzaExperienciaPecuaria(alianzaExperienciaPecuaria);
   }
 
   @override
@@ -84,48 +78,55 @@ class _AlianzaBeneficiarioExperienciaFormState
   }
 
   void loadAlianzaExperienciaAgricola(
-      AlianzaExperienciaAgricolaEntity alianzaExperienciaAgricolaLoaded) {
-    alianzaExperienciaAgricolaTipoActividadProductivaId =
-        alianzaExperienciaAgricolaLoaded.tipoActividadProductivaId;
-    alianzaExperienciaAgricolaFrecuenciaId =
-        alianzaExperienciaAgricolaLoaded.frecuenciaId;
-    areaCultivoCtrl.text = alianzaExperienciaAgricolaLoaded.areaCultivo;
-    cantidadProducidaCtrl.text =
-        alianzaExperienciaAgricolaLoaded.cantidadProducida;
-    cantidadVendidaCtrl.text = alianzaExperienciaAgricolaLoaded.cantidadVendida;
-    cantidadAutoconsumoCtrl.text =
-        alianzaExperienciaAgricolaLoaded.cantidadAutoconsumo;
-    costoImplementacionCtrl.text =
-        alianzaExperienciaAgricolaLoaded.costoImplementacion;
-    alianzaExperienciaAgricolaValorJornalCtrl.text =
-        alianzaExperienciaAgricolaLoaded.valorJornal;
-    totalIngresoNetoCtrl.text =
-        alianzaExperienciaAgricolaLoaded.totalIngresoNeto;
-    areaPastoCtrl.text = alianzaExperienciaAgricolaLoaded.areaPasto;
-    areaSinUsoCtrl.text = alianzaExperienciaAgricolaLoaded.areaSinUso;
-    areaReservaConservacionCtrl.text =
-        alianzaExperienciaAgricolaLoaded.areaReservaConservacion;
-    areaImplementacionCtrl.text =
-        alianzaExperienciaAgricolaLoaded.areaImplementacion;
-    totalAreaPredioCtrl.text = alianzaExperienciaAgricolaLoaded.totalAreaPredio;
+      AlianzaExperienciaAgricolaEntity alianzaExperienciaAgricola) {
+    setState(() {
+      alianzaExperienciaAgricolaTipoActividadProductivaId =
+          alianzaExperienciaAgricola.tipoActividadProductivaId;
+      alianzaExperienciaAgricolaFrecuenciaId =
+          alianzaExperienciaAgricola.frecuenciaId;
+      areaCultivoCtrl.text = alianzaExperienciaAgricola.areaCultivo ?? '';
+      cantidadProducidaCtrl.text =
+          alianzaExperienciaAgricola.cantidadProducida ?? '';
+      cantidadVendidaCtrl.text =
+          alianzaExperienciaAgricola.cantidadVendida ?? '';
+      cantidadAutoconsumoCtrl.text =
+          alianzaExperienciaAgricola.cantidadAutoconsumo ?? '';
+      costoImplementacionCtrl.text =
+          alianzaExperienciaAgricola.costoImplementacion ?? '';
+      alianzaExperienciaAgricolaValorJornalCtrl.text =
+          alianzaExperienciaAgricola.valorJornal ?? '';
+      totalIngresoNetoCtrl.text =
+          alianzaExperienciaAgricola.totalIngresoNeto ?? '';
+      areaPastoCtrl.text = alianzaExperienciaAgricola.areaPasto ?? '';
+      areaSinUsoCtrl.text = alianzaExperienciaAgricola.areaSinUso ?? '';
+      areaReservaConservacionCtrl.text =
+          alianzaExperienciaAgricola.areaReservaConservacion ?? '';
+      areaImplementacionCtrl.text =
+          alianzaExperienciaAgricola.areaImplementacion ?? '';
+      totalAreaPredioCtrl.text =
+          alianzaExperienciaAgricola.totalAreaPredio ?? '';
+    });
   }
 
   void loadAlianzaExperienciaPecuaria(
-      AlianzaExperienciaPecuariaEntity alianzaExperienciaPecuariaLoaded) {
-    alianzaExperienciaPecuariaTipoActividadProductivaId =
-        alianzaExperienciaPecuariaLoaded.tipoActividadProductivaId;
-    alianzaExperienciaPecuariaFrecuenciaId =
-        alianzaExperienciaPecuariaLoaded.frecuenciaId;
-    cantidadAnimalesCtrl.text =
-        alianzaExperienciaPecuariaLoaded.cantidadAnimales;
-    cantidadCriaCtrl.text = alianzaExperienciaPecuariaLoaded.cantidadCria;
-    cantidadLevanteCtrl.text = alianzaExperienciaPecuariaLoaded.cantidadLevante;
-    cantidadCebaCtrl.text = alianzaExperienciaPecuariaLoaded.cantidadCeba;
-    cantidadLecheCtrl.text = alianzaExperienciaPecuariaLoaded.cantidadLeche;
-    alianzaExperienciaPecuariaValorJornalCtrl.text =
-        alianzaExperienciaPecuariaLoaded.valorJornal;
-    costosInsumosCtrl.text = alianzaExperienciaPecuariaLoaded.costosInsumos;
-    ingresosCtrl.text = alianzaExperienciaPecuariaLoaded.ingresos;
+      AlianzaExperienciaPecuariaEntity alianzaExperienciaPecuaria) {
+    setState(() {
+      alianzaExperienciaPecuariaTipoActividadProductivaId =
+          alianzaExperienciaPecuaria.tipoActividadProductivaId;
+      alianzaExperienciaPecuariaFrecuenciaId =
+          alianzaExperienciaPecuaria.frecuenciaId;
+      cantidadAnimalesCtrl.text =
+          alianzaExperienciaPecuaria.cantidadAnimales ?? '';
+      cantidadCriaCtrl.text = alianzaExperienciaPecuaria.cantidadCria ?? '';
+      cantidadLevanteCtrl.text =
+          alianzaExperienciaPecuaria.cantidadLevante ?? '';
+      cantidadCebaCtrl.text = alianzaExperienciaPecuaria.cantidadCeba ?? '';
+      cantidadLecheCtrl.text = alianzaExperienciaPecuaria.cantidadLeche ?? '';
+      alianzaExperienciaPecuariaValorJornalCtrl.text =
+          alianzaExperienciaPecuaria.valorJornal ?? '';
+      costosInsumosCtrl.text = alianzaExperienciaPecuaria.costosInsumos ?? '';
+      ingresosCtrl.text = alianzaExperienciaPecuaria.ingresos ?? '';
+    });
   }
 
   @override
@@ -193,7 +194,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                                       (TipoActividadProductivaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.tipoActividadProductivaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {
@@ -225,7 +226,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                                       (FrecuenciaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.frecuenciaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {
@@ -471,7 +472,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                                       (TipoActividadProductivaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.tipoActividadProductivaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {
@@ -503,7 +504,7 @@ class _AlianzaBeneficiarioExperienciaFormState
                                       (FrecuenciaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.frecuenciaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {

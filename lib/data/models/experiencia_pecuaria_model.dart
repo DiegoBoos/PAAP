@@ -2,9 +2,9 @@ import '../../domain/entities/experiencia_pecuaria_entity.dart';
 
 class ExperienciaPecuariaModel extends ExperienciaPecuariaEntity {
   ExperienciaPecuariaModel({
-    required String? tipoActividadProductivaId,
-    required String? beneficiarioId,
-    required String? frecuenciaId,
+    String? tipoActividadProductivaId,
+    String? beneficiarioId,
+    String? frecuenciaId,
     String? cantidadAnimales,
     String? cantidadCria,
     String? cantidadLevante,
@@ -15,18 +15,18 @@ class ExperienciaPecuariaModel extends ExperienciaPecuariaEntity {
     String? ingresos,
     String? recordStatus,
   }) : super(
-          tipoActividadProductivaId: tipoActividadProductivaId ?? '',
-          beneficiarioId: beneficiarioId ?? '',
-          frecuenciaId: frecuenciaId ?? '',
-          cantidadAnimales: cantidadAnimales ?? '',
-          cantidadCria: cantidadCria ?? '',
-          cantidadLevante: cantidadLevante ?? '',
-          cantidadCeba: cantidadCeba ?? '',
-          cantidadLeche: cantidadLeche ?? '',
-          valorJornal: valorJornal ?? '',
-          costosInsumos: costosInsumos ?? '',
-          ingresos: ingresos ?? '',
-          recordStatus: recordStatus ?? '',
+          tipoActividadProductivaId: tipoActividadProductivaId,
+          beneficiarioId: beneficiarioId,
+          frecuenciaId: frecuenciaId,
+          cantidadAnimales: cantidadAnimales,
+          cantidadCria: cantidadCria,
+          cantidadLevante: cantidadLevante,
+          cantidadCeba: cantidadCeba,
+          cantidadLeche: cantidadLeche,
+          valorJornal: valorJornal,
+          costosInsumos: costosInsumos,
+          ingresos: ingresos,
+          recordStatus: recordStatus,
         );
 
   factory ExperienciaPecuariaModel.fromJson(Map<String, dynamic> json) =>

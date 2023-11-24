@@ -25,7 +25,7 @@ class PerfilCofinanciadorLocalDataSourceImpl
     await db.execute('''
       CREATE TABLE IF NOT EXISTS PerfilCofinanciador (
         PerfilId	TEXT NOT NULL,
-        CofinanciadorId	TEXT NOT NULL,
+        CofinanciadorId	TEXT NOT NULL,zz
         Monto	TEXT,
         Participacion	TEXT,
         RecordStatus	TEXT,

@@ -2,8 +2,8 @@ import 'package:paap/domain/entities/v_perfil_entity.dart';
 
 class VPerfilModel extends VPerfilEntity {
   VPerfilModel(
-      {required String perfilId,
-      required String convocatoriaId,
+      {String? perfilId,
+      String? convocatoriaId,
       String? nombre,
       String? abreviatura,
       String? municipio,
@@ -21,20 +21,20 @@ class VPerfilModel extends VPerfilEntity {
       : super(
             perfilId: perfilId,
             convocatoriaId: convocatoriaId,
-            nombre: nombre ?? '',
-            abreviatura: abreviatura ?? '',
-            municipio: municipio ?? '',
-            departamento: departamento ?? '',
-            direccion: direccion ?? '',
-            contacto: contacto ?? '',
-            telefonoFijo: telefonoFijo ?? '',
-            telefonoMovil: telefonoMovil ?? '',
-            correo: correo ?? '',
-            tipoProyecto: tipoProyecto ?? '',
-            productoPrincipal: productoPrincipal ?? '',
-            productoAsociado: productoAsociado ?? '',
-            valorTotalProyecto: valorTotalProyecto ?? '',
-            incentivoModular: incentivoModular ?? '');
+            nombre: nombre,
+            abreviatura: abreviatura,
+            municipio: municipio,
+            departamento: departamento,
+            direccion: direccion,
+            contacto: contacto,
+            telefonoFijo: telefonoFijo,
+            telefonoMovil: telefonoMovil,
+            correo: correo,
+            tipoProyecto: tipoProyecto,
+            productoPrincipal: productoPrincipal,
+            productoAsociado: productoAsociado,
+            valorTotalProyecto: valorTotalProyecto,
+            incentivoModular: incentivoModular);
 
   factory VPerfilModel.fromJson(Map<String, dynamic> json) => VPerfilModel(
       perfilId: json["perfilId"],

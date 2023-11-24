@@ -9,6 +9,8 @@ import '../../../ui/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_p
 import '../../../ui/cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
 import '../../../domain/entities/desembolso_entity.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
+import '../../cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
+import '../../cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/sync_pages.dart';
@@ -61,6 +63,12 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
 
   @override
   Widget build(BuildContext context) {
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
+
     final perfilPreInversionCofinanciadorDesembolsoCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
             context);
@@ -117,7 +125,7 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                                     (DesembolsoEntity value) {
                               return DropdownMenuItem<String>(
                                 value: value.desembolsoId,
-                                child: Text(value.nombre),
+                                child: Text(value.nombre!),
                               );
                             }).toList(),
                             validator: (value) {
@@ -183,6 +191,28 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                                 return;
                               }
                               formKeyDesembolso.currentState!.save();
+
+                              final perfilPreInversionId =
+                                  vPerfilPreInversionCubit
+                                      .state
+                                      .vPerfilPreInversion!
+                                      .perfilPreInversionId!;
+
+                              final cofinanciadorId =
+                                  perfilPreInversionCofinanciadorCubit
+                                      .state
+                                      .perfilPreInversionCofinanciador
+                                      .cofinanciadorId!;
+
+                              perfilPreInversionCofinanciadorDesembolsoCubit
+                                  .changePerfilPreInversionId(
+                                      perfilPreInversionId);
+
+                              perfilPreInversionCofinanciadorDesembolsoCubit
+                                  .changeCofinanciadorId(cofinanciadorId);
+
+                              perfilPreInversionCofinanciadorDesembolsoCubit
+                                  .changeFecha(fechaCtrl.text);
 
                               perfilPreInversionCofinanciadorDesembolsoCubit
                                   .savePerfilPreInversionCofinanciadorDesembolsoDB();

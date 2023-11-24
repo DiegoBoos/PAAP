@@ -1,10 +1,9 @@
 class MunicipioEntity {
-  MunicipioEntity(
-      {required this.id, required this.nombre, required this.departamentoid});
+  MunicipioEntity({this.id, this.nombre, this.departamentoid});
 
-  String id;
-  String nombre;
-  String departamentoid;
+  String? id;
+  String? nombre;
+  String? departamentoid;
 
   Map<String, dynamic> toJson() =>
       {"MunicipioId": id, "Nombre": nombre, "DepartamentoId": departamentoid};

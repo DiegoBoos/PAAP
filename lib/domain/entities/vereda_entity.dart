@@ -1,14 +1,10 @@
 class VeredaEntity {
-  VeredaEntity(
-      {required this.veredaId,
-      required this.nombre,
-      required this.codigoDane,
-      required this.municipioId});
+  VeredaEntity({this.veredaId, this.nombre, this.codigoDane, this.municipioId});
 
-  String veredaId;
-  String nombre;
-  String codigoDane;
-  String municipioId;
+  String? veredaId;
+  String? nombre;
+  String? codigoDane;
+  String? municipioId;
 
   Map<String, dynamic> toJson() => {
         "VeredaId": veredaId,

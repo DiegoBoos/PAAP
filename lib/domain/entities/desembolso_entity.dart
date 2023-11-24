@@ -1,8 +1,8 @@
 class DesembolsoEntity {
-  DesembolsoEntity({required this.desembolsoId, required this.nombre});
+  DesembolsoEntity({this.desembolsoId, this.nombre});
 
-  String desembolsoId;
-  String nombre;
+  String? desembolsoId;
+  String? nombre;
 
   Map<String, dynamic> toJson() =>
       {"DesembolsoId": desembolsoId, "Nombre": nombre};

@@ -6,7 +6,7 @@ class PerfilPreInversionCofinanciadorEntity {
     this.telefonoMovil,
     this.correo,
     this.municipio,
-    required this.monto,
+    this.monto,
     this.participacion,
     this.recordStatus,
   });
@@ -17,7 +17,7 @@ class PerfilPreInversionCofinanciadorEntity {
   String? telefonoMovil;
   String? correo;
   String? municipio;
-  String monto;
+  String? monto;
   String? participacion;
   String? recordStatus;
 

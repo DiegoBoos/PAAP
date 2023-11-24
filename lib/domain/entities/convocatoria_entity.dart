@@ -1,19 +1,19 @@
 class ConvocatoriaEntity {
   ConvocatoriaEntity({
-    required this.convocatoriaId,
-    required this.nombre,
-    required this.descripcion,
-    required this.fechaInicial,
-    required this.fechaFinal,
-    required this.recursos,
+    this.convocatoriaId,
+    this.nombre,
+    this.descripcion,
+    this.fechaInicial,
+    this.fechaFinal,
+    this.recursos,
   });
 
-  String convocatoriaId;
-  String nombre;
-  String descripcion;
-  String fechaInicial;
-  String fechaFinal;
-  String recursos;
+  String? convocatoriaId;
+  String? nombre;
+  String? descripcion;
+  String? fechaInicial;
+  String? fechaFinal;
+  String? recursos;
 
   Map<String, dynamic> toJson() => {
         "ConvocatoriaId": convocatoriaId,

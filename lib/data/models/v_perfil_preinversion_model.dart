@@ -2,8 +2,8 @@ import 'package:paap/domain/entities/v_perfil_preinversion_entity.dart';
 
 class VPerfilPreInversionModel extends VPerfilPreInversionEntity {
   VPerfilPreInversionModel({
-    required String perfilPreInversionId,
-    required String perfilId,
+    String? perfilPreInversionId,
+    String? perfilId,
     String? convocatoria,
     String? nombre,
     String? abreviatura,
@@ -23,22 +23,22 @@ class VPerfilPreInversionModel extends VPerfilPreInversionEntity {
   }) : super(
             perfilPreInversionId: perfilPreInversionId,
             perfilId: perfilId,
-            convocatoria: convocatoria ?? '',
-            nombre: nombre ?? '',
-            abreviatura: abreviatura ?? '',
-            nit: nit ?? '',
-            municipio: municipio ?? '',
-            direccion: direccion ?? '',
-            contacto: contacto ?? '',
-            telefonoFijo: telefonoFijo ?? '',
-            telefonoMovil: telefonoMovil ?? '',
-            correo: correo ?? '',
-            tipoProyecto: tipoProyecto ?? '',
-            producto: producto ?? '',
-            productoAsociado: productoAsociado ?? '',
-            valorTotalProyecto: valorTotalProyecto ?? '',
-            incentivoModular: incentivoModular ?? '',
-            departamento: departamento ?? '');
+            convocatoria: convocatoria,
+            nombre: nombre,
+            abreviatura: abreviatura,
+            nit: nit,
+            municipio: municipio,
+            direccion: direccion,
+            contacto: contacto,
+            telefonoFijo: telefonoFijo,
+            telefonoMovil: telefonoMovil,
+            correo: correo,
+            tipoProyecto: tipoProyecto,
+            producto: producto,
+            productoAsociado: productoAsociado,
+            valorTotalProyecto: valorTotalProyecto,
+            incentivoModular: incentivoModular,
+            departamento: departamento);
 
   factory VPerfilPreInversionModel.fromJson(Map<String, dynamic> json) =>
       VPerfilPreInversionModel(

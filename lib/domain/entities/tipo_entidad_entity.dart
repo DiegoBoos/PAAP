@@ -1,8 +1,8 @@
 class TipoEntidadEntity {
-  TipoEntidadEntity({required this.tipoEntidadId, required this.nombre});
+  TipoEntidadEntity({this.tipoEntidadId, this.nombre});
 
-  String tipoEntidadId;
-  String nombre;
+  String? tipoEntidadId;
+  String? nombre;
 
   Map<String, dynamic> toJson() =>
       {"TipoEntidadId": tipoEntidadId, "Nombre": nombre};

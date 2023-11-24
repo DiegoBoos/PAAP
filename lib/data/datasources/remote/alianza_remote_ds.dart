@@ -92,7 +92,7 @@ class AlianzaRemoteDataSourceImpl implements AlianzaRemoteDataSource {
 
         List<AlianzaModel> listAlianza = [];
         for (var alianza in alianzas) {
-          final dsAlianza = await getAlianzaTable(usuario, alianza.id);
+          final dsAlianza = await getAlianzaTable(usuario, alianza.id!);
           listAlianza.add(dsAlianza);
         }
         return listAlianza;

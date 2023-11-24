@@ -18,7 +18,7 @@ class PerfilCofinanciadorModel extends PerfilCofinanciadorEntity {
           telefonoMovil: telefonoMovil,
           correo: correo,
           municipio: municipio,
-          monto: monto ?? '0',
+          monto: monto,
           participacion: participacion,
           recordStatus: recordStatus,
         );

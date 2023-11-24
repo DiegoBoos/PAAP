@@ -2,7 +2,7 @@ import 'package:paap/domain/entities/cofinanciador_entity.dart';
 
 class CofinanciadorModel extends CofinanciadorEntity {
   CofinanciadorModel({
-    required String id,
+    String? id,
     String? nombre,
     String? telefonoFijo,
     String? telefonoMovil,
@@ -13,14 +13,14 @@ class CofinanciadorModel extends CofinanciadorEntity {
     String? municipio,
   }) : super(
             id: id,
-            nombre: nombre ?? '',
-            telefonoFijo: telefonoFijo ?? '',
-            telefonoMovil: telefonoMovil ?? '',
-            correo: correo ?? '',
-            direccion: direccion ?? '',
-            tipoEntidad: tipoEntidad ?? '',
-            departamento: departamento ?? '',
-            municipio: municipio ?? '');
+            nombre: nombre,
+            telefonoFijo: telefonoFijo,
+            telefonoMovil: telefonoMovil,
+            correo: correo,
+            direccion: direccion,
+            tipoEntidad: tipoEntidad,
+            departamento: departamento,
+            municipio: municipio);
 
   factory CofinanciadorModel.fromJson(Map<String, dynamic> json) =>
       CofinanciadorModel(

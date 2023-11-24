@@ -1,11 +1,10 @@
 class DepartamentoEntity {
-  DepartamentoEntity(
-      {required this.id, required this.nombre, required this.paisid});
+  DepartamentoEntity({this.id, this.nombre, this.paisId});
 
-  String id;
-  String nombre;
-  String paisid;
+  String? id;
+  String? nombre;
+  String? paisId;
 
   Map<String, dynamic> toJson() =>
-      {"DepartamentoId": id, "Nombre": nombre, "PaisId": paisid};
+      {"DepartamentoId": id, "Nombre": nombre, "PaisId": paisId};
 }

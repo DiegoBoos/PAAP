@@ -108,7 +108,7 @@ class PerfilesPreInversionRemoteDataSourceImpl
         List<PerfilPreInversionModel> listPerfilesPreInversion = [];
         for (var perfilPreInversion in perfilesPreInversion) {
           final dsPerfilPreInversion =
-              await getPerfilPreInversionTable(usuario, perfilPreInversion.id);
+              await getPerfilPreInversionTable(usuario, perfilPreInversion.id!);
           listPerfilesPreInversion.add(dsPerfilPreInversion);
         }
         return listPerfilesPreInversion;

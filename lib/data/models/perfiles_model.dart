@@ -2,7 +2,7 @@ import 'package:paap/domain/entities/perfiles_entity.dart';
 
 class PerfilesModel extends PerfilesEntity {
   PerfilesModel({
-    required String id,
+    String? id,
     String? nombre,
     String? abreviatura,
     String? valorProyecto,
@@ -11,12 +11,12 @@ class PerfilesModel extends PerfilesEntity {
     String? categorizacion,
   }) : super(
             id: id,
-            nombre: nombre ?? '',
-            abreviatura: abreviatura ?? '',
-            valorProyecto: valorProyecto ?? '',
-            incentivoModular: incentivoModular ?? '',
-            ubicacion: ubicacion ?? '',
-            categorizacion: categorizacion ?? '');
+            nombre: nombre,
+            abreviatura: abreviatura,
+            valorProyecto: valorProyecto,
+            incentivoModular: incentivoModular,
+            ubicacion: ubicacion,
+            categorizacion: categorizacion);
 
   factory PerfilesModel.fromJson(Map<String, dynamic> json) => PerfilesModel(
         id: json["ID"],

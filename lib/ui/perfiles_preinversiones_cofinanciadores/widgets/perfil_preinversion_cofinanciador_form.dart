@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../../domain/entities/cofinanciador_entity.dart';
+import '../../cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../utils/input_decoration.dart';
 
 class PerfilPreInversionCofinanciadorForm extends StatefulWidget {
@@ -32,23 +33,37 @@ class _PerfilPreInversionCofinanciadorFormState
   void initState() {
     super.initState();
 
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    final municipioPerfil =
+        vPerfilPreInversionCubit.state.vPerfilPreInversion!.municipio;
+
+    cofinanciadorId = widget.perfilPreInversionCofinanciador?.cofinanciadorId;
+
     setState(() {
-      cofinanciadoresFiltered = widget.cofinanciadores
-          .where((cofinanciador) =>
-              cofinanciador.municipio ==
-              widget.perfilPreInversionCofinanciador?.municipio)
-          .toList();
-
-      cofinanciadorId = widget.perfilPreInversionCofinanciador?.cofinanciadorId;
-
+      // Si se está editando un registro de la tabla PerfilPreInversionCofinanciador
+      // Se filtra la lista de cofinanciadores por municipio y se asigna el valor inicial al controlador
       if (cofinanciadorId != null) {
-        final initialCofinanciador = cofinanciadoresFiltered.firstWhere(
+        cofinanciadoresFiltered = widget.cofinanciadores
+            .where((cofinanciador) =>
+                cofinanciador.municipio ==
+                widget.perfilPreInversionCofinanciador?.municipio)
+            .toList();
+
+        final initialValue = cofinanciadoresFiltered.firstWhere(
           (cofinanciador) =>
               cofinanciador.id ==
               widget.perfilPreInversionCofinanciador?.cofinanciadorId,
         );
+
         _cofinanciadorController =
-            TextEditingController(text: initialCofinanciador.nombre);
+            TextEditingController(text: initialValue.nombre);
+      } else {
+        cofinanciadoresFiltered = widget.cofinanciadores
+            .where(
+                (cofinanciador) => cofinanciador.municipio == municipioPerfil)
+            .toList();
       }
 
       participacionCtrl.text =
@@ -62,14 +77,25 @@ class _PerfilPreInversionCofinanciadorFormState
       cofinanciadorId = null;
       _cofinanciadorController.clear();
     });
+
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
+      context,
+    );
+
+    perfilPreInversionCofinanciadorCubit.changeCofinanciadorId(cofinanciadorId);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
+
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
       context,
-    ).initState();
+    );
+
+    perfilPreInversionCofinanciadorCubit.initState();
   }
 
   @override
@@ -84,13 +110,13 @@ class _PerfilPreInversionCofinanciadorFormState
           Autocomplete<CofinanciadorEntity>(
               optionsBuilder: (TextEditingValue textEditingValue) {
                 return cofinanciadoresFiltered.where((cofinanciador) {
-                  return cofinanciador.nombre
+                  return cofinanciador.nombre!
                       .toLowerCase()
                       .contains(textEditingValue.text.toLowerCase());
                 });
               },
               displayStringForOption: (CofinanciadorEntity option) =>
-                  option.nombre,
+                  option.nombre!,
               fieldViewBuilder: (BuildContext context,
                   TextEditingController textEditingController,
                   FocusNode focusNode,
@@ -122,6 +148,8 @@ class _PerfilPreInversionCofinanciadorFormState
                 setState(() {
                   cofinanciadorId = value.id;
                 });
+                perfilPreInversionCofinanciadorCubit
+                    .changeCofinanciadorId(cofinanciadorId);
               },
               initialValue: _cofinanciadorController.value),
           const SizedBox(height: 20),
@@ -140,10 +168,11 @@ class _PerfilPreInversionCofinanciadorFormState
               }),
           const SizedBox(height: 20),
           TextFormField(
-              enabled: false,
-              controller: participacionCtrl,
-              decoration: CustomInputDecoration.inputDecoration(
-                  hintText: 'Participación', labelText: 'Participación'))
+            enabled: false,
+            controller: participacionCtrl,
+            decoration: CustomInputDecoration.inputDecoration(
+                hintText: 'Participación', labelText: 'Participación'),
+          )
         ]),
       ),
     );

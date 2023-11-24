@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/perfil_cofinanciador_entity.dart';
 import '../../blocs/perfil_cofinanciadores/perfil_cofinanciadores_bloc.dart';
 import '../../cubits/menu/menu_cubit.dart';
 import '../../cubits/perfil_cofinanciador/perfil_cofinanciador_cubit.dart';
@@ -40,13 +39,16 @@ class _NewEditPerfilCofinanciadorPageState
 
     final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
 
+    final perfilCofinanciadorCubit =
+        BlocProvider.of<PerfilCofinanciadorCubit>(context);
+
     final perfilCofinanciadoresBloc =
         BlocProvider.of<PerfilCofinanciadoresBloc>(context);
 
     final perfil = vPerfilCubit.state.vPerfil!;
 
-    final perfilCofinanciador = ModalRoute.of(context)!.settings.arguments
-        as PerfilCofinanciadorEntity?;
+    final perfilCofinanciador =
+        perfilCofinanciadorCubit.state.perfilCofinanciador;
 
     return MultiBlocListener(
       listeners: [
@@ -57,7 +59,7 @@ class _NewEditPerfilCofinanciadorPageState
                   context, 'Datos guardados satisfactoriamente', Colors.green);
 
               perfilCofinanciadoresBloc
-                  .add(GetPerfilCofinanciadores(perfil.perfilId));
+                  .add(GetPerfilCofinanciadores(perfil.perfilId!));
 
               final perfilCofinanciadorSaved = state.perfilCofinanciador;
 
@@ -77,16 +79,8 @@ class _NewEditPerfilCofinanciadorPageState
           },
         ),
         appBar: AppBar(
-            title:
-                BlocBuilder<PerfilCofinanciadorCubit, PerfilCofinanciadorState>(
-              builder: (context, state) {
-                if (state is PerfilCofinanciadorLoaded) {
-                  return const Text('Editar');
-                } else {
-                  return const Text('Crear');
-                }
-              },
-            ),
+            title: Text(
+                perfilCofinanciador.cofinanciadorId == '' ? 'Crear' : 'Editar'),
             actions: const [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -103,7 +97,6 @@ class _NewEditPerfilCofinanciadorPageState
                   builder: (context, state) {
                     if (state is CofinanciadoresLoaded) {
                       return PerfilCofinanciadorForm(
-                        perfilCofinanciador: perfilCofinanciador,
                         cofinanciadores: state.cofinanciadoresLoaded!,
                       );
                     } else {
@@ -123,18 +116,24 @@ class _NewEditPerfilCofinanciadorPageState
                     final perfilCofinanciadorCubit =
                         BlocProvider.of<PerfilCofinanciadorCubit>(context);
 
-                    final participacion =
-                        double.parse(perfilCofinanciador!.monto) *
-                            100 /
-                            double.parse(perfil.valorTotalProyecto);
+                    final perfilCofinanciador =
+                        perfilCofinanciadorCubit.state.perfilCofinanciador;
+
+                    double participacion = 0;
+
+                    if (perfilCofinanciador.monto != null &&
+                        perfilCofinanciador.monto != '') {
+                      participacion = double.parse(perfilCofinanciador.monto!) *
+                          100 /
+                          double.parse(perfil.valorTotalProyecto!);
+                    }
 
                     perfilCofinanciadorCubit.changePerfilId(perfil.perfilId);
 
                     perfilCofinanciadorCubit
                         .changeParticipacion(participacion.toString());
 
-                    perfilCofinanciadorCubit
-                        .savePerfilCofinanciadorDB(perfilCofinanciador);
+                    perfilCofinanciadorCubit.savePerfilCofinanciadorDB();
                   },
                 )
               ],

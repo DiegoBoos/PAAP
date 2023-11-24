@@ -14,15 +14,19 @@ class PerfilPreInversionAliadoCubit
 
   void initState() => emit(PerfilPreInversionAliadoInitial());
 
-  void savePerfilPreInversionAliadoDB(
-      PerfilPreInversionAliadoEntity perfilPreInversionAliadoEntity) async {
+  void setPerfilPreInversionAliado(
+      PerfilPreInversionAliadoEntity perfilPreInversionAliado) {
+    emit(PerfilPreInversionAliadoChanged(perfilPreInversionAliado));
+  }
+
+  void savePerfilPreInversionAliadoDB() async {
     final result = await perfilPreInversionAliadoDB
-        .savePerfilPreInversionAliadoUsecaseDB(perfilPreInversionAliadoEntity);
+        .savePerfilPreInversionAliadoUsecaseDB(state.perfilPreInversionAliado);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionAliadoError(failure.properties.first)),
         (data) => emit(PerfilPreInversionAliadoSaved(
-            perfilPreInversionAliado: perfilPreInversionAliadoEntity)));
+            perfilPreInversionAliado: state.perfilPreInversionAliado)));
   }
 
   void changePerfilPreInversionId(String value) {

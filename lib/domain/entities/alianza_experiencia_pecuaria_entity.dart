@@ -1,31 +1,31 @@
 class AlianzaExperienciaPecuariaEntity {
   AlianzaExperienciaPecuariaEntity({
-    required this.tipoActividadProductivaId,
-    required this.beneficiarioId,
-    required this.frecuenciaId,
-    required this.cantidadAnimales,
-    required this.cantidadCria,
-    required this.cantidadLevante,
-    required this.cantidadCeba,
-    required this.cantidadLeche,
-    required this.valorJornal,
-    required this.costosInsumos,
-    required this.ingresos,
-    required this.recordStatus,
+    this.tipoActividadProductivaId,
+    this.beneficiarioId,
+    this.frecuenciaId,
+    this.cantidadAnimales,
+    this.cantidadCria,
+    this.cantidadLevante,
+    this.cantidadCeba,
+    this.cantidadLeche,
+    this.valorJornal,
+    this.costosInsumos,
+    this.ingresos,
+    this.recordStatus,
   });
 
-  String tipoActividadProductivaId;
-  String beneficiarioId;
-  String frecuenciaId;
-  String cantidadAnimales;
-  String cantidadCria;
-  String cantidadLevante;
-  String cantidadCeba;
-  String cantidadLeche;
-  String valorJornal;
-  String costosInsumos;
-  String ingresos;
-  String recordStatus;
+  String? tipoActividadProductivaId;
+  String? beneficiarioId;
+  String? frecuenciaId;
+  String? cantidadAnimales;
+  String? cantidadCria;
+  String? cantidadLevante;
+  String? cantidadCeba;
+  String? cantidadLeche;
+  String? valorJornal;
+  String? costosInsumos;
+  String? ingresos;
+  String? recordStatus;
 
   AlianzaExperienciaPecuariaEntity copyWith({
     String? tipoActividadProductivaId,

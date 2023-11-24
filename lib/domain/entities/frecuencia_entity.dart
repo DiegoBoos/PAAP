@@ -1,8 +1,8 @@
 class FrecuenciaEntity {
-  FrecuenciaEntity({required this.frecuenciaId, required this.nombre});
+  FrecuenciaEntity({this.frecuenciaId, this.nombre});
 
-  String frecuenciaId;
-  String nombre;
+  String? frecuenciaId;
+  String? nombre;
 
   Map<String, dynamic> toJson() =>
       {"FrecuenciaId": frecuenciaId, "Nombre": nombre};

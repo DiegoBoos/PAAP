@@ -43,7 +43,7 @@ class MenuCubit extends Cubit<MenuState> {
             menu.menuId == '1069')
         .toList();
     preinversionMenu.sort((a, b) {
-      return a.orden.toLowerCase().compareTo(b.orden.toLowerCase());
+      return a.orden!.toLowerCase().compareTo(b.orden!.toLowerCase());
     });
     return preinversionMenu;
   }
@@ -60,7 +60,7 @@ class MenuCubit extends Cubit<MenuState> {
         .toList();
 
     perfilesMenu.sort((a, b) {
-      return a.orden.toLowerCase().compareTo(b.orden.toLowerCase());
+      return a.orden!.toLowerCase().compareTo(b.orden!.toLowerCase());
     });
     return perfilesMenu;
   }
@@ -71,7 +71,7 @@ class MenuCubit extends Cubit<MenuState> {
             menu.menuId == '11' || menu.menuId == '43' || menu.menuId == '44')
         .toList();
     alianzasMenu.sort((a, b) {
-      return a.orden.toLowerCase().compareTo(b.orden.toLowerCase());
+      return a.orden!.toLowerCase().compareTo(b.orden!.toLowerCase());
     });
     return alianzasMenu;
   }

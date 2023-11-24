@@ -1,15 +1,15 @@
 class RubroEntity {
   RubroEntity({
     this.rubroId,
-    required this.nombre,
-    required this.descripcion,
+    this.nombre,
+    this.descripcion,
     this.activo,
     this.actividadFinancieraId,
   });
 
   String? rubroId;
-  String nombre;
-  String descripcion;
+  String? nombre;
+  String? descripcion;
   String? activo;
   String? actividadFinancieraId;
 

@@ -113,7 +113,7 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
 
     for (var evaluacionProduccion in evaluacionesProduccionEntity) {
       if (evaluacionProduccion.recordStatus == 'N') {
-        perfilIdsEvaluacionesNews.add(evaluacionProduccion.perfilId);
+        perfilIdsEvaluacionesNews.add(evaluacionProduccion.perfilId!);
         batch.delete('Evaluacion',
             where: 'EvaluacionId = ?',
             whereArgs: [evaluacionProduccion.evaluacionId]);

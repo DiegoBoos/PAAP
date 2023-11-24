@@ -87,7 +87,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
       String municipioId, String perfilBeneficiarioVeredaId) async {
     final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
-    await veredaCubit.getVeredasByMunicipioDB(municipioId);
+    veredaCubit.getVeredasByMunicipioDB(municipioId);
     veredaId =
         perfilBeneficiarioVeredaId != '' ? perfilBeneficiarioVeredaId : null;
   }
@@ -124,7 +124,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                           (DepartamentoEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.id,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -163,7 +163,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                           (MunicipioEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.id,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -173,7 +173,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                         return null;
                       },
                       onChanged: (String? value) async {
-                        await veredaCubit.getVeredasByMunicipioDB(value!);
+                        veredaCubit.getVeredasByMunicipioDB(value!);
 
                         setState(() {
                           municipioId = value;
@@ -200,7 +200,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                                 (VeredaEntity value) {
                           return DropdownMenuItem<String>(
                             value: value.veredaId,
-                            child: Text(value.nombre),
+                            child: Text(value.nombre!),
                           );
                         }).toList(),
                         onChanged: (String? value) {
@@ -230,7 +230,7 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                               (TipoTenenciaEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.tipoTenenciaId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -315,37 +315,6 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
                   onSaved: (String? newValue) {
                     perfilBeneficiarioCubit.changeCualBeneficio(newValue);
                   }),
-              //TODO: Beneficio
-              /* const SizedBox(height: 20),
-              BlocBuilder<BeneficioCubit, BeneficioState>(
-                builder: (context, state) {
-                  if (state is BeneficiosLoaded) {
-                    return DropdownButtonFormField(
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Beneficio', labelText: 'Beneficio'),
-                      value: beneficioId,
-                      items: state.beneficios!.map<DropdownMenuItem<String>>(
-                          (BeneficioEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.beneficioId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        perfilBeneficiarioCubit
-                            .changeBeneficioId(value);
-                      },
-                    );
-                  }
-                  return Container();
-                },
-              ), */
               const SizedBox(height: 20),
               TextFormField(
                   keyboardType: TextInputType.number,

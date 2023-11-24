@@ -27,7 +27,7 @@ class PerfilPreInversionConsultoresTableSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
-        DataCell(Text(consultor.consultor)),
+        DataCell(Text(consultor.consultor!)),
         DataCell(IconButton(
             onPressed: () async {
               final perfilPreInversionConsultor =
@@ -40,18 +40,9 @@ class PerfilPreInversionConsultoresTableSource extends DataTableSource {
                 fechaRevision: DateTime.now().toIso8601String(),
               );
 
-              await perfilPreInversionConsultorCubit
+              perfilPreInversionConsultorCubit
                   .savePerfilPreInversionConsultorDB(
-                      perfilPreInversionConsultor)
-                  .whenComplete(() {
-                if (perfilPreInversionConsultorCubit.state
-                    is PerfilPreInversionConsultorSaved) {
-                  BlocProvider.of<PerfilPreInversionConsultoresBloc>(context)
-                      .add(GetPerfilPreInversionConsultores(
-                          vPerfilPreInversionCubit.state.vPerfilPreInversion!
-                              .perfilPreInversionId));
-                }
-              });
+                      perfilPreInversionConsultor);
             },
             icon: const Icon(Icons.person_add))),
       ],
@@ -78,14 +69,29 @@ class PerfilPreInversionConsultoresRows extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PaginatedDataTable(
-      header: const Text('Consultores'),
-      rowsPerPage: 5, // Adjust as needed
-      columns: const <DataColumn>[
-        DataColumn(label: Text('Nombre')),
-        DataColumn(label: Text('Acción')),
-      ],
-      source: PerfilPreInversionConsultoresTableSource(context, consultores),
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
+
+    return BlocListener<PerfilPreInversionConsultorCubit,
+        PerfilPreInversionConsultorState>(
+      listener: (context, state) {
+        if (state is PerfilPreInversionConsultorSaved) {
+          BlocProvider.of<PerfilPreInversionConsultoresBloc>(context)
+              .add(GetPerfilPreInversionConsultores(perfilPreInversionId));
+        }
+      },
+      child: PaginatedDataTable(
+        header: const Text('Consultores'),
+        rowsPerPage: 5, // Adjust as needed
+        columns: const <DataColumn>[
+          DataColumn(label: Text('Nombre')),
+          DataColumn(label: Text('Acción')),
+        ],
+        source: PerfilPreInversionConsultoresTableSource(context, consultores),
+      ),
     );
   }
 }

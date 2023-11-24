@@ -1,8 +1,8 @@
 class GeneroEntity {
-  GeneroEntity({required this.generoId, required this.nombre});
+  GeneroEntity({this.generoId, this.nombre});
 
-  String generoId;
-  String nombre;
+  String? generoId;
+  String? nombre;
 
   Map<String, dynamic> toJson() => {"GeneroId": generoId, "Nombre": nombre};
 }

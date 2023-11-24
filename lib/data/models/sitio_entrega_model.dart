@@ -1,8 +1,8 @@
 import '../../domain/entities/sitio_entrega_entity.dart';
 
 class SitioEntregaModel extends SitioEntregaEntity {
-  SitioEntregaModel({required String sitioEntregaId, String? nombre})
-      : super(sitioEntregaId: sitioEntregaId, nombre: nombre ?? '');
+  SitioEntregaModel({String? sitioEntregaId, String? nombre})
+      : super(sitioEntregaId: sitioEntregaId, nombre: nombre);
 
   factory SitioEntregaModel.fromJson(Map<String, dynamic> json) =>
       SitioEntregaModel(

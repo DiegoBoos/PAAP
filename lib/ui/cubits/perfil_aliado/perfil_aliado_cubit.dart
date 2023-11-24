@@ -13,11 +13,15 @@ class PerfilAliadoCubit extends Cubit<PerfilAliadoState> {
 
   void initState() => emit(PerfilAliadoInitial());
 
-  void savePerfilAliadoDB(PerfilAliadoEntity perfilAliadoEntity) async {
+  void setPerfilAliado(PerfilAliadoEntity perfilAliado) {
+    emit(PerfilAliadoChanged(perfilAliado));
+  }
+
+  void savePerfilAliadoDB() async {
     final result =
-        await perfilAliadoDB.savePerfilAliadoUsecaseDB(perfilAliadoEntity);
+        await perfilAliadoDB.savePerfilAliadoUsecaseDB(state.perfilAliado);
     result.fold((failure) => emit(PerfilAliadoError(failure.properties.first)),
-        (data) => emit(PerfilAliadoSaved(perfilAliado: perfilAliadoEntity)));
+        (data) => emit(PerfilAliadoSaved(perfilAliado: state.perfilAliado)));
   }
 
   void changePerfilId(String value) {

@@ -32,12 +32,13 @@ class _PerfilPreInversionConsultoresPageState
 
     perfilPreInversionConsultoresBloc.add(GetPerfilPreInversionConsultores(
         vPerfilPreInversionCubit
-            .state.vPerfilPreInversion!.perfilPreInversionId));
+            .state.vPerfilPreInversion!.perfilPreInversionId!));
   }
 
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
+
     return Scaffold(
       drawer: BlocBuilder<MenuCubit, MenuState>(
         builder: (context, state) {
@@ -90,9 +91,9 @@ class _PerfilPreInversionConsultoresPageState
                                 context)
                             .add(DeletePerfilPreInversionConsultores(
                                 perfilPreInversionConsultoresLoaded[0]
-                                    .perfilPreInversionId,
+                                    .perfilPreInversionId!,
                                 perfilPreInversionConsultoresLoaded[0]
-                                    .consultorId,
+                                    .consultorId!,
                                 '2'));
                       },
                       icon: const Icon(Icons.delete_forever))),

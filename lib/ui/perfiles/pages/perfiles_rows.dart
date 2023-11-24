@@ -17,14 +17,14 @@ class VPerfilesTableSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
-        DataCell(Text(vPerfil.perfilId)),
+        DataCell(Text(vPerfil.perfilId!)),
         DataCell(TextButton(
           onPressed: () {
             BlocProvider.of<VPerfilCubit>(context).selectVPerfil(vPerfil);
             Navigator.pushNamed(context, 'VPerfil');
           },
           child: Text(
-            vPerfil.nombre,
+            vPerfil.nombre!,
           ),
         )),
       ],
@@ -74,14 +74,14 @@ class _PerfilesRowsState extends State<PerfilesRows> {
         final lowerCaseQuery = query.toLowerCase();
         if (enableId) {
           final vPerfiles = allVPerfiles.where((vPerfil) {
-            return vPerfil.perfilId.toLowerCase() == lowerCaseQuery;
+            return vPerfil.perfilId!.toLowerCase() == lowerCaseQuery;
           }).toList();
 
           vPerfilesFiltered = vPerfiles;
           return;
         } else {
           final vPerfiles = allVPerfiles.where((vPerfil) {
-            return vPerfil.nombre.toLowerCase().contains(lowerCaseQuery);
+            return vPerfil.nombre!.toLowerCase().contains(lowerCaseQuery);
           }).toList();
 
           vPerfilesFiltered = vPerfiles;

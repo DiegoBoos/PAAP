@@ -28,7 +28,7 @@ class MunicipioRemoteDataSourceImpl implements MunicipioRemoteDataSource {
 
     for (var departamento in departamentos) {
       final municipiosDepartamento =
-          await getMunicipiosByDepartamento(usuario, departamento.id);
+          await getMunicipiosByDepartamento(usuario, departamento.id!);
       municipios.addAll(municipiosDepartamento);
     }
     return municipios;

@@ -1,37 +1,37 @@
 class AliadoEntity {
   AliadoEntity({
-    required this.aliadoId,
-    required this.nombre,
-    required this.fechaCreacion,
-    required this.nombreContacto,
-    required this.direccion,
-    required this.telefonoFijo,
-    required this.telefonoMovil,
-    required this.correo,
-    required this.municipioId,
-    required this.experiencia,
-    required this.fechaActivacion,
-    required this.fechaDesactivacion,
-    required this.fechaCambio,
-    required this.activo,
-    required this.recordStatus,
+    this.aliadoId,
+    this.nombre,
+    this.fechaCreacion,
+    this.nombreContacto,
+    this.direccion,
+    this.telefonoFijo,
+    this.telefonoMovil,
+    this.correo,
+    this.municipioId,
+    this.experiencia,
+    this.fechaActivacion,
+    this.fechaDesactivacion,
+    this.fechaCambio,
+    this.activo,
+    this.recordStatus,
   });
 
-  String aliadoId;
-  String nombre;
-  String fechaCreacion;
-  String nombreContacto;
-  String direccion;
-  String telefonoFijo;
-  String telefonoMovil;
-  String correo;
-  String municipioId;
-  String experiencia;
-  String fechaActivacion;
-  String fechaDesactivacion;
-  String fechaCambio;
-  String activo;
-  String recordStatus;
+  String? aliadoId;
+  String? nombre;
+  String? fechaCreacion;
+  String? nombreContacto;
+  String? direccion;
+  String? telefonoFijo;
+  String? telefonoMovil;
+  String? correo;
+  String? municipioId;
+  String? experiencia;
+  String? fechaActivacion;
+  String? fechaDesactivacion;
+  String? fechaCambio;
+  String? activo;
+  String? recordStatus;
 
   AliadoEntity copyWith({
     String? aliadoId,

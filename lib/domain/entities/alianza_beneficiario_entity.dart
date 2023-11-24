@@ -1,124 +1,114 @@
 class AlianzaBeneficiarioEntity {
   AlianzaBeneficiarioEntity({
-    required this.alianzaId,
-    required this.beneficiarioId,
-    required this.municipioId,
-    required this.veredaId,
-    required this.areaFinca,
-    required this.areaProyecto,
-    required this.tipoTenenciaId,
-    required this.experiencia,
-    required this.asociado,
-    required this.conocePerfil,
-    required this.fueBeneficiado,
-    required this.cualBeneficio,
-    required this.activo,
-    required this.miembrosHogar,
-    required this.miembrosEcoActivos,
-    required this.residenciaId,
-    required this.accesoExplotacionTierra,
-    required this.gastosMensuales,
-    required this.mesesAsociado,
-    required this.nombreOrganizacion,
-    required this.activoInmobiliario,
-    required this.activoFinanciero,
-    required this.activoProductivo,
-    required this.activoCorriente,
-    required this.nota,
-    required this.nombreFinca,
-    required this.tipoDiscapacidadId,
-    required this.nivelEscolarId,
-    required this.cotizanteBeps,
-    required this.estadoCivilId,
-    required this.conyugeNombre1,
-    required this.conyugeFechaNacimiento,
-    required this.conyugeIngresosMensuales,
-    required this.calificacionSisben,
-    required this.ingresosMensuales,
-    required this.conyugeNombre2,
-    required this.conyugeApellido1,
-    required this.conyugeApellido2,
-    required this.conyugeGeneroId,
-    required this.conyugeFechaExpedicionDocumento,
-    required this.conyugeGrupoEspecialId,
-    required this.actividadEconomicaId,
-    required this.ingresosDiarios,
-    required this.diasTrabajo,
-    required this.conyugeTipoIdentificacionId,
-    required this.conyugeId,
-    required this.longitud,
-    required this.latitud,
-    required this.cedulaCatastral,
-    required this.beneficioId,
+    this.alianzaId,
+    this.beneficiarioId,
+    this.municipioId,
+    this.veredaId,
+    this.areaFinca,
+    this.areaProyecto,
+    this.tipoTenenciaId,
+    this.experiencia,
+    this.asociado,
+    this.conocePerfil,
+    this.fueBeneficiado,
+    this.cualBeneficio,
+    this.activo,
+    this.miembrosHogar,
+    this.miembrosEcoActivos,
+    this.residenciaId,
+    this.accesoExplotacionTierra,
+    this.gastosMensuales,
+    this.mesesAsociado,
+    this.nombreOrganizacion,
+    this.activoInmobiliario,
+    this.activoFinanciero,
+    this.activoProductivo,
+    this.activoCorriente,
+    this.nota,
+    this.nombreFinca,
+    this.tipoDiscapacidadId,
+    this.nivelEscolarId,
+    this.cotizanteBeps,
+    this.estadoCivilId,
+    this.conyugeNombre1,
+    this.conyugeFechaNacimiento,
+    this.conyugeIngresosMensuales,
+    this.calificacionSisben,
+    this.ingresosMensuales,
+    this.conyugeNombre2,
+    this.conyugeApellido1,
+    this.conyugeApellido2,
+    this.conyugeGeneroId,
+    this.conyugeFechaExpedicionDocumento,
+    this.conyugeGrupoEspecialId,
+    this.actividadEconomicaId,
+    this.ingresosDiarios,
+    this.diasTrabajo,
+    this.conyugeTipoIdentificacionId,
+    this.conyugeId,
+    this.longitud,
+    this.latitud,
+    this.cedulaCatastral,
+    this.beneficioId,
+    this.recordStatus,
     //OTROS
-    this.documento,
-    this.tipoDocumento,
     this.nombre,
     this.edad,
-    this.genero,
-    this.grupoEspecial,
-    this.ubicacion,
-    required this.recordStatus,
   });
 
-  String alianzaId;
-  String beneficiarioId;
-  String municipioId;
-  String veredaId;
-  String areaFinca;
-  String areaProyecto;
-  String tipoTenenciaId;
-  String experiencia;
-  String asociado;
-  String conocePerfil;
-  String fueBeneficiado;
-  String cualBeneficio;
-  String activo;
-  String miembrosHogar;
-  String miembrosEcoActivos;
-  String residenciaId;
-  String accesoExplotacionTierra;
-  String gastosMensuales;
-  String mesesAsociado;
-  String nombreOrganizacion;
-  String activoInmobiliario;
-  String activoFinanciero;
-  String activoProductivo;
-  String activoCorriente;
-  String nota;
-  String nombreFinca;
-  String tipoDiscapacidadId;
-  String nivelEscolarId;
-  String cotizanteBeps;
-  String estadoCivilId;
-  String conyugeNombre1;
-  String conyugeFechaNacimiento;
-  String conyugeIngresosMensuales;
-  String calificacionSisben;
-  String ingresosMensuales;
-  String conyugeNombre2;
-  String conyugeApellido1;
-  String conyugeApellido2;
-  String conyugeGeneroId;
-  String conyugeFechaExpedicionDocumento;
-  String conyugeGrupoEspecialId;
-  String actividadEconomicaId;
-  String ingresosDiarios;
-  String diasTrabajo;
-  String conyugeTipoIdentificacionId;
-  String conyugeId;
-  String longitud;
-  String latitud;
-  String cedulaCatastral;
-  String beneficioId;
-  String? documento;
-  String? tipoDocumento;
+  String? alianzaId;
+  String? beneficiarioId;
+  String? municipioId;
+  String? veredaId;
+  String? areaFinca;
+  String? areaProyecto;
+  String? tipoTenenciaId;
+  String? experiencia;
+  String? asociado;
+  String? conocePerfil;
+  String? fueBeneficiado;
+  String? cualBeneficio;
+  String? activo;
+  String? miembrosHogar;
+  String? miembrosEcoActivos;
+  String? residenciaId;
+  String? accesoExplotacionTierra;
+  String? gastosMensuales;
+  String? mesesAsociado;
+  String? nombreOrganizacion;
+  String? activoInmobiliario;
+  String? activoFinanciero;
+  String? activoProductivo;
+  String? activoCorriente;
+  String? nota;
+  String? nombreFinca;
+  String? tipoDiscapacidadId;
+  String? nivelEscolarId;
+  String? cotizanteBeps;
+  String? estadoCivilId;
+  String? conyugeNombre1;
+  String? conyugeFechaNacimiento;
+  String? conyugeIngresosMensuales;
+  String? calificacionSisben;
+  String? ingresosMensuales;
+  String? conyugeNombre2;
+  String? conyugeApellido1;
+  String? conyugeApellido2;
+  String? conyugeGeneroId;
+  String? conyugeFechaExpedicionDocumento;
+  String? conyugeGrupoEspecialId;
+  String? actividadEconomicaId;
+  String? ingresosDiarios;
+  String? diasTrabajo;
+  String? conyugeTipoIdentificacionId;
+  String? conyugeId;
+  String? longitud;
+  String? latitud;
+  String? cedulaCatastral;
+  String? beneficioId;
+  String? recordStatus;
   String? nombre;
   String? edad;
-  String? genero;
-  String? grupoEspecial;
-  String? ubicacion;
-  String recordStatus;
 
   AlianzaBeneficiarioEntity copyWith({
     String? alianzaId,

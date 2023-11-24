@@ -73,9 +73,8 @@ class _PerfilAliadoFormState extends State<PerfilAliadoForm> {
       unidadId = widget.perfilAliado?.unidadId;
       frecuenciaId = widget.perfilAliado?.frecuenciaId;
       sitioEntregaId = widget.perfilAliado?.sitioEntregaId;
+      loadAliado(aliadoCubit.state.aliado);
     });
-
-    loadAliado(aliadoCubit.state.aliado);
   }
 
   @override
@@ -86,36 +85,34 @@ class _PerfilAliadoFormState extends State<PerfilAliadoForm> {
     BlocProvider.of<AliadoCubit>(context).initState();
   }
 
-  loadAliado(AliadoEntity? aliado) {
-    setState(() {
-      final aliadoMunicipioId = aliado?.municipioId;
+  loadAliado(AliadoEntity aliado) {
+    final aliadoMunicipioId = aliado.municipioId;
 
-      final municipio = municipiosFiltered.firstWhere(
-          (municipio) => municipio.id == aliadoMunicipioId,
-          orElse: () => MunicipioModel(id: '', nombre: '', departamentoid: ''));
+    final municipio = municipiosFiltered.firstWhere(
+        (municipio) => municipio.id == aliadoMunicipioId,
+        orElse: () => MunicipioModel(id: '', nombre: '', departamentoid: ''));
 
-      if (municipio.id != '') {
-        departamentoId = municipio.departamentoid;
-        municipioId = aliadoMunicipioId;
+    if (municipio.id != '') {
+      departamentoId = municipio.departamentoid;
+      municipioId = aliadoMunicipioId;
 
-        municipiosFiltered = allMunicipios
-            .where(((municipio) => municipio.departamentoid == departamentoId))
-            .toList();
-      }
-      aliadoIdCtrl.text = aliado?.aliadoId ?? '';
-      nombreCtrl.text = aliado?.nombre ?? '';
-      experienciaCtrl.text = aliado?.experiencia ?? '';
-      nombreContactoCtrl.text = aliado?.nombreContacto ?? '';
-      direccionCtrl.text = aliado?.direccion ?? '';
-      correoCtrl.text = aliado?.correo ?? '';
-      telefonoFijoCtrl.text = aliado?.telefonoFijo ?? '';
-      telefonoMovilCtrl.text = aliado?.telefonoMovil ?? '';
+      municipiosFiltered = allMunicipios
+          .where(((municipio) => municipio.departamentoid == departamentoId))
+          .toList();
+    }
+    aliadoIdCtrl.text = aliado.aliadoId ?? '';
+    nombreCtrl.text = aliado.nombre ?? '';
+    experienciaCtrl.text = aliado.experiencia ?? '';
+    nombreContactoCtrl.text = aliado.nombreContacto ?? '';
+    direccionCtrl.text = aliado.direccion ?? '';
+    correoCtrl.text = aliado.correo ?? '';
+    telefonoFijoCtrl.text = aliado.telefonoFijo ?? '';
+    telefonoMovilCtrl.text = aliado.telefonoMovil ?? '';
 
-      if (aliado != null && aliado.fechaDesactivacion != '') {
-        fechaDesactivacionCtrl.text =
-            dateFormat.format(DateTime.parse(aliado.fechaDesactivacion));
-      }
-    });
+    if (aliado.fechaDesactivacion != null && aliado.fechaDesactivacion != '') {
+      fechaDesactivacionCtrl.text =
+          dateFormat.format(DateTime.parse(aliado.fechaDesactivacion!));
+    }
   }
 
   @override
@@ -211,7 +208,7 @@ class _PerfilAliadoFormState extends State<PerfilAliadoForm> {
                               (DepartamentoEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.id,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -247,7 +244,7 @@ class _PerfilAliadoFormState extends State<PerfilAliadoForm> {
                       .map<DropdownMenuItem<String>>((MunicipioEntity value) {
                     return DropdownMenuItem<String>(
                       value: value.id,
-                      child: Text(value.nombre),
+                      child: Text(value.nombre!),
                     );
                   }).toList(),
                   validator: (value) {
@@ -404,7 +401,7 @@ class _PerfilAliadoFormState extends State<PerfilAliadoForm> {
                                       (ProductoEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.id,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {
@@ -461,7 +458,7 @@ class _PerfilAliadoFormState extends State<PerfilAliadoForm> {
                                             (UnidadEntity value) {
                                       return DropdownMenuItem<String>(
                                         value: value.unidadId,
-                                        child: Text(value.nombre),
+                                        child: Text(value.nombre!),
                                       );
                                     }).toList(),
                                     validator: (value) {
@@ -522,7 +519,7 @@ class _PerfilAliadoFormState extends State<PerfilAliadoForm> {
                                             (FrecuenciaEntity value) {
                                       return DropdownMenuItem<String>(
                                         value: value.frecuenciaId,
-                                        child: Text(value.nombre),
+                                        child: Text(value.nombre!),
                                       );
                                     }).toList(),
                                     validator: (value) {
@@ -557,7 +554,7 @@ class _PerfilAliadoFormState extends State<PerfilAliadoForm> {
                                       (SitioEntregaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.sitioEntregaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {

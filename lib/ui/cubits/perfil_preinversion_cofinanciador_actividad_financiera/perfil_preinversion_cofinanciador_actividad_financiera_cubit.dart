@@ -35,19 +35,17 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
     });
   }
 
-  void savePerfilPreInversionCofinanciadorActividadFinancieraDB(
-      PerfilPreInversionCofinanciadorActividadFinancieraEntity
-          perfilPreInversionCofinanciadorActividadFinanciera) async {
+  void savePerfilPreInversionCofinanciadorActividadFinancieraDB() async {
     final result = await perfilPreInversionCofinanciadorActividadFinancieraDB
         .savePerfilPreInversionCofinanciadorActividadFinancieraUsecaseDB(
-            perfilPreInversionCofinanciadorActividadFinanciera);
+            state.perfilPreInversionCofinanciadorActividadFinanciera);
     result.fold((failure) {
       emit(PerfilPreInversionCofinanciadorActividadFinancieraError(
           failure.properties.first));
     }, (data) {
       emit(PerfilPreInversionCofinanciadorActividadFinancieraSaved(
           perfilPreInversionCofinanciadorActividadFinanciera:
-              perfilPreInversionCofinanciadorActividadFinanciera));
+              state.perfilPreInversionCofinanciadorActividadFinanciera));
     });
   }
 
@@ -59,7 +57,7 @@ class PerfilPreInversionCofinanciadorActividadFinancieraCubit
         perfilPreInversion));
   }
 
-  void changeCofinanciador(String value) {
+  void changeCofinanciadorId(String value) {
     final cofinanciador = state
         .perfilPreInversionCofinanciadorActividadFinanciera
         .copyWith(cofinanciadorId: value);

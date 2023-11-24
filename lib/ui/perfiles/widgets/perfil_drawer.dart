@@ -16,14 +16,14 @@ class PerfilDrawer extends StatelessWidget {
 
             return ListTile(
                 leading: setIcon(submenu),
-                title: Text(submenu.nombre),
+                title: Text(submenu.nombre!),
                 onTap: () {
                   if (submenu.menuId == '12') {
                     Navigator.popUntil(context, (route) => route.isFirst);
                     return;
                   }
 
-                  Navigator.pushNamed(context, submenu.ruta);
+                  Navigator.pushNamed(context, submenu.ruta!);
                 });
           },
         ));

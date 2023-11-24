@@ -2,8 +2,8 @@ import 'package:paap/domain/entities/evaluacion_entity.dart';
 
 class EvaluacionModel extends EvaluacionEntity {
   EvaluacionModel({
-    required String evaluacionId,
-    required String perfilId,
+    String? evaluacionId,
+    String? perfilId,
     String? resumen,
     String? fortalezas,
     String? debilidades,
@@ -17,16 +17,16 @@ class EvaluacionModel extends EvaluacionEntity {
   }) : super(
             evaluacionId: evaluacionId,
             perfilId: perfilId,
-            resumen: resumen ?? '',
-            fortalezas: fortalezas ?? '',
-            debilidades: debilidades ?? '',
-            riesgos: riesgos ?? '',
-            finalizado: finalizado ?? '',
-            usuarioIdCoordinador: usuarioIdCoordinador ?? '',
-            fechaEvaluacion: fechaEvaluacion ?? '',
-            preAprobado: preAprobado ?? '',
-            recordStatus: recordStatus ?? '',
-            remoteEvaluacionId: remoteEvaluacionId ?? '');
+            resumen: resumen,
+            fortalezas: fortalezas,
+            debilidades: debilidades,
+            riesgos: riesgos,
+            finalizado: finalizado,
+            usuarioIdCoordinador: usuarioIdCoordinador,
+            fechaEvaluacion: fechaEvaluacion,
+            preAprobado: preAprobado,
+            recordStatus: recordStatus,
+            remoteEvaluacionId: remoteEvaluacionId);
 
   factory EvaluacionModel.fromJson(Map<String, dynamic> json) =>
       EvaluacionModel(

@@ -18,7 +18,7 @@ class PerfilPreInversionDrawer extends StatelessWidget {
 
             return ListTile(
                 leading: Icon(setIcon(submenu)),
-                title: Text(submenu.nombre),
+                title: Text(submenu.nombre!),
                 onTap: () {
                   if (submenu.menuId == '36') {
                     Navigator.popUntil(context, (route) => route.isFirst);
@@ -26,7 +26,7 @@ class PerfilPreInversionDrawer extends StatelessWidget {
                     return;
                   }
 
-                  Navigator.pushNamed(context, submenu.ruta);
+                  Navigator.pushNamed(context, submenu.ruta!);
                 });
           },
         ));

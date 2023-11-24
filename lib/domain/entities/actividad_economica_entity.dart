@@ -1,13 +1,13 @@
 class ActividadEconomicaEntity {
   ActividadEconomicaEntity({
-    required this.actividadEconomicaId,
-    required this.nombre,
-    required this.descripcion,
+    this.actividadEconomicaId,
+    this.nombre,
+    this.descripcion,
   });
 
-  String actividadEconomicaId;
-  String nombre;
-  String descripcion;
+  String? actividadEconomicaId;
+  String? nombre;
+  String? descripcion;
 
   Map<String, dynamic> toJson() => {
         "ActividadEconomicaId": actividadEconomicaId,

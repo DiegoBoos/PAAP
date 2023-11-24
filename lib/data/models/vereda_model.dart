@@ -2,14 +2,14 @@ import 'package:paap/domain/entities/vereda_entity.dart';
 
 class VeredaModel extends VeredaEntity {
   VeredaModel(
-      {required String veredaId,
+      {String? veredaId,
       String? nombre,
       String? codigoDane,
-      required String municipioId})
+      String? municipioId})
       : super(
             veredaId: veredaId,
-            nombre: nombre ?? '',
-            codigoDane: codigoDane ?? '',
+            nombre: nombre,
+            codigoDane: codigoDane,
             municipioId: municipioId);
 
   factory VeredaModel.fromJson(Map<String, dynamic> json) => VeredaModel(

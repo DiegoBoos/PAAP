@@ -1,8 +1,8 @@
 class SyncLogEntity {
-  SyncLogEntity({required this.tabla, required this.cantidadRegistros});
+  SyncLogEntity({this.tabla, this.cantidadRegistros});
 
-  String tabla;
-  int cantidadRegistros;
+  String? tabla;
+  int? cantidadRegistros;
 
   Map<String, dynamic> toJson() =>
       {"Tabla": tabla, "CantidadRegistros": cantidadRegistros};

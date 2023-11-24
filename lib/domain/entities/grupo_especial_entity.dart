@@ -1,13 +1,13 @@
 class GrupoEspecialEntity {
   GrupoEspecialEntity({
-    required this.grupoEspecialId,
-    required this.nombre,
-    required this.descripcion,
+    this.grupoEspecialId,
+    this.nombre,
+    this.descripcion,
   });
 
-  String grupoEspecialId;
-  String nombre;
-  String descripcion;
+  String? grupoEspecialId;
+  String? nombre;
+  String? descripcion;
 
   factory GrupoEspecialEntity.fromJson(Map<String, dynamic> json) =>
       GrupoEspecialEntity(

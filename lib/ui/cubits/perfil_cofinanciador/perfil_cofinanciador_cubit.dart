@@ -14,6 +14,10 @@ class PerfilCofinanciadorCubit extends Cubit<PerfilCofinanciadorState> {
 
   void initState() => emit(PerfilCofinanciadorInitial());
 
+  void setPerfilCofinanciador(PerfilCofinanciadorEntity perfilCofinanciador) {
+    emit(PerfilCofinanciadorChanged(perfilCofinanciador));
+  }
+
   void loadPerfilCofinanciador(String perfilId, String cofinanciadorId) async {
     final result = await perfilCofinanciadorDB.getPerfilCofinanciadorUsecaseDB(
         perfilId, cofinanciadorId);
@@ -29,13 +33,12 @@ class PerfilCofinanciadorCubit extends Cubit<PerfilCofinanciadorState> {
     });
   }
 
-  void savePerfilCofinanciadorDB(
-      PerfilCofinanciadorEntity perfilCofinanciador) async {
+  void savePerfilCofinanciadorDB() async {
     final result = await perfilCofinanciadorDB
-        .savePerfilCofinanciadorUsecaseDB(perfilCofinanciador);
+        .savePerfilCofinanciadorUsecaseDB(state.perfilCofinanciador);
     result.fold(
         (failure) => emit(PerfilCofinanciadorError(failure.properties.first)),
-        (data) => emit(PerfilCofinanciadorSaved(perfilCofinanciador)));
+        (data) => emit(PerfilCofinanciadorSaved(state.perfilCofinanciador)));
   }
 
   void changePerfilId(String? newValue) {

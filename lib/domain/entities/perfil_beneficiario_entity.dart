@@ -1,7 +1,7 @@
 class PerfilBeneficiarioEntity {
   PerfilBeneficiarioEntity({
-    required this.perfilId,
-    required this.beneficiarioId,
+    this.perfilId,
+    this.beneficiarioId,
     this.municipioId,
     this.veredaId,
     this.areaFinca,
@@ -18,8 +18,8 @@ class PerfilBeneficiarioEntity {
     this.recordStatus,
   });
 
-  String perfilId;
-  String beneficiarioId;
+  String? perfilId;
+  String? beneficiarioId;
   String? municipioId;
   String? veredaId;
   String? areaFinca;

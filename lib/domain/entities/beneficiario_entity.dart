@@ -1,40 +1,40 @@
 class BeneficiarioEntity {
   BeneficiarioEntity({
-    required this.beneficiarioId,
+    this.beneficiarioId,
     this.tipoIdentificacionId,
     this.tipoDocumento,
-    required this.fechaExpedicionDocumento,
-    required this.fechaNacimiento,
+    this.fechaExpedicionDocumento,
+    this.fechaNacimiento,
     this.edad,
-    required this.nombre1,
-    required this.nombre2,
-    required this.apellido1,
-    required this.apellido2,
+    this.nombre1,
+    this.nombre2,
+    this.apellido1,
+    this.apellido2,
     this.generoId,
     this.genero,
     this.grupoEspecialId,
     this.grupoEspecial,
-    required this.telefonoMovil,
-    required this.activo,
+    this.telefonoMovil,
+    this.activo,
     this.recordStatus,
   });
 
-  String beneficiarioId;
+  String? beneficiarioId;
   String? tipoIdentificacionId;
   String? tipoDocumento;
-  String fechaExpedicionDocumento;
-  String fechaNacimiento;
+  String? fechaExpedicionDocumento;
+  String? fechaNacimiento;
   int? edad;
-  String nombre1;
-  String nombre2;
-  String apellido1;
-  String apellido2;
+  String? nombre1;
+  String? nombre2;
+  String? apellido1;
+  String? apellido2;
   String? generoId;
   String? genero;
   String? grupoEspecialId;
   String? grupoEspecial;
-  String telefonoMovil;
-  String activo;
+  String? telefonoMovil;
+  String? activo;
   String? recordStatus;
 
   BeneficiarioEntity copyWith({

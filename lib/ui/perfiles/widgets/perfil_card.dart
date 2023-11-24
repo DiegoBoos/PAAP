@@ -36,8 +36,8 @@ class PerfilCard extends StatelessWidget {
                       ],
                       rows: [
                         DataRow(cells: <DataCell>[
-                          DataCell(Text(state.vPerfilSelected!.perfilId)),
-                          DataCell(Text(state.vPerfilSelected!.nombre)),
+                          DataCell(Text(state.vPerfilSelected!.perfilId!)),
+                          DataCell(Text(state.vPerfilSelected!.nombre!)),
                         ])
                       ])));
         }

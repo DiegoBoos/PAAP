@@ -47,7 +47,7 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
 
     for (var departamento in departamentos) {
       final municipiosDepartamento =
-          await getMunicipiosByDepartamento(usuario, departamento.id);
+          await getMunicipiosByDepartamento(usuario, departamento.id!);
       municipios.addAll(municipiosDepartamento);
     }
 
@@ -55,7 +55,7 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
 
     for (var municipio in municipios) {
       final veredasMunicipio =
-          await getVeredasByMunicipio(usuario, municipio.id);
+          await getVeredasByMunicipio(usuario, municipio.id!);
 
       if (veredasMunicipio.isNotEmpty) {
         veredas.addAll(veredasMunicipio);
@@ -128,7 +128,6 @@ class VeredaRemoteDataSourceImpl implements VeredaRemoteDataSource {
 
         String res = Utils.convertXmlToJson(xmlString);
 
-        //final Map<String, dynamic> decodedResp = json.decode(res);
         final Map<String, dynamic> decodedResp = jsonDecode(res
             .toString()
             .replaceAll(RegExp(r'[^A-Za-z0-9() áéíóúÁÉÍÓÚñÑ:[\]{}.,";?]'), ''));

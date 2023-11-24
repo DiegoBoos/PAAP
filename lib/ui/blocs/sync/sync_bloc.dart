@@ -327,16 +327,14 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     on<SyncStarted>((event, emit) async {
       final usuario = event.usuario;
       if (event.mode == 'A') {
-        //TODO: revisar total
         gTotal = 60;
         add(SyncStatusChanged(state.syncProgressModel.copyWith(
             title: 'Sincronizando Actividades',
             counter: state.syncProgressModel.counter + 1,
             total: gTotal,
             percent: calculatePercent())));
-        await syncActividadesEconomicas(usuario, emit);
+        await syncBeneficiarios(usuario, emit, 0);
       } else {
-        //TODO: revisar total
         gTotal = 20;
         add(SyncStatusChanged(state.syncProgressModel.copyWith(
             title: 'Sincronizando Aliados',

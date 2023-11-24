@@ -119,7 +119,7 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
-    final alianzaId = vAlianzaCubit.state.vAlianza!.alianzaId;
+    final alianzaId = vAlianzaCubit.state.vAlianza!.alianzaId!;
 
     alianzaBeneficiarioCubit.changeAlianzaId(alianzaId);
     alianzaBeneficiarioCubit.changeConocePerfil('true');
@@ -140,7 +140,7 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
       alianzaBeneficiarioCubit.changeAccesoExplotacionTierra(false);
     }
 
-    alianzaBeneficiarioCubit.saveAlianzaBeneficiarioDB(alianzaBeneficiario);
+    alianzaBeneficiarioCubit.saveAlianzaBeneficiarioDB();
   }
 
   void saveExperiencia(BuildContext context) {
@@ -152,7 +152,7 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
         BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context);
     final tipoProyecto = vAlianzaCubit.state.vAlianza!.tipoProyecto;
 
-    final beneficiarioId = beneficiarioCubit.state.beneficiario.beneficiarioId;
+    final beneficiarioId = beneficiarioCubit.state.beneficiario.beneficiarioId!;
 
     if (tipoProyecto == 'Agrícola') {
       alianzaExperienciaAgricolaCubit.changeBeneficiarioId(beneficiarioId);

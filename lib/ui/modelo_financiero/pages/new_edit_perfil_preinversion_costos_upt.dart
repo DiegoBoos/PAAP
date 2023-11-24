@@ -5,7 +5,6 @@ import '../../../domain/entities/actividad_financiera_entity.dart';
 import '../../../domain/entities/perfil_preinversion_plan_negocio_entity.dart';
 import '../../../domain/entities/rubro_entity.dart';
 import '../../../domain/entities/unidad_entity.dart';
-import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart';
 import '../../cubits/actividad_financiera/actividad_financiera_cubit.dart';
 import '../../cubits/perfil_preinversion_costos_utp/perfil_preinversion_costos_utp_cubit.dart';
 import '../../cubits/rubro/rubro_cubit.dart';
@@ -27,6 +26,8 @@ class NewEditPerfilPreInversionCostosUPT extends StatefulWidget {
 class _NewEditPerfilPreInversionCostosUPTState
     extends State<NewEditPerfilPreInversionCostosUPT> {
   final formKeyCostosUPT = GlobalKey<FormState>();
+
+  List<RubroEntity> allRubros = [];
   List<RubroEntity> rubrosFiltered = [];
 
   String? actividadFinancieraId;
@@ -40,7 +41,29 @@ class _NewEditPerfilPreInversionCostosUPTState
   @override
   void initState() {
     super.initState();
-    loadAccesories();
+
+    final perfilPreInversionCostosUPTCubit =
+        BlocProvider.of<PerfilPreInversionCostosUPTCubit>(context);
+
+    final rubroCubit = BlocProvider.of<RubroCubit>(context);
+    allRubros = rubrosFiltered = rubroCubit.state.rubros!;
+
+    final perfilPreInversionCostosUPT =
+        perfilPreInversionCostosUPTCubit.state.perfilPreInversionCostosUPT;
+
+    setState(() {
+      actividadFinancieraId = perfilPreInversionCostosUPT.actividadFinancieraId;
+      rubroId = perfilPreInversionCostosUPT.rubroId;
+      unidadId = perfilPreInversionCostosUPT.unidadId;
+      yearCtrl.text = perfilPreInversionCostosUPT.year ?? '';
+      cantidadCtrl.text = perfilPreInversionCostosUPT.cantidad ?? '';
+      valorCtrl.text = perfilPreInversionCostosUPT.valor ?? '';
+
+      rubrosFiltered = allRubros
+          .where(
+              ((rubro) => rubro.actividadFinancieraId == actividadFinancieraId))
+          .toList();
+    });
   }
 
   @override
@@ -49,68 +72,18 @@ class _NewEditPerfilPreInversionCostosUPTState
     BlocProvider.of<PerfilPreInversionCostosUPTCubit>(context).initState();
   }
 
-  Future<void> loadAccesories() async {
-    final perfilPreInversionCostosUPTCubit =
-        BlocProvider.of<PerfilPreInversionCostosUPTCubit>(context);
-    final rubroCubit = BlocProvider.of<RubroCubit>(context);
-
-    await rubroCubit.getRubrosDB();
-
-    if (rubroCubit.state is RubrosLoaded) {
-      rubrosFiltered = rubroCubit.state.rubros!;
-    }
-
-    if (perfilPreInversionCostosUPTCubit.state
-        is PerfilPreInversionCostosUPTLoaded) {
-      final perfilPreInversionCostosUPTLoaded =
-          perfilPreInversionCostosUPTCubit.state.perfilPreInversionCostosUPT;
-      loadPerfilPreInversionCostosUPT(perfilPreInversionCostosUPTLoaded);
-    }
-  }
-
-  void loadPerfilPreInversionCostosUPT(
-      VPerfilPreInversionPlanNegocioEntity perfilPreInversionCostosUPTLoaded) {
-    actividadFinancieraId =
-        perfilPreInversionCostosUPTLoaded.actividadFinancieraId;
-    rubroId = perfilPreInversionCostosUPTLoaded.rubroId;
-    unidadId = perfilPreInversionCostosUPTLoaded.unidadId;
-    yearCtrl.text = perfilPreInversionCostosUPTLoaded.year;
-    cantidadCtrl.text = perfilPreInversionCostosUPTLoaded.cantidad;
-    valorCtrl.text = perfilPreInversionCostosUPTLoaded.valor;
-
-    final rubroCubit = BlocProvider.of<RubroCubit>(context);
-
-    rubrosFiltered = rubroCubit.state.rubros!
-        .where(
-            ((rubro) => rubro.actividadFinancieraId == actividadFinancieraId))
-        .toList();
-
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
     final perfilPreInversionCostosUPTCubit =
         BlocProvider.of<PerfilPreInversionCostosUPTCubit>(context);
-    final rubroCubit = BlocProvider.of<RubroCubit>(context);
 
     final tipoMovimientoId =
         ModalRoute.of(context)!.settings.arguments as String;
 
-    return BlocConsumer<PerfilPreInversionCostosUPTCubit,
+    return BlocBuilder<PerfilPreInversionCostosUPTCubit,
         PerfilPreInversionCostosUPTState>(
-      listener: (context, state) {
-        BlocListener<PerfilPreInversionCostosUPTCubit,
-            PerfilPreInversionCostosUPTState>(listener: (context, state) {
-          if (state is PerfilPreInversionCostosUPTLoaded) {
-            final perfilPreInversionCostosUPTLoaded =
-                state.perfilPreInversionCostosUPTLoaded;
-            loadPerfilPreInversionCostosUPT(perfilPreInversionCostosUPTLoaded);
-          }
-        });
-      },
       builder: (context, state) {
         return Scaffold(
             appBar: AppBar(
@@ -160,7 +133,7 @@ class _NewEditPerfilPreInversionCostosUPTState
                                           (ActividadFinancieraEntity value) {
                                     return DropdownMenuItem<String>(
                                       value: value.actividadFinancieraId,
-                                      child: Text(value.nombre),
+                                      child: Text(value.nombre!),
                                     );
                                   }).toList(),
                                   validator: ((value) {
@@ -171,7 +144,7 @@ class _NewEditPerfilPreInversionCostosUPTState
                                   }),
                                   onChanged: (String? value) {
                                     setState(() {
-                                      rubrosFiltered = rubroCubit.state.rubros!
+                                      rubrosFiltered = allRubros
                                           .where(((rubro) =>
                                               rubro.actividadFinancieraId ==
                                               value))
@@ -195,7 +168,7 @@ class _NewEditPerfilPreInversionCostosUPTState
                                 (RubroEntity value) {
                               return DropdownMenuItem<String>(
                                 value: value.rubroId,
-                                child: Text(value.nombre),
+                                child: Text(value.nombre!),
                               );
                             }).toList(),
                             validator: ((value) {
@@ -229,7 +202,7 @@ class _NewEditPerfilPreInversionCostosUPTState
                                           (UnidadEntity value) {
                                     return DropdownMenuItem<String>(
                                       value: value.unidadId,
-                                      child: Text(value.nombre),
+                                      child: Text(value.nombre!),
                                     );
                                   }).toList(),
                                   validator: ((value) {
@@ -312,16 +285,19 @@ class _NewEditPerfilPreInversionCostosUPTState
                       final perfilPreInversionCostosUPT =
                           perfilPreInversionCostosUPTCubit
                               .state.perfilPreInversionCostosUPT;
+
                       final perfilPreInversionPlanNegocio =
                           PerfilPreInversionPlanNegocioEntity(
-                              perfilPreInversionId: perfilPreInversionId,
-                              rubroId: perfilPreInversionCostosUPT.rubroId,
-                              year: perfilPreInversionCostosUPT.year,
-                              valor: perfilPreInversionCostosUPT.valor,
-                              cantidad: perfilPreInversionCostosUPT.cantidad,
-                              unidadId: perfilPreInversionCostosUPT.unidadId,
-                              productoId: '',
-                              tipoCalidadId: '');
+                        perfilPreInversionId: perfilPreInversionId,
+                        rubroId: perfilPreInversionCostosUPT.rubroId,
+                        year: perfilPreInversionCostosUPT.year,
+                        valor: perfilPreInversionCostosUPT.valor,
+                        cantidad: perfilPreInversionCostosUPT.cantidad,
+                        unidadId: perfilPreInversionCostosUPT.unidadId,
+                        productoId: perfilPreInversionCostosUPT.productoId,
+                        tipoCalidadId:
+                            perfilPreInversionCostosUPT.tipoCalidadId,
+                      );
                       perfilPreInversionCostosUPTCubit
                           .savePerfilPreInversionCostosUPTDB(
                               perfilPreInversionPlanNegocio, tipoMovimientoId);

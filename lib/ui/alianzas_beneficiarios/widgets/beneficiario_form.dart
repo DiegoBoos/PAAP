@@ -44,11 +44,8 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     super.initState();
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
 
-    if (beneficiarioCubit.state is BeneficiarioLoaded) {
-      final beneficiarioLoaded = beneficiarioCubit.state.beneficiario;
-
-      loadBeneficiario(beneficiarioLoaded);
-    }
+    final beneficiario = beneficiarioCubit.state.beneficiario;
+    loadBeneficiario(beneficiario);
   }
 
   @override
@@ -57,29 +54,31 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     BlocProvider.of<BeneficiarioCubit>(context).initState();
   }
 
-  void loadBeneficiario(BeneficiarioEntity beneficiarioLoaded) {
-    tipoIdentificacionId = beneficiarioLoaded.tipoIdentificacionId;
-    generoId = beneficiarioLoaded.generoId;
-    grupoEspecialId = beneficiarioLoaded.grupoEspecialId;
+  void loadBeneficiario(BeneficiarioEntity beneficiario) {
+    tipoIdentificacionId = beneficiario.tipoIdentificacionId;
+    generoId = beneficiario.generoId;
+    grupoEspecialId = beneficiario.grupoEspecialId;
 
-    beneficiarioIdCtrl.text = beneficiarioLoaded.beneficiarioId;
+    beneficiarioIdCtrl.text = beneficiario.beneficiarioId ?? '';
 
-    if (beneficiarioLoaded.fechaExpedicionDocumento != '') {
+    if (beneficiario.fechaExpedicionDocumento != null &&
+        beneficiario.fechaExpedicionDocumento != '') {
       fechaExpedicionDocumentoCtrl.text = dateFormat
-          .format(DateTime.parse(beneficiarioLoaded.fechaExpedicionDocumento));
+          .format(DateTime.parse(beneficiario.fechaExpedicionDocumento!));
     }
 
-    if (beneficiarioLoaded.fechaNacimiento != '') {
+    if (beneficiario.fechaNacimiento != null &&
+        beneficiario.fechaNacimiento != '') {
       fechaNacimientoCtrl.text =
-          dateFormat.format(DateTime.parse(beneficiarioLoaded.fechaNacimiento));
-      calcularEdad(beneficiarioLoaded.fechaNacimiento);
+          dateFormat.format(DateTime.parse(beneficiario.fechaNacimiento!));
+      calcularEdad(beneficiario.fechaNacimiento!);
     }
 
-    telefonoMovilCtrl.text = beneficiarioLoaded.telefonoMovil;
-    nombre1Ctrl.text = beneficiarioLoaded.nombre1;
-    nombre2Ctrl.text = beneficiarioLoaded.nombre2;
-    apellido1Ctrl.text = beneficiarioLoaded.apellido1;
-    apellido2Ctrl.text = beneficiarioLoaded.apellido2;
+    telefonoMovilCtrl.text = beneficiario.telefonoMovil ?? '';
+    nombre1Ctrl.text = beneficiario.nombre1 ?? '';
+    nombre2Ctrl.text = beneficiario.nombre2 ?? '';
+    apellido1Ctrl.text = beneficiario.apellido1 ?? '';
+    apellido2Ctrl.text = beneficiario.apellido2 ?? '';
   }
 
   void calcularEdad(String fechaNacimiento) {
@@ -96,6 +95,9 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
+
+    final alianzaId =
+        alianzaBeneficiarioCubit.state.alianzaBeneficiario.alianzaId;
 
     return BlocListener<BeneficiarioCubit, BeneficiarioState>(
         listener: (context, state) {
@@ -131,12 +133,9 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                 return null;
               },
               onFieldSubmitted: (String value) {
-                final alianzaId = alianzaBeneficiarioCubit
-                    .state.alianzaBeneficiario.alianzaId;
-
                 beneficiarioCubit.loadBeneficiario(value);
                 alianzaBeneficiarioCubit.loadAlianzaBeneficiario(
-                    alianzaId, value);
+                    alianzaId!, value);
               },
               onSaved: ((String? newValue) {
                 beneficiarioCubit.changeBeneficiarioId(newValue);
@@ -157,7 +156,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                             (TipoIdentificacionEntity value) {
                       return DropdownMenuItem<String>(
                         value: value.tipoIdentificacionId,
-                        child: Text(value.nombre),
+                        child: Text(value.nombre!),
                       );
                     }).toList(),
                     onChanged: (String? value) {
@@ -371,7 +370,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                               (GeneroEntity value) {
                             return DropdownMenuItem<String>(
                               value: value.generoId,
-                              child: Text(value.nombre),
+                              child: Text(value.nombre!),
                             );
                           }).toList(),
                           validator: (value) {
@@ -405,7 +404,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                             (GrupoEspecialEntity value) {
                       return DropdownMenuItem<String>(
                         value: value.grupoEspecialId,
-                        child: Text(value.nombre),
+                        child: Text(value.nombre!),
                       );
                     }).toList(),
                     validator: (value) {

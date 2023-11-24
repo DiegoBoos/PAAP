@@ -1,24 +1,24 @@
 class PerfilPreInversionPlanNegocioEntity {
   PerfilPreInversionPlanNegocioEntity({
-    required this.perfilPreInversionId,
-    required this.rubroId,
-    required this.year,
-    required this.valor,
-    required this.cantidad,
-    required this.unidadId,
-    required this.productoId,
-    required this.tipoCalidadId,
+    this.perfilPreInversionId,
+    this.rubroId,
+    this.year,
+    this.valor,
+    this.cantidad,
+    this.unidadId,
+    this.productoId,
+    this.tipoCalidadId,
     this.recordStatus,
   });
 
-  String perfilPreInversionId;
-  String rubroId;
-  String year;
-  String valor;
-  String cantidad;
-  String unidadId;
-  String productoId;
-  String tipoCalidadId;
+  String? perfilPreInversionId;
+  String? rubroId;
+  String? year;
+  String? valor;
+  String? cantidad;
+  String? unidadId;
+  String? productoId;
+  String? tipoCalidadId;
   String? recordStatus;
 
   PerfilPreInversionPlanNegocioEntity copyWith(

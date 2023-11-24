@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/perfil_beneficiario_entity.dart';
+import '../../cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 
 class PerfilBeneficiariosTableSource extends DataTableSource {
   final BuildContext context;
@@ -12,14 +14,21 @@ class PerfilBeneficiariosTableSource extends DataTableSource {
   DataRow getRow(int index) {
     final perfilBeneficiario = perfilBeneficiarios[index];
 
+    final perfilBeneficiarioCubit =
+        BlocProvider.of<PerfilBeneficiarioCubit>(context);
+
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
-        DataCell(Text(perfilBeneficiario.beneficiarioId)),
+        DataCell(Text(perfilBeneficiario.beneficiarioId!)),
         DataCell(TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, 'NewEditVPerfilBeneficiario',
-                  arguments: perfilBeneficiario);
+              perfilBeneficiarioCubit.setPerfilBeneficiario(perfilBeneficiario);
+
+              Navigator.pushNamed(
+                context,
+                'NewEditVPerfilBeneficiario',
+              );
             },
             child: Text(perfilBeneficiario.nombre ?? '')))
 

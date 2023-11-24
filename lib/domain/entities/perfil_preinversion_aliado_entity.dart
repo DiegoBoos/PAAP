@@ -1,7 +1,7 @@
 class PerfilPreInversionAliadoEntity {
   PerfilPreInversionAliadoEntity({
-    required this.perfilPreInversionId,
-    required this.aliadoId,
+    this.perfilPreInversionId,
+    this.aliadoId,
     this.productoId,
     this.volumenCompra,
     this.unidadId,
@@ -12,8 +12,8 @@ class PerfilPreInversionAliadoEntity {
     this.recordStatus,
   });
 
-  String perfilPreInversionId;
-  String aliadoId;
+  String? perfilPreInversionId;
+  String? aliadoId;
   String? productoId;
   String? volumenCompra;
   String? unidadId;

@@ -31,12 +31,10 @@ class PerfilPreInversionConsultorCubit
     });
   }
 
-  Future<void> savePerfilPreInversionConsultorDB(
-      PerfilPreInversionConsultorEntity
-          perfilPreInversionConsultorEntity) async {
+  void savePerfilPreInversionConsultorDB(
+      PerfilPreInversionConsultorEntity perfilPreInversionConsultor) async {
     final result = await perfilPreInversionConsultorDB
-        .savePerfilPreInversionConsultorUsecaseDB(
-            perfilPreInversionConsultorEntity);
+        .savePerfilPreInversionConsultorUsecaseDB(perfilPreInversionConsultor);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionConsultorError(failure.properties.first)),

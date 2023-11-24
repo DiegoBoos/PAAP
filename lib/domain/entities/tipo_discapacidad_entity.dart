@@ -1,13 +1,13 @@
 class TipoDiscapacidadEntity {
   TipoDiscapacidadEntity({
-    required this.tipoDiscapacidadId,
-    required this.nombre,
-    required this.descripcion,
+    this.tipoDiscapacidadId,
+    this.nombre,
+    this.descripcion,
   });
 
-  String tipoDiscapacidadId;
-  String nombre;
-  String descripcion;
+  String? tipoDiscapacidadId;
+  String? nombre;
+  String? descripcion;
 
   Map<String, dynamic> toJson() => {
         "TipoDiscapacidadId": tipoDiscapacidadId,

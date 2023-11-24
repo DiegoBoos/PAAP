@@ -2,8 +2,8 @@ import 'package:paap/domain/entities/v_alianza_entity.dart';
 
 class VAlianzaModel extends VAlianzaEntity {
   VAlianzaModel(
-      {required String alianzaId,
-      required String perfilPreInversionId,
+      {String? alianzaId,
+      String? perfilPreInversionId,
       String? convocatoria,
       String? nombre,
       String? abreviatura,
@@ -23,22 +23,22 @@ class VAlianzaModel extends VAlianzaEntity {
       : super(
             alianzaId: alianzaId,
             perfilPreInversionId: perfilPreInversionId,
-            convocatoria: convocatoria ?? '',
-            nombre: nombre ?? '',
-            abreviatura: abreviatura ?? '',
-            nit: nit ?? '',
-            municipio: municipio ?? '',
-            direccion: direccion ?? '',
-            contacto: contacto ?? '',
-            telefonoFijo: telefonoFijo ?? '',
-            telefonoMovil: telefonoMovil ?? '',
-            correo: correo ?? '',
-            tipoProyecto: tipoProyecto ?? '',
-            productoPrincipal: productoPrincipal ?? '',
-            productoAsociado: productoAsociado ?? '',
-            valorTotalProyecto: valorTotalProyecto ?? '',
-            incentivoModular: incentivoModular ?? '',
-            legalizado: legalizado ?? '');
+            convocatoria: convocatoria,
+            nombre: nombre,
+            abreviatura: abreviatura,
+            nit: nit,
+            municipio: municipio,
+            direccion: direccion,
+            contacto: contacto,
+            telefonoFijo: telefonoFijo,
+            telefonoMovil: telefonoMovil,
+            correo: correo,
+            tipoProyecto: tipoProyecto,
+            productoPrincipal: productoPrincipal,
+            productoAsociado: productoAsociado,
+            valorTotalProyecto: valorTotalProyecto,
+            incentivoModular: incentivoModular,
+            legalizado: legalizado);
 
   factory VAlianzaModel.fromJson(Map<String, dynamic> json) => VAlianzaModel(
       alianzaId: json["alianzaId"],

@@ -12,7 +12,7 @@ class CofinanciadorCubit extends Cubit<CofinanciadorState> {
   CofinanciadorCubit({required this.cofinanciadorDB})
       : super(CofinanciadoresInitial());
 
-  Future<void> getCofinanciadores() async {
+  void getCofinanciadores() async {
     final result = await cofinanciadorDB.getCofinanciadoresUsecaseDB();
     result.fold((failure) => emit(CofinanciadorError(failure.properties.first)),
         (data) => emit(CofinanciadoresLoaded(data!)));

@@ -3,12 +3,12 @@ import '../../domain/entities/perfil_preinversion_cofinanciador_rubro_entity.dar
 class PerfilPreInversionCofinanciadorRubroModel
     extends PerfilPreInversionCofinanciadorRubroEntity {
   PerfilPreInversionCofinanciadorRubroModel({
-    required String perfilPreInversionId,
-    required String cofinanciadorId,
-    required String desembolsoId,
-    required String actividadFinancieraId,
-    required String rubroId,
-    required String valor,
+    String? perfilPreInversionId,
+    String? cofinanciadorId,
+    String? desembolsoId,
+    String? actividadFinancieraId,
+    String? rubroId,
+    String? valor,
     String? actividadFinanciera,
     String? rubro,
     String? desembolso,
@@ -20,10 +20,10 @@ class PerfilPreInversionCofinanciadorRubroModel
           actividadFinancieraId: actividadFinancieraId,
           rubroId: rubroId,
           valor: valor,
-          actividadFinanciera: actividadFinanciera ?? '',
-          rubro: rubro ?? '',
-          desembolso: desembolso ?? '',
-          recordStatus: recordStatus ?? '',
+          actividadFinanciera: actividadFinanciera,
+          rubro: rubro,
+          desembolso: desembolso,
+          recordStatus: recordStatus,
         );
 
   factory PerfilPreInversionCofinanciadorRubroModel.fromJson(

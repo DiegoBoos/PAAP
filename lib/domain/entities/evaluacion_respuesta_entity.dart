@@ -1,19 +1,19 @@
 class EvaluacionRespuestaEntity {
   EvaluacionRespuestaEntity({
-    required this.criterioId,
-    required this.evaluacionId,
-    required this.opcionId,
-    required this.observacion,
-    required this.recordStatus,
-    required this.remoteEvaluacionId,
+    this.criterioId,
+    this.evaluacionId,
+    this.opcionId,
+    this.observacion,
+    this.recordStatus,
+    this.remoteEvaluacionId,
   });
 
-  String criterioId;
-  String evaluacionId;
-  String opcionId;
-  String observacion;
-  String recordStatus;
-  String remoteEvaluacionId;
+  String? criterioId;
+  String? evaluacionId;
+  String? opcionId;
+  String? observacion;
+  String? recordStatus;
+  String? remoteEvaluacionId;
 
   EvaluacionRespuestaEntity copyWith({
     String? criterioId,

@@ -1,15 +1,15 @@
 class TipoActividadProductivaEntity {
   TipoActividadProductivaEntity({
-    required this.tipoActividadProductivaId,
-    required this.nombre,
-    required this.descripcion,
-    required this.tipoProyectoId,
+    this.tipoActividadProductivaId,
+    this.nombre,
+    this.descripcion,
+    this.tipoProyectoId,
   });
 
-  String tipoActividadProductivaId;
-  String nombre;
-  String descripcion;
-  String tipoProyectoId;
+  String? tipoActividadProductivaId;
+  String? nombre;
+  String? descripcion;
+  String? tipoProyectoId;
 
   Map<String, dynamic> toJson() => {
         "TipoActividadProductivaId": tipoActividadProductivaId,

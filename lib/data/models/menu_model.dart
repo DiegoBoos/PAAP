@@ -2,7 +2,7 @@ import 'package:paap/domain/entities/menu_entity.dart';
 
 class MenuModel extends MenuEntity {
   MenuModel(
-      {required String menuId,
+      {String? menuId,
       String? nombre,
       String? ruta,
       String? icono,
@@ -11,11 +11,11 @@ class MenuModel extends MenuEntity {
       required String tipoMenuId})
       : super(
             menuId: menuId,
-            nombre: nombre ?? '',
-            ruta: ruta ?? '',
-            icono: icono ?? '',
-            orden: orden ?? '',
-            menuPadre: menuPadre ?? '',
+            nombre: nombre,
+            ruta: ruta,
+            icono: icono,
+            orden: orden,
+            menuPadre: menuPadre,
             tipoMenuId: tipoMenuId);
 
   factory MenuModel.fromJson(Map<String, dynamic> json) => MenuModel(

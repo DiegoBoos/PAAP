@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/perfil_preinversion_aliado_entity.dart';
+import '../../cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
 
 class PerfilPreInversionAliadosTableSource extends DataTableSource {
   final BuildContext context;
@@ -13,14 +15,22 @@ class PerfilPreInversionAliadosTableSource extends DataTableSource {
   DataRow getRow(int index) {
     final perfilPreInversionAliado = perfilPreInversionAliados[index];
 
+    final perfilPreInversionAliadoCubit =
+        BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
+
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
-        DataCell(Text(perfilPreInversionAliado.aliadoId)),
+        DataCell(Text(perfilPreInversionAliado.aliadoId!)),
         DataCell(TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, 'NewEditAliadoPreInversion',
-                  arguments: perfilPreInversionAliado);
+              perfilPreInversionAliadoCubit
+                  .setPerfilPreInversionAliado(perfilPreInversionAliado);
+
+              Navigator.pushNamed(
+                context,
+                'NewEditAliadoPreInversion',
+              );
             },
             child: Text(perfilPreInversionAliado.aliado ?? ''))),
       ],
@@ -94,7 +104,7 @@ class _PerfilPreInversionAliadosRowsState
               const Text('PerfilPreInversionAliados'),
               IconButton(
                   onPressed: () =>
-                      Navigator.pushNamed(context, 'NewEditVAliado'),
+                      Navigator.pushNamed(context, 'NewEditAliadoPreInversion'),
                   icon: const Icon(Icons.add))
             ],
           ),

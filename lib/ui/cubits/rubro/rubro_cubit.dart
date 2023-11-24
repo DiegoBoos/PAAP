@@ -11,7 +11,7 @@ class RubroCubit extends Cubit<RubroState> {
 
   RubroCubit({required this.rubroDB}) : super(RubrosInitial());
 
-  Future<void> getRubrosDB() async {
+  void getRubrosDB() async {
     final result = await rubroDB.getRubrosUsecaseDB();
     result.fold((failure) => emit(RubrosError(failure.properties.first)),
         (data) => emit(RubrosLoaded(data)));

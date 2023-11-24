@@ -6,7 +6,6 @@ import '../../../ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart'
 import '../../../ui/cubits/genero/genero_cubit.dart';
 import '../../../ui/cubits/grupo_especial/grupo_especial_cubit.dart';
 import '../../../ui/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
-import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';
 import '../../../domain/entities/tipo_identificacion_entity.dart';
@@ -43,50 +42,46 @@ class _ConyugeFormState extends State<ConyugeForm> {
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
-    if (alianzaBeneficiarioCubit.state is AlianzaBeneficiarioLoaded) {
-      final alianzaBeneficiarioLoaded =
-          alianzaBeneficiarioCubit.state.alianzaBeneficiario;
+    final alianzaBeneficiario =
+        alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
-      loadConyuge(alianzaBeneficiarioLoaded);
-    }
-  }
-
-  void loadConyuge(AlianzaBeneficiarioEntity alianzaBeneficiarioLoaded) {
     final conyugeFechaExpedicionDocumento =
-        alianzaBeneficiarioLoaded.conyugeFechaExpedicionDocumento;
+        alianzaBeneficiario.conyugeFechaExpedicionDocumento;
 
-    final conyugeFechaNacimiento =
-        alianzaBeneficiarioLoaded.conyugeFechaNacimiento;
+    final conyugeFechaNacimiento = alianzaBeneficiario.conyugeFechaNacimiento;
 
-    conyugeTipoIdentificacionId =
-        alianzaBeneficiarioLoaded.conyugeTipoIdentificacionId;
+    setState(() {
+      conyugeTipoIdentificacionId =
+          alianzaBeneficiario.conyugeTipoIdentificacionId;
 
-    conyugeGeneroId = alianzaBeneficiarioLoaded.conyugeGeneroId;
+      conyugeGeneroId = alianzaBeneficiario.conyugeGeneroId;
 
-    conyugeGrupoEspecialId = alianzaBeneficiarioLoaded.conyugeGrupoEspecialId;
+      conyugeGrupoEspecialId = alianzaBeneficiario.conyugeGrupoEspecialId;
 
-    conyugeIdCtrl.text = alianzaBeneficiarioLoaded.conyugeId;
+      conyugeIdCtrl.text = alianzaBeneficiario.conyugeId ?? '';
 
-    if (conyugeFechaExpedicionDocumento != '') {
-      conyugeFechaExpedicionDocumentoCtrl.text =
-          dateFormat.format(DateTime.parse(conyugeFechaExpedicionDocumento));
-    }
+      if (conyugeFechaExpedicionDocumento != null &&
+          conyugeFechaExpedicionDocumento != '') {
+        conyugeFechaExpedicionDocumentoCtrl.text =
+            dateFormat.format(DateTime.parse(conyugeFechaExpedicionDocumento));
+      }
 
-    conyugeNombre1Ctrl.text = alianzaBeneficiarioLoaded.conyugeNombre1;
-    conyugeApellido1Ctrl.text = alianzaBeneficiarioLoaded.conyugeApellido1;
-    conyugeNombre2Ctrl.text = alianzaBeneficiarioLoaded.conyugeNombre2;
-    conyugeApellido2Ctrl.text = alianzaBeneficiarioLoaded.conyugeApellido2;
-    conyugeGeneroId = alianzaBeneficiarioLoaded.conyugeGeneroId;
+      conyugeNombre1Ctrl.text = alianzaBeneficiario.conyugeNombre1 ?? '';
+      conyugeApellido1Ctrl.text = alianzaBeneficiario.conyugeApellido1 ?? '';
+      conyugeNombre2Ctrl.text = alianzaBeneficiario.conyugeNombre2 ?? '';
+      conyugeApellido2Ctrl.text = alianzaBeneficiario.conyugeApellido2 ?? '';
+      conyugeGeneroId = alianzaBeneficiario.conyugeGeneroId;
 
-    if (conyugeFechaNacimiento != '') {
-      conyugeFechaNacimientoCtrl.text =
-          dateFormat.format(DateTime.parse(conyugeFechaNacimiento));
-    }
+      if (conyugeFechaNacimiento != null && conyugeFechaNacimiento != '') {
+        conyugeFechaNacimientoCtrl.text =
+            dateFormat.format(DateTime.parse(conyugeFechaNacimiento));
+      }
 
-    ingresosMensualesCtrl.text =
-        alianzaBeneficiarioLoaded.conyugeIngresosMensuales;
+      ingresosMensualesCtrl.text =
+          alianzaBeneficiario.conyugeIngresosMensuales ?? '';
 
-    conyugeGrupoEspecialId = alianzaBeneficiarioLoaded.conyugeGrupoEspecialId;
+      conyugeGrupoEspecialId = alianzaBeneficiario.conyugeGrupoEspecialId;
+    });
   }
 
   @override
@@ -94,301 +89,290 @@ class _ConyugeFormState extends State<ConyugeForm> {
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
-    return BlocListener<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
-      listener: (context, state) {
-        if (state is AlianzaBeneficiarioLoaded) {
-          final alianzaBeneficiarioLoaded = state.alianzaBeneficiarioLoaded;
-
-          loadConyuge(alianzaBeneficiarioLoaded);
-        }
-      },
-      child: BlocBuilder<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
-          builder: (context, state) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(children: [
-              const Text(
-                'Información del conyuge',
-                style: Styles.titleStyle,
-              ),
-              const SizedBox(height: 20),
-              BlocBuilder<TipoIdentificacionCubit, TipoIdentificacionState>(
-                builder: (context, state) {
-                  if (state is TiposIdentificacionesLoaded) {
-                    return DropdownButtonFormField(
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Tipo de identificación',
-                          labelText: 'Tipo de identificación'),
-                      value: conyugeTipoIdentificacionId,
-                      items: state.tiposIdentificaciones!
-                          .map<DropdownMenuItem<String>>(
-                              (TipoIdentificacionEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.tipoIdentificacionId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        alianzaBeneficiarioCubit
-                            .changeConyugeTipoIdentificacion(value);
-                      },
-                    );
-                  }
-                  return Container();
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                  keyboardType: TextInputType.number,
-                  controller: conyugeIdCtrl,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Documento de identificación',
-                      labelText: 'Documento de identificación'),
-                  validator: ((value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo Requerido';
-                    }
-                    return null;
-                  }),
-                  onSaved: (String? newValue) {
-                    alianzaBeneficiarioCubit.changeConyugeDocumento(newValue);
-                  }),
-              const SizedBox(height: 20),
-              TextFormField(
+    return BlocBuilder<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
+        builder: (context, state) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(children: [
+            const Text(
+              'Información del conyuge',
+              style: Styles.titleStyle,
+            ),
+            const SizedBox(height: 20),
+            BlocBuilder<TipoIdentificacionCubit, TipoIdentificacionState>(
+              builder: (context, state) {
+                if (state is TiposIdentificacionesLoaded) {
+                  return DropdownButtonFormField(
+                    decoration: CustomInputDecoration.inputDecoration(
+                        hintText: 'Tipo de identificación',
+                        labelText: 'Tipo de identificación'),
+                    value: conyugeTipoIdentificacionId,
+                    items: state.tiposIdentificaciones!
+                        .map<DropdownMenuItem<String>>(
+                            (TipoIdentificacionEntity value) {
+                      return DropdownMenuItem<String>(
+                        value: value.tipoIdentificacionId,
+                        child: Text(value.nombre!),
+                      );
+                    }).toList(),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Campo Requerido';
+                      }
+                      return null;
+                    },
+                    onChanged: (String? value) {
+                      alianzaBeneficiarioCubit
+                          .changeConyugeTipoIdentificacion(value);
+                    },
+                  );
+                }
+                return Container();
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
                 keyboardType: TextInputType.number,
-                controller: conyugeFechaExpedicionDocumentoCtrl,
-                validator: (value) {
+                controller: conyugeIdCtrl,
+                decoration: CustomInputDecoration.inputDecoration(
+                    hintText: 'Documento de identificación',
+                    labelText: 'Documento de identificación'),
+                validator: ((value) {
                   if (value == null || value.isEmpty) {
                     return 'Campo Requerido';
                   }
-                  if (DateTime.tryParse(value) == null) {
-                    return 'No es una fecha válida';
-                  }
                   return null;
-                },
-                decoration: CustomInputDecoration.inputDecoration(
-                    hintText: 'Fecha de expedición',
-                    labelText: 'Fecha de expedición',
-                    suffixIcon: IconButton(
-                        onPressed: () async {
-                          DateTime? newDate = await showDatePicker(
-                              context: context,
-                              initialDate: conyugeFechaExpedicionDocumentoCtrl
-                                          .text !=
-                                      ''
-                                  ? DateTime.parse(
-                                      conyugeFechaExpedicionDocumentoCtrl.text)
-                                  : DateTime.now(),
-                              firstDate: DateTime(1000),
-                              lastDate: DateTime(3000));
+                }),
+                onSaved: (String? newValue) {
+                  alianzaBeneficiarioCubit.changeConyugeDocumento(newValue);
+                }),
+            const SizedBox(height: 20),
+            TextFormField(
+              keyboardType: TextInputType.number,
+              controller: conyugeFechaExpedicionDocumentoCtrl,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Campo Requerido';
+                }
+                if (DateTime.tryParse(value) == null) {
+                  return 'No es una fecha válida';
+                }
+                return null;
+              },
+              decoration: CustomInputDecoration.inputDecoration(
+                  hintText: 'Fecha de expedición',
+                  labelText: 'Fecha de expedición',
+                  suffixIcon: IconButton(
+                      onPressed: () async {
+                        DateTime? newDate = await showDatePicker(
+                            context: context,
+                            initialDate: conyugeFechaExpedicionDocumentoCtrl
+                                        .text !=
+                                    ''
+                                ? DateTime.parse(
+                                    conyugeFechaExpedicionDocumentoCtrl.text)
+                                : DateTime.now(),
+                            firstDate: DateTime(1000),
+                            lastDate: DateTime(3000));
 
-                          if (newDate == null) return;
+                        if (newDate == null) return;
 
-                          conyugeFechaExpedicionDocumentoCtrl.text =
-                              dateFormat.format(newDate);
+                        conyugeFechaExpedicionDocumentoCtrl.text =
+                            dateFormat.format(newDate);
 
-                          alianzaBeneficiarioCubit.changeConyugeFechaExpedicion(
-                              conyugeFechaExpedicionDocumentoCtrl.text);
-                        },
-                        icon: const Icon(Icons.calendar_today))),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                        controller: conyugeNombre1Ctrl,
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'Conyuge Nombre 1',
-                            labelText: 'Conyuge Nombre 1'),
-                        validator: ((value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        }),
-                        onSaved: (String? newValue) {
-                          alianzaBeneficiarioCubit
-                              .changeConyugeNombre1(newValue);
-                        }),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: TextFormField(
-                        controller: conyugeApellido1Ctrl,
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'Conyuge Apellido 1',
-                            labelText: 'Conyuge Apellido 1'),
-                        validator: ((value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Campo Requerido';
-                          }
-                          return null;
-                        }),
-                        onSaved: (String? newValue) {
-                          alianzaBeneficiarioCubit
-                              .changeConyugeApellido1(newValue);
-                        }),
-                  )
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                        controller: conyugeNombre2Ctrl,
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'Conyuge Nombre 2',
-                            labelText: 'Conyuge Nombre 2'),
-                        onSaved: (String? newValue) {
-                          alianzaBeneficiarioCubit
-                              .changeConyugeNombre2(newValue);
-                        }),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: TextFormField(
-                        controller: conyugeApellido2Ctrl,
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'Conyuge Apellido 2',
-                            labelText: 'Conyuge Apellido 2'),
-                        onSaved: (String? newValue) {
-                          alianzaBeneficiarioCubit
-                              .changeConyugeApellido2(newValue);
-                        }),
-                  )
-                ],
-              ),
-              const SizedBox(height: 20),
-              BlocBuilder<GeneroCubit, GeneroState>(
-                builder: (context, state) {
-                  if (state is GenerosLoaded) {
-                    return DropdownButtonFormField(
+                        alianzaBeneficiarioCubit.changeConyugeFechaExpedicion(
+                            conyugeFechaExpedicionDocumentoCtrl.text);
+                      },
+                      icon: const Icon(Icons.calendar_today))),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                      controller: conyugeNombre1Ctrl,
                       decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Género', labelText: 'Género'),
-                      value: conyugeGeneroId,
-                      items: state.generos
-                          ?.map<DropdownMenuItem<String>>((GeneroEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.generoId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
+                          hintText: 'Conyuge Nombre 1',
+                          labelText: 'Conyuge Nombre 1'),
+                      validator: ((value) {
+                        if (value == null || value.isEmpty) {
                           return 'Campo Requerido';
                         }
                         return null;
+                      }),
+                      onSaved: (String? newValue) {
+                        alianzaBeneficiarioCubit.changeConyugeNombre1(newValue);
+                      }),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: TextFormField(
+                      controller: conyugeApellido1Ctrl,
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Conyuge Apellido 1',
+                          labelText: 'Conyuge Apellido 1'),
+                      validator: ((value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Campo Requerido';
+                        }
+                        return null;
+                      }),
+                      onSaved: (String? newValue) {
+                        alianzaBeneficiarioCubit
+                            .changeConyugeApellido1(newValue);
+                      }),
+                )
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                      controller: conyugeNombre2Ctrl,
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Conyuge Nombre 2',
+                          labelText: 'Conyuge Nombre 2'),
+                      onSaved: (String? newValue) {
+                        alianzaBeneficiarioCubit.changeConyugeNombre2(newValue);
+                      }),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: TextFormField(
+                      controller: conyugeApellido2Ctrl,
+                      decoration: CustomInputDecoration.inputDecoration(
+                          hintText: 'Conyuge Apellido 2',
+                          labelText: 'Conyuge Apellido 2'),
+                      onSaved: (String? newValue) {
+                        alianzaBeneficiarioCubit
+                            .changeConyugeApellido2(newValue);
+                      }),
+                )
+              ],
+            ),
+            const SizedBox(height: 20),
+            BlocBuilder<GeneroCubit, GeneroState>(
+              builder: (context, state) {
+                if (state is GenerosLoaded) {
+                  return DropdownButtonFormField(
+                    decoration: CustomInputDecoration.inputDecoration(
+                        hintText: 'Género', labelText: 'Género'),
+                    value: conyugeGeneroId,
+                    items: state.generos
+                        ?.map<DropdownMenuItem<String>>((GeneroEntity value) {
+                      return DropdownMenuItem<String>(
+                        value: value.generoId,
+                        child: Text(value.nombre!),
+                      );
+                    }).toList(),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Campo Requerido';
+                      }
+                      return null;
+                    },
+                    onChanged: (String? value) {
+                      alianzaBeneficiarioCubit.changeConyugeGenero(value);
+                    },
+                  );
+                }
+                return Container();
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              keyboardType: TextInputType.number,
+              controller: conyugeFechaNacimientoCtrl,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Campo Requerido';
+                }
+                if (DateTime.tryParse(value) == null) {
+                  return 'No es una fecha válida';
+                }
+
+                return null;
+              },
+              decoration: CustomInputDecoration.inputDecoration(
+                  hintText: 'Fecha de nacimiento',
+                  labelText: 'Fecha de nacimiento',
+                  suffixIcon: IconButton(
+                      onPressed: () async {
+                        DateTime? newDate = await showDatePicker(
+                            context: context,
+                            initialDate: conyugeFechaNacimientoCtrl.text != ''
+                                ? DateTime.parse(
+                                    conyugeFechaNacimientoCtrl.text)
+                                : DateTime.now(),
+                            firstDate: DateTime(1000),
+                            lastDate: DateTime(3000));
+
+                        if (newDate == null) return;
+
+                        conyugeFechaNacimientoCtrl.text =
+                            dateFormat.format(newDate);
+
+                        alianzaBeneficiarioCubit.changeConyugeFechaNacimiento(
+                            conyugeFechaNacimientoCtrl.text);
                       },
-                      onChanged: (String? value) {
-                        alianzaBeneficiarioCubit.changeConyugeGenero(value);
-                      },
-                    );
-                  }
-                  return Container();
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
+                      icon: const Icon(Icons.calendar_today))),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
                 keyboardType: TextInputType.number,
-                controller: conyugeFechaNacimientoCtrl,
-                validator: (value) {
+                controller: ingresosMensualesCtrl,
+                decoration: CustomInputDecoration.inputDecoration(
+                    hintText: 'Ingresos Mensuales',
+                    labelText: 'Ingresos Mensuales'),
+                validator: ((value) {
                   if (value == null || value.isEmpty) {
                     return 'Campo Requerido';
                   }
-                  if (DateTime.tryParse(value) == null) {
-                    return 'No es una fecha válida';
-                  }
-
                   return null;
-                },
-                decoration: CustomInputDecoration.inputDecoration(
-                    hintText: 'Fecha de nacimiento',
-                    labelText: 'Fecha de nacimiento',
-                    suffixIcon: IconButton(
-                        onPressed: () async {
-                          DateTime? newDate = await showDatePicker(
-                              context: context,
-                              initialDate: conyugeFechaNacimientoCtrl.text != ''
-                                  ? DateTime.parse(
-                                      conyugeFechaNacimientoCtrl.text)
-                                  : DateTime.now(),
-                              firstDate: DateTime(1000),
-                              lastDate: DateTime(3000));
-
-                          if (newDate == null) return;
-
-                          conyugeFechaNacimientoCtrl.text =
-                              dateFormat.format(newDate);
-
-                          alianzaBeneficiarioCubit.changeConyugeFechaNacimiento(
-                              conyugeFechaNacimientoCtrl.text);
-                        },
-                        icon: const Icon(Icons.calendar_today))),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                  keyboardType: TextInputType.number,
-                  controller: ingresosMensualesCtrl,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Ingresos Mensuales',
-                      labelText: 'Ingresos Mensuales'),
-                  validator: ((value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo Requerido';
-                    }
-                    return null;
-                  }),
-                  onSaved: (String? newValue) {
-                    alianzaBeneficiarioCubit
-                        .changeConyugeIngresosMensuales(newValue);
-                  }),
-              const SizedBox(height: 20),
-              BlocBuilder<GrupoEspecialCubit, GrupoEspecialState>(
-                builder: (context, state) {
-                  if (state is GruposEspecialesLoaded) {
-                    return DropdownButtonFormField(
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Grupo Especial',
-                          labelText: 'Grupo Especial'),
-                      value: conyugeGrupoEspecialId,
-                      items: state.gruposEspeciales!
-                          .map<DropdownMenuItem<String>>(
-                              (GrupoEspecialEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.grupoEspecialId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        alianzaBeneficiarioCubit
-                            .changeConyugeGrupoEspecial(value);
-                      },
-                    );
-                  }
-                  return Container();
-                },
-              ),
-            ]),
-          ),
-        );
-      }),
-    );
+                }),
+                onSaved: (String? newValue) {
+                  alianzaBeneficiarioCubit
+                      .changeConyugeIngresosMensuales(newValue);
+                }),
+            const SizedBox(height: 20),
+            BlocBuilder<GrupoEspecialCubit, GrupoEspecialState>(
+              builder: (context, state) {
+                if (state is GruposEspecialesLoaded) {
+                  return DropdownButtonFormField(
+                    decoration: CustomInputDecoration.inputDecoration(
+                        hintText: 'Grupo Especial',
+                        labelText: 'Grupo Especial'),
+                    value: conyugeGrupoEspecialId,
+                    items: state.gruposEspeciales!
+                        .map<DropdownMenuItem<String>>(
+                            (GrupoEspecialEntity value) {
+                      return DropdownMenuItem<String>(
+                        value: value.grupoEspecialId,
+                        child: Text(value.nombre!),
+                      );
+                    }).toList(),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Campo Requerido';
+                      }
+                      return null;
+                    },
+                    onChanged: (String? value) {
+                      alianzaBeneficiarioCubit
+                          .changeConyugeGrupoEspecial(value);
+                    },
+                  );
+                }
+                return Container();
+              },
+            ),
+          ]),
+        ),
+      );
+    });
   }
 }

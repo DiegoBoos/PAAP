@@ -30,7 +30,7 @@ class _PerfilPreInversionBeneficiariosPageState
         BlocProvider.of<PerfilPreInversionBeneficiariosBloc>(context);
 
     final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId;
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
     perfilPreInversionBeneficiariosBloc
         .add(GetPerfilPreInversionBeneficiarios(perfilPreInversionId));

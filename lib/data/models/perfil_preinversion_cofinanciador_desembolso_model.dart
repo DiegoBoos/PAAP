@@ -3,9 +3,9 @@ import 'package:paap/domain/entities/perfil_preinversion_cofinanciador_desembols
 class PerfilPreInversionCofinanciadorDesembolsoModel
     extends PerfilPreInversionCofinanciadorDesembolsoEntity {
   PerfilPreInversionCofinanciadorDesembolsoModel({
-    required String perfilPreInversionId,
-    required String cofinanciadorId,
-    required String desembolsoId,
+    String? perfilPreInversionId,
+    String? cofinanciadorId,
+    String? desembolsoId,
     String? fecha,
     String? desembolso,
     String? recordStatus,
@@ -13,9 +13,9 @@ class PerfilPreInversionCofinanciadorDesembolsoModel
           perfilPreInversionId: perfilPreInversionId,
           cofinanciadorId: cofinanciadorId,
           desembolsoId: desembolsoId,
-          fecha: fecha ?? '',
-          desembolso: desembolso ?? '',
-          recordStatus: recordStatus ?? '',
+          fecha: fecha,
+          desembolso: desembolso,
+          recordStatus: recordStatus,
         );
 
   factory PerfilPreInversionCofinanciadorDesembolsoModel.fromJson(

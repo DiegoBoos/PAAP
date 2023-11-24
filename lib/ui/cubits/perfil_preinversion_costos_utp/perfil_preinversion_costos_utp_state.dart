@@ -51,16 +51,4 @@ class PerfilPreInversionCostosUPTError
 }
 
 VPerfilPreInversionPlanNegocioEntity initObject() =>
-    VPerfilPreInversionPlanNegocioEntity(
-        actividadFinancieraId: '',
-        actividadFinanciera: '',
-        rubroId: '',
-        rubro: '',
-        unidadId: '',
-        unidad: '',
-        year: '',
-        cantidad: '',
-        valor: '',
-        productoId: '',
-        tipoCalidadId: '',
-        porcentaje: '');
+    VPerfilPreInversionPlanNegocioEntity(cantidad: '', valor: '', year: '');

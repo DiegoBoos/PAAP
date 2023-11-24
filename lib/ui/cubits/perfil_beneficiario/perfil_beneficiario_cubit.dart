@@ -14,6 +14,10 @@ class PerfilBeneficiarioCubit extends Cubit<PerfilBeneficiarioState> {
 
   void initState() => emit(PerfilBeneficiarioInitial());
 
+  void setPerfilBeneficiario(PerfilBeneficiarioEntity perfilBeneficiario) {
+    emit(PerfilBeneficiarioChanged(perfilBeneficiario));
+  }
+
   void loadPerfilBeneficiario(String perfilId, String beneficiarioId) async {
     final result = await perfilBeneficiarioDB.getPerfilBeneficiarioUsecaseDB(
         perfilId, beneficiarioId);
@@ -29,14 +33,13 @@ class PerfilBeneficiarioCubit extends Cubit<PerfilBeneficiarioState> {
     });
   }
 
-  void savePerfilBeneficiarioDB(
-      PerfilBeneficiarioEntity perfilBeneficiarioEntity) async {
+  void savePerfilBeneficiarioDB() async {
     final result = await perfilBeneficiarioDB
-        .savePerfilBeneficiarioUsecaseDB(perfilBeneficiarioEntity);
+        .savePerfilBeneficiarioUsecaseDB(state.perfilBeneficiario);
     result.fold(
         (failure) => emit(PerfilBeneficiarioError(failure.properties.first)),
         (data) => emit(PerfilBeneficiarioSaved(
-            perfilBeneficiario: perfilBeneficiarioEntity)));
+            perfilBeneficiario: state.perfilBeneficiario)));
   }
 
   void changeMunicipioId(String value) {

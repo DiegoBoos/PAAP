@@ -174,7 +174,7 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
                                       (TipoActividadProductivaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.tipoActividadProductivaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {
@@ -208,7 +208,7 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
                                       (FrecuenciaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.frecuenciaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {
@@ -454,7 +454,7 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
                                       (TipoActividadProductivaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.tipoActividadProductivaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {
@@ -488,7 +488,7 @@ class _AlianzaExperienciaFormState extends State<AlianzaExperienciaForm> {
                                       (FrecuenciaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.frecuenciaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {

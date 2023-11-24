@@ -10,7 +10,7 @@ class EvaluacionCubit extends Cubit<EvaluacionState> {
 
   EvaluacionCubit({required this.evaluacionDB}) : super(EvaluacionInitial());
 
-  Future<void> getEvaluacionDB(String perfilId) async {
+  void getEvaluacionDB(String perfilId) async {
     final result = await evaluacionDB.getEvaluacionUsecaseDB(perfilId);
     result.fold((failure) => emit(EvaluacionError(failure.properties.first)),
         (data) => emit(EvaluacionLoaded(data!)));

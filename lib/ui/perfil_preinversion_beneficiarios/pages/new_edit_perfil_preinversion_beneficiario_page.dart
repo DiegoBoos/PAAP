@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 import '../../../ui/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
 import '../../../ui/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../ui/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
@@ -30,9 +29,11 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
         BlocProvider.of<VPerfilPreInversionCubit>(context);
     final perfilPreInversionBeneficiariosBloc =
         BlocProvider.of<PerfilPreInversionBeneficiariosBloc>(context);
-    final perfilPreInversionBeneficiario = ModalRoute.of(context)!
-        .settings
-        .arguments as PerfilPreInversionBeneficiarioEntity?;
+    final perfilPreInversionBeneficiarioCubit =
+        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
+
+    final perfilPreInversionBeneficiario = perfilPreInversionBeneficiarioCubit
+        .state.perfilPreInversionBeneficiario;
 
     return BlocListener<PerfilPreInversionBeneficiarioCubit,
             PerfilPreInversionBeneficiarioState>(
@@ -46,7 +47,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
                 context, 'Datos guardados satisfactoriamente', Colors.green);
 
             final perfilPreInversionId = vPerfilPreInversionCubit
-                .state.vPerfilPreInversion!.perfilPreInversionId;
+                .state.vPerfilPreInversion!.perfilPreInversionId!;
 
             perfilPreInversionBeneficiariosBloc
                 .add(GetPerfilPreInversionBeneficiarios(perfilPreInversionId));
@@ -62,7 +63,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
               },
             ),
             appBar: AppBar(
-                title: Text(perfilPreInversionBeneficiario?.beneficiarioId == ''
+                title: Text(perfilPreInversionBeneficiario.beneficiarioId == ''
                     ? 'Crear'
                     : 'Editar'),
                 actions: const [
@@ -79,17 +80,14 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
                   key: formKey,
                   child: Column(
                     children: [
-                      BeneficiarioForm(
-                          perfilPreInversionBeneficiario:
-                              perfilPreInversionBeneficiario),
+                      const BeneficiarioForm(),
                       PerfilBeneficiarioForm(
                         perfilPreInversionBeneficiario:
                             perfilPreInversionBeneficiario,
                       ),
                       const PerfilPreInversionBeneficiarioForm(),
-                      if (perfilPreInversionBeneficiario?.estadoCivilId ==
-                              '2' ||
-                          perfilPreInversionBeneficiario?.estadoCivilId == '5')
+                      if (perfilPreInversionBeneficiario.estadoCivilId == '2' ||
+                          perfilPreInversionBeneficiario.estadoCivilId == '5')
                         ConyugeForm(
                           perfilPreInversionBeneficiario:
                               perfilPreInversionBeneficiario,
@@ -136,7 +134,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
         BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
 
     final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId;
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
     final perfilPreInversionBeneficiario = perfilPreInversionBeneficiarioCubit
         .state.perfilPreInversionBeneficiario;
@@ -159,9 +157,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
       perfilPreInversionBeneficiarioCubit.changeAccesoExplotacionTierra(false);
     }
 
-    perfilPreInversionBeneficiarioCubit.savePerfilPreInversionBeneficiarioDB(
-        perfilPreInversionBeneficiarioCubit
-            .state.perfilPreInversionBeneficiario);
+    perfilPreInversionBeneficiarioCubit.savePerfilPreInversionBeneficiarioDB();
   }
 
   void saveExperiencia(BuildContext context) {
@@ -175,7 +171,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
     final tipoProyecto =
         vPerfilPreInversionCubit.state.vPerfilPreInversion!.tipoProyecto;
 
-    final beneficiarioId = beneficiarioCubit.state.beneficiario.beneficiarioId;
+    final beneficiarioId = beneficiarioCubit.state.beneficiario.beneficiarioId!;
 
     if (tipoProyecto == 'Agrícola') {
       experienciaAgricolaCubit.changeBeneficiarioId(beneficiarioId);
@@ -187,8 +183,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
     } else if (tipoProyecto == 'Pecuario') {
       experienciaPecuariaCubit.changeBeneficiarioId(beneficiarioId);
 
-      experienciaPecuariaCubit.saveExperienciaPecuariaDB(
-          experienciaPecuariaCubit.state.experienciaPecuaria);
+      experienciaPecuariaCubit.saveExperienciaPecuariaDB();
     }
   }
 }

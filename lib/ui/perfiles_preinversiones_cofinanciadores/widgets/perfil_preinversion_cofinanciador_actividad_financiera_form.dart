@@ -12,6 +12,7 @@ import '../../../domain/entities/actividad_financiera_entity.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_actividad_financiera_entity.dart';
 import '../../../domain/entities/perfil_preinversion_cofinanciador_desembolso_entity.dart';
 import '../../cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
+import '../../cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/sync_pages.dart';
@@ -66,13 +67,18 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
 
   @override
   Widget build(BuildContext context) {
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+
     final perfilPreInversionCofinanciadorCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context,
-            listen: true);
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
+      context,
+    );
 
     final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
-        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context,
-            listen: true);
+        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(
+      context,
+    );
 
     final perfilPreInversionCofinanciadorActividadesFinancierasBloc =
         BlocProvider.of<
@@ -95,7 +101,7 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
 
           final perfilPreInversionId = state
               .perfilPreInversionCofinanciadorActividadFinanciera
-              .perfilPreInversionId;
+              .perfilPreInversionId!;
 
           final cofinanciadorId = state
               .perfilPreInversionCofinanciadorActividadFinanciera
@@ -128,7 +134,7 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
                               (ActividadFinancieraEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.actividadFinancieraId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -197,7 +203,8 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
                     return 'Debe seleccionar un valor';
                   }
 
-                  if (monto != '' &&
+                  if (monto != null &&
+                      monto != '' &&
                       double.parse(value) > double.parse(monto)) {
                     return 'El valor no puede ser mayor al monto';
                   }
@@ -221,11 +228,23 @@ class _PerfilPreInversionCofinanciadorActividadFinancieraFormState
 
                         formKeyActividadFinanciera.currentState!.save();
 
+                        final perfilPreInversionId = vPerfilPreInversionCubit
+                            .state.vPerfilPreInversion!.perfilPreInversionId!;
+
+                        final cofinanciadorId =
+                            perfilPreInversionCofinanciadorCubit
+                                .state
+                                .perfilPreInversionCofinanciador
+                                .cofinanciadorId!;
+
                         perfilPreInversionCofinanciadorActividadFinancieraCubit
-                            .savePerfilPreInversionCofinanciadorActividadFinancieraDB(
-                                perfilPreInversionCofinanciadorActividadFinancieraCubit
-                                    .state
-                                    .perfilPreInversionCofinanciadorActividadFinanciera);
+                            .changePerfilPreInversionId(perfilPreInversionId);
+
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .changeCofinanciadorId(cofinanciadorId);
+
+                        perfilPreInversionCofinanciadorActividadFinancieraCubit
+                            .savePerfilPreInversionCofinanciadorActividadFinancieraDB();
                       },
                       child: const Icon(Icons.add))),
               const PerfilPreInversionCofinanciadorActividadesFinancierasRows()
@@ -297,14 +316,21 @@ class PerfilPreInversionCofinanciadorActividadesFinancierasRows
                     perfilPreInversionCofinanciadorActividadesFinancieras[
                         index];
 
-                final valor = NumberFormat.currency(
-                        locale: 'en_US', decimalDigits: 0, symbol: "\$")
-                    .format(double.parse(
-                        perfilPreInversionCofinanciadorActividadFinanciera
-                            .valor));
+                String? valor;
+
+                if (perfilPreInversionCofinanciadorActividadFinanciera.valor !=
+                        null &&
+                    perfilPreInversionCofinanciadorActividadFinanciera.valor !=
+                        '') {
+                  valor = NumberFormat.currency(
+                          locale: 'en_US', decimalDigits: 0, symbol: "\$")
+                      .format(double.parse(
+                          perfilPreInversionCofinanciadorActividadFinanciera
+                              .valor!));
+                }
 
                 return DataRow(cells: <DataCell>[
-                  DataCell(Text(valor)),
+                  DataCell(Text(valor ?? '')),
                   DataCell(Text(
                       perfilPreInversionCofinanciadorActividadFinanciera
                           .actividadFinanciera!)),

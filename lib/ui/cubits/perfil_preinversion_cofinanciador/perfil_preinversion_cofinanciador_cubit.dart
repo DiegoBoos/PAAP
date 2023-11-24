@@ -38,13 +38,19 @@ class PerfilPreInversionCofinanciadorCubit
                 state.perfilPreInversionCofinanciador)));
   }
 
+  void setPerfilPreInversionCofinanciador(
+      PerfilPreInversionCofinanciadorEntity perfilPreInversionCofinanciador) {
+    emit(PerfilPreInversionCofinanciadorChanged(
+        perfilPreInversionCofinanciador));
+  }
+
   void changePerfilPreInversionId(String? value) {
     final perfilPreInversionIdChanged = state.perfilPreInversionCofinanciador
         .copyWith(perfilPreInversionId: value);
     emit(PerfilPreInversionCofinanciadorChanged(perfilPreInversionIdChanged));
   }
 
-  void changeCofinanciador(String? newValue) {
+  void changeCofinanciadorId(String? newValue) {
     final cofinanciadorIdChanged = state.perfilPreInversionCofinanciador
         .copyWith(cofinanciadorId: newValue);
     emit(PerfilPreInversionCofinanciadorChanged(cofinanciadorIdChanged));

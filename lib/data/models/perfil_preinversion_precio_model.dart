@@ -2,7 +2,7 @@ import '../../domain/entities/perfil_preinversion_precio_entity.dart';
 
 class PerfilPreInversionPrecioModel extends PerfilPreInversionPrecioEntity {
   PerfilPreInversionPrecioModel({
-    required String perfilPreInversionId,
+    String? perfilPreInversionId,
     String? productoId,
     String? unidadId,
     String? tipoCalidadId,
@@ -13,14 +13,14 @@ class PerfilPreInversionPrecioModel extends PerfilPreInversionPrecioEntity {
     String? recordStatus,
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
-          productoId: productoId ?? '',
-          unidadId: unidadId ?? '',
-          tipoCalidadId: tipoCalidadId ?? '',
-          precio: precio ?? '',
-          producto: producto ?? '',
-          unidad: unidad ?? '',
-          tipoCalidad: tipoCalidad ?? '',
-          recordStatus: recordStatus ?? '',
+          productoId: productoId,
+          unidadId: unidadId,
+          tipoCalidadId: tipoCalidadId,
+          precio: precio,
+          producto: producto,
+          unidad: unidad,
+          tipoCalidad: tipoCalidad,
+          recordStatus: recordStatus,
         );
 
   factory PerfilPreInversionPrecioModel.fromJson(Map<String, dynamic> json) =>

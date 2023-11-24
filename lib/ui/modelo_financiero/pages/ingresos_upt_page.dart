@@ -9,8 +9,7 @@ import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart'
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/no_data_svg.dart';
-import '../../utils/styles.dart';
-import '../widgets/perfiles_preinversiones_plan_negocios_rows.dart';
+import 'perfiles_preinversiones_plan_negocios_rows.dart';
 
 class IngresosUPTPage extends StatefulWidget {
   const IngresosUPTPage({super.key});
@@ -32,7 +31,7 @@ class _IngresosUPTPageState extends State<IngresosUPTPage> {
         BlocProvider.of<VPerfilPreInversionCubit>(context);
 
     final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId;
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
     vPerfilesPreInversionesPlanNegociosCubit
         .getVPerfilesPreInversionesPlanNegociosDB(
@@ -48,7 +47,7 @@ class _IngresosUPTPageState extends State<IngresosUPTPage> {
         BlocProvider.of<VPerfilPreInversionCubit>(context);
 
     final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId;
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
     return BlocListener<PerfilPreInversionIngresosUPTCubit,
         PerfilPreInversionIngresosUPTState>(listener: (context, state) {
@@ -79,9 +78,8 @@ class _IngresosUPTPageState extends State<IngresosUPTPage> {
                 child: Center(child: NoDataSvg(title: 'No hay resultados')));
           }
           return PerfilPreInversionPlanNegociosRows(
-              vPerfilesPreInversionesPlanNegocios:
+              perfilPreInversionPlanNegocios:
                   vPerfilesPreInversionesPlanNegocios,
-              subtitleStyle: Styles.subtitleStyle,
               tipoMovimientoId: tipoMovimientoId);
         }
         return const NoDataSvg(

@@ -29,7 +29,7 @@ class _PerfilCofinanciadoresPageState extends State<PerfilCofinanciadoresPage> {
 
     final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
     perfilCofinanciadoresBloc
-        .add(GetPerfilCofinanciadores(vPerfilCubit.state.vPerfil!.perfilId));
+        .add(GetPerfilCofinanciadores(vPerfilCubit.state.vPerfil!.perfilId!));
   }
 
   @override

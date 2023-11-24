@@ -11,7 +11,7 @@ class CriterioCubit extends Cubit<CriterioState> {
 
   CriterioCubit({required this.criterioDB}) : super(CriteriosInitial());
 
-  Future<void> getCriteriosDB(String agrupacionId) async {
+  void getCriteriosDB(String agrupacionId) async {
     final result = await criterioDB.getCriteriosUsecaseDB(agrupacionId);
     result.fold((failure) => emit(CriteriosError(failure.properties.first)),
         (data) => emit(CriteriosLoaded(data)));

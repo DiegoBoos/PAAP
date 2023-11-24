@@ -70,7 +70,7 @@ class SyncLogLocalDataSourceImpl implements SyncLogLocalDataSource {
     var batch = db.batch();
 
     for (var syncLog in syncLogsEntity) {
-      batch.update(syncLog.tabla, {'recordStatus': 'R'});
+      batch.update(syncLog.tabla!, {'recordStatus': 'R'});
     }
 
     final res = await batch.commit();

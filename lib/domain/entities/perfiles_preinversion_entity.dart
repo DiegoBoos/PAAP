@@ -1,21 +1,21 @@
 class PerfilesPreInversionEntity {
   PerfilesPreInversionEntity({
-    required this.id,
-    required this.nombre,
-    required this.abreviatura,
-    required this.valorProyecto,
-    required this.incentivoModular,
-    required this.ubicacion,
-    required this.categorizacion,
+    this.id,
+    this.nombre,
+    this.abreviatura,
+    this.valorProyecto,
+    this.incentivoModular,
+    this.ubicacion,
+    this.categorizacion,
   });
 
-  String id;
-  String nombre;
-  String abreviatura;
-  String valorProyecto;
-  String incentivoModular;
-  String ubicacion;
-  String categorizacion;
+  String? id;
+  String? nombre;
+  String? abreviatura;
+  String? valorProyecto;
+  String? incentivoModular;
+  String? ubicacion;
+  String? categorizacion;
 
   Map<String, dynamic> toJson() => {
         "ID": id,

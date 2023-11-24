@@ -53,7 +53,7 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
         PerfilPreInversionCofinanciadorDesembolsoChanged(perfilPreInversionId));
   }
 
-  void changeCofinanciador(String value) {
+  void changeCofinanciadorId(String value) {
     final cofinanciadorId = state.perfilPreInversionCofinanciadorDesembolso
         .copyWith(cofinanciadorId: value);
     emit(PerfilPreInversionCofinanciadorDesembolsoChanged(cofinanciadorId));

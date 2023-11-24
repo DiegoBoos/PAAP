@@ -91,9 +91,9 @@ class _PerfilPreInversionAliadoFormState
     BlocProvider.of<AliadoCubit>(context).initState();
   }
 
-  loadAliado(AliadoEntity? aliado) {
+  loadAliado(AliadoEntity aliado) {
     setState(() {
-      final aliadoMunicipioId = aliado?.municipioId;
+      final aliadoMunicipioId = aliado.municipioId;
 
       final municipio = municipiosFiltered.firstWhere(
           (municipio) => municipio.id == aliadoMunicipioId,
@@ -107,18 +107,19 @@ class _PerfilPreInversionAliadoFormState
             .where(((municipio) => municipio.departamentoid == departamentoId))
             .toList();
       }
-      aliadoIdCtrl.text = aliado?.aliadoId ?? '';
-      nombreCtrl.text = aliado?.nombre ?? '';
-      experienciaCtrl.text = aliado?.experiencia ?? '';
-      nombreContactoCtrl.text = aliado?.nombreContacto ?? '';
-      direccionCtrl.text = aliado?.direccion ?? '';
-      correoCtrl.text = aliado?.correo ?? '';
-      telefonoFijoCtrl.text = aliado?.telefonoFijo ?? '';
-      telefonoMovilCtrl.text = aliado?.telefonoMovil ?? '';
+      aliadoIdCtrl.text = aliado.aliadoId ?? '';
+      nombreCtrl.text = aliado.nombre ?? '';
+      experienciaCtrl.text = aliado.experiencia ?? '';
+      nombreContactoCtrl.text = aliado.nombreContacto ?? '';
+      direccionCtrl.text = aliado.direccion ?? '';
+      correoCtrl.text = aliado.correo ?? '';
+      telefonoFijoCtrl.text = aliado.telefonoFijo ?? '';
+      telefonoMovilCtrl.text = aliado.telefonoMovil ?? '';
 
-      if (aliado != null && aliado.fechaDesactivacion != '') {
+      if (aliado.fechaDesactivacion != null &&
+          aliado.fechaDesactivacion != '') {
         fechaDesactivacionCtrl.text =
-            dateFormat.format(DateTime.parse(aliado.fechaDesactivacion));
+            dateFormat.format(DateTime.parse(aliado.fechaDesactivacion!));
       }
     });
   }
@@ -217,7 +218,7 @@ class _PerfilPreInversionAliadoFormState
                               (DepartamentoEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.id,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -253,7 +254,7 @@ class _PerfilPreInversionAliadoFormState
                       .map<DropdownMenuItem<String>>((MunicipioEntity value) {
                     return DropdownMenuItem<String>(
                       value: value.id,
-                      child: Text(value.nombre),
+                      child: Text(value.nombre!),
                     );
                   }).toList(),
                   validator: (value) {
@@ -411,7 +412,7 @@ class _PerfilPreInversionAliadoFormState
                                       (ProductoEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.id,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {
@@ -469,7 +470,7 @@ class _PerfilPreInversionAliadoFormState
                                             (UnidadEntity value) {
                                       return DropdownMenuItem<String>(
                                         value: value.unidadId,
-                                        child: Text(value.nombre),
+                                        child: Text(value.nombre!),
                                       );
                                     }).toList(),
                                     validator: (value) {
@@ -531,7 +532,7 @@ class _PerfilPreInversionAliadoFormState
                                             (FrecuenciaEntity value) {
                                       return DropdownMenuItem<String>(
                                         value: value.frecuenciaId,
-                                        child: Text(value.nombre),
+                                        child: Text(value.nombre!),
                                       );
                                     }).toList(),
                                     validator: (value) {
@@ -567,7 +568,7 @@ class _PerfilPreInversionAliadoFormState
                                       (SitioEntregaEntity value) {
                                 return DropdownMenuItem<String>(
                                   value: value.sitioEntregaId,
-                                  child: Text(value.nombre),
+                                  child: Text(value.nombre!),
                                 );
                               }).toList(),
                               validator: (value) {

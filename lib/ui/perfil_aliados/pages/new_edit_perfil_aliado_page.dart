@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/perfil_aliado_entity.dart';
 import '../../blocs/perfil_aliados/perfil_aliados_bloc.dart';
 import '../../cubits/menu/menu_cubit.dart';
 import '../../cubits/perfil_aliado/perfil_aliado_cubit.dart';
@@ -20,8 +19,8 @@ class NewEditPerfilAliadoPage extends StatelessWidget {
     final perfilAliadosBloc = BlocProvider.of<PerfilAliadosBloc>(context);
     final perfilAliadoCubit = BlocProvider.of<PerfilAliadoCubit>(context);
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    final perfilAliado =
-        ModalRoute.of(context)?.settings.arguments as PerfilAliadoEntity?;
+
+    final perfilAliado = perfilAliadoCubit.state.perfilAliado;
 
     return BlocListener<PerfilAliadoCubit, PerfilAliadoState>(
       listener: (context, state) {
@@ -33,8 +32,8 @@ class NewEditPerfilAliadoPage extends StatelessWidget {
           CustomSnackBar.showSnackBar(
               context, 'Datos guardados satisfactoriamente', Colors.green);
 
-          final perfilAliado = state.perfilAliado.perfilId;
-          perfilAliadosBloc.add(GetPerfilAliados(perfilAliado));
+          final perfilId = state.perfilAliado.perfilId;
+          perfilAliadosBloc.add(GetPerfilAliados(perfilId!));
         }
       },
       child: Scaffold(
@@ -47,7 +46,7 @@ class NewEditPerfilAliadoPage extends StatelessWidget {
             },
           ),
           appBar: AppBar(
-              title: Text(perfilAliado?.perfilId == '' ? 'Crear' : 'Editar'),
+              title: Text(perfilAliado.perfilId == '' ? 'Crear' : 'Editar'),
               actions: const [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -69,8 +68,7 @@ class NewEditPerfilAliadoPage extends StatelessWidget {
 
                         formKey.currentState!.save();
 
-                        perfilAliadoCubit.savePerfilAliadoDB(
-                            perfilAliadoCubit.state.perfilAliado);
+                        perfilAliadoCubit.savePerfilAliadoDB();
                       },
                     ),
                   ],

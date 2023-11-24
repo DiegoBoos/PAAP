@@ -10,7 +10,7 @@ import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 
 import '../../alianzas/widgets/alianza_drawer.dart';
-import '../widgets/alianzas_beneficiarios_rows.dart';
+import 'alianzas_beneficiarios_rows.dart';
 
 class AlianzasBeneficiariosPage extends StatefulWidget {
   const AlianzasBeneficiariosPage({super.key});
@@ -28,13 +28,19 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
 
     final alianzasBeneficiariosBloc =
         BlocProvider.of<AlianzasBeneficiariosBloc>(context);
-    alianzasBeneficiariosBloc
-        .add(GetAlianzasBeneficiarios(vAlianzaCubit.state.vAlianza!.alianzaId));
+    alianzasBeneficiariosBloc.add(
+        GetAlianzasBeneficiarios(vAlianzaCubit.state.vAlianza!.alianzaId!));
   }
 
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
+
+    final alianzasBeneficiariosBloc =
+        BlocProvider.of<AlianzasBeneficiariosBloc>(context, listen: true);
+
+    final alianzasBeneficiarios =
+        alianzasBeneficiariosBloc.state.alianzasBeneficiarios;
 
     return Scaffold(
         drawer: BlocBuilder<MenuCubit, MenuState>(
@@ -45,10 +51,13 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
             );
           },
         ),
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.save),
-            onPressed: () =>
-                Navigator.pushNamed(context, 'NewEditVBeneficiarioAlianza')),
+        floatingActionButton: alianzasBeneficiarios != null &&
+                alianzasBeneficiarios.isEmpty
+            ? FloatingActionButton(
+                child: const Icon(Icons.save),
+                onPressed: () =>
+                    Navigator.pushNamed(context, 'NewEditVBeneficiarioAlianza'))
+            : null,
         appBar: AppBar(title: const Text('Consulta'), actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -77,8 +86,8 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
                           Center(child: NoDataSvg(title: 'No hay resultados')));
                 }
                 return AlianzasBeneficiariosRows(
-                    alianzasBeneficiarios: alianzasBeneficiarios,
-                    subtitleStyle: Styles.subtitleStyle);
+                  alianzasBeneficiarios: alianzasBeneficiarios,
+                );
               }
               return Container();
             },

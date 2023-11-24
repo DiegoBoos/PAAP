@@ -39,13 +39,4 @@ class VisitaError extends VisitaState {
   List<Object?> get props => [message];
 }
 
-VisitaEntity initObject() => VisitaEntity(
-    perfilId: '',
-    tipoVisitaId: '',
-    fechaInicial: '',
-    fechaFinal: '',
-    estadoVisitaId: '',
-    observacion: '',
-    usuarioId: '',
-    fechaRegistro: '',
-    recordStatus: '');
+VisitaEntity initObject() => VisitaEntity();

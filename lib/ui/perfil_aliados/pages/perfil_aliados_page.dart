@@ -9,7 +9,7 @@ import '../../perfiles/widgets/perfil_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
-import '../widgets/perfil_aliados_rows.dart';
+import 'perfil_aliados_rows.dart';
 
 class PerfilAliadosPage extends StatefulWidget {
   const PerfilAliadosPage({super.key});
@@ -27,7 +27,7 @@ class _PerfilAliadosPageState extends State<PerfilAliadosPage> {
     final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
 
     final perfilId = vPerfilCubit.state.vPerfil!.perfilId;
-    perfilAliadosBloc.add(GetPerfilAliados(perfilId));
+    perfilAliadosBloc.add(GetPerfilAliados(perfilId!));
   }
 
   @override

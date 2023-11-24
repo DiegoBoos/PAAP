@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/perfil_cofinanciador_entity.dart';
 import '../../cubits/perfil_cofinanciador/perfil_cofinanciador_cubit.dart';
 import '../../../domain/entities/cofinanciador_entity.dart';
 import '../../utils/input_decoration.dart';
 
 class PerfilCofinanciadorForm extends StatefulWidget {
-  const PerfilCofinanciadorForm(
-      {super.key,
-      required this.perfilCofinanciador,
-      required this.cofinanciadores});
-  final PerfilCofinanciadorEntity? perfilCofinanciador;
+  const PerfilCofinanciadorForm({super.key, required this.cofinanciadores});
   final List<CofinanciadorEntity> cofinanciadores;
 
   @override
@@ -31,25 +26,31 @@ class _PerfilCofinanciadorFormState extends State<PerfilCofinanciadorForm> {
   void initState() {
     super.initState();
 
+    final perfilCofinanciadorCubit =
+        BlocProvider.of<PerfilCofinanciadorCubit>(context);
+
+    final perfilCofinanciador =
+        perfilCofinanciadorCubit.state.perfilCofinanciador;
+
     setState(() {
       cofinanciadoresFiltered = widget.cofinanciadores
           .where((cofinanciador) =>
-              cofinanciador.municipio == widget.perfilCofinanciador?.municipio)
+              cofinanciador.municipio == perfilCofinanciador.municipio)
           .toList();
 
-      cofinanciadorId = widget.perfilCofinanciador?.cofinanciadorId;
+      cofinanciadorId = perfilCofinanciador.cofinanciadorId;
 
       if (cofinanciadorId != null) {
         final initialCofinanciador = cofinanciadoresFiltered.firstWhere(
           (cofinanciador) =>
-              cofinanciador.id == widget.perfilCofinanciador?.cofinanciadorId,
+              cofinanciador.id == perfilCofinanciador.cofinanciadorId,
         );
         _cofinanciadorController =
             TextEditingController(text: initialCofinanciador.nombre);
       }
 
-      participacionCtrl.text = widget.perfilCofinanciador?.participacion ?? '';
-      montoCtrl.text = widget.perfilCofinanciador?.monto ?? '';
+      participacionCtrl.text = perfilCofinanciador.participacion ?? '';
+      montoCtrl.text = perfilCofinanciador.monto ?? '';
     });
   }
 
@@ -80,13 +81,13 @@ class _PerfilCofinanciadorFormState extends State<PerfilCofinanciadorForm> {
           Autocomplete<CofinanciadorEntity>(
               optionsBuilder: (TextEditingValue textEditingValue) {
                 return cofinanciadoresFiltered.where((cofinanciador) {
-                  return cofinanciador.nombre
+                  return cofinanciador.nombre!
                       .toLowerCase()
                       .contains(textEditingValue.text.toLowerCase());
                 });
               },
               displayStringForOption: (CofinanciadorEntity option) =>
-                  option.nombre,
+                  option.nombre!,
               fieldViewBuilder: (BuildContext context,
                   TextEditingController textEditingController,
                   FocusNode focusNode,

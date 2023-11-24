@@ -121,7 +121,7 @@ class LogPage extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final log = syncLog[index];
                   return ListTile(
-                      title: Text(log.tabla),
+                      title: Text(log.tabla!),
                       subtitle: Text('${log.cantidadRegistros}'));
                 },
                 separatorBuilder: ((_, __) => const Divider()),

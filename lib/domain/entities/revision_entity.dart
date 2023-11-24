@@ -1,8 +1,8 @@
 class RevisionEntity {
-  RevisionEntity({required this.revisionId, required this.nombre});
+  RevisionEntity({this.revisionId, this.nombre});
 
-  String revisionId;
-  String nombre;
+  String? revisionId;
+  String? nombre;
 
   Map<String, dynamic> toJson() => {"RevisionId": revisionId, "Nombre": nombre};
 }

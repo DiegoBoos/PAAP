@@ -1,11 +1,11 @@
 import 'package:paap/domain/entities/unidad_entity.dart';
 
 class UnidadModel extends UnidadEntity {
-  UnidadModel({required String unidadId, String? nombre, String? simbolo})
+  UnidadModel({String? unidadId, String? nombre, String? simbolo})
       : super(
           unidadId: unidadId,
-          nombre: nombre ?? '',
-          simbolo: simbolo ?? '',
+          nombre: nombre,
+          simbolo: simbolo,
         );
 
   factory UnidadModel.fromJson(Map<String, dynamic> json) => UnidadModel(

@@ -11,7 +11,7 @@ class VeredaCubit extends Cubit<VeredaState> {
 
   VeredaCubit({required this.veredaDB}) : super(VeredasInitial());
 
-  Future<void> getVeredasByMunicipioDB(String municipioId) async {
+  void getVeredasByMunicipioDB(String municipioId) async {
     final result = await veredaDB.getVeredasByMunicipioUsecaseDB(municipioId);
     result.fold((failure) => emit(VeredasError(failure.properties.first)),
         (data) => emit(VeredasLoaded(data)));

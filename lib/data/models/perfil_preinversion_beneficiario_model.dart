@@ -3,8 +3,8 @@ import '../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 class PerfilPreInversionBeneficiarioModel
     extends PerfilPreInversionBeneficiarioEntity {
   PerfilPreInversionBeneficiarioModel({
-    required String perfilPreInversionId,
-    required String beneficiarioId,
+    String? perfilPreInversionId,
+    String? beneficiarioId,
     String? municipioId,
     String? veredaId,
     String? areaFinca,

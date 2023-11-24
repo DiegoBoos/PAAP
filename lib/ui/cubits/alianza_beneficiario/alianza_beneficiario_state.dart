@@ -9,7 +9,8 @@ abstract class AlianzaBeneficiarioState extends Equatable {
 }
 
 class AlianzaBeneficiarioInitial extends AlianzaBeneficiarioState {
-  AlianzaBeneficiarioInitial() : super(alianzaBeneficiario: initObject());
+  AlianzaBeneficiarioInitial()
+      : super(alianzaBeneficiario: AlianzaBeneficiarioEntity());
 }
 
 class AlianzaBeneficiarioLoaded extends AlianzaBeneficiarioState {
@@ -34,62 +35,7 @@ class AlianzaBeneficiarioError extends AlianzaBeneficiarioState {
   final String message;
 
   AlianzaBeneficiarioError(this.message)
-      : super(alianzaBeneficiario: initObject());
+      : super(alianzaBeneficiario: AlianzaBeneficiarioEntity());
   @override
   List<Object?> get props => [message];
-}
-
-AlianzaBeneficiarioEntity initObject() {
-  return AlianzaBeneficiarioEntity(
-      alianzaId: '',
-      beneficiarioId: '',
-      municipioId: '',
-      veredaId: '',
-      areaFinca: '',
-      areaProyecto: '',
-      tipoTenenciaId: '',
-      experiencia: '',
-      asociado: '',
-      conocePerfil: '',
-      fueBeneficiado: '',
-      cualBeneficio: '',
-      beneficioId: '',
-      activo: '',
-      miembrosHogar: '',
-      miembrosEcoActivos: '',
-      residenciaId: '',
-      accesoExplotacionTierra: '',
-      gastosMensuales: '',
-      mesesAsociado: '',
-      nombreOrganizacion: '',
-      activoInmobiliario: '',
-      activoFinanciero: '',
-      activoProductivo: '',
-      activoCorriente: '',
-      nota: '',
-      nombreFinca: '',
-      nivelEscolarId: '',
-      cotizanteBeps: '',
-      estadoCivilId: '',
-      calificacionSisben: '',
-      ingresosMensuales: '',
-      tipoDiscapacidadId: '',
-      conyugeTipoIdentificacionId: '',
-      conyugeId: '',
-      conyugeNombre1: '',
-      conyugeNombre2: '',
-      conyugeApellido1: '',
-      conyugeApellido2: '',
-      conyugeGeneroId: '',
-      conyugeFechaExpedicionDocumento: '',
-      conyugeGrupoEspecialId: '',
-      conyugeFechaNacimiento: '',
-      conyugeIngresosMensuales: '',
-      actividadEconomicaId: '',
-      ingresosDiarios: '',
-      diasTrabajo: '',
-      longitud: '',
-      latitud: '',
-      cedulaCatastral: '',
-      recordStatus: '');
 }

@@ -1,14 +1,11 @@
 class OpcionEntity {
   OpcionEntity(
-      {required this.opcionId,
-      required this.nombre,
-      required this.calificacion,
-      required this.criterioId});
+      {this.opcionId, this.nombre, this.calificacion, this.criterioId});
 
-  String opcionId;
-  String nombre;
-  String calificacion;
-  String criterioId;
+  String? opcionId;
+  String? nombre;
+  String? calificacion;
+  String? criterioId;
 
   Map<String, dynamic> toJson() => {
         "OpcionId": opcionId,

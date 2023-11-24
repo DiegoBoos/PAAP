@@ -1,7 +1,7 @@
 class PerfilPreInversionBeneficiarioEntity {
   PerfilPreInversionBeneficiarioEntity({
-    required this.perfilPreInversionId,
-    required this.beneficiarioId,
+    this.perfilPreInversionId,
+    this.beneficiarioId,
     this.municipioId,
     this.veredaId,
     this.areaFinca,
@@ -55,8 +55,8 @@ class PerfilPreInversionBeneficiarioEntity {
     this.recordStatus,
   });
 
-  String perfilPreInversionId;
-  String beneficiarioId;
+  String? perfilPreInversionId;
+  String? beneficiarioId;
   String? municipioId;
   String? veredaId;
   String? areaFinca;

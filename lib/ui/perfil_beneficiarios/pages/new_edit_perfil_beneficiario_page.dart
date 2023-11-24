@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/perfil_beneficiario_entity.dart';
 import '../../blocs/perfil_beneficiarios/perfil_beneficiarios_bloc.dart';
 import '../../cubits/menu/menu_cubit.dart';
 import '../../cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
@@ -24,8 +23,10 @@ class NewEditPerfilBeneficiarioPage extends StatelessWidget {
         BlocProvider.of<PerfilBeneficiariosBloc>(context);
     final perfilBeneficiarioCubit =
         BlocProvider.of<PerfilBeneficiarioCubit>(context);
-    final perfilBeneficiario =
-        ModalRoute.of(context)!.settings.arguments as PerfilBeneficiarioEntity?;
+
+    final perfilId = vPerfilCubit.state.vPerfil!.perfilId!;
+
+    final perfilBeneficiario = perfilBeneficiarioCubit.state.perfilBeneficiario;
 
     return BlocListener<PerfilBeneficiarioCubit, PerfilBeneficiarioState>(
         listener: (context, state) {
@@ -37,8 +38,7 @@ class NewEditPerfilBeneficiarioPage extends StatelessWidget {
             CustomSnackBar.showSnackBar(
                 context, 'Datos guardados satisfactoriamente', Colors.green);
 
-            perfilBeneficiariosBloc.add(
-                GetPerfilBeneficiarios(vPerfilCubit.state.vPerfil!.perfilId));
+            perfilBeneficiariosBloc.add(GetPerfilBeneficiarios(perfilId));
           }
         },
         child: Scaffold(
@@ -51,9 +51,8 @@ class NewEditPerfilBeneficiarioPage extends StatelessWidget {
             },
           ),
           appBar: AppBar(
-              title: Text(perfilBeneficiario?.beneficiarioId == ''
-                  ? 'Crear'
-                  : 'Editar'),
+              title: Text(
+                  perfilBeneficiario.beneficiarioId == '' ? 'Crear' : 'Editar'),
               actions: const [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -78,8 +77,7 @@ class NewEditPerfilBeneficiarioPage extends StatelessWidget {
 
                         formKey.currentState!.save();
 
-                        perfilBeneficiarioCubit.savePerfilBeneficiarioDB(
-                            perfilBeneficiarioCubit.state.perfilBeneficiario);
+                        perfilBeneficiarioCubit.savePerfilBeneficiarioDB();
                       },
                     ),
                     const SizedBox(height: 10)

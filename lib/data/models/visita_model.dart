@@ -2,25 +2,25 @@ import '../../domain/entities/visita_entity.dart';
 
 class VisitaModel extends VisitaEntity {
   VisitaModel({
-    required String perfilId,
-    required String tipoVisitaId,
+    String? perfilId,
+    String? tipoVisitaId,
     String? fechaInicial,
     String? fechaFinal,
-    required String estadoVisitaId,
+    String? estadoVisitaId,
     String? observacion,
-    required String usuarioId,
+    String? usuarioId,
     String? fechaRegistro,
     String? recordStatus,
   }) : super(
           perfilId: perfilId,
           tipoVisitaId: tipoVisitaId,
-          fechaInicial: fechaInicial ?? '',
-          fechaFinal: fechaFinal ?? '',
+          fechaInicial: fechaInicial,
+          fechaFinal: fechaFinal,
           estadoVisitaId: estadoVisitaId,
-          observacion: observacion ?? '',
+          observacion: observacion,
           usuarioId: usuarioId,
-          fechaRegistro: fechaRegistro ?? '',
-          recordStatus: recordStatus ?? '',
+          fechaRegistro: fechaRegistro,
+          recordStatus: recordStatus,
         );
 
   factory VisitaModel.fromJson(Map<String, dynamic> json) => VisitaModel(

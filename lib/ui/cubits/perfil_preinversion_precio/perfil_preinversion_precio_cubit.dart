@@ -24,15 +24,14 @@ class PerfilPreInversionPrecioCubit
         (data) => emit(PerfilPreInversionPrecioLoaded(data!)));
   }
 
-  Future<void> savePerfilPreInversionPrecioDB(
-      PerfilPreInversionPrecioEntity perfilPreInversionPrecioEntity) async {
+  void savePerfilPreInversionPrecioDB() async {
     final result = await perfilPreInversionPrecioDB
-        .savePerfilPreInversionPrecioUsecaseDB(perfilPreInversionPrecioEntity);
+        .savePerfilPreInversionPrecioUsecaseDB(state.perfilPreInversionPrecio);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionPrecioError(failure.properties.first)),
         (data) => emit(PerfilPreInversionPrecioSaved(
-            perfilPreInversionPrecio: perfilPreInversionPrecioEntity)));
+            perfilPreInversionPrecio: state.perfilPreInversionPrecio)));
   }
 
   void changePerfilPreInversionId(String perfilPreInversionId) {

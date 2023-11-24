@@ -1,37 +1,37 @@
 class ConsultorEntity {
   ConsultorEntity({
-    required this.consultorId,
-    required this.nombre1,
-    required this.nombre2,
-    required this.apellido1,
-    required this.apellido2,
-    required this.generoId,
-    required this.fechaNacimiento,
-    required this.fechaExpedicionDocumento,
-    required this.direccion,
-    required this.telefonoFijo,
-    required this.telefonoMovil,
-    required this.experiencia,
-    required this.activo,
-    required this.usuarioId,
-    required this.consultor,
+    this.consultorId,
+    this.nombre1,
+    this.nombre2,
+    this.apellido1,
+    this.apellido2,
+    this.generoId,
+    this.fechaNacimiento,
+    this.fechaExpedicionDocumento,
+    this.direccion,
+    this.telefonoFijo,
+    this.telefonoMovil,
+    this.experiencia,
+    this.activo,
+    this.usuarioId,
+    this.consultor,
   });
 
-  String consultorId;
-  String nombre1;
-  String nombre2;
-  String apellido1;
-  String apellido2;
-  String generoId;
-  String fechaNacimiento;
-  String fechaExpedicionDocumento;
-  String direccion;
-  String telefonoFijo;
-  String telefonoMovil;
-  String experiencia;
-  String activo;
-  String usuarioId;
-  String consultor;
+  String? consultorId;
+  String? nombre1;
+  String? nombre2;
+  String? apellido1;
+  String? apellido2;
+  String? generoId;
+  String? fechaNacimiento;
+  String? fechaExpedicionDocumento;
+  String? direccion;
+  String? telefonoFijo;
+  String? telefonoMovil;
+  String? experiencia;
+  String? activo;
+  String? usuarioId;
+  String? consultor;
 
   Map<String, dynamic> toJson() => {
         "ConsultorId": consultorId,

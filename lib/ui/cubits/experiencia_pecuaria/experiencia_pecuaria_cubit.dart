@@ -29,10 +29,9 @@ class ExperienciaPecuariaCubit extends Cubit<ExperienciaPecuariaState> {
     });
   }
 
-  void saveExperienciaPecuariaDB(
-      ExperienciaPecuariaEntity experienciaPecuariaEntity) async {
+  void saveExperienciaPecuariaDB() async {
     final result = await experienciaPecuariaDB
-        .saveExperienciaPecuariaUsecaseDB(experienciaPecuariaEntity);
+        .saveExperienciaPecuariaUsecaseDB(state.experienciaPecuaria);
     result.fold(
         (failure) => emit(ExperienciaPecuariaError(failure.properties.first)),
         (data) => emit(ExperienciaPecuariaSaved()));

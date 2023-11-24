@@ -57,15 +57,7 @@ class PerfilPreInversionIngresosUPTError
 
 VPerfilPreInversionPlanNegocioEntity _initObject() =>
     VPerfilPreInversionPlanNegocioEntity(
-        actividadFinancieraId: '',
-        actividadFinanciera: '',
-        rubroId: '',
-        rubro: '',
-        unidadId: '',
-        unidad: '',
-        year: '',
-        cantidad: '',
-        valor: '',
-        productoId: '',
-        tipoCalidadId: '',
-        porcentaje: '');
+      year: '',
+      cantidad: '',
+      valor: '',
+    );

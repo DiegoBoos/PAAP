@@ -26,19 +26,17 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
 
   void initState() => emit(AlianzaBeneficiarioInitial());
 
-  void selectAlianzaBeneficiario(
-      AlianzaBeneficiarioEntity alianzaBeneficiario) {
+  void setAlianzaBeneficiario(AlianzaBeneficiarioEntity alianzaBeneficiario) {
     emit(AlianzaBeneficiarioLoaded(alianzaBeneficiario));
   }
 
-  void saveAlianzaBeneficiarioDB(
-      AlianzaBeneficiarioEntity alianzaBeneficiarioEntity) async {
+  void saveAlianzaBeneficiarioDB() async {
     final result = await alianzaBeneficiarioDB
-        .saveAlianzaBeneficiarioUsecaseDB(alianzaBeneficiarioEntity);
+        .saveAlianzaBeneficiarioUsecaseDB(state.alianzaBeneficiario);
     result.fold(
         (failure) => emit(AlianzaBeneficiarioError(failure.properties.first)),
         (data) => emit(AlianzaBeneficiarioSaved(
-            alianzaBeneficiario: alianzaBeneficiarioEntity)));
+            alianzaBeneficiario: state.alianzaBeneficiario)));
   }
 
   void changeMunicipioId(String value) {

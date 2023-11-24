@@ -26,7 +26,7 @@ class _PerfilBeneficiariosPageState extends State<PerfilBeneficiariosPage> {
     final perfilBeneficiariosBloc =
         BlocProvider.of<PerfilBeneficiariosBloc>(context);
 
-    final perfilId = vPerfilCubit.state.vPerfil!.perfilId;
+    final perfilId = vPerfilCubit.state.vPerfil!.perfilId!;
     perfilBeneficiariosBloc.add(GetPerfilBeneficiarios(perfilId));
   }
 

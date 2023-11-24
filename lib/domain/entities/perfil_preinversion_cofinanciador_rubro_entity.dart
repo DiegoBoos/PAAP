@@ -1,27 +1,27 @@
 class PerfilPreInversionCofinanciadorRubroEntity {
   PerfilPreInversionCofinanciadorRubroEntity({
-    required this.perfilPreInversionId,
+    this.perfilPreInversionId,
     this.cofinanciadorId,
     this.desembolsoId,
     this.actividadFinancieraId,
     this.rubroId,
-    required this.valor,
+    this.valor,
     this.actividadFinanciera,
     this.rubro,
     this.desembolso,
-    required this.recordStatus,
+    this.recordStatus,
   });
 
-  String perfilPreInversionId;
+  String? perfilPreInversionId;
   String? cofinanciadorId;
   String? desembolsoId;
   String? actividadFinancieraId;
   String? rubroId;
-  String valor;
+  String? valor;
   String? actividadFinanciera;
   String? rubro;
   String? desembolso;
-  String recordStatus;
+  String? recordStatus;
 
   PerfilPreInversionCofinanciadorRubroEntity copyWith({
     String? perfilPreInversionId,

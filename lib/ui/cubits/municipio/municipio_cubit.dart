@@ -13,7 +13,7 @@ class MunicipioCubit extends Cubit<MunicipioState> {
 
   void initState() => emit(MunicipiosInitial());
 
-  Future<void> getMunicipiosDB() async {
+  void getMunicipiosDB() async {
     final result = await municipioDB.getMunicipiosUsecaseDB();
     result.fold((failure) => emit(MunicipiosError(failure.properties.first)),
         (data) => emit(MunicipiosLoaded(data)));

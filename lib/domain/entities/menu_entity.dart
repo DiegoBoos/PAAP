@@ -1,21 +1,21 @@
 class MenuEntity {
   MenuEntity({
-    required this.menuId,
-    required this.nombre,
-    required this.ruta,
-    required this.icono,
-    required this.orden,
-    required this.menuPadre,
-    required this.tipoMenuId,
+    this.menuId,
+    this.nombre,
+    this.ruta,
+    this.icono,
+    this.orden,
+    this.menuPadre,
+    this.tipoMenuId,
   });
 
-  final String menuId;
-  final String nombre;
-  final String ruta;
-  final String icono;
-  final String orden;
-  final String menuPadre;
-  final String tipoMenuId;
+  String? menuId;
+  String? nombre;
+  String? ruta;
+  String? icono;
+  String? orden;
+  String? menuPadre;
+  String? tipoMenuId;
 
   Map<String, dynamic> toJson() => {
         "MenuId": menuId,

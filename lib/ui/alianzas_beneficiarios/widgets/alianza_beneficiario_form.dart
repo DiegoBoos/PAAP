@@ -13,7 +13,6 @@ import '../../../domain/entities/estado_civil_entity.dart';
 import '../../../domain/entities/nivel_escolar_entity.dart';
 import '../../../domain/entities/residencia_entity.dart';
 import '../../../domain/entities/tipo_discapacidad_entity.dart';
-import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
@@ -58,12 +57,39 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
-    if (alianzaBeneficiarioCubit.state is AlianzaBeneficiarioLoaded) {
-      final alianzaBeneficiarioLoaded =
-          alianzaBeneficiarioCubit.state.alianzaBeneficiario;
+    final alianzaBeneficiario =
+        alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
-      loadAlianzaBeneficiario(alianzaBeneficiarioLoaded);
-    }
+    setState(() {
+      residenciaId = alianzaBeneficiario.residenciaId;
+      estadoCivilId = alianzaBeneficiario.estadoCivilId;
+      nivelEscolarId = alianzaBeneficiario.nivelEscolarId;
+      actividadEconomicaId = alianzaBeneficiario.actividadEconomicaId;
+      tipoDiscapacidadId = alianzaBeneficiario.tipoDiscapacidadId;
+      ingresosDiariosCtrl.text = alianzaBeneficiario.ingresosDiarios ?? '';
+      diasTrabajoCtrl.text = alianzaBeneficiario.diasTrabajo ?? '';
+      calificacionSisbenCtrl.text =
+          alianzaBeneficiario.calificacionSisben ?? '';
+      latitudCtrl.text = alianzaBeneficiario.latitud ?? '';
+      longitudCtrl.text = alianzaBeneficiario.longitud ?? '';
+      cedulaCatastralCtrl.text = alianzaBeneficiario.cedulaCatastral ?? '';
+      miembrosHogarCtrl.text = alianzaBeneficiario.miembrosHogar ?? '';
+      miembrosEcoActivosCtrl.text =
+          alianzaBeneficiario.miembrosEcoActivos ?? '';
+      ingresosMensualesCtrl.text = alianzaBeneficiario.ingresosMensuales ?? '';
+      gastosMensualesCtrl.text = alianzaBeneficiario.gastosMensuales ?? '';
+      activoInmobiliarioCtrl.text =
+          alianzaBeneficiario.activoInmobiliario ?? '';
+      activoFinancieroCtrl.text = alianzaBeneficiario.activoFinanciero ?? '';
+      activoProductivoCtrl.text = alianzaBeneficiario.activoProductivo ?? '';
+      activoCorrienteCtrl.text = alianzaBeneficiario.activoCorriente ?? '';
+      nombreFincaCtrl.text = alianzaBeneficiario.nombreFinca ?? '';
+      nombreOrganizacionCtrl.text =
+          alianzaBeneficiario.nombreOrganizacion ?? '';
+      mesesAsociadoCtrl.text = alianzaBeneficiario.mesesAsociado ?? '';
+      notaCtrl.text = alianzaBeneficiario.nota ?? '';
+      calculateTotalActivo(alianzaBeneficiario);
+    });
   }
 
   @override
@@ -72,51 +98,13 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
     BlocProvider.of<AlianzaBeneficiarioCubit>(context).initState();
   }
 
-  void loadAlianzaBeneficiario(
-      AlianzaBeneficiarioEntity alianzaBeneficiarioLoaded) {
-    residenciaId = alianzaBeneficiarioLoaded.residenciaId;
-    estadoCivilId = alianzaBeneficiarioLoaded.estadoCivilId;
-    nivelEscolarId = alianzaBeneficiarioLoaded.nivelEscolarId;
-    actividadEconomicaId = alianzaBeneficiarioLoaded.actividadEconomicaId;
-    tipoDiscapacidadId = alianzaBeneficiarioLoaded.tipoDiscapacidadId;
-    ingresosDiariosCtrl.text = alianzaBeneficiarioLoaded.ingresosDiarios;
-    diasTrabajoCtrl.text = alianzaBeneficiarioLoaded.diasTrabajo;
-    calificacionSisbenCtrl.text = alianzaBeneficiarioLoaded.calificacionSisben;
-    latitudCtrl.text = alianzaBeneficiarioLoaded.latitud;
-    longitudCtrl.text = alianzaBeneficiarioLoaded.longitud;
-    cedulaCatastralCtrl.text = alianzaBeneficiarioLoaded.cedulaCatastral;
-    miembrosHogarCtrl.text = alianzaBeneficiarioLoaded.miembrosHogar;
-    miembrosEcoActivosCtrl.text = alianzaBeneficiarioLoaded.miembrosEcoActivos;
-    ingresosMensualesCtrl.text = alianzaBeneficiarioLoaded.ingresosMensuales;
-    gastosMensualesCtrl.text = alianzaBeneficiarioLoaded.gastosMensuales;
-    activoInmobiliarioCtrl.text = alianzaBeneficiarioLoaded.activoInmobiliario;
-    activoFinancieroCtrl.text = alianzaBeneficiarioLoaded.activoFinanciero;
-    activoProductivoCtrl.text = alianzaBeneficiarioLoaded.activoProductivo;
-    activoCorrienteCtrl.text = alianzaBeneficiarioLoaded.activoCorriente;
-    nombreFincaCtrl.text = alianzaBeneficiarioLoaded.nombreFinca;
-    nombreOrganizacionCtrl.text = alianzaBeneficiarioLoaded.nombreOrganizacion;
-    mesesAsociadoCtrl.text = alianzaBeneficiarioLoaded.mesesAsociado;
-    notaCtrl.text = alianzaBeneficiarioLoaded.nota;
-    calculateTotalActivo(alianzaBeneficiarioLoaded);
-  }
-
   @override
   Widget build(BuildContext context) {
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
-    return BlocListener<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
-        listener: (context, state) {
-      if (state is AlianzaBeneficiarioError) {
-        CustomSnackBar.showSnackBar(context, state.message, Colors.red);
-      }
-      if (state is AlianzaBeneficiarioLoaded) {
-        final alianzaBeneficiarioLoaded = state.alianzaBeneficiarioLoaded;
-
-        loadAlianzaBeneficiario(alianzaBeneficiarioLoaded);
-      }
-    }, child: BlocBuilder<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
-            builder: (context, state) {
+    return BlocBuilder<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
+        builder: (context, state) {
       final alianzaBeneficiario = state.alianzaBeneficiario;
       return Card(
         child: Padding(
@@ -139,7 +127,7 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
                           (ResidenciaEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.residenciaId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -170,7 +158,7 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
                               (EstadoCivilEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.estadoCivilId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -205,7 +193,7 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
                               (NivelEscolarEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.nivelEscolarId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -236,7 +224,7 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
                               (ActividadEconomicaEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.actividadEconomicaId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -267,7 +255,7 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
                               (TipoDiscapacidadEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.tipoDiscapacidadId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       onChanged: (String? value) {
@@ -596,16 +584,19 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
           ),
         ),
       );
-    }));
+    });
   }
 
-  void calculateTotalActivo(
-      AlianzaBeneficiarioEntity alianzaBeneficiarioLoaded) {
-    final sum = double.parse(alianzaBeneficiarioLoaded.activoCorriente) +
-        double.parse(alianzaBeneficiarioLoaded.activoFinanciero) +
-        double.parse(alianzaBeneficiarioLoaded.activoInmobiliario) +
-        double.parse(alianzaBeneficiarioLoaded.activoInmobiliario) +
-        double.parse(alianzaBeneficiarioLoaded.activoProductivo);
-    totalActivoCtrl.text = sum.toString();
+  void calculateTotalActivo(AlianzaBeneficiarioEntity alianzaBeneficiario) {
+    if (alianzaBeneficiario.activoCorriente != null &&
+        alianzaBeneficiario.activoFinanciero != null &&
+        alianzaBeneficiario.activoInmobiliario != null &&
+        alianzaBeneficiario.activoProductivo != null) {
+      final sum = double.parse(alianzaBeneficiario.activoCorriente!) +
+          double.parse(alianzaBeneficiario.activoFinanciero!) +
+          double.parse(alianzaBeneficiario.activoInmobiliario!) +
+          double.parse(alianzaBeneficiario.activoProductivo!);
+      totalActivoCtrl.text = sum.toString();
+    }
   }
 }

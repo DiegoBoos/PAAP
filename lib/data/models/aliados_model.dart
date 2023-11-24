@@ -2,20 +2,20 @@ import 'package:paap/domain/entities/aliados_entity.dart';
 
 class AliadosModel extends AliadosEntity {
   AliadosModel({
-    required String aliadoId,
+    String? aliadoId,
     String? nombre,
     String? nombreContacto,
     String? telefonoMovil,
     String? correo,
-    required String ciudad,
-    required String aniosExperiencia,
-    required String estado,
+    String? ciudad,
+    String? aniosExperiencia,
+    String? estado,
   }) : super(
             aliadoId: aliadoId,
-            nombre: nombre ?? '',
-            nombreContacto: nombreContacto ?? '',
-            telefonoMovil: telefonoMovil ?? '',
-            correo: correo ?? '',
+            nombre: nombre,
+            nombreContacto: nombreContacto,
+            telefonoMovil: telefonoMovil,
+            correo: correo,
             ciudad: ciudad,
             aniosExperiencia: aniosExperiencia,
             estado: estado);

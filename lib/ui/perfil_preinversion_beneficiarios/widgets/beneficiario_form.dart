@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 import '../../../ui/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../ui/cubits/genero/genero_cubit.dart';
 import '../../../ui/cubits/grupo_especial/grupo_especial_cubit.dart';
@@ -18,8 +17,7 @@ import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class BeneficiarioForm extends StatefulWidget {
-  const BeneficiarioForm({super.key, this.perfilPreInversionBeneficiario});
-  final PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario;
+  const BeneficiarioForm({super.key});
 
   @override
   State<BeneficiarioForm> createState() => _BeneficiarioFormState();
@@ -48,14 +46,38 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   void initState() {
     super.initState();
 
-    // pageViewController.addListener(() {
-    //   final sliderCubit = BlocProvider.of<SliderCubit>(context);
-    //   sliderCubit.showSlider(sliderCubit.state.sliderModel
-    //       .copyWith(currentPage: pageViewController.page!));
-    // });
-
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
-    loadBeneficiario(beneficiarioCubit.state.beneficiario);
+    final beneficiario = beneficiarioCubit.state.beneficiario;
+
+    loadBeneficiario(beneficiario);
+  }
+
+  void loadBeneficiario(BeneficiarioEntity beneficiario) {
+    setState(() {
+      tipoIdentificacionId = beneficiario.tipoIdentificacionId;
+      generoId = beneficiario.generoId;
+      grupoEspecialId = beneficiario.grupoEspecialId;
+      beneficiarioIdCtrl.text = beneficiario.beneficiarioId ?? '';
+
+      if (beneficiario.fechaExpedicionDocumento != null &&
+          beneficiario.fechaExpedicionDocumento != '') {
+        fechaExpedicionDocumentoCtrl.text = dateFormat
+            .format(DateTime.parse(beneficiario.fechaExpedicionDocumento!));
+      }
+
+      if (beneficiario.fechaNacimiento != null &&
+          beneficiario.fechaNacimiento != '') {
+        fechaNacimientoCtrl.text =
+            dateFormat.format(DateTime.parse(beneficiario.fechaNacimiento!));
+        calcularEdad(fechaNacimientoCtrl.text);
+      }
+
+      telefonoMovilCtrl.text = beneficiario.telefonoMovil ?? '';
+      nombre1Ctrl.text = beneficiario.nombre1 ?? '';
+      nombre2Ctrl.text = beneficiario.nombre2 ?? '';
+      apellido1Ctrl.text = beneficiario.apellido1 ?? '';
+      apellido2Ctrl.text = beneficiario.apellido2 ?? '';
+    });
   }
 
   @override
@@ -68,32 +90,6 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   void dispose() {
     pageViewController.dispose();
     super.dispose();
-  }
-
-  void loadBeneficiario(BeneficiarioEntity beneficiario) {
-    setState(() {
-      tipoIdentificacionId = beneficiario.tipoIdentificacionId;
-      generoId = beneficiario.generoId;
-      grupoEspecialId = beneficiario.grupoEspecialId;
-      beneficiarioIdCtrl.text = beneficiario.beneficiarioId;
-
-      if (beneficiario.fechaExpedicionDocumento != '') {
-        fechaExpedicionDocumentoCtrl.text = dateFormat
-            .format(DateTime.parse(beneficiario.fechaExpedicionDocumento));
-      }
-
-      if (beneficiario.fechaNacimiento != '') {
-        fechaNacimientoCtrl.text =
-            dateFormat.format(DateTime.parse(beneficiario.fechaNacimiento));
-        calcularEdad(fechaNacimientoCtrl.text);
-      }
-
-      telefonoMovilCtrl.text = beneficiario.telefonoMovil;
-      nombre1Ctrl.text = beneficiario.nombre1;
-      nombre2Ctrl.text = beneficiario.nombre2;
-      apellido1Ctrl.text = beneficiario.apellido1;
-      apellido2Ctrl.text = beneficiario.apellido2;
-    });
   }
 
   void calcularEdad(String fechaNacimiento) {
@@ -113,6 +109,9 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
 
     final perfilPreInversionBeneficiarioCubit =
         BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
+
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
     return BlocListener<BeneficiarioCubit, BeneficiarioState>(
         listener: (context, state) {
@@ -147,9 +146,6 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                 return null;
               },
               onFieldSubmitted: (String value) {
-                final perfilPreInversionId = vPerfilPreInversionCubit
-                    .state.vPerfilPreInversion!.perfilPreInversionId;
-
                 beneficiarioCubit.loadBeneficiario(value);
 
                 perfilPreInversionBeneficiarioCubit
@@ -177,7 +173,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                             (TipoIdentificacionEntity value) {
                       return DropdownMenuItem<String>(
                         value: value.tipoIdentificacionId,
-                        child: Text(value.nombre),
+                        child: Text(value.nombre!),
                       );
                     }).toList(),
                     onChanged: (String? value) {
@@ -391,7 +387,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                               (GeneroEntity value) {
                             return DropdownMenuItem<String>(
                               value: value.generoId,
-                              child: Text(value.nombre),
+                              child: Text(value.nombre!),
                             );
                           }).toList(),
                           validator: (value) {
@@ -425,7 +421,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
                             (GrupoEspecialEntity value) {
                       return DropdownMenuItem<String>(
                         value: value.grupoEspecialId,
-                        child: Text(value.nombre),
+                        child: Text(value.nombre!),
                       );
                     }).toList(),
                     validator: (value) {

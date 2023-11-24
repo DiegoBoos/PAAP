@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/perfil_aliado_entity.dart';
+import '../../cubits/perfil_aliado/perfil_aliado_cubit.dart';
 
 class PerfilAliadosTableSource extends DataTableSource {
   final BuildContext context;
@@ -12,14 +14,20 @@ class PerfilAliadosTableSource extends DataTableSource {
   DataRow getRow(int index) {
     final perfilAliado = perfilAliados[index];
 
+    final perfilAliadoCubit = BlocProvider.of<PerfilAliadoCubit>(context);
+
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
-        DataCell(Text(perfilAliado.aliadoId)),
+        DataCell(Text(perfilAliado.aliadoId!)),
         DataCell(TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, 'NewEditVPerfilAliado',
-                  arguments: perfilAliado);
+              perfilAliadoCubit.setPerfilAliado(perfilAliado);
+
+              Navigator.pushNamed(
+                context,
+                'NewEditVPerfilAliado',
+              );
             },
             child: Text(perfilAliado.aliado ?? ''))),
       ],

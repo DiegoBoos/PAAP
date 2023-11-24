@@ -6,6 +6,7 @@ import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 import '../../blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
 import '../../blocs/perfil_preinversion_cofinanciador_desembolsos/perfil_preinversion_cofinanciador_desembolsos_bloc.dart';
 import '../../blocs/perfil_preinversion_cofinanciador_rubros/perfil_preinversion_cofinanciador_rubros_bloc.dart';
+import '../../cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
 import '../../cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 import '../../cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
 import '../../cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
@@ -23,6 +24,11 @@ class PerfilPreInversionCofinanciadoresTableSource extends DataTableSource {
   DataRow getRow(int index) {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
+      context,
+    );
 
     final perfilPreInversionCofinanciadorDesembolsoCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
@@ -42,9 +48,14 @@ class PerfilPreInversionCofinanciadoresTableSource extends DataTableSource {
     final perfilPreInversionCofinanciador =
         perfilPreInversionCofinanciadores[index];
 
-    final monto =
-        NumberFormat.currency(locale: 'en_US', decimalDigits: 0, symbol: "\$")
-            .format(double.parse(perfilPreInversionCofinanciador.monto));
+    String? monto;
+
+    if (perfilPreInversionCofinanciador.monto != null &&
+        perfilPreInversionCofinanciador.monto != '') {
+      monto =
+          NumberFormat.currency(locale: 'en_US', decimalDigits: 0, symbol: "\$")
+              .format(double.parse(perfilPreInversionCofinanciador.monto!));
+    }
 
     return DataRow.byIndex(
       index: index,
@@ -56,33 +67,38 @@ class PerfilPreInversionCofinanciadoresTableSource extends DataTableSource {
                 : () async {
                     final navigator = Navigator.of(context);
 
-                    final vPerfilPreInversionId = vPerfilPreInversionCubit
-                        .state.vPerfilPreInversion!.perfilPreInversionId;
+                    final perfilPreInversionId = vPerfilPreInversionCubit
+                        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
                     final cofinanciadorId =
                         perfilPreInversionCofinanciador.cofinanciadorId!;
 
+                    // Asignar el perfilPreInversionId y cofinanciadorId al cubit de perfilPreInversionCofinanciador
+                    perfilPreInversionCofinanciadorCubit
+                        .setPerfilPreInversionCofinanciador(
+                            perfilPreInversionCofinanciador);
+
+                    // Obtener los desembolsos, actividades financieras y rubros
                     perfilPreInversionCofinanciadorDesembolsoCubit
                         .getPerfilPreInversionCofinanciadorDesembolso(
-                            vPerfilPreInversionId, cofinanciadorId);
+                            perfilPreInversionId, cofinanciadorId);
 
                     perfilPreInversionCofinanciadorActividadFinancieraCubit
                         .getPerfilPreInversionCofinanciadorActividadFinanciera(
-                      vPerfilPreInversionId,
+                      perfilPreInversionId,
                       cofinanciadorId,
                     );
 
                     perfilPreInversionCofinanciadorRubroCubit
                         .getPerfilPreInversionCofinanciadorRubro(
-                      vPerfilPreInversionId,
+                      perfilPreInversionId,
                       cofinanciadorId,
                     );
 
-                    navigator.pushNamed('NewEditVCofinanciadorPreInversion',
-                        arguments: perfilPreInversionCofinanciador);
+                    navigator.pushNamed('NewEditVCofinanciadorPreInversion');
                   },
             child: Text(perfilPreInversionCofinanciador.nombre!))),
-        DataCell(Text(monto)),
+        DataCell(Text(monto!)),
       ],
     );
   }
@@ -153,7 +169,7 @@ class _PerfilPreInversionCofinanciadorRowsState
     final perfilPreInversionCofinanciadorRubrosBloc =
         BlocProvider.of<PerfilPreInversionCofinanciadorRubrosBloc>(context);
     final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId;
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
     return MultiBlocListener(
         listeners: [

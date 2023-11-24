@@ -48,27 +48,25 @@ class _PerfilPreInversionPrecioFormState
   Future<void> loadAccesories() async {
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
+
     final perfilPreInversionPrecioCubit =
         BlocProvider.of<PerfilPreInversionPrecioCubit>(context);
+
     final productoCubit = BlocProvider.of<ProductoCubit>(context);
 
-    await productoCubit.getProductosDB(vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId);
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
-    if (perfilPreInversionPrecioCubit.state is PerfilPreInversionPrecioLoaded) {
-      final perfilPreInversionPrecioLoaded =
-          perfilPreInversionPrecioCubit.state.perfilPreInversionPrecio;
-      loadPerfilPreInversionPrecio(perfilPreInversionPrecioLoaded);
-    }
-  }
+    final perfilPreInversionPrecio =
+        perfilPreInversionPrecioCubit.state.perfilPreInversionPrecio;
 
-  void loadPerfilPreInversionPrecio(
-      PerfilPreInversionPrecioEntity perfilPreInversionPrecioLoaded) {
-    productoId = perfilPreInversionPrecioLoaded.productoId;
-    tipoCalidadId = perfilPreInversionPrecioLoaded.tipoCalidadId;
-    precioCtrl.text = perfilPreInversionPrecioLoaded.precio;
+    productoCubit.getProductosDB(perfilPreInversionId);
 
-    setState(() {});
+    setState(() {
+      productoId = perfilPreInversionPrecio.productoId;
+      tipoCalidadId = perfilPreInversionPrecio.tipoCalidadId;
+      precioCtrl.text = perfilPreInversionPrecio.precio ?? '';
+    });
   }
 
   @override
@@ -82,154 +80,161 @@ class _PerfilPreInversionPrecioFormState
     final perfilPreInversionIngresosUPTCubit =
         BlocProvider.of<PerfilPreInversionIngresosUPTCubit>(context);
 
-    return Form(
-      key: formKeyPerfilPreInversionPrecio,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const Text(
-                'Precio Por Calidad Asignada',
-                style: Styles.titleStyle,
-              ),
-              const SizedBox(height: 20),
-              const SizedBox(height: 20),
-              BlocBuilder<ProductoCubit, ProductoState>(
-                builder: (context, state) {
-                  if (state is ProductosLoaded) {
-                    return DropdownButtonFormField(
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Producto', labelText: 'Producto'),
-                      isExpanded: true,
-                      value: productoId,
-                      items: state.productos!.map<DropdownMenuItem<String>>(
-                          (ProductoEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.id,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        perfilPreInversionIngresosUPTCubit
-                            .changeProducto(value);
-                        perfilPreInversionPrecioCubit.changeProducto(value);
-                      },
-                    );
-                  }
-                  return Container();
-                },
-              ),
-              const SizedBox(height: 20),
-              BlocBuilder<TipoCalidadCubit, TipoCalidadState>(
-                builder: (context, state) {
-                  if (state is TiposCalidadesLoaded) {
-                    return DropdownButtonFormField(
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Tipo Calidad', labelText: 'Tipo Calidad'),
-                      isExpanded: true,
-                      value: tipoCalidadId,
-                      items: state.tiposCalidades!
-                          .map<DropdownMenuItem<String>>(
-                              (TipoCalidadEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.tipoCalidadId,
-                          child: Text(value.nombre),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        perfilPreInversionIngresosUPTCubit
-                            .changeTipoCalidad(value);
-                        perfilPreInversionPrecioCubit.changeTipoCalidad(value);
-                      },
-                    );
-                  }
-                  return Container();
-                },
-              ),
-              const SizedBox(height: 20),
-              BlocBuilder<PerfilPreInversionPrecioCubit,
-                  PerfilPreInversionPrecioState>(
-                builder: (context, state) {
-                  return Column(
-                    children: [
-                      TextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: precioCtrl,
-                          decoration: CustomInputDecoration.inputDecoration(
-                              hintText: 'Precio', labelText: 'Precio'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Campo Requerido';
-                            }
-                            return null;
-                          },
-                          onSaved: (String? newValue) {
-                            perfilPreInversionPrecioCubit
-                                .changePrecio(newValue);
-                          }),
-                      const SizedBox(height: 20),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: FloatingActionButton(
-                            heroTag: 'btn-add-precio',
-                            onPressed: () async {
-                              if (!formKeyPerfilPreInversionPrecio.currentState!
-                                  .validate()) {
-                                return;
+    final perfilesPreInversionesPreciosBloc =
+        BlocProvider.of<PerfilesPreInversionesPreciosBloc>(
+      context,
+    );
+
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
+
+    return BlocListener<PerfilesPreInversionesPreciosBloc,
+        PerfilesPreInversionesPreciosState>(
+      listener: (context, state) {
+        if (state is PerfilesPreInversionesPreciosSaved) {
+          perfilesPreInversionesPreciosBloc
+              .add(GetPerfilesPreInversionesPrecios(perfilPreInversionId));
+        }
+      },
+      child: Form(
+        key: formKeyPerfilPreInversionPrecio,
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const Text(
+                  'Precio Por Calidad Asignada',
+                  style: Styles.titleStyle,
+                ),
+                const SizedBox(height: 20),
+                const SizedBox(height: 20),
+                BlocBuilder<ProductoCubit, ProductoState>(
+                  builder: (context, state) {
+                    if (state is ProductosLoaded) {
+                      return DropdownButtonFormField(
+                        decoration: CustomInputDecoration.inputDecoration(
+                            hintText: 'Producto', labelText: 'Producto'),
+                        isExpanded: true,
+                        value: productoId,
+                        items: state.productos!.map<DropdownMenuItem<String>>(
+                            (ProductoEntity value) {
+                          return DropdownMenuItem<String>(
+                            value: value.id,
+                            child: Text(value.nombre!),
+                          );
+                        }).toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Campo Requerido';
+                          }
+                          return null;
+                        },
+                        onChanged: (String? value) {
+                          perfilPreInversionIngresosUPTCubit
+                              .changeProducto(value);
+                          perfilPreInversionPrecioCubit.changeProducto(value);
+                        },
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+                const SizedBox(height: 20),
+                BlocBuilder<TipoCalidadCubit, TipoCalidadState>(
+                  builder: (context, state) {
+                    if (state is TiposCalidadesLoaded) {
+                      return DropdownButtonFormField(
+                        decoration: CustomInputDecoration.inputDecoration(
+                            hintText: 'Tipo Calidad',
+                            labelText: 'Tipo Calidad'),
+                        isExpanded: true,
+                        value: tipoCalidadId,
+                        items: state.tiposCalidades!
+                            .map<DropdownMenuItem<String>>(
+                                (TipoCalidadEntity value) {
+                          return DropdownMenuItem<String>(
+                            value: value.tipoCalidadId,
+                            child: Text(value.nombre!),
+                          );
+                        }).toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Campo Requerido';
+                          }
+                          return null;
+                        },
+                        onChanged: (String? value) {
+                          perfilPreInversionIngresosUPTCubit
+                              .changeTipoCalidad(value);
+                          perfilPreInversionPrecioCubit
+                              .changeTipoCalidad(value);
+                        },
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+                const SizedBox(height: 20),
+                BlocBuilder<PerfilPreInversionPrecioCubit,
+                    PerfilPreInversionPrecioState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller: precioCtrl,
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Precio', labelText: 'Precio'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Campo Requerido';
                               }
-
-                              formKeyPerfilPreInversionPrecio.currentState!
-                                  .save();
-
-                              perfilPreInversionPrecioCubit
-                                  .changePerfilPreInversionId(
-                                      vPerfilPreInversionCubit
-                                          .state
-                                          .vPerfilPreInversion!
-                                          .perfilPreInversionId);
-
-                              await perfilPreInversionPrecioCubit
-                                  .savePerfilPreInversionPrecioDB(
-                                      perfilPreInversionPrecioCubit
-                                          .state.perfilPreInversionPrecio)
-                                  .whenComplete(() {
-                                final perfilesPreInversionesPreciosBloc =
-                                    BlocProvider.of<
-                                        PerfilesPreInversionesPreciosBloc>(
-                                  context,
-                                );
-
-                                perfilesPreInversionesPreciosBloc.add(
-                                    GetPerfilesPreInversionesPrecios(
-                                        vPerfilPreInversionCubit
-                                            .state
-                                            .vPerfilPreInversion!
-                                            .perfilPreInversionId));
-                              });
+                              return null;
                             },
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            child: const Icon(Icons.add)),
-                      ),
-                      const PerfilesPreInversionesPreciosRows()
-                    ],
-                  );
-                },
-              ),
-            ],
+                            onSaved: (String? newValue) {
+                              perfilPreInversionPrecioCubit
+                                  .changePrecio(newValue);
+                            }),
+                        const SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: FloatingActionButton(
+                              heroTag: 'btn-add-precio',
+                              onPressed: () async {
+                                if (!formKeyPerfilPreInversionPrecio
+                                    .currentState!
+                                    .validate()) {
+                                  return;
+                                }
+
+                                formKeyPerfilPreInversionPrecio.currentState!
+                                    .save();
+
+                                final perfilPreInversionId =
+                                    vPerfilPreInversionCubit
+                                        .state
+                                        .vPerfilPreInversion!
+                                        .perfilPreInversionId!;
+
+                                perfilPreInversionPrecioCubit
+                                    .changePerfilPreInversionId(
+                                        perfilPreInversionId);
+
+                                perfilPreInversionPrecioCubit
+                                    .savePerfilPreInversionPrecioDB();
+                              },
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              child: const Icon(Icons.add)),
+                        ),
+                        const PerfilesPreInversionesPreciosRows()
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -261,7 +266,7 @@ class _PerfilesPreInversionesPreciosRowsState
 
     perfilesPreInversionesPreciosBloc.add(GetPerfilesPreInversionesPrecios(
         vPerfilPreInversionCubit
-            .state.vPerfilPreInversion!.perfilPreInversionId));
+            .state.vPerfilPreInversion!.perfilPreInversionId!));
   }
 
   @override
@@ -329,19 +334,11 @@ class _PerfilesPreInversionesPreciosRowsState
 
                 final precio = NumberFormat.currency(
                         locale: 'en_US', decimalDigits: 0, symbol: "\$")
-                    .format(double.parse(perfilPreInversionPrecio.precio));
+                    .format(double.parse(perfilPreInversionPrecio.precio!));
 
                 return DataRow(cells: <DataCell>[
-                  /*  DataCell(IconButton(
-                      onPressed: () {
-                         final perfilPreInversionPrecioCubit =
-                            BlocProvider.of<PerfilPreInversionPrecioCubit>(
-                                context);
-
-                        perfilPreInversionPrecioCubit.deletePerfilPreInversionPrecioDB();
-                      },
-                      icon: const Icon(Icons.cancel))), */
-                  DataCell(Text(perfilPreInversionPrecio.perfilPreInversionId)),
+                  DataCell(
+                      Text(perfilPreInversionPrecio.perfilPreInversionId!)),
                   DataCell(Text(perfilPreInversionPrecio.unidad ?? '')),
                   DataCell(Text(perfilPreInversionPrecio.producto ?? '')),
                   DataCell(Text(perfilPreInversionPrecio.tipoCalidad ?? '')),

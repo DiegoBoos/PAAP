@@ -120,7 +120,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                             (TipoIdentificacionEntity value) {
                       return DropdownMenuItem<String>(
                         value: value.tipoIdentificacionId,
-                        child: Text(value.nombre),
+                        child: Text(value.nombre!),
                       );
                     }).toList(),
                     validator: (value) {
@@ -277,7 +277,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                         ?.map<DropdownMenuItem<String>>((GeneroEntity value) {
                       return DropdownMenuItem<String>(
                         value: value.generoId,
-                        child: Text(value.nombre),
+                        child: Text(value.nombre!),
                       );
                     }).toList(),
                     validator: (value) {
@@ -365,7 +365,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
                             (GrupoEspecialEntity value) {
                       return DropdownMenuItem<String>(
                         value: value.grupoEspecialId,
-                        child: Text(value.nombre),
+                        child: Text(value.nombre!),
                       );
                     }).toList(),
                     validator: (value) {

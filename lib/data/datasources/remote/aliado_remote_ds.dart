@@ -95,8 +95,10 @@ class AliadoRemoteDataSourceImpl implements AliadoRemoteDataSource {
 
         List<AliadoModel> listAliado = [];
         for (var aliado in aliados) {
-          final dsAliado = await getAliadoTable(usuario, aliado.aliadoId);
-          listAliado.add(dsAliado);
+          if (aliado.aliadoId != null) {
+            final dsAliado = await getAliadoTable(usuario, aliado.aliadoId!);
+            listAliado.add(dsAliado);
+          }
         }
         return listAliado;
       } else {

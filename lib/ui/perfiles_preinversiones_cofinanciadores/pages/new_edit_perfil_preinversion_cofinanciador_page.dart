@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/perfil_preinversion_cofinanciador_entity.dart';
 import '../../../ui/blocs/perfil_preinversion_cofinanciadores/perfil_preinversion_cofinanciadores_bloc.dart';
 import '../../../ui/cubits/menu/menu_cubit.dart';
 import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion_cofinanciador_cubit.dart';
@@ -38,7 +37,6 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
   @override
   void initState() {
     super.initState();
-
     BlocProvider.of<CofinanciadorCubit>(context).getCofinanciadores();
     BlocProvider.of<RubroCubit>(context).getRubrosDB();
   }
@@ -49,6 +47,9 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
 
     final vPerfilPreInversionCubit =
         BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
 
     final perfilPreInversionCofinanciadorDesembolsoCubit =
         BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
@@ -66,6 +67,9 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
     final perfilPreInversion =
         vPerfilPreInversionCubit.state.vPerfilPreInversion!;
 
+    final perfilPreInversionCofinanciador = perfilPreInversionCofinanciadorCubit
+        .state.perfilPreInversionCofinanciador;
+
     final perfilPreInversionCofinanciadorDesembolso =
         perfilPreInversionCofinanciadorDesembolsoCubit
             .state.perfilPreInversionCofinanciadorDesembolso;
@@ -78,10 +82,6 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
         perfilPreInversionCofinanciadorRubroCubit
             .state.perfilPreInversionCofinanciadorRubro;
 
-    final perfilPreInversionCofinanciador = ModalRoute.of(context)!
-        .settings
-        .arguments as PerfilPreInversionCofinanciadorEntity?;
-
     return MultiBlocListener(
       listeners: [
         BlocListener<PerfilPreInversionCofinanciadorCubit,
@@ -91,15 +91,29 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
               CustomSnackBar.showSnackBar(
                   context, 'Datos guardados satisfactoriamente', Colors.green);
 
+              // Actualizar la lista de cofinanciadores
               perfilPreInversionCofinanciadoresBloc.add(
                   GetPerfilPreInversionCofinanciadores(
-                      perfilPreInversion.perfilPreInversionId));
+                      perfilPreInversion.perfilPreInversionId!));
 
               final perfilPreInversionCofinanciadorSaved =
                   state.perfilPreInversionCofinanciador;
 
+              // Actualizar el monto del cofinanciador
               BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context)
                   .changeMonto(perfilPreInversionCofinanciadorSaved.monto);
+
+              final valorTotalProyecto = vPerfilPreInversionCubit
+                  .state.vPerfilPreInversion!.valorTotalProyecto;
+
+              // Actualizar la participacion del cofinanciador
+              final participacion =
+                  double.parse(state.perfilPreInversionCofinanciador.monto!) *
+                      100 /
+                      double.parse(valorTotalProyecto!);
+
+              perfilPreInversionCofinanciadorCubit
+                  .changeParticipacion(participacion.toString());
 
               perfilPreInversionCofinanciadorDesembolsoCubit
                   .getPerfilPreInversionCofinanciadorDesembolso(
@@ -143,7 +157,7 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
               perfilPreInversionCofinanciadorRubroCubit
                   .getPerfilPreInversionCofinanciadorRubro(
                       perfilPreInversionCofinanciadorActividadFinancieraSaved
-                          .perfilPreInversionId,
+                          .perfilPreInversionId!,
                       perfilPreInversionCofinanciadorActividadFinancieraSaved
                           .cofinanciadorId!);
 
@@ -195,7 +209,7 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                         cofinanciadores: state.cofinanciadoresLoaded!,
                       );
                     } else {
-                      return const SizedBox();
+                      return const CircularProgressIndicator();
                     }
                   },
                 ),
@@ -216,25 +230,6 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                     }
 
                     formKeyCofinanciador.currentState!.save();
-
-                    final perfilPreInversionCofinanciadorCubit =
-                        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
-                            context);
-
-                    final participacion =
-                        double.parse(perfilPreInversionCofinanciador!.monto) *
-                            100 /
-                            double.parse(perfilPreInversion.valorTotalProyecto);
-
-                    perfilPreInversionCofinanciadorCubit
-                        .changePerfilPreInversionId(
-                            perfilPreInversion.perfilPreInversionId);
-
-                    perfilPreInversionCofinanciadorCubit
-                        .changeParticipacion(participacion.toString());
-
-                    perfilPreInversionCofinanciadorCubit.changeCofinanciador(
-                        perfilPreInversionCofinanciador.cofinanciadorId);
 
                     perfilPreInversionCofinanciadorCubit
                         .savePerfilPreInversionCofinanciadorDB();

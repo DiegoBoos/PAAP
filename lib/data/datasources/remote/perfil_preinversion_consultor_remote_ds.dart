@@ -115,7 +115,7 @@ class PerfilPreInversionConsultorRemoteDataSourceImpl
           for (var perfilPreInversion in perfilesPreInversion) {
             final dsPerfilPreInversionConsultor =
                 await getPerfilPreInversionConsultorTable(
-                    usuario, perfilPreInversion.id);
+                    usuario, perfilPreInversion.id!);
             if (dsPerfilPreInversionConsultor.isNotEmpty) {
               for (var perfilPreInversionConsultor
                   in dsPerfilPreInversionConsultor) {

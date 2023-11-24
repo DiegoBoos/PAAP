@@ -2,8 +2,8 @@ import 'package:paap/domain/entities/perfil_aliado_entity.dart';
 
 class PerfilAliadoModel extends PerfilAliadoEntity {
   PerfilAliadoModel({
-    required String perfilId,
-    required String aliadoId,
+    String? perfilId,
+    String? aliadoId,
     String? productoId,
     String? volumenCompra,
     String? unidadId,

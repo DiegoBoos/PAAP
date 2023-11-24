@@ -1,18 +1,18 @@
 class ProductoEntity {
   ProductoEntity(
-      {required this.id,
-      required this.nombre,
-      required this.unidad,
-      required this.simbolo,
-      required this.esProducto,
-      required this.esAsociado});
+      {this.id,
+      this.nombre,
+      this.unidad,
+      this.simbolo,
+      this.esProducto,
+      this.esAsociado});
 
-  String id;
-  String nombre;
-  String unidad;
-  String simbolo;
-  String esProducto;
-  String esAsociado;
+  String? id;
+  String? nombre;
+  String? unidad;
+  String? simbolo;
+  String? esProducto;
+  String? esAsociado;
 
   Map<String, dynamic> toJson() => {
         "ProductoId": id,

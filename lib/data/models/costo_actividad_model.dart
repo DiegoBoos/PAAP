@@ -2,13 +2,13 @@ import '../../domain/entities/costo_actividad_entity.dart';
 
 class CostoActividadModel extends CostoActividadEntity {
   CostoActividadModel({
-    required String actividadId,
-    required String metaIndicadorId,
-    required String costo,
-    required String actividad,
-    required String meta,
-    required String year,
-    required String indicador,
+    String? actividadId,
+    String? metaIndicadorId,
+    String? costo,
+    String? actividad,
+    String? meta,
+    String? year,
+    String? indicador,
   }) : super(
             actividadId: actividadId,
             metaIndicadorId: metaIndicadorId,

@@ -22,8 +22,7 @@ class MatrizEvaluacion extends StatefulWidget {
 }
 
 class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
-  AgrupacionEntity agrupacion = AgrupacionEntity(
-      agrupacionId: '', nombre: '', descripcion: '', convocatoriaId: '');
+  AgrupacionEntity agrupacion = AgrupacionEntity();
   bool showOpciones = false;
 
   String? opcionId;
@@ -50,7 +49,7 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
               .map<DropdownMenuItem<String>>((AgrupacionEntity value) {
             return DropdownMenuItem<String>(
               value: value.agrupacionId,
-              child: Text(value.nombre),
+              child: Text(value.nombre!),
             );
           }).toList(),
           onChanged: (String? value) async {
@@ -59,7 +58,7 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
               agrupacion = agrupacionCubit.state.agrupaciones!
                   .firstWhere(((element) => element.agrupacionId == value));
             });
-            await criterioCubit.getCriteriosDB(agrupacion.agrupacionId);
+            criterioCubit.getCriteriosDB(agrupacion.agrupacionId!);
           },
         ),
         if (agrupacion.agrupacionId != '')
@@ -72,11 +71,11 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: [
-                      Text(agrupacion.nombre,
+                      Text(agrupacion.nombre!,
                           style: Styles.subtitleStyle
                               .copyWith(color: Colors.white)),
                       const SizedBox(height: 10),
-                      Text(agrupacion.descripcion,
+                      Text(agrupacion.descripcion!,
                           style: Styles.subtitleStyle
                               .copyWith(color: Colors.white)),
                     ],
@@ -109,12 +108,12 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                                   (CriterioEntity value) {
                             return DropdownMenuItem<String>(
                               value: value.criterioId,
-                              child: Text(value.nombre),
+                              child: Text(value.nombre!),
                             );
                           }).toList(),
                           onChanged: (String? value) async {
                             evaluacionRespuestaCubit
-                                .changeEvaluacion(evaluacion.evaluacionId);
+                                .changeEvaluacion(evaluacion.evaluacionId!);
                             evaluacionRespuestaCubit.changeCriterio(value!);
 
                             final evaluacionRespuesta =
@@ -122,18 +121,18 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                                     .getEvaluacionRespuestaDB(
                                         value,
                                         evaluacionRespuestaCubit.state
-                                            .evaluacionRespuesta.evaluacionId);
+                                            .evaluacionRespuesta.evaluacionId!);
 
                             if (evaluacionRespuesta != null) {
                               observacionCtrl.text =
-                                  evaluacionRespuesta.observacion;
+                                  evaluacionRespuesta.observacion!;
                               opcionId = evaluacionRespuesta.opcionId;
                               evaluacionRespuestaCubit
                                   .getEvaluacionRespuestaOpcionDB(
-                                      evaluacionRespuestaCubit
-                                          .state.evaluacionRespuesta.criterioId,
                                       evaluacionRespuestaCubit.state
-                                          .evaluacionRespuesta.evaluacionId,
+                                          .evaluacionRespuesta.criterioId!,
+                                      evaluacionRespuestaCubit.state
+                                          .evaluacionRespuesta.evaluacionId!,
                                       opcionId!);
                             }
 
@@ -165,16 +164,16 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                                 (OpcionEntity value) {
                               return DropdownMenuItem<String>(
                                 value: value.opcionId,
-                                child: Text(value.nombre),
+                                child: Text(value.nombre!),
                               );
                             }).toList(),
                             onChanged: (String? value) {
                               evaluacionRespuestaCubit
                                   .getEvaluacionRespuestaOpcionDB(
-                                      evaluacionRespuestaCubit
-                                          .state.evaluacionRespuesta.criterioId,
                                       evaluacionRespuestaCubit.state
-                                          .evaluacionRespuesta.evaluacionId,
+                                          .evaluacionRespuesta.criterioId!,
+                                      evaluacionRespuestaCubit.state
+                                          .evaluacionRespuesta.evaluacionId!,
                                       value!);
 
                               opcionId = value;
@@ -187,8 +186,8 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                               EvaluacionRespuestaState>(
                             listener: (context, state) {
                               if (state is EvaluacionRespuestaLoaded) {
-                                observacionCtrl.text =
-                                    state.evaluacionRespuestaLoaded.observacion;
+                                observacionCtrl.text = state
+                                    .evaluacionRespuestaLoaded.observacion!;
                               }
                             },
                             builder: (context, state) {

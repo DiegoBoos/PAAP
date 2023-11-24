@@ -2,7 +2,7 @@ import 'package:paap/domain/entities/convocatoria_entity.dart';
 
 class ConvocatoriaModel extends ConvocatoriaEntity {
   ConvocatoriaModel(
-      {required String convocatoriaId,
+      {String? convocatoriaId,
       String? nombre,
       String? descripcion,
       String? fechaInicial,
@@ -10,11 +10,11 @@ class ConvocatoriaModel extends ConvocatoriaEntity {
       String? recursos})
       : super(
             convocatoriaId: convocatoriaId,
-            nombre: nombre ?? '',
-            descripcion: descripcion ?? '',
-            fechaInicial: fechaInicial ?? '',
-            fechaFinal: fechaFinal ?? '',
-            recursos: recursos ?? '');
+            nombre: nombre,
+            descripcion: descripcion,
+            fechaInicial: fechaInicial,
+            fechaFinal: fechaFinal,
+            recursos: recursos);
 
   factory ConvocatoriaModel.fromJson(Map<String, dynamic> json) =>
       ConvocatoriaModel(

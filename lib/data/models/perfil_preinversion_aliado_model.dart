@@ -2,8 +2,8 @@ import 'package:paap/domain/usecases/perfil_preinversion_aliado/perfil_preinvers
 
 class PerfilPreInversionAliadoModel extends PerfilPreInversionAliadoEntity {
   PerfilPreInversionAliadoModel({
-    required String perfilPreInversionId,
-    required String aliadoId,
+    String? perfilPreInversionId,
+    String? aliadoId,
     String? productoId,
     String? volumenCompra,
     String? unidadId,

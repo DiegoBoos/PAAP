@@ -2,7 +2,7 @@ import 'package:paap/domain/entities/consultor_entity.dart';
 
 class ConsultorModel extends ConsultorEntity {
   ConsultorModel({
-    required String consultorId,
+    String? consultorId,
     String? nombre1,
     String? nombre2,
     String? apellido1,
@@ -19,20 +19,20 @@ class ConsultorModel extends ConsultorEntity {
     String? consultor,
   }) : super(
             consultorId: consultorId,
-            nombre1: nombre1 ?? '',
-            nombre2: nombre2 ?? '',
-            apellido1: apellido1 ?? '',
-            apellido2: apellido2 ?? '',
-            generoId: generoId ?? '',
-            fechaNacimiento: fechaNacimiento ?? '',
-            fechaExpedicionDocumento: fechaExpedicionDocumento ?? '',
-            direccion: direccion ?? '',
-            telefonoFijo: telefonoFijo ?? '',
-            telefonoMovil: telefonoMovil ?? '',
-            experiencia: experiencia ?? '',
-            activo: activo ?? '',
-            usuarioId: usuarioId ?? '',
-            consultor: consultor ?? '');
+            nombre1: nombre1,
+            nombre2: nombre2,
+            apellido1: apellido1,
+            apellido2: apellido2,
+            generoId: generoId,
+            fechaNacimiento: fechaNacimiento,
+            fechaExpedicionDocumento: fechaExpedicionDocumento,
+            direccion: direccion,
+            telefonoFijo: telefonoFijo,
+            telefonoMovil: telefonoMovil,
+            experiencia: experiencia,
+            activo: activo,
+            usuarioId: usuarioId,
+            consultor: consultor);
 
   factory ConsultorModel.fromJson(Map<String, dynamic> json) => ConsultorModel(
         consultorId: json["ConsultorId"],

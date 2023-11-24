@@ -1,39 +1,39 @@
 class AlianzaExperienciaAgricolaEntity {
   AlianzaExperienciaAgricolaEntity({
-    required this.tipoActividadProductivaId,
-    required this.beneficiarioId,
-    required this.frecuenciaId,
-    required this.areaCultivo,
-    required this.cantidadProducida,
-    required this.cantidadVendida,
-    required this.cantidadAutoconsumo,
-    required this.costoImplementacion,
-    required this.valorJornal,
-    required this.totalIngresoNeto,
-    required this.areaPasto,
-    required this.areaSinUso,
-    required this.areaReservaConservacion,
-    required this.areaImplementacion,
-    required this.totalAreaPredio,
-    required this.recordStatus,
+    this.tipoActividadProductivaId,
+    this.beneficiarioId,
+    this.frecuenciaId,
+    this.areaCultivo,
+    this.cantidadProducida,
+    this.cantidadVendida,
+    this.cantidadAutoconsumo,
+    this.costoImplementacion,
+    this.valorJornal,
+    this.totalIngresoNeto,
+    this.areaPasto,
+    this.areaSinUso,
+    this.areaReservaConservacion,
+    this.areaImplementacion,
+    this.totalAreaPredio,
+    this.recordStatus,
   });
 
-  String tipoActividadProductivaId;
-  String beneficiarioId;
-  String frecuenciaId;
-  String areaCultivo;
-  String cantidadProducida;
-  String cantidadVendida;
-  String cantidadAutoconsumo;
-  String costoImplementacion;
-  String valorJornal;
-  String totalIngresoNeto;
-  String areaPasto;
-  String areaSinUso;
-  String areaReservaConservacion;
-  String areaImplementacion;
-  String totalAreaPredio;
-  String recordStatus;
+  String? tipoActividadProductivaId;
+  String? beneficiarioId;
+  String? frecuenciaId;
+  String? areaCultivo;
+  String? cantidadProducida;
+  String? cantidadVendida;
+  String? cantidadAutoconsumo;
+  String? costoImplementacion;
+  String? valorJornal;
+  String? totalIngresoNeto;
+  String? areaPasto;
+  String? areaSinUso;
+  String? areaReservaConservacion;
+  String? areaImplementacion;
+  String? totalAreaPredio;
+  String? recordStatus;
 
   AlianzaExperienciaAgricolaEntity copyWith({
     String? tipoActividadProductivaId,

@@ -1,42 +1,42 @@
 class VAlianzaEntity {
   VAlianzaEntity(
-      {required this.alianzaId,
-      required this.perfilPreInversionId,
-      required this.convocatoria,
-      required this.nombre,
-      required this.abreviatura,
-      required this.nit,
-      required this.municipio,
-      required this.direccion,
-      required this.contacto,
-      required this.telefonoFijo,
-      required this.telefonoMovil,
-      required this.correo,
-      required this.tipoProyecto,
-      required this.productoPrincipal,
-      required this.productoAsociado,
-      required this.valorTotalProyecto,
-      required this.incentivoModular,
-      required this.legalizado});
+      {this.alianzaId,
+      this.perfilPreInversionId,
+      this.convocatoria,
+      this.nombre,
+      this.abreviatura,
+      this.nit,
+      this.municipio,
+      this.direccion,
+      this.contacto,
+      this.telefonoFijo,
+      this.telefonoMovil,
+      this.correo,
+      this.tipoProyecto,
+      this.productoPrincipal,
+      this.productoAsociado,
+      this.valorTotalProyecto,
+      this.incentivoModular,
+      this.legalizado});
 
-  final String alianzaId;
-  final String perfilPreInversionId;
-  final String convocatoria;
-  final String nombre;
-  final String abreviatura;
-  final String nit;
-  final String municipio;
-  final String direccion;
-  final String contacto;
-  final String telefonoFijo;
-  final String telefonoMovil;
-  final String correo;
-  final String tipoProyecto;
-  final String productoPrincipal;
-  final String productoAsociado;
-  final String valorTotalProyecto;
-  final String incentivoModular;
-  final String legalizado;
+  String? alianzaId;
+  String? perfilPreInversionId;
+  String? convocatoria;
+  String? nombre;
+  String? abreviatura;
+  String? nit;
+  String? municipio;
+  String? direccion;
+  String? contacto;
+  String? telefonoFijo;
+  String? telefonoMovil;
+  String? correo;
+  String? tipoProyecto;
+  String? productoPrincipal;
+  String? productoAsociado;
+  String? valorTotalProyecto;
+  String? incentivoModular;
+  String? legalizado;
 
   Map<String, dynamic> toJson() => {
         "alianzaId": alianzaId,

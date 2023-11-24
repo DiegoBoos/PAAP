@@ -1,12 +1,9 @@
 class EstadoCivilEntity {
-  EstadoCivilEntity(
-      {required this.estadoCivilId,
-      required this.nombre,
-      required this.tieneConyuge});
+  EstadoCivilEntity({this.estadoCivilId, this.nombre, this.tieneConyuge});
 
-  String estadoCivilId;
-  String nombre;
-  String tieneConyuge;
+  String? estadoCivilId;
+  String? nombre;
+  String? tieneConyuge;
 
   Map<String, dynamic> toJson() => {
         "EstadoCivilId": estadoCivilId,

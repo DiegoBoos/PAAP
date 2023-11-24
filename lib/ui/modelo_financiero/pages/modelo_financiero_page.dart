@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../ui/cubits/menu/menu_cubit.dart';
+import '../../cubits/rubro/rubro_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/network_icon.dart';
 import 'costos_upt_page.dart';
@@ -24,6 +25,14 @@ const List<Tab> tabs = <Tab>[
 ];
 
 class _ModeloFinancieroPageState extends State<ModeloFinancieroPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    final rubroCubit = BlocProvider.of<RubroCubit>(context);
+    rubroCubit.getRubrosDB();
+  }
+
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);

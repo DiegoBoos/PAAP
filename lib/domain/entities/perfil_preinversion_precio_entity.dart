@@ -1,25 +1,25 @@
 class PerfilPreInversionPrecioEntity {
   PerfilPreInversionPrecioEntity({
-    required this.perfilPreInversionId,
-    required this.productoId,
-    required this.unidadId,
-    required this.tipoCalidadId,
-    required this.precio,
+    this.perfilPreInversionId,
+    this.productoId,
+    this.unidadId,
+    this.tipoCalidadId,
+    this.precio,
     this.producto,
     this.unidad,
     this.tipoCalidad,
-    required this.recordStatus,
+    this.recordStatus,
   });
 
-  String perfilPreInversionId;
-  String productoId;
-  String unidadId;
-  String tipoCalidadId;
-  String precio;
+  String? perfilPreInversionId;
+  String? productoId;
+  String? unidadId;
+  String? tipoCalidadId;
+  String? precio;
   String? producto;
   String? unidad;
   String? tipoCalidad;
-  String recordStatus;
+  String? recordStatus;
 
   PerfilPreInversionPrecioEntity copyWith(
       {String? perfilPreInversionId,

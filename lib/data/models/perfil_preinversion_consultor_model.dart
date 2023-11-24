@@ -3,8 +3,8 @@ import '../../domain/entities/perfil_preinversion_consultor_entity.dart';
 class PerfilPreInversionConsultorModel
     extends PerfilPreInversionConsultorEntity {
   PerfilPreInversionConsultorModel({
-    required String perfilPreInversionId,
-    required String consultorId,
+    String? perfilPreInversionId,
+    String? consultorId,
     String? revisionId,
     String? fechaRevision,
     String? recordStatus,
@@ -13,11 +13,11 @@ class PerfilPreInversionConsultorModel
   }) : super(
           perfilPreInversionId: perfilPreInversionId,
           consultorId: consultorId,
-          revisionId: revisionId ?? '',
-          fechaRevision: fechaRevision ?? '',
-          recordStatus: recordStatus ?? '',
-          revision: revision ?? '',
-          consultor: consultor ?? '',
+          revisionId: revisionId,
+          fechaRevision: fechaRevision,
+          recordStatus: recordStatus,
+          revision: revision,
+          consultor: consultor,
         );
 
   factory PerfilPreInversionConsultorModel.fromJson(

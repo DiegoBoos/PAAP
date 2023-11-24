@@ -5,6 +5,7 @@ import '../../cubits/beneficiario/beneficiario_cubit.dart';
 import '../../cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
 import '../../cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
 import '../../cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
+import '../../cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 
@@ -24,13 +25,15 @@ class PerfilPreInversionBeneficiariosTableSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
-        DataCell(Text(perfilPreInversionBeneficiario.beneficiarioId)),
+        DataCell(Text(perfilPreInversionBeneficiario.beneficiarioId!)),
         DataCell(TextButton(
             onPressed: () {
               final vPerfilPreinversionCubit =
                   BlocProvider.of<VPerfilPreInversionCubit>(context);
               final beneficiarioCubit =
                   BlocProvider.of<BeneficiarioCubit>(context);
+              final perfilPreInversionBeneficiarioCubit =
+                  BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
               final perfilBeneficiarioCubit =
                   BlocProvider.of<PerfilBeneficiarioCubit>(context);
               final experienciaAgricolaCubit =
@@ -40,11 +43,12 @@ class PerfilPreInversionBeneficiariosTableSource extends DataTableSource {
               final tipoProyecto = vPerfilPreinversionCubit
                   .state.vPerfilPreInversion!.tipoProyecto;
               final perfilId =
-                  vPerfilPreinversionCubit.state.vPerfilPreInversion!.perfilId;
+                  vPerfilPreinversionCubit.state.vPerfilPreInversion!.perfilId!;
+
               final beneficiarioId =
                   perfilPreInversionBeneficiario.beneficiarioId;
 
-              beneficiarioCubit.loadBeneficiario(beneficiarioId);
+              beneficiarioCubit.loadBeneficiario(beneficiarioId!);
 
               perfilBeneficiarioCubit.loadPerfilBeneficiario(
                   perfilId, beneficiarioId);
@@ -57,8 +61,14 @@ class PerfilPreInversionBeneficiariosTableSource extends DataTableSource {
                     '1', beneficiarioId);
               }
 
-              Navigator.pushNamed(context, 'NewEditVBeneficiarioPreInversion',
-                  arguments: perfilPreInversionBeneficiario);
+              perfilPreInversionBeneficiarioCubit
+                  .setPerfilPreInversionBeneficiario(
+                      perfilPreInversionBeneficiario);
+
+              Navigator.pushNamed(
+                context,
+                'NewEditVBeneficiarioPreInversion',
+              );
             },
             child: Text(perfilPreInversionBeneficiario.nombre ?? ''))),
 

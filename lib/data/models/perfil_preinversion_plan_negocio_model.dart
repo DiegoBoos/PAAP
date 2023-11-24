@@ -3,12 +3,12 @@ import '../../domain/entities/perfil_preinversion_plan_negocio_entity.dart';
 class PerfilPreInversionPlanNegocioModel
     extends PerfilPreInversionPlanNegocioEntity {
   PerfilPreInversionPlanNegocioModel({
-    required String perfilPreInversionId,
-    required String rubroId,
-    required String year,
-    required String valor,
-    required String cantidad,
-    required String unidadId,
+    String? perfilPreInversionId,
+    String? rubroId,
+    String? year,
+    String? valor,
+    String? cantidad,
+    String? unidadId,
     String? productoId,
     String? tipoCalidadId,
     String? recordStatus,
@@ -19,9 +19,9 @@ class PerfilPreInversionPlanNegocioModel
           valor: valor,
           cantidad: cantidad,
           unidadId: unidadId,
-          productoId: productoId ?? '',
-          tipoCalidadId: tipoCalidadId ?? '',
-          recordStatus: recordStatus ?? '',
+          productoId: productoId,
+          tipoCalidadId: tipoCalidadId,
+          recordStatus: recordStatus,
         );
 
   factory PerfilPreInversionPlanNegocioModel.fromJson(

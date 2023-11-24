@@ -99,7 +99,7 @@ class VisitaRemoteDataSourceImpl implements VisitaRemoteDataSource {
 
         List<VisitaModel> listVisita = [];
         for (var perfil in perfiles) {
-          final dsVisita = await getVisitaTable(usuario, perfil.id);
+          final dsVisita = await getVisitaTable(usuario, perfil.id!);
           if (dsVisita != null) {
             listVisita.add(dsVisita);
           }

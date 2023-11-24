@@ -39,10 +39,10 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
     final visitaCubit = BlocProvider.of<VisitaCubit>(context);
     final agrupacionCubit = BlocProvider.of<AgrupacionCubit>(context);
 
-    await visitaCubit.getVisitaDB(vPerfilCubit.state.vPerfil!.perfilId, '1');
+    visitaCubit.getVisitaDB(vPerfilCubit.state.vPerfil!.perfilId!, '1');
 
-    await agrupacionCubit
-        .getAgrupacionesDB(vPerfilCubit.state.vPerfil!.convocatoriaId);
+    agrupacionCubit
+        .getAgrupacionesDB(vPerfilCubit.state.vPerfil!.convocatoriaId!);
   }
 
   @override
@@ -163,11 +163,10 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                       DateTime.now().toIso8601String(),
                                   recordStatus: 'N');
 
-                              await visitaCubit
-                                  .saveVisitaEvaluacionDB(newVisita);
+                              visitaCubit.saveVisitaEvaluacionDB(newVisita);
 
-                              await evaluacionCubit
-                                  .getEvaluacionDB(vPerfil.perfilId);
+                              evaluacionCubit
+                                  .getEvaluacionDB(vPerfil.perfilId!);
                             },
                             backgroundColor:
                                 Theme.of(context).colorScheme.primary,
@@ -183,12 +182,12 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                   }
 
                   if (state is VisitaLoaded) {
-                    evaluacionCubit.getEvaluacionDB(vPerfil.perfilId);
+                    evaluacionCubit.getEvaluacionDB(vPerfil.perfilId!);
                     savedDates = true;
                     fechaInicialCtrl.text = dateFormat.format(
-                        DateTime.parse(state.visitaLoaded.fechaInicial));
+                        DateTime.parse(state.visitaLoaded.fechaInicial!));
                     fechaFinalCtrl.text = dateFormat
-                        .format(DateTime.parse(state.visitaLoaded.fechaFinal));
+                        .format(DateTime.parse(state.visitaLoaded.fechaFinal!));
                     return Column(
                       children: [
                         DatesForm(
@@ -228,7 +227,7 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                 builder: (context, state) {
                                   final evaluacion = state.evaluacion;
                                   return SaveFinishCancelButtons(
-                                      finalizado: evaluacion.finalizado,
+                                      finalizado: evaluacion.finalizado!,
                                       onFinished: evaluacion.finalizado ==
                                               'true'
                                           ? null
@@ -284,7 +283,7 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                                       evaluacionRespuestaCubit
                                                           .state
                                                           .evaluacionRespuesta,
-                                                      vPerfil.perfilId);
+                                                      vPerfil.perfilId!);
                                             });
                                 },
                               ),

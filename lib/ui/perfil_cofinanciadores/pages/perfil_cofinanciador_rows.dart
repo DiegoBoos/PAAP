@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../domain/entities/perfil_cofinanciador_entity.dart';
+import '../../cubits/perfil_cofinanciador/perfil_cofinanciador_cubit.dart';
 
 class PerfilCofinanciadoresTableSource extends DataTableSource {
   final BuildContext context;
@@ -13,9 +15,15 @@ class PerfilCofinanciadoresTableSource extends DataTableSource {
   DataRow getRow(int index) {
     final perfilCofinanciador = perfilCofinanciadores[index];
 
-    final monto =
-        NumberFormat.currency(locale: 'en_US', decimalDigits: 0, symbol: "\$")
-            .format(double.parse(perfilCofinanciador.monto));
+    final perfilCofinanciadorCubit =
+        BlocProvider.of<PerfilCofinanciadorCubit>(context);
+
+    String? monto;
+    if (perfilCofinanciador.monto != null || perfilCofinanciador.monto != '') {
+      monto =
+          NumberFormat.currency(locale: 'en_US', decimalDigits: 0, symbol: "\$")
+              .format(double.parse(perfilCofinanciador.monto!));
+    }
 
     return DataRow.byIndex(
       index: index,
@@ -27,11 +35,15 @@ class PerfilCofinanciadoresTableSource extends DataTableSource {
                 : () async {
                     final navigator = Navigator.of(context);
 
-                    navigator.pushNamed('NewEditVCofinanciador',
-                        arguments: perfilCofinanciador);
+                    perfilCofinanciadorCubit
+                        .setPerfilCofinanciador(perfilCofinanciador);
+
+                    navigator.pushNamed(
+                      'NewEditVCofinanciador',
+                    );
                   },
             child: Text(perfilCofinanciador.nombre!))),
-        DataCell(Text(monto)),
+        DataCell(Text(monto!)),
       ],
     );
   }

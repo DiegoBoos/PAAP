@@ -14,17 +14,19 @@ class VAlianzasTableSource extends DataTableSource {
   DataRow getRow(int index) {
     final vAlianza = vAlianzas[index];
 
+    final vAlianzaCubit = BlocProvider.of<VAlianzaCubit>(context);
+
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
-        DataCell(Text(vAlianza.alianzaId)),
+        DataCell(Text(vAlianza.alianzaId!)),
         DataCell(TextButton(
           onPressed: () {
-            BlocProvider.of<VAlianzaCubit>(context).selectVAlianza(vAlianza);
+            vAlianzaCubit.selectVAlianza(vAlianza);
             Navigator.pushNamed(context, 'VAlianza');
           },
           child: Text(
-            vAlianza.nombre,
+            vAlianza.nombre!,
           ),
         )),
       ],
@@ -74,14 +76,14 @@ class _AlianzasRowsState extends State<AlianzasRows> {
         final lowerCaseQuery = query.toLowerCase();
         if (enableId) {
           final vAlianzas = allVAlianzas.where((vPerfil) {
-            return vPerfil.alianzaId.toLowerCase() == lowerCaseQuery;
+            return vPerfil.alianzaId!.toLowerCase() == lowerCaseQuery;
           }).toList();
 
           vAlianzasFiltered = vAlianzas;
           return;
         } else {
           final vAlianzas = allVAlianzas.where((vPerfil) {
-            return vPerfil.nombre.toLowerCase().contains(lowerCaseQuery);
+            return vPerfil.nombre!.toLowerCase().contains(lowerCaseQuery);
           }).toList();
 
           vAlianzasFiltered = vAlianzas;

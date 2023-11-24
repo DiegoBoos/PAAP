@@ -184,7 +184,7 @@ class _TabsPageState extends State<TabsPage> {
                             onTap: _onItemTapped,
                             items: tabsMenu
                                 .map((menu) => BottomNavigationBarItem(
-                                    icon: Icon(setIcon(menu.menuId)),
+                                    icon: Icon(setIcon(menu.menuId!)),
                                     label: menu.nombre))
                                 .toList()));
               }
@@ -221,7 +221,7 @@ List<MenuEntity> tabsMenuSorted(List<MenuEntity> menu) {
       .toList();
 
   tabsMenu.sort((a, b) {
-    return a.orden.toLowerCase().compareTo(b.orden.toLowerCase());
+    return a.orden!.toLowerCase().compareTo(b.orden!.toLowerCase());
   });
 
   return tabsMenu;
@@ -278,7 +278,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                   controller: tabController,
                   tabs: tabsMenu
                       .map(
-                        (menu) => CustomTab(title: menu.nombre),
+                        (menu) => CustomTab(title: menu.nombre!),
                       )
                       .toList()),
               Expanded(

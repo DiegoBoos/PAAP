@@ -2,9 +2,9 @@ import '../../domain/entities/alianza_experiencia_pecuaria_entity.dart';
 
 class AlianzaExperienciaPecuariaModel extends AlianzaExperienciaPecuariaEntity {
   AlianzaExperienciaPecuariaModel({
-    required String tipoActividadProductivaId,
-    required String beneficiarioId,
-    required String frecuenciaId,
+    String? tipoActividadProductivaId,
+    String? beneficiarioId,
+    String? frecuenciaId,
     String? cantidadAnimales,
     String? cantidadCria,
     String? cantidadLevante,
@@ -18,15 +18,15 @@ class AlianzaExperienciaPecuariaModel extends AlianzaExperienciaPecuariaEntity {
           tipoActividadProductivaId: tipoActividadProductivaId,
           beneficiarioId: beneficiarioId,
           frecuenciaId: frecuenciaId,
-          cantidadAnimales: cantidadAnimales ?? '',
-          cantidadCria: cantidadCria ?? '',
-          cantidadLevante: cantidadLevante ?? '',
-          cantidadCeba: cantidadCeba ?? '',
-          cantidadLeche: cantidadLeche ?? '',
-          valorJornal: valorJornal ?? '',
-          costosInsumos: costosInsumos ?? '',
-          ingresos: ingresos ?? '',
-          recordStatus: recordStatus ?? '',
+          cantidadAnimales: cantidadAnimales,
+          cantidadCria: cantidadCria,
+          cantidadLevante: cantidadLevante,
+          cantidadCeba: cantidadCeba,
+          cantidadLeche: cantidadLeche,
+          valorJornal: valorJornal,
+          costosInsumos: costosInsumos,
+          ingresos: ingresos,
+          recordStatus: recordStatus,
         );
 
   factory AlianzaExperienciaPecuariaModel.fromJson(Map<String, dynamic> json) =>

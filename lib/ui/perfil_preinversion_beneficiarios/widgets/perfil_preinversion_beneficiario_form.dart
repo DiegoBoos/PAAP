@@ -155,7 +155,7 @@ class _PerfilPreInversionBeneficiarioFormState
                           (ResidenciaEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.residenciaId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -187,7 +187,7 @@ class _PerfilPreInversionBeneficiarioFormState
                               (EstadoCivilEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.estadoCivilId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -223,7 +223,7 @@ class _PerfilPreInversionBeneficiarioFormState
                               (NivelEscolarEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.nivelEscolarId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -255,7 +255,7 @@ class _PerfilPreInversionBeneficiarioFormState
                               (ActividadEconomicaEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.actividadEconomicaId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       validator: (value) {
@@ -286,7 +286,7 @@ class _PerfilPreInversionBeneficiarioFormState
                               (TipoDiscapacidadEntity value) {
                         return DropdownMenuItem<String>(
                           value: value.tipoDiscapacidadId,
-                          child: Text(value.nombre),
+                          child: Text(value.nombre!),
                         );
                       }).toList(),
                       onChanged: (String? value) {

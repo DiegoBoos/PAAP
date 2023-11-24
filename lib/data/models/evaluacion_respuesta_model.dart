@@ -2,9 +2,9 @@ import 'package:paap/domain/entities/evaluacion_respuesta_entity.dart';
 
 class EvaluacionRespuestaModel extends EvaluacionRespuestaEntity {
   EvaluacionRespuestaModel({
-    required String criterioId,
-    required String evaluacionId,
-    required String opcionId,
+    String? criterioId,
+    String? evaluacionId,
+    String? opcionId,
     String? observacion,
     String? recordStatus,
     String? remoteEvaluacionId,
@@ -12,9 +12,9 @@ class EvaluacionRespuestaModel extends EvaluacionRespuestaEntity {
           criterioId: criterioId,
           evaluacionId: evaluacionId,
           opcionId: opcionId,
-          observacion: observacion ?? '',
-          recordStatus: recordStatus ?? '',
-          remoteEvaluacionId: remoteEvaluacionId ?? '',
+          observacion: observacion,
+          recordStatus: recordStatus,
+          remoteEvaluacionId: remoteEvaluacionId,
         );
 
   factory EvaluacionRespuestaModel.fromJson(Map<String, dynamic> json) =>

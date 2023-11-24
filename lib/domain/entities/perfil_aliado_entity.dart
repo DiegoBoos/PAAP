@@ -1,7 +1,7 @@
 class PerfilAliadoEntity {
   PerfilAliadoEntity({
-    required this.perfilId,
-    required this.aliadoId,
+    this.perfilId,
+    this.aliadoId,
     this.productoId,
     this.volumenCompra,
     this.unidadId,
@@ -12,8 +12,8 @@ class PerfilAliadoEntity {
     this.recordStatus,
   });
 
-  String perfilId;
-  String aliadoId;
+  String? perfilId;
+  String? aliadoId;
   String? productoId;
   String? volumenCompra;
   String? unidadId;

@@ -1,31 +1,31 @@
 class VPerfilPreInversionPlanNegocioEntity {
   VPerfilPreInversionPlanNegocioEntity({
-    required this.actividadFinancieraId,
-    required this.actividadFinanciera,
-    required this.rubroId,
-    required this.rubro,
-    required this.unidadId,
-    required this.unidad,
-    required this.year,
-    required this.cantidad,
-    required this.valor,
+    this.actividadFinancieraId,
+    this.actividadFinanciera,
+    this.rubroId,
+    this.rubro,
+    this.unidadId,
+    this.unidad,
+    this.year,
+    this.cantidad,
+    this.valor,
     this.productoId,
     this.tipoCalidadId,
-    required this.porcentaje,
+    this.porcentaje,
   });
 
-  String actividadFinancieraId;
-  String actividadFinanciera;
-  String rubroId;
-  String rubro;
-  String unidadId;
-  String unidad;
-  String year;
-  String cantidad;
-  String valor;
+  String? actividadFinancieraId;
+  String? actividadFinanciera;
+  String? rubroId;
+  String? rubro;
+  String? unidadId;
+  String? unidad;
+  String? year;
+  String? cantidad;
+  String? valor;
   String? productoId;
   String? tipoCalidadId;
-  String porcentaje;
+  String? porcentaje;
 
   VPerfilPreInversionPlanNegocioEntity copyWith(
       {String? actividadFinancieraId,

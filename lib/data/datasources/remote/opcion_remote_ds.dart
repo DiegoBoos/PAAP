@@ -27,7 +27,7 @@ class OpcionRemoteDataSourceImpl implements OpcionRemoteDataSource {
     List<OpcionModel> opciones = [];
     for (var criterio in criterios) {
       final opcionesCriterio =
-          await getOpcionesByCriterio(usuario, criterio.criterioId);
+          await getOpcionesByCriterio(usuario, criterio.criterioId!);
       opciones.addAll(opcionesCriterio);
     }
     return opciones;

@@ -31,7 +31,7 @@ class _PerfilesPreInversionesCofinanciadoresPageState
         BlocProvider.of<PerfilPreInversionCofinanciadoresBloc>(context);
 
     final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId;
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
     perfilPreInversionCofinanciadoresBloc
         .add(GetPerfilPreInversionCofinanciadores(perfilPreInversionId));
@@ -54,7 +54,7 @@ class _PerfilesPreInversionesCofinanciadoresPageState
           ? FloatingActionButton(
               child: const Icon(Icons.save),
               onPressed: () => Navigator.pushNamed(
-                  context, 'NewEditCofinanciadorPreInversion'))
+                  context, 'NewEditVCofinanciadorPreInversion'))
           : null,
       drawer: BlocBuilder<MenuCubit, MenuState>(
         builder: (context, state) {

@@ -79,19 +79,23 @@ class _BeneficiarioExperienciaFormState
       experienciaAgricolaTipoActividadProductivaId =
           experienciaAgricola.tipoActividadProductivaId;
       experienciaAgricolaFrecuenciaId = experienciaAgricola.frecuenciaId;
-      areaCultivoCtrl.text = experienciaAgricola.areaCultivo;
-      cantidadProducidaCtrl.text = experienciaAgricola.cantidadProducida;
-      cantidadVendidaCtrl.text = experienciaAgricola.cantidadVendida;
-      cantidadAutoconsumoCtrl.text = experienciaAgricola.cantidadAutoconsumo;
-      costoImplementacionCtrl.text = experienciaAgricola.costoImplementacion;
-      experienciaAgricolaValorJornalCtrl.text = experienciaAgricola.valorJornal;
-      totalIngresoNetoCtrl.text = experienciaAgricola.totalIngresoNeto;
-      areaPastoCtrl.text = experienciaAgricola.areaPasto;
-      areaSinUsoCtrl.text = experienciaAgricola.areaSinUso;
+      areaCultivoCtrl.text = experienciaAgricola.areaCultivo ?? '';
+      cantidadProducidaCtrl.text = experienciaAgricola.cantidadProducida ?? '';
+      cantidadVendidaCtrl.text = experienciaAgricola.cantidadVendida ?? '';
+      cantidadAutoconsumoCtrl.text =
+          experienciaAgricola.cantidadAutoconsumo ?? '';
+      costoImplementacionCtrl.text =
+          experienciaAgricola.costoImplementacion ?? '';
+      experienciaAgricolaValorJornalCtrl.text =
+          experienciaAgricola.valorJornal ?? '';
+      totalIngresoNetoCtrl.text = experienciaAgricola.totalIngresoNeto ?? '';
+      areaPastoCtrl.text = experienciaAgricola.areaPasto ?? '';
+      areaSinUsoCtrl.text = experienciaAgricola.areaSinUso ?? '';
       areaReservaConservacionCtrl.text =
-          experienciaAgricola.areaReservaConservacion;
-      areaImplementacionCtrl.text = experienciaAgricola.areaImplementacion;
-      totalAreaPredioCtrl.text = experienciaAgricola.totalAreaPredio;
+          experienciaAgricola.areaReservaConservacion ?? '';
+      areaImplementacionCtrl.text =
+          experienciaAgricola.areaImplementacion ?? '';
+      totalAreaPredioCtrl.text = experienciaAgricola.totalAreaPredio ?? '';
     });
   }
 
@@ -100,14 +104,15 @@ class _BeneficiarioExperienciaFormState
       experienciaPecuariaTipoActividadProductivaId =
           experienciaPecuaria.tipoActividadProductivaId;
       experienciaPecuariaFrecuenciaId = experienciaPecuaria.frecuenciaId;
-      cantidadAnimalesCtrl.text = experienciaPecuaria.cantidadAnimales;
-      cantidadCriaCtrl.text = experienciaPecuaria.cantidadCria;
-      cantidadLevanteCtrl.text = experienciaPecuaria.cantidadLevante;
-      cantidadCebaCtrl.text = experienciaPecuaria.cantidadCeba;
-      cantidadLecheCtrl.text = experienciaPecuaria.cantidadLeche;
-      experienciaPecuariaValorJornalCtrl.text = experienciaPecuaria.valorJornal;
-      costosInsumosCtrl.text = experienciaPecuaria.costosInsumos;
-      ingresosCtrl.text = experienciaPecuaria.ingresos;
+      cantidadAnimalesCtrl.text = experienciaPecuaria.cantidadAnimales ?? '';
+      cantidadCriaCtrl.text = experienciaPecuaria.cantidadCria ?? '';
+      cantidadLevanteCtrl.text = experienciaPecuaria.cantidadLevante ?? '';
+      cantidadCebaCtrl.text = experienciaPecuaria.cantidadCeba ?? '';
+      cantidadLecheCtrl.text = experienciaPecuaria.cantidadLeche ?? '';
+      experienciaPecuariaValorJornalCtrl.text =
+          experienciaPecuaria.valorJornal ?? '';
+      costosInsumosCtrl.text = experienciaPecuaria.costosInsumos ?? '';
+      ingresosCtrl.text = experienciaPecuaria.ingresos ?? '';
     });
   }
 
@@ -150,7 +155,7 @@ class _BeneficiarioExperienciaFormState
                                     (TipoActividadProductivaEntity value) {
                               return DropdownMenuItem<String>(
                                 value: value.tipoActividadProductivaId,
-                                child: Text(value.nombre),
+                                child: Text(value.nombre!),
                               );
                             }).toList(),
                             validator: (value) {
@@ -182,7 +187,7 @@ class _BeneficiarioExperienciaFormState
                                     (FrecuenciaEntity value) {
                               return DropdownMenuItem<String>(
                                 value: value.frecuenciaId,
-                                child: Text(value.nombre),
+                                child: Text(value.nombre!),
                               );
                             }).toList(),
                             validator: (value) {
@@ -434,7 +439,7 @@ class _BeneficiarioExperienciaFormState
                                     (TipoActividadProductivaEntity value) {
                               return DropdownMenuItem<String>(
                                 value: value.tipoActividadProductivaId,
-                                child: Text(value.nombre),
+                                child: Text(value.nombre!),
                               );
                             }).toList(),
                             validator: (value) {
@@ -466,7 +471,7 @@ class _BeneficiarioExperienciaFormState
                                     (FrecuenciaEntity value) {
                               return DropdownMenuItem<String>(
                                 value: value.frecuenciaId,
-                                child: Text(value.nombre),
+                                child: Text(value.nombre!),
                               );
                             }).toList(),
                             validator: (value) {

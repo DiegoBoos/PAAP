@@ -2,8 +2,8 @@ import 'package:paap/domain/entities/perfil_beneficiario_entity.dart';
 
 class PerfilBeneficiarioModel extends PerfilBeneficiarioEntity {
   PerfilBeneficiarioModel({
-    required String perfilId,
-    required String beneficiarioId,
+    String? perfilId,
+    String? beneficiarioId,
     String? municipioId,
     String? veredaId,
     String? areaFinca,

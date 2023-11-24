@@ -2,11 +2,11 @@ import 'package:paap/domain/entities/estado_visita_entity.dart';
 
 class EstadoVisitaModel extends EstadoVisitaEntity {
   EstadoVisitaModel(
-      {required String estadoVisitaId, String? nombre, String? descripcion})
+      {String? estadoVisitaId, String? nombre, String? descripcion})
       : super(
             estadoVisitaId: estadoVisitaId,
-            nombre: nombre ?? '',
-            descripcion: descripcion ?? '');
+            nombre: nombre,
+            descripcion: descripcion);
 
   factory EstadoVisitaModel.fromJson(Map<String, dynamic> json) =>
       EstadoVisitaModel(

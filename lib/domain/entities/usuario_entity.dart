@@ -1,31 +1,31 @@
 class UsuarioEntity {
   UsuarioEntity({
-    required this.usuarioId,
-    required this.nombre,
-    required this.apellido,
-    required this.direccion,
-    required this.telefonoFijo,
-    required this.telefonoMovil,
-    required this.correo,
-    required this.contrasena,
-    required this.fechaActivacion,
-    required this.fechaDesactivacion,
-    required this.fechaCambio,
-    required this.activo,
+    this.usuarioId,
+    this.nombre,
+    this.apellido,
+    this.direccion,
+    this.telefonoFijo,
+    this.telefonoMovil,
+    this.correo,
+    this.contrasena,
+    this.fechaActivacion,
+    this.fechaDesactivacion,
+    this.fechaCambio,
+    this.activo,
   });
 
-  final String usuarioId;
-  final String nombre;
-  final String apellido;
-  final String direccion;
-  final String telefonoFijo;
-  final String telefonoMovil;
-  final String correo;
-  final String contrasena;
-  final String fechaActivacion;
-  final String fechaDesactivacion;
-  final String fechaCambio;
-  final String activo;
+  String? usuarioId;
+  String? nombre;
+  String? apellido;
+  String? direccion;
+  String? telefonoFijo;
+  String? telefonoMovil;
+  String? correo;
+  String? contrasena;
+  String? fechaActivacion;
+  String? fechaDesactivacion;
+  String? fechaCambio;
+  String? activo;
 
   Map<String, dynamic> toJson() => {
         "UsuarioId": usuarioId,

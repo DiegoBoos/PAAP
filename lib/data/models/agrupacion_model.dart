@@ -2,15 +2,15 @@ import 'package:paap/domain/entities/agrupacion_entity.dart';
 
 class AgrupacionModel extends AgrupacionEntity {
   AgrupacionModel(
-      {required String agrupacionId,
+      {String? agrupacionId,
       String? nombre,
       String? descripcion,
       String? convocatoriaId})
       : super(
             agrupacionId: agrupacionId,
-            nombre: nombre ?? '',
-            descripcion: descripcion ?? '',
-            convocatoriaId: convocatoriaId ?? '');
+            nombre: nombre,
+            descripcion: descripcion,
+            convocatoriaId: convocatoriaId);
 
   factory AgrupacionModel.fromJson(Map<String, dynamic> json) =>
       AgrupacionModel(

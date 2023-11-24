@@ -9,8 +9,7 @@ import '../../../ui/cubits/v_perfiles_preinversiones_plan_negocios/v_perfiles_pr
 import '../../../domain/entities/v_perfil_preinversion_plan_negocio_entity.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/no_data_svg.dart';
-import '../../utils/styles.dart';
-import '../widgets/perfiles_preinversiones_plan_negocios_rows.dart';
+import 'perfiles_preinversiones_plan_negocios_rows.dart';
 
 class CostosUPTPage extends StatefulWidget {
   const CostosUPTPage({super.key});
@@ -32,7 +31,7 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
         BlocProvider.of<VPerfilesPreInversionesPlanNegociosCubit>(context);
 
     final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId;
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
     vPerfilesPreInversionesPlanNegociosCubit
         .getVPerfilesPreInversionesPlanNegociosDB(
@@ -48,7 +47,7 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
         BlocProvider.of<VPerfilesPreInversionesPlanNegociosCubit>(context);
 
     final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId;
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
 
     return BlocListener<PerfilPreInversionCostosUPTCubit,
         PerfilPreInversionCostosUPTState>(listener: (context, state) {
@@ -79,9 +78,8 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
                 child: Center(child: NoDataSvg(title: 'No hay resultados')));
           }
           return PerfilPreInversionPlanNegociosRows(
-              vPerfilesPreInversionesPlanNegocios:
+              perfilPreInversionPlanNegocios:
                   vPerfilesPreInversionesPlanNegocios,
-              subtitleStyle: Styles.subtitleStyle,
               tipoMovimientoId: tipoMovimientoId);
         }
         return const NoDataSvg(

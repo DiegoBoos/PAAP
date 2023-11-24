@@ -30,7 +30,7 @@ class _PerfilPreInversionAliadosPageState
         BlocProvider.of<PerfilPreInversionAliadosBloc>(context);
     perfilPreInversionAliadosBloc.add(GetPerfilPreInversionAliados(
         vPerfilPreInversionCubit
-            .state.vPerfilPreInversion!.perfilPreInversionId));
+            .state.vPerfilPreInversion!.perfilPreInversionId!));
   }
 
   @override

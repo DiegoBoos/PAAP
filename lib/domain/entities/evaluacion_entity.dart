@@ -1,31 +1,31 @@
 class EvaluacionEntity {
   EvaluacionEntity({
-    required this.evaluacionId,
-    required this.perfilId,
-    required this.resumen,
-    required this.fortalezas,
-    required this.debilidades,
-    required this.riesgos,
-    required this.finalizado,
-    required this.usuarioIdCoordinador,
-    required this.fechaEvaluacion,
-    required this.preAprobado,
-    required this.recordStatus,
-    required this.remoteEvaluacionId,
+    this.evaluacionId,
+    this.perfilId,
+    this.resumen,
+    this.fortalezas,
+    this.debilidades,
+    this.riesgos,
+    this.finalizado,
+    this.usuarioIdCoordinador,
+    this.fechaEvaluacion,
+    this.preAprobado,
+    this.recordStatus,
+    this.remoteEvaluacionId,
   });
 
-  String evaluacionId;
-  String perfilId;
-  String resumen;
-  String fortalezas;
-  String debilidades;
-  String riesgos;
-  String finalizado;
-  String usuarioIdCoordinador;
-  String fechaEvaluacion;
-  String preAprobado;
-  String recordStatus;
-  String remoteEvaluacionId;
+  String? evaluacionId;
+  String? perfilId;
+  String? resumen;
+  String? fortalezas;
+  String? debilidades;
+  String? riesgos;
+  String? finalizado;
+  String? usuarioIdCoordinador;
+  String? fechaEvaluacion;
+  String? preAprobado;
+  String? recordStatus;
+  String? remoteEvaluacionId;
 
   Map<String, dynamic> toJson() => {
         //"EvaluacionId": evaluacionId,

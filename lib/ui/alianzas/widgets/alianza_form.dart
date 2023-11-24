@@ -18,13 +18,6 @@ class AlianzaForm extends StatelessWidget {
                 initialValue: vAlianzaSelected.alianzaId,
                 enabled: false,
                 decoration: CustomInputDecoration.inputDecoration(
-                    hintText: 'ID. PreInversion',
-                    labelText: 'ID. PreInversion')),
-            const SizedBox(height: 20),
-            TextFormField(
-                initialValue: vAlianzaSelected.alianzaId,
-                enabled: false,
-                decoration: CustomInputDecoration.inputDecoration(
                     hintText: 'ID Alianza', labelText: 'ID Alianza')),
             const SizedBox(height: 20),
             TextFormField(

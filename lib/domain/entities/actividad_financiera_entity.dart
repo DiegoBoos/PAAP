@@ -1,17 +1,17 @@
 class ActividadFinancieraEntity {
   ActividadFinancieraEntity({
-    required this.actividadFinancieraId,
-    required this.nombre,
-    required this.descripcion,
-    required this.activo,
-    required this.tipoMovimientoId,
+    this.actividadFinancieraId,
+    this.nombre,
+    this.descripcion,
+    this.activo,
+    this.tipoMovimientoId,
   });
 
-  String actividadFinancieraId;
-  String nombre;
-  String descripcion;
-  String activo;
-  String tipoMovimientoId;
+  String? actividadFinancieraId;
+  String? nombre;
+  String? descripcion;
+  String? activo;
+  String? tipoMovimientoId;
 
   Map<String, dynamic> toJson() => {
         "ActividadFinancieraId": actividadFinancieraId,

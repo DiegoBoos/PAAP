@@ -2,7 +2,7 @@ import 'package:paap/domain/entities/usuario_entity.dart';
 
 class UsuarioModel extends UsuarioEntity {
   UsuarioModel(
-      {required String usuarioId,
+      {String? usuarioId,
       String? nombre,
       String? apellido,
       String? direccion,
@@ -16,17 +16,17 @@ class UsuarioModel extends UsuarioEntity {
       String? activo})
       : super(
             usuarioId: usuarioId,
-            nombre: nombre ?? '',
-            apellido: apellido ?? '',
-            direccion: direccion ?? '',
-            telefonoFijo: telefonoFijo ?? '',
-            telefonoMovil: telefonoMovil ?? '',
-            correo: correo ?? '',
-            contrasena: contrasena ?? '',
-            fechaActivacion: fechaActivacion ?? '',
-            fechaDesactivacion: fechaDesactivacion ?? '',
-            fechaCambio: fechaCambio ?? '',
-            activo: activo ?? '');
+            nombre: nombre,
+            apellido: apellido,
+            direccion: direccion,
+            telefonoFijo: telefonoFijo,
+            telefonoMovil: telefonoMovil,
+            correo: correo,
+            contrasena: contrasena,
+            fechaActivacion: fechaActivacion,
+            fechaDesactivacion: fechaDesactivacion,
+            fechaCambio: fechaCambio,
+            activo: activo);
 
   factory UsuarioModel.fromJson(Map<String, dynamic> json) => UsuarioModel(
         usuarioId: json["UsuarioId"],

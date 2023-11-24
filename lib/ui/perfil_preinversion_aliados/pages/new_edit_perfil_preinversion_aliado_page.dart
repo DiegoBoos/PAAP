@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/perfil_preinversion_aliado_entity.dart';
 import '../../../ui/blocs/perfil_preinversion_aliados/perfil_preinversion_aliados_bloc.dart';
 import '../../../ui/cubits/aliado/aliado_cubit.dart';
 import '../../../ui/cubits/menu/menu_cubit.dart';
@@ -28,8 +27,9 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
         BlocProvider.of<VPerfilPreInversionCubit>(context);
     final perfilPreInversionAliadosBloc =
         BlocProvider.of<PerfilPreInversionAliadosBloc>(context);
-    final perfilPreInversionAliado = ModalRoute.of(context)!.settings.arguments
-        as PerfilPreInversionAliadoEntity?;
+
+    final perfilPreInversionAliado =
+        perfilPreInversionAliadoCubit.state.perfilPreInversionAliado;
 
     return BlocListener<PerfilPreInversionAliadoCubit,
         PerfilPreInversionAliadoState>(
@@ -44,7 +44,7 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
 
           perfilPreInversionAliadosBloc.add(GetPerfilPreInversionAliados(
               vPerfilPreInversionCubit
-                  .state.vPerfilPreInversion!.perfilPreInversionId));
+                  .state.vPerfilPreInversion!.perfilPreInversionId!));
         }
       },
       child: Scaffold(
@@ -57,9 +57,8 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
             },
           ),
           appBar: AppBar(
-              title: Text(perfilPreInversionAliado?.aliadoId == ''
-                  ? 'Crear'
-                  : 'Editar'),
+              title: Text(
+                  perfilPreInversionAliado.aliadoId == '' ? 'Crear' : 'Editar'),
               actions: const [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -88,12 +87,10 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
                         aliadoCubit.saveAliadoDB(aliadoCubit.state.aliado);
 
                         perfilPreInversionAliadoCubit
-                            .changePerfilPreInversionId(vPerfilPreInversionId);
+                            .changePerfilPreInversionId(vPerfilPreInversionId!);
 
                         perfilPreInversionAliadoCubit
-                            .savePerfilPreInversionAliadoDB(
-                                perfilPreInversionAliadoCubit
-                                    .state.perfilPreInversionAliado);
+                            .savePerfilPreInversionAliadoDB();
                       },
                     ),
                   ],

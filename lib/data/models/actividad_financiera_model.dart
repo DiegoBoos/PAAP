@@ -2,17 +2,17 @@ import 'package:paap/domain/entities/actividad_financiera_entity.dart';
 
 class ActividadFinancieraModel extends ActividadFinancieraEntity {
   ActividadFinancieraModel({
-    required String actividadFinancieraId,
+    String? actividadFinancieraId,
     String? nombre,
     String? descripcion,
     String? activo,
     String? tipoMovimientoId,
   }) : super(
             actividadFinancieraId: actividadFinancieraId,
-            nombre: nombre ?? '',
-            descripcion: descripcion ?? '',
-            activo: activo ?? '',
-            tipoMovimientoId: tipoMovimientoId ?? '');
+            nombre: nombre,
+            descripcion: descripcion,
+            activo: activo,
+            tipoMovimientoId: tipoMovimientoId);
 
   factory ActividadFinancieraModel.fromJson(Map<String, dynamic> json) =>
       ActividadFinancieraModel(

@@ -1,43 +1,43 @@
 class AlianzaEntity {
   AlianzaEntity({
-    required this.alianzaId,
-    required this.perfilPreInversionId,
-    required this.convocatoriaId,
-    required this.nombre,
-    required this.abreviatura,
-    required this.nit,
-    required this.municipioId,
-    required this.direccion,
-    required this.contacto,
-    required this.telefonoFijo,
-    required this.telefonoMovil,
-    required this.correo,
-    required this.tipoProyectoId,
-    required this.productoId,
-    required this.productoAsociadoId,
-    required this.valorTotalProyecto,
-    required this.incentivoModular,
-    required this.legalizado,
+    this.alianzaId,
+    this.perfilPreInversionId,
+    this.convocatoriaId,
+    this.nombre,
+    this.abreviatura,
+    this.nit,
+    this.municipioId,
+    this.direccion,
+    this.contacto,
+    this.telefonoFijo,
+    this.telefonoMovil,
+    this.correo,
+    this.tipoProyectoId,
+    this.productoId,
+    this.productoAsociadoId,
+    this.valorTotalProyecto,
+    this.incentivoModular,
+    this.legalizado,
   });
 
-  final String alianzaId;
-  final String perfilPreInversionId;
-  final String convocatoriaId;
-  final String nombre;
-  final String abreviatura;
-  final String nit;
-  final String municipioId;
-  final String direccion;
-  final String contacto;
-  final String telefonoFijo;
-  final String telefonoMovil;
-  final String correo;
-  final String tipoProyectoId;
-  final String productoId;
-  final String productoAsociadoId;
-  final String valorTotalProyecto;
-  final String incentivoModular;
-  final String legalizado;
+  String? alianzaId;
+  String? perfilPreInversionId;
+  String? convocatoriaId;
+  String? nombre;
+  String? abreviatura;
+  String? nit;
+  String? municipioId;
+  String? direccion;
+  String? contacto;
+  String? telefonoFijo;
+  String? telefonoMovil;
+  String? correo;
+  String? tipoProyectoId;
+  String? productoId;
+  String? productoAsociadoId;
+  String? valorTotalProyecto;
+  String? incentivoModular;
+  String? legalizado;
 
   Map<String, dynamic> toJson() => {
         "AlianzaId": alianzaId,

@@ -32,18 +32,23 @@ class PerfilPreInversionBeneficiarioCubit
 
   void initState() => emit(PerfilPreInversionBeneficiarioInitial());
 
-  void savePerfilPreInversionBeneficiarioDB(
+  void setPerfilPreInversionBeneficiario(
       PerfilPreInversionBeneficiarioEntity
-          perfilPreInversionBeneficiarioEntity) async {
+          perfilPreInversionBeneficiarioEntity) {
+    emit(PerfilPreInversionBeneficiarioChanged(
+        perfilPreInversionBeneficiarioEntity));
+  }
+
+  void savePerfilPreInversionBeneficiarioDB() async {
     final result = await perfilPreInversionBeneficiarioDB
         .savePerfilPreInversionBeneficiarioUsecaseDB(
-            perfilPreInversionBeneficiarioEntity);
+            state.perfilPreInversionBeneficiario);
     result.fold(
         (failure) =>
             emit(PerfilPreInversionBeneficiarioError(failure.properties.first)),
         (data) => emit(PerfilPreInversionBeneficiarioSaved(
             perfilPreInversionBeneficiario:
-                perfilPreInversionBeneficiarioEntity)));
+                state.perfilPreInversionBeneficiario)));
   }
 
   void changeMunicipioId(String value) {

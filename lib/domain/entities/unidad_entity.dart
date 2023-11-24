@@ -1,13 +1,13 @@
 class UnidadEntity {
   UnidadEntity({
-    required this.unidadId,
-    required this.nombre,
-    required this.simbolo,
+    this.unidadId,
+    this.nombre,
+    this.simbolo,
   });
 
-  String unidadId;
-  String nombre;
-  String simbolo;
+  String? unidadId;
+  String? nombre;
+  String? simbolo;
 
   Map<String, dynamic> toJson() => {
         "UnidadId": unidadId,

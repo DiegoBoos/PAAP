@@ -18,7 +18,7 @@ class AliadoCubit extends Cubit<AliadoState> {
         (data) => emit(AliadoSaved(aliadoSaved: aliadoEntity)));
   }
 
-  Future<void> getAliado(String aliadoId) async {
+  void getAliado(String aliadoId) async {
     final result = await aliadoUsecaseDB.getAliadoUsecaseDB(aliadoId);
     result.fold((failure) => emit(AliadoError(failure.properties.first)),
         (data) {

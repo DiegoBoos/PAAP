@@ -17,7 +17,7 @@ class VPerfilesPreInversionTableSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
-        DataCell(Text(vPerfilPreInversion.perfilPreInversionId)),
+        DataCell(Text(vPerfilPreInversion.perfilPreInversionId!)),
         DataCell(TextButton(
           onPressed: () {
             BlocProvider.of<VPerfilPreInversionCubit>(context)
@@ -28,7 +28,7 @@ class VPerfilesPreInversionTableSource extends DataTableSource {
             );
           },
           child: Text(
-            vPerfilPreInversion.nombre,
+            vPerfilPreInversion.nombre!,
           ),
         )),
       ],
@@ -80,7 +80,8 @@ class _PerfilesPreInversionRowsState extends State<PerfilesPreInversionRows> {
         if (enableId) {
           final vPerfilesPreInversion =
               allVPerfilesPreInversion.where((vPerfil) {
-            return vPerfil.perfilPreInversionId.toLowerCase() == lowerCaseQuery;
+            return vPerfil.perfilPreInversionId!.toLowerCase() ==
+                lowerCaseQuery;
           }).toList();
 
           vPerfilesPreInversionFiltered = vPerfilesPreInversion;
@@ -88,7 +89,7 @@ class _PerfilesPreInversionRowsState extends State<PerfilesPreInversionRows> {
         } else {
           final vPerfilesPreInversion =
               allVPerfilesPreInversion.where((vPerfil) {
-            return vPerfil.nombre.toLowerCase().contains(lowerCaseQuery);
+            return vPerfil.nombre!.toLowerCase().contains(lowerCaseQuery);
           }).toList();
 
           vPerfilesPreInversionFiltered = vPerfilesPreInversion;
