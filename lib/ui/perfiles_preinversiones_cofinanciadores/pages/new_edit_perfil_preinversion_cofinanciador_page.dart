@@ -8,7 +8,6 @@ import '../../../ui/cubits/perfil_preinversion_cofinanciador/perfil_preinversion
 import '../../../ui/cubits/perfil_preinversion_cofinanciador_actividad_financiera/perfil_preinversion_cofinanciador_actividad_financiera_cubit.dart';
 import '../../../ui/cubits/perfil_preinversion_cofinanciador_desembolso/perfil_preinversion_cofinanciador_desembolso_cubit.dart';
 import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
-import '../../cubits/actividad_financiera/actividad_financiera_cubit.dart';
 import '../../cubits/cofinanciador/cofinanciador_cubit.dart';
 import '../../cubits/perfil_preinversion_cofinanciador_rubro/perfil_preinversion_cofinanciador_rubro_cubit.dart';
 import '../../cubits/rubro/rubro_cubit.dart';
@@ -32,6 +31,9 @@ class NewEditPerfilPreInversionCofinanciadorPage extends StatefulWidget {
 class _NewEditPerfilPreInversionCofinanciadorPageState
     extends State<NewEditPerfilPreInversionCofinanciadorPage> {
   final formKeyCofinanciador = GlobalKey<FormState>();
+  bool isDesembolsoVisible = false;
+  bool isActividadesVisible = false;
+  bool isRubrosVisible = false;
 
   @override
   void initState() {
@@ -104,6 +106,10 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                       perfilPreInversionCofinanciadorSaved
                           .perfilPreInversionId!,
                       perfilPreInversionCofinanciadorSaved.cofinanciadorId!);
+
+              setState(() {
+                isDesembolsoVisible = true;
+              });
             }
           },
         ),
@@ -120,6 +126,9 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                           .perfilPreInversionId!,
                       perfilPreInversionCofinanciadorDesembolsoSaved
                           .cofinanciadorId!);
+              setState(() {
+                isActividadesVisible = true;
+              });
             }
           },
         ),
@@ -137,6 +146,10 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                           .perfilPreInversionId,
                       perfilPreInversionCofinanciadorActividadFinancieraSaved
                           .cofinanciadorId!);
+
+              setState(() {
+                isRubrosVisible = true;
+              });
             }
           },
         ),
@@ -186,38 +199,15 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                     }
                   },
                 ),
-                BlocBuilder<PerfilPreInversionCofinanciadorDesembolsoCubit,
-                    PerfilPreInversionCofinanciadorDesembolsoState>(
-                  builder: (context, state) {
-                    if (state
-                        is PerfilPreInversionCofinanciadorDesembolsoLoaded) {
-                      return PerfilPreInversionCofinanciadorDesembolsoForm(
-                          perfilPreInversionCofinanciadorDesembolso);
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-                BlocBuilder<ActividadFinancieraCubit, ActividadFinancieraState>(
-                  builder: (context, state) {
-                    if (state is ActividadesFinancierasLoaded) {
-                      return PerfilPreInversionCofinanciadorActividadFinancieraForm(
-                          perfilPreInversionCofinanciadorActividadFinanciera);
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-                BlocBuilder<RubroCubit, RubroState>(
-                  builder: (context, state) {
-                    if (state is RubrosLoaded) {
-                      return PerfilPreInversionCofinanciadorRubroForm(
-                          perfilPreInversionCofinanciadorRubro);
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
+                if (isDesembolsoVisible)
+                  PerfilPreInversionCofinanciadorDesembolsoForm(
+                      perfilPreInversionCofinanciadorDesembolso),
+                if (isActividadesVisible)
+                  PerfilPreInversionCofinanciadorActividadFinancieraForm(
+                      perfilPreInversionCofinanciadorActividadFinanciera),
+                if (isRubrosVisible)
+                  PerfilPreInversionCofinanciadorRubroForm(
+                      perfilPreInversionCofinanciadorRubro),
                 const SizedBox(height: 20),
                 SaveBackButtons(
                   onSaved: () async {
