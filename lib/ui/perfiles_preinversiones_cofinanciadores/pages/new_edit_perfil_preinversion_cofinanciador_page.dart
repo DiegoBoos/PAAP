@@ -233,9 +233,11 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                     perfilPreInversionCofinanciadorCubit
                         .changeParticipacion(participacion.toString());
 
+                    perfilPreInversionCofinanciadorCubit.changeCofinanciador(
+                        perfilPreInversionCofinanciador.cofinanciadorId);
+
                     perfilPreInversionCofinanciadorCubit
-                        .savePerfilPreInversionCofinanciadorDB(
-                            perfilPreInversionCofinanciador);
+                        .savePerfilPreInversionCofinanciadorDB();
                   },
                 )
               ],

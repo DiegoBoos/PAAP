@@ -185,10 +185,7 @@ class _PerfilPreInversionCofinanciadorDesembolsoFormState
                               formKeyDesembolso.currentState!.save();
 
                               perfilPreInversionCofinanciadorDesembolsoCubit
-                                  .savePerfilPreInversionCofinanciadorDesembolsoDB(
-                                      perfilPreInversionCofinanciadorDesembolsoCubit
-                                          .state
-                                          .perfilPreInversionCofinanciadorDesembolso);
+                                  .savePerfilPreInversionCofinanciadorDesembolsoDB();
                             },
                             child: const Icon(Icons.add))),
                     const PerfilPreInversionCofinanciadorDesembolsosRows()

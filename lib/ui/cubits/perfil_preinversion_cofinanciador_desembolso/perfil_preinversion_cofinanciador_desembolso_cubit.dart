@@ -32,19 +32,17 @@ class PerfilPreInversionCofinanciadorDesembolsoCubit
     });
   }
 
-  void savePerfilPreInversionCofinanciadorDesembolsoDB(
-      PerfilPreInversionCofinanciadorDesembolsoEntity
-          perfilPreInversionCofinanciadorDesembolso) async {
+  void savePerfilPreInversionCofinanciadorDesembolsoDB() async {
     final result = await perfilPreInversionCofinanciadorDesembolsoDB
         .savePerfilPreInversionCofinanciadorDesembolsoUsecaseDB(
-            perfilPreInversionCofinanciadorDesembolso);
+            state.perfilPreInversionCofinanciadorDesembolso);
     result.fold((failure) {
       emit(PerfilPreInversionCofinanciadorDesembolsoError(
           failure.properties.first));
     }, (data) {
       emit(PerfilPreInversionCofinanciadorDesembolsoSaved(
           perfilPreInversionCofinanciadorDesembolso:
-              perfilPreInversionCofinanciadorDesembolso));
+              state.perfilPreInversionCofinanciadorDesembolso));
     });
   }
 
