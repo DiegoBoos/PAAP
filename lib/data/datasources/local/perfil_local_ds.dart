@@ -55,7 +55,7 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
     Departamento.Nombre as departamento, 
     Direccion as direccion,
     Contacto as contacto,
-    TelefonoFijo as telefonoFijo, 
+    Coalesce(TelefonoFijo, '') as telefonoFijo, 
     TelefonoMovil as telefonoMovil,
     Correo as correo,
     TipoProyecto.Nombre as tipoProyecto,

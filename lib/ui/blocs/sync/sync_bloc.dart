@@ -333,7 +333,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
             counter: state.syncProgressModel.counter + 1,
             total: gTotal,
             percent: calculatePercent())));
-        await syncBeneficiarios(usuario, emit, 0);
+        await syncActividadesEconomicas(usuario, emit);
       } else {
         gTotal = 20;
         add(SyncStatusChanged(state.syncProgressModel.copyWith(
