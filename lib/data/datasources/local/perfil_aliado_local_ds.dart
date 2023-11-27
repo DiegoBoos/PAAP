@@ -42,7 +42,7 @@ class PerfilAliadoLocalDataSourceImpl implements PerfilAliadoLocalDataSource {
     final db = await DBConfig.database;
 
     String sql = '''
-      select 
+      SELECT 
       PerfilAliado.PerfilId,
       PerfilAliado.AliadoId,
       PerfilAliado.ProductoId,
@@ -51,10 +51,24 @@ class PerfilAliadoLocalDataSourceImpl implements PerfilAliadoLocalDataSource {
       PerfilAliado.FrecuenciaId,
       PerfilAliado.PorcentajeCompra,
       PerfilAliado.SitioEntregaId,
-      Aliado.Nombre as aliado
-      from PerfilAliado
-      left join Aliado on (Aliado.AliadoId=PerfilAliado.AliadoId)
-      where PerfilId = $perfilId
+      Aliado.AliadoId,
+      Aliado.Nombre,
+      Aliado.FechaCreacion,
+      Aliado.NombreContacto,
+      Aliado.Direccion,
+      Aliado.TelefonoFijo,
+      Aliado.TelefonoMovil,
+      Aliado.Correo,
+      Aliado.MunicipioId,
+      Aliado.Experiencia,
+      Aliado.FechaActivacion,
+      Aliado.FechaDesactivacion,
+      Aliado.FechaCambio,
+      Aliado.Activo,
+      PerfilAliado.RecordStatus
+      FROM PerfilAliado
+      INNER JOIN Aliado on (Aliado.AliadoId=PerfilAliado.AliadoId)
+      WHERE PerfilId = $perfilId
       ''';
 
     final res = await db.rawQuery(sql);

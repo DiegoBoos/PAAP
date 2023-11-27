@@ -86,17 +86,17 @@ class _PerfilPreInversionCofinanciadorFormState
     perfilPreInversionCofinanciadorCubit.changeCofinanciadorId(cofinanciadorId);
   }
 
-  @override
-  void deactivate() {
-    super.deactivate();
+  // @override
+  // void deactivate() {
+  //   super.deactivate();
 
-    final perfilPreInversionCofinanciadorCubit =
-        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
-      context,
-    );
+  //   final perfilPreInversionCofinanciadorCubit =
+  //       BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(
+  //     context,
+  //   );
 
-    perfilPreInversionCofinanciadorCubit.initState();
-  }
+  //   perfilPreInversionCofinanciadorCubit.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

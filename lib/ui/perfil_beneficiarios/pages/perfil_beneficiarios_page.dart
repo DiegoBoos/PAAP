@@ -7,7 +7,6 @@ import '../../cubits/v_perfil/v_perfil_cubit.dart';
 import '../../perfiles/widgets/perfil_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
-import '../../utils/no_data_svg.dart';
 import 'perfil_beneficiarios_rows.dart';
 
 class PerfilBeneficiariosPage extends StatefulWidget {
@@ -22,6 +21,7 @@ class _PerfilBeneficiariosPageState extends State<PerfilBeneficiariosPage> {
   @override
   void initState() {
     super.initState();
+
     final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
     final perfilBeneficiariosBloc =
         BlocProvider.of<PerfilBeneficiariosBloc>(context);
@@ -58,11 +58,7 @@ class _PerfilBeneficiariosPageState extends State<PerfilBeneficiariosPage> {
             }
             if (state is PerfilBeneficiariosLoaded) {
               final perfilBeneficiarios = state.perfilBeneficiariosLoaded;
-              if (perfilBeneficiarios.isEmpty) {
-                return const SizedBox(
-                    child:
-                        Center(child: NoDataSvg(title: 'No hay resultados')));
-              }
+
               return PerfilBeneficiariosRows(
                 perfilBeneficiarios: perfilBeneficiarios,
               );

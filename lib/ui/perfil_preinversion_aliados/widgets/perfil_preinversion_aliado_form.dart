@@ -22,6 +22,7 @@ import '../../../domain/entities/sitio_entrega_entity.dart';
 import '../../../domain/entities/unidad_entity.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
+import '../../utils/styles.dart';
 
 class PerfilPreInversionAliadoForm extends StatefulWidget {
   const PerfilPreInversionAliadoForm(
@@ -80,6 +81,19 @@ class _PerfilPreInversionAliadoFormState
       sitioEntregaId = widget.perfilPreInversionAliado?.sitioEntregaId;
     });
 
+    final aliado = AliadoEntity(
+        aliadoId: widget.perfilPreInversionAliado?.aliadoId,
+        nombre: widget.perfilPreInversionAliado?.nombre,
+        experiencia: widget.perfilPreInversionAliado?.experiencia,
+        nombreContacto: widget.perfilPreInversionAliado?.nombreContacto,
+        direccion: widget.perfilPreInversionAliado?.direccion,
+        correo: widget.perfilPreInversionAliado?.correo,
+        telefonoFijo: widget.perfilPreInversionAliado?.telefonoFijo,
+        telefonoMovil: widget.perfilPreInversionAliado?.telefonoMovil,
+        fechaDesactivacion: widget.perfilPreInversionAliado?.fechaDesactivacion,
+        municipioId: widget.perfilPreInversionAliado?.municipioId);
+
+    aliadoCubit.setAliado(aliado);
     loadAliado(aliadoCubit.state.aliado);
   }
 
@@ -145,454 +159,485 @@ class _PerfilPreInversionAliadoFormState
             }
           })),
         ],
-        child: BlocBuilder<AliadoCubit, AliadoState>(
-          builder: (context, state) {
-            return Column(children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: aliadoIdCtrl,
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'ID Aliado', labelText: 'ID Aliado'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Campo Requerido*';
-                        }
-                        return null;
-                      },
-                      onFieldSubmitted: (String? newValue) {
-                        aliadoCubit.getAliado(newValue!);
-                      },
-                      onSaved: (String? newValue) {
-                        aliadoCubit.changeAliadoId(newValue);
-                        perfilPreInversionAliadoCubit.changeAliadoId(newValue);
-                      },
-                    ),
+        child: Card(
+            child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(children: [
+                  const Text(
+                    'Información del aliado con relación al perfil preinversión',
+                    style: Styles.titleStyle,
                   ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: TextFormField(
-                        controller: experienciaCtrl,
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'Años de experiencia',
-                            labelText: 'Años de experiencia'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Campo Requerido*';
-                          }
-                          return null;
-                        },
-                        onSaved: (String? newValue) {
-                          aliadoCubit.changeExperiencia(newValue);
-                        }),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                  controller: nombreCtrl,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Nombre', labelText: 'Nombre'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo Requerido*';
-                    }
-                    return null;
-                  },
-                  onSaved: (String? newValue) {
-                    aliadoCubit.changeNombre(newValue);
-                  }),
-              const SizedBox(height: 20),
-              BlocBuilder<DepartamentoCubit, DepartamentoState>(
-                builder: (context, state) {
-                  if (state is DepartamentosLoaded) {
-                    return DropdownButtonFormField(
-                      isExpanded: true,
-                      decoration: CustomInputDecoration.inputDecoration(
-                          hintText: 'Departamento', labelText: 'Departamento'),
-                      value: departamentoId,
-                      items: state.departamentosLoaded!
-                          .map<DropdownMenuItem<String>>(
-                              (DepartamentoEntity value) {
-                        return DropdownMenuItem<String>(
-                          value: value.id,
-                          child: Text(value.nombre!),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Campo Requerido*';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? value) {
-                        setState(() {
-                          municipiosFiltered = allMunicipios
-                              .where(((municipio) =>
-                                  municipio.departamentoid == value))
-                              .toList();
-
-                          departamentoId = value;
-                          municipioId = null;
-                        });
-                      },
-                    );
-                  }
-                  return Container();
-                },
-              ),
-              if (departamentoId != null) const SizedBox(height: 20),
-              if (departamentoId != null)
-                DropdownButtonFormField(
-                  isExpanded: true,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Municipio', labelText: 'Municipio'),
-                  value: municipioId,
-                  items: municipiosFiltered
-                      .map<DropdownMenuItem<String>>((MunicipioEntity value) {
-                    return DropdownMenuItem<String>(
-                      value: value.id,
-                      child: Text(value.nombre!),
-                    );
-                  }).toList(),
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Campo Requerido*';
-                    }
-                    return null;
-                  },
-                  onChanged: (String? value) {
-                    setState(() {
-                      municipioId = value;
-                    });
-                  },
-                  onSaved: (String? newValue) {
-                    aliadoCubit.changeMunicipio(newValue);
-                  },
-                ),
-              const SizedBox(height: 20),
-              TextFormField(
-                  controller: nombreContactoCtrl,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Nombre del contacto',
-                      labelText: 'Nombre del contacto'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo Requerido*';
-                    }
-                    return null;
-                  },
-                  onSaved: (String? newValue) {
-                    aliadoCubit.changeNombreContacto(newValue);
-                  }),
-              const SizedBox(height: 20),
-              TextFormField(
-                  controller: direccionCtrl,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Dirección', labelText: 'Dirección'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo Requerido*';
-                    }
-                    return null;
-                  },
-                  onSaved: (String? newValue) {
-                    aliadoCubit.changeDireccion(newValue);
-                  }),
-              const SizedBox(height: 20),
-              TextFormField(
-                  controller: correoCtrl,
-                  maxLines: null,
-                  decoration: CustomInputDecoration.inputDecoration(
-                      hintText: 'Correo', labelText: 'Correo'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo Requerido*';
-                    }
-                    if (!EmailValidator.validate(value)) {
-                      return 'Email no válido';
-                    }
-                    return null;
-                  },
-                  onSaved: (String? newValue) {
-                    aliadoCubit.changeCorreo(newValue);
-                  }),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                        controller: telefonoFijoCtrl,
-                        keyboardType: TextInputType.number,
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'Teléfono Fijo',
-                            labelText: 'Teléfono Fijo'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Campo Requerido*';
-                          }
-                          return null;
-                        },
-                        onSaved: (String? newValue) {
-                          aliadoCubit.changeTelefonoFijo(newValue);
-                        }),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: TextFormField(
-                        controller: telefonoMovilCtrl,
-                        keyboardType: TextInputType.number,
-                        decoration: CustomInputDecoration.inputDecoration(
-                            hintText: 'Teléfono Móvil',
-                            labelText: 'Teléfono Móvil'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Campo Requerido*';
-                          }
-                          return null;
-                        },
-                        onSaved: (String? newValue) {
-                          aliadoCubit.changeTelefonoMovil(newValue);
-                        }),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: fechaDesactivacionCtrl,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Campo Requerido';
-                  }
-                  if (DateTime.tryParse(value) == null) {
-                    return 'No es una fecha válida';
-                  }
-                  return null;
-                },
-                onSaved: (String? newValue) {
-                  aliadoCubit.changeFechaDesactivacion(newValue);
-                },
-                decoration: CustomInputDecoration.inputDecoration(
-                    hintText: 'Fecha Desactivacion',
-                    labelText: 'Fecha Desactivacion',
-                    suffixIcon: IconButton(
-                        onPressed: () async {
-                          DateTime? newDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2050));
-
-                          if (newDate == null) return;
-
-                          fechaDesactivacionCtrl.text =
-                              dateFormat.format(newDate);
-                        },
-                        icon: const Icon(Icons.calendar_today))),
-              ),
-              const SizedBox(height: 20),
-              BlocBuilder<PerfilPreInversionAliadoCubit,
-                  PerfilPreInversionAliadoState>(
-                builder: (context, state) {
-                  return Column(
-                    children: [
-                      BlocBuilder<ProductoCubit, ProductoState>(
-                        builder: (context, state) {
-                          if (state is ProductosLoaded) {
-                            return DropdownButtonFormField(
-                              isExpanded: true,
-                              decoration: CustomInputDecoration.inputDecoration(
-                                  hintText: 'Producto', labelText: 'Producto'),
-                              value: productoId,
-                              items: state.productosLoaded!
-                                  .map<DropdownMenuItem<String>>(
-                                      (ProductoEntity value) {
-                                return DropdownMenuItem<String>(
-                                  value: value.id,
-                                  child: Text(value.nombre!),
-                                );
-                              }).toList(),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Campo Requerido*';
-                                }
-                                return null;
-                              },
-                              onChanged: (String? value) {
-                                perfilPreInversionAliadoCubit
-                                    .changeProducto(value);
-                              },
-                            );
-                          }
-                          return Container();
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                                controller: volumenCompraCtrl,
-                                keyboardType: TextInputType.number,
+                  const SizedBox(height: 20),
+                  BlocBuilder<AliadoCubit, AliadoState>(
+                    builder: (context, state) {
+                      return Column(children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: aliadoIdCtrl,
                                 decoration:
                                     CustomInputDecoration.inputDecoration(
-                                        hintText: 'Volumen Compra',
-                                        labelText: 'Volumen Compra'),
+                                        hintText: 'ID Aliado',
+                                        labelText: 'ID Aliado'),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Campo Requerido*';
                                   }
                                   return null;
                                 },
+                                onFieldSubmitted: (String? newValue) {
+                                  aliadoCubit.getAliado(newValue!);
+                                },
                                 onSaved: (String? newValue) {
+                                  aliadoCubit.changeAliadoId(newValue);
                                   perfilPreInversionAliadoCubit
-                                      .changeVolumenCompra(newValue);
-                                }),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: BlocBuilder<UnidadCubit, UnidadState>(
-                              builder: (context, state) {
-                                if (state is UnidadesLoaded) {
-                                  return DropdownButtonFormField(
-                                    isExpanded: true,
-                                    decoration:
-                                        CustomInputDecoration.inputDecoration(
-                                            hintText: 'Unidad',
-                                            labelText: 'Unidad'),
-                                    value: unidadId,
-                                    items: state.unidadesLoaded!
-                                        .map<DropdownMenuItem<String>>(
-                                            (UnidadEntity value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value.unidadId,
-                                        child: Text(value.nombre!),
-                                      );
-                                    }).toList(),
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return 'Campo Requerido*';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (String? value) {
-                                      perfilPreInversionAliadoCubit
-                                          .changeUnidad(value);
-                                    },
-                                  );
-                                }
-                                return Container();
-                              },
+                                      .changeAliadoId(newValue);
+                                },
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                                controller: porcentajeCompraCtrl,
-                                keyboardType: TextInputType.number,
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: TextFormField(
+                                  controller: experienciaCtrl,
+                                  decoration:
+                                      CustomInputDecoration.inputDecoration(
+                                          hintText: 'Años de experiencia',
+                                          labelText: 'Años de experiencia'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Campo Requerido*';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (String? newValue) {
+                                    aliadoCubit.changeExperiencia(newValue);
+                                  }),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                            controller: nombreCtrl,
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Nombre', labelText: 'Nombre'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Campo Requerido*';
+                              }
+                              return null;
+                            },
+                            onSaved: (String? newValue) {
+                              aliadoCubit.changeNombre(newValue);
+                            }),
+                        const SizedBox(height: 20),
+                        BlocBuilder<DepartamentoCubit, DepartamentoState>(
+                          builder: (context, state) {
+                            if (state is DepartamentosLoaded) {
+                              return DropdownButtonFormField(
+                                isExpanded: true,
                                 decoration:
                                     CustomInputDecoration.inputDecoration(
-                                        hintText: 'Porcentaje de compra',
-                                        labelText: 'Porcentaje de compra'),
+                                        hintText: 'Departamento',
+                                        labelText: 'Departamento'),
+                                value: departamentoId,
+                                items: state.departamentosLoaded!
+                                    .map<DropdownMenuItem<String>>(
+                                        (DepartamentoEntity value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value.id,
+                                    child: Text(value.nombre!),
+                                  );
+                                }).toList(),
                                 validator: (value) {
-                                  if (value == null || value.isEmpty) {
+                                  if (value == null) {
                                     return 'Campo Requerido*';
                                   }
                                   return null;
                                 },
-                                onSaved: (String? newValue) {
-                                  perfilPreInversionAliadoCubit
-                                      .changePorcentajeCompra(newValue);
-                                }),
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    municipiosFiltered = allMunicipios
+                                        .where(((municipio) =>
+                                            municipio.departamentoid == value))
+                                        .toList();
+
+                                    departamentoId = value;
+                                    municipioId = null;
+                                  });
+                                },
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
+                        if (departamentoId != null) const SizedBox(height: 20),
+                        if (departamentoId != null)
+                          DropdownButtonFormField(
+                            isExpanded: true,
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Municipio', labelText: 'Municipio'),
+                            value: municipioId,
+                            items: municipiosFiltered
+                                .map<DropdownMenuItem<String>>(
+                                    (MunicipioEntity value) {
+                              return DropdownMenuItem<String>(
+                                value: value.id,
+                                child: Text(value.nombre!),
+                              );
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Campo Requerido*';
+                              }
+                              return null;
+                            },
+                            onChanged: (String? value) {
+                              setState(() {
+                                municipioId = value;
+                              });
+                            },
+                            onSaved: (String? newValue) {
+                              aliadoCubit.changeMunicipio(newValue);
+                            },
                           ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child:
-                                BlocBuilder<FrecuenciaCubit, FrecuenciaState>(
-                              builder: (context, state) {
-                                if (state is FrecuenciasLoaded) {
-                                  return DropdownButtonFormField(
-                                    isExpanded: true,
-                                    decoration:
-                                        CustomInputDecoration.inputDecoration(
-                                            hintText: 'Frecuencia',
-                                            labelText: 'Frecuencia'),
-                                    value: frecuenciaId,
-                                    items: state.frecuenciasLoaded!
-                                        .map<DropdownMenuItem<String>>(
-                                            (FrecuenciaEntity value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value.frecuenciaId,
-                                        child: Text(value.nombre!),
-                                      );
-                                    }).toList(),
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return 'Campo Requerido*';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (String? value) {
-                                      perfilPreInversionAliadoCubit
-                                          .changeFrecuencia(value);
-                                    },
-                                  );
-                                }
-                                return Container();
-                              },
+                        const SizedBox(height: 20),
+                        TextFormField(
+                            controller: nombreContactoCtrl,
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Nombre del contacto',
+                                labelText: 'Nombre del contacto'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Campo Requerido*';
+                              }
+                              return null;
+                            },
+                            onSaved: (String? newValue) {
+                              aliadoCubit.changeNombreContacto(newValue);
+                            }),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                            controller: direccionCtrl,
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Dirección', labelText: 'Dirección'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Campo Requerido*';
+                              }
+                              return null;
+                            },
+                            onSaved: (String? newValue) {
+                              aliadoCubit.changeDireccion(newValue);
+                            }),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                            controller: correoCtrl,
+                            maxLines: null,
+                            decoration: CustomInputDecoration.inputDecoration(
+                                hintText: 'Correo', labelText: 'Correo'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Campo Requerido*';
+                              }
+                              if (!EmailValidator.validate(value)) {
+                                return 'Email no válido';
+                              }
+                              return null;
+                            },
+                            onSaved: (String? newValue) {
+                              aliadoCubit.changeCorreo(newValue);
+                            }),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                  controller: telefonoFijoCtrl,
+                                  keyboardType: TextInputType.number,
+                                  decoration:
+                                      CustomInputDecoration.inputDecoration(
+                                          hintText: 'Teléfono Fijo',
+                                          labelText: 'Teléfono Fijo'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Campo Requerido*';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (String? newValue) {
+                                    aliadoCubit.changeTelefonoFijo(newValue);
+                                  }),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      BlocBuilder<SitioEntregaCubit, SitioEntregaState>(
-                        builder: (context, state) {
-                          if (state is SitiosEntregasLoaded) {
-                            return DropdownButtonFormField(
-                              isExpanded: true,
-                              decoration: CustomInputDecoration.inputDecoration(
-                                  hintText: 'Sitio Entrega',
-                                  labelText: 'Sitio Entrega'),
-                              value: sitioEntregaId,
-                              items: state.sitiosEntregasLoaded!
-                                  .map<DropdownMenuItem<String>>(
-                                      (SitioEntregaEntity value) {
-                                return DropdownMenuItem<String>(
-                                  value: value.sitioEntregaId,
-                                  child: Text(value.nombre!),
-                                );
-                              }).toList(),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Campo Requerido*';
-                                }
-                                return null;
-                              },
-                              onChanged: (String? value) {
-                                perfilPreInversionAliadoCubit
-                                    .changeSitioEntrega(value);
-                              },
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: TextFormField(
+                                  controller: telefonoMovilCtrl,
+                                  keyboardType: TextInputType.number,
+                                  decoration:
+                                      CustomInputDecoration.inputDecoration(
+                                          hintText: 'Teléfono Móvil',
+                                          labelText: 'Teléfono Móvil'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Campo Requerido*';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (String? newValue) {
+                                    aliadoCubit.changeTelefonoMovil(newValue);
+                                  }),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: fechaDesactivacionCtrl,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Campo Requerido';
+                            }
+                            if (DateTime.tryParse(value) == null) {
+                              return 'No es una fecha válida';
+                            }
+                            return null;
+                          },
+                          onSaved: (String? newValue) {
+                            aliadoCubit.changeFechaDesactivacion(newValue);
+                          },
+                          decoration: CustomInputDecoration.inputDecoration(
+                              hintText: 'Fecha Desactivacion',
+                              labelText: 'Fecha Desactivacion',
+                              suffixIcon: IconButton(
+                                  onPressed: () async {
+                                    DateTime? newDate = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime(2050));
+
+                                    if (newDate == null) return;
+
+                                    fechaDesactivacionCtrl.text =
+                                        dateFormat.format(newDate);
+                                  },
+                                  icon: const Icon(Icons.calendar_today))),
+                        ),
+                        const SizedBox(height: 20),
+                        BlocBuilder<PerfilPreInversionAliadoCubit,
+                            PerfilPreInversionAliadoState>(
+                          builder: (context, state) {
+                            return Column(
+                              children: [
+                                BlocBuilder<ProductoCubit, ProductoState>(
+                                  builder: (context, state) {
+                                    if (state is ProductosLoaded) {
+                                      return DropdownButtonFormField(
+                                        isExpanded: true,
+                                        decoration: CustomInputDecoration
+                                            .inputDecoration(
+                                                hintText: 'Producto',
+                                                labelText: 'Producto'),
+                                        value: productoId,
+                                        items: state.productosLoaded!
+                                            .map<DropdownMenuItem<String>>(
+                                                (ProductoEntity value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value.id,
+                                            child: Text(value.nombre!),
+                                          );
+                                        }).toList(),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Campo Requerido*';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (String? value) {
+                                          perfilPreInversionAliadoCubit
+                                              .changeProducto(value);
+                                        },
+                                      );
+                                    }
+                                    return Container();
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Expanded(
+                                      child: TextFormField(
+                                          controller: volumenCompraCtrl,
+                                          keyboardType: TextInputType.number,
+                                          decoration: CustomInputDecoration
+                                              .inputDecoration(
+                                                  hintText: 'Volumen Compra',
+                                                  labelText: 'Volumen Compra'),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Campo Requerido*';
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (String? newValue) {
+                                            perfilPreInversionAliadoCubit
+                                                .changeVolumenCompra(newValue);
+                                          }),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Expanded(
+                                      child:
+                                          BlocBuilder<UnidadCubit, UnidadState>(
+                                        builder: (context, state) {
+                                          if (state is UnidadesLoaded) {
+                                            return DropdownButtonFormField(
+                                              isExpanded: true,
+                                              decoration: CustomInputDecoration
+                                                  .inputDecoration(
+                                                      hintText: 'Unidad',
+                                                      labelText: 'Unidad'),
+                                              value: unidadId,
+                                              items: state.unidadesLoaded!.map<
+                                                      DropdownMenuItem<String>>(
+                                                  (UnidadEntity value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value.unidadId,
+                                                  child: Text(value.nombre!),
+                                                );
+                                              }).toList(),
+                                              validator: (value) {
+                                                if (value == null) {
+                                                  return 'Campo Requerido*';
+                                                }
+                                                return null;
+                                              },
+                                              onChanged: (String? value) {
+                                                perfilPreInversionAliadoCubit
+                                                    .changeUnidad(value);
+                                              },
+                                            );
+                                          }
+                                          return Container();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Expanded(
+                                      child: TextFormField(
+                                          controller: porcentajeCompraCtrl,
+                                          keyboardType: TextInputType.number,
+                                          decoration: CustomInputDecoration
+                                              .inputDecoration(
+                                                  hintText:
+                                                      'Porcentaje de compra',
+                                                  labelText:
+                                                      'Porcentaje de compra'),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Campo Requerido*';
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (String? newValue) {
+                                            perfilPreInversionAliadoCubit
+                                                .changePorcentajeCompra(
+                                                    newValue);
+                                          }),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Expanded(
+                                      child: BlocBuilder<FrecuenciaCubit,
+                                          FrecuenciaState>(
+                                        builder: (context, state) {
+                                          if (state is FrecuenciasLoaded) {
+                                            return DropdownButtonFormField(
+                                              isExpanded: true,
+                                              decoration: CustomInputDecoration
+                                                  .inputDecoration(
+                                                      hintText: 'Frecuencia',
+                                                      labelText: 'Frecuencia'),
+                                              value: frecuenciaId,
+                                              items: state.frecuenciasLoaded!
+                                                  .map<
+                                                          DropdownMenuItem<
+                                                              String>>(
+                                                      (FrecuenciaEntity value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value.frecuenciaId,
+                                                  child: Text(value.nombre!),
+                                                );
+                                              }).toList(),
+                                              validator: (value) {
+                                                if (value == null) {
+                                                  return 'Campo Requerido*';
+                                                }
+                                                return null;
+                                              },
+                                              onChanged: (String? value) {
+                                                perfilPreInversionAliadoCubit
+                                                    .changeFrecuencia(value);
+                                              },
+                                            );
+                                          }
+                                          return Container();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                BlocBuilder<SitioEntregaCubit,
+                                    SitioEntregaState>(
+                                  builder: (context, state) {
+                                    if (state is SitiosEntregasLoaded) {
+                                      return DropdownButtonFormField(
+                                        isExpanded: true,
+                                        decoration: CustomInputDecoration
+                                            .inputDecoration(
+                                                hintText: 'Sitio Entrega',
+                                                labelText: 'Sitio Entrega'),
+                                        value: sitioEntregaId,
+                                        items: state.sitiosEntregasLoaded!
+                                            .map<DropdownMenuItem<String>>(
+                                                (SitioEntregaEntity value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value.sitioEntregaId,
+                                            child: Text(value.nombre!),
+                                          );
+                                        }).toList(),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Campo Requerido*';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (String? value) {
+                                          perfilPreInversionAliadoCubit
+                                              .changeSitioEntrega(value);
+                                        },
+                                      );
+                                    }
+                                    return Container();
+                                  },
+                                ),
+                              ],
                             );
-                          }
-                          return Container();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-            ]);
-          },
-        ));
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                      ]);
+                    },
+                  )
+                ]))));
   }
 }

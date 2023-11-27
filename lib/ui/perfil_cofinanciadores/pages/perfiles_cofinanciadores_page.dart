@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/perfil_cofinanciadores/perfil_cofinanciadores_bloc.dart';
 import '../../cubits/menu/menu_cubit.dart';
 import '../../cubits/v_perfil/v_perfil_cubit.dart';
 import '../../../domain/usecases/perfil_cofinanciador/perfil_cofinanciador_exports.dart';
 import '../../perfiles/widgets/perfil_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
-import '../../utils/no_data_svg.dart';
 import 'perfil_cofinanciador_rows.dart';
 
 class PerfilCofinanciadoresPage extends StatefulWidget {
@@ -35,20 +33,8 @@ class _PerfilCofinanciadoresPageState extends State<PerfilCofinanciadoresPage> {
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    final perfilCofinanciadoresBloc =
-        BlocProvider.of<PerfilCofinanciadoresBloc>(context, listen: true);
-
-    final perfilCofinanciadores =
-        perfilCofinanciadoresBloc.state.perfilCofinanciadores;
 
     return Scaffold(
-      floatingActionButton:
-          perfilCofinanciadores != null && perfilCofinanciadores.isEmpty
-              ? FloatingActionButton(
-                  child: const Icon(Icons.save),
-                  onPressed: () =>
-                      Navigator.pushNamed(context, 'NewEditCofinanciador'))
-              : null,
       drawer: BlocBuilder<MenuCubit, MenuState>(
         builder: (context, state) {
           final menuHijo = menuCubit.perfilesMenuSorted(state.menus!);
@@ -76,11 +62,7 @@ class _PerfilCofinanciadoresPageState extends State<PerfilCofinanciadoresPage> {
             } else if (state is PerfilCofinanciadoresLoaded) {
               List<PerfilCofinanciadorEntity> perfilCofinanciadores =
                   state.perfilCofinanciadoresLoaded;
-              if (perfilCofinanciadores.isEmpty) {
-                return const SizedBox(
-                    child:
-                        Center(child: NoDataSvg(title: 'No hay resultados')));
-              }
+
               return PerfilCofinanciadorRows(
                 perfilCofinanciadores: perfilCofinanciadores,
               );

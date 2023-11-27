@@ -9,7 +9,7 @@ import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
 import '../../utils/no_data_svg.dart';
-import '../widgets/perfil_preinversion_aliados_rows.dart';
+import 'perfil_preinversion_aliados_rows.dart';
 
 class PerfilPreInversionAliadosPage extends StatefulWidget {
   const PerfilPreInversionAliadosPage({super.key});
@@ -28,27 +28,18 @@ class _PerfilPreInversionAliadosPageState
         BlocProvider.of<VPerfilPreInversionCubit>(context);
     final perfilPreInversionAliadosBloc =
         BlocProvider.of<PerfilPreInversionAliadosBloc>(context);
-    perfilPreInversionAliadosBloc.add(GetPerfilPreInversionAliados(
-        vPerfilPreInversionCubit
-            .state.vPerfilPreInversion!.perfilPreInversionId!));
+
+    final perfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId!;
+    perfilPreInversionAliadosBloc
+        .add(GetPerfilPreInversionAliados(perfilPreInversionId));
   }
 
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    final perfilPreInversionAliadosBloc =
-        BlocProvider.of<PerfilPreInversionAliadosBloc>(context, listen: true);
-    final perfilPreInversionAliados =
-        perfilPreInversionAliadosBloc.state.perfilPreInversionAliados;
 
     return Scaffold(
-        floatingActionButton: perfilPreInversionAliados != null &&
-                perfilPreInversionAliados.isEmpty
-            ? FloatingActionButton(
-                child: const Icon(Icons.save),
-                onPressed: () =>
-                    Navigator.pushNamed(context, 'NewEditAliadoPreInversion'))
-            : null,
         drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
             final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
@@ -74,11 +65,7 @@ class _PerfilPreInversionAliadosPageState
               } else if (state is PerfilPreInversionAliadosLoaded) {
                 List<PerfilPreInversionAliadoEntity> perfilPreInversionAliados =
                     state.perfilPreInversionAliadosLoaded!;
-                if (perfilPreInversionAliados.isEmpty) {
-                  return const SizedBox(
-                      child:
-                          Center(child: NoDataSvg(title: 'No hay resultados')));
-                }
+
                 return PerfilPreInversionAliadosRows(
                   perfilPreInversionAliados: perfilPreInversionAliados,
                 );

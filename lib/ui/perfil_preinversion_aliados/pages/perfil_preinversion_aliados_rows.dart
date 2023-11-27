@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/perfil_aliado_entity.dart';
-import '../../cubits/perfil_aliado/perfil_aliado_cubit.dart';
+import '../../../domain/entities/perfil_preinversion_aliado_entity.dart';
+import '../../cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
 import '../../utils/no_data_svg.dart';
 
-class PerfilAliadosTableSource extends DataTableSource {
+class PerfilPreInversionAliadosTableSource extends DataTableSource {
   final BuildContext context;
-  final List<PerfilAliadoEntity> perfilAliados;
+  final List<PerfilPreInversionAliadoEntity> perfilPreInversionAliados;
 
-  PerfilAliadosTableSource(this.context, this.perfilAliados);
+  PerfilPreInversionAliadosTableSource(
+      this.context, this.perfilPreInversionAliados);
 
   @override
   DataRow getRow(int index) {
-    final perfilAliado = perfilAliados[index];
+    final perfilPreInversionAliado = perfilPreInversionAliados[index];
 
-    final perfilAliadoCubit = BlocProvider.of<PerfilAliadoCubit>(context);
+    final perfilPreInversionAliadoCubit =
+        BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
 
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
-        DataCell(Text(perfilAliado.aliadoId!)),
+        DataCell(Text(perfilPreInversionAliado.aliadoId!)),
         DataCell(TextButton(
             onPressed: () {
-              perfilAliadoCubit.setPerfilAliado(perfilAliado);
+              perfilPreInversionAliadoCubit
+                  .setPerfilPreInversionAliado(perfilPreInversionAliado);
 
               Navigator.pushNamed(
                 context,
-                'NewEditVPerfilAliado',
+                'NewEditAliadoPreInversion',
               );
             },
-            child: Text(perfilAliado.nombre ?? ''))),
+            child: Text(perfilPreInversionAliado.nombre ?? ''))),
       ],
     );
   }
@@ -39,43 +42,47 @@ class PerfilAliadosTableSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => perfilAliados.length;
+  int get rowCount => perfilPreInversionAliados.length;
 
   @override
   int get selectedRowCount => 0;
 }
 
-class PerfilAliadosRows extends StatefulWidget {
-  const PerfilAliadosRows({
+class PerfilPreInversionAliadosRows extends StatefulWidget {
+  const PerfilPreInversionAliadosRows({
     Key? key,
-    required this.perfilAliados,
+    required this.perfilPreInversionAliados,
   }) : super(key: key);
 
-  final List<PerfilAliadoEntity> perfilAliados;
+  final List<PerfilPreInversionAliadoEntity> perfilPreInversionAliados;
 
   @override
-  State<PerfilAliadosRows> createState() => _PerfilAliadosRowsState();
+  State<PerfilPreInversionAliadosRows> createState() =>
+      _PerfilPreInversionAliadosRowsState();
 }
 
-class _PerfilAliadosRowsState extends State<PerfilAliadosRows> {
-  List<PerfilAliadoEntity> perfilAliadosFiltered = [];
+class _PerfilPreInversionAliadosRowsState
+    extends State<PerfilPreInversionAliadosRows> {
+  List<PerfilPreInversionAliadoEntity> perfilPreInversionAliadosFiltered = [];
 
   void _buscar(String query) {
     final lowerCaseQuery = query.toLowerCase();
-    final perfilAliados = widget.perfilAliados.where((perfilAliado) {
-      final nombre = perfilAliado.nombre ?? '';
-      return nombre.toLowerCase().contains(lowerCaseQuery);
+    final perfilPreInversionAliados =
+        widget.perfilPreInversionAliados.where((perfilPreInversionAliado) {
+      return perfilPreInversionAliado.nombre!
+          .toLowerCase()
+          .contains(lowerCaseQuery);
     }).toList();
 
     setState(() {
-      perfilAliadosFiltered = perfilAliados;
+      perfilPreInversionAliadosFiltered = perfilPreInversionAliados;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    perfilAliadosFiltered = widget.perfilAliados;
-    return widget.perfilAliados.isEmpty
+    perfilPreInversionAliadosFiltered = widget.perfilPreInversionAliados;
+    return widget.perfilPreInversionAliados.isEmpty
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -85,12 +92,13 @@ class _PerfilAliadosRowsState extends State<PerfilAliadosRows> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Perfil Aliados',
+                      'PreInversión Aliados',
                       style: TextStyle(fontSize: 20),
                     ),
                     IconButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, 'NewEditVPerfilAliado');
+                          Navigator.pushNamed(
+                              context, 'NewEditAliadoPreInversion');
                         },
                         icon: const Icon(
                           Icons.add,
@@ -114,10 +122,10 @@ class _PerfilAliadosRowsState extends State<PerfilAliadosRows> {
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Perfil Aliados'),
+                    const Text('PreInversión Aliados'),
                     IconButton(
                         onPressed: () => Navigator.pushNamed(
-                            context, 'NewEditVPerfilAliado'),
+                            context, 'NewEditAliadoPreInversion'),
                         icon: const Icon(Icons.add))
                   ],
                 ),
@@ -126,8 +134,8 @@ class _PerfilAliadosRowsState extends State<PerfilAliadosRows> {
                   DataColumn(label: Text('ID')),
                   DataColumn(label: Text('Nombre')),
                 ],
-                source:
-                    PerfilAliadosTableSource(context, perfilAliadosFiltered),
+                source: PerfilPreInversionAliadosTableSource(
+                    context, perfilPreInversionAliadosFiltered),
               ),
             ],
           );

@@ -34,12 +34,13 @@ class AppRouter {
     'VPerfil': (BuildContext context) => const PerfilDetailPage(),
     'VBeneficiario': (BuildContext context) => const PerfilBeneficiariosPage(),
     'VAliado': (BuildContext context) => const PerfilAliadosPage(),
-    'VCofinanciador': (BuildContext context) =>
+    'VCofinanciadores': (BuildContext context) =>
         const PerfilCofinanciadoresPage(),
-    'NewEditVAliado': (BuildContext context) => const NewEditPerfilAliadoPage(),
-    'NewEditVBeneficiario': (BuildContext context) =>
+    'NewEditVPerfilAliado': (BuildContext context) =>
+        const NewEditPerfilAliadoPage(),
+    'NewEditVPerfilBeneficiario': (BuildContext context) =>
         const NewEditPerfilBeneficiarioPage(),
-    'NewEditVCofinanciador': (BuildContext context) =>
+    'NewEditVPerfilCofinanciador': (BuildContext context) =>
         const NewEditPerfilCofinanciadorPage(),
     'VPrimeraVisita': (BuildContext context) => const RegistroVisitaPage(),
     'VPerfilPreInversion': (BuildContext context) {

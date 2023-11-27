@@ -12,10 +12,6 @@ class AlianzasBeneficiariosBloc
   final AlianzaBeneficiarioUsecaseDB alianzaBeneficiarioUsecaseDB;
   AlianzasBeneficiariosBloc({required this.alianzaBeneficiarioUsecaseDB})
       : super(AlianzasBeneficiariosInitial()) {
-    on(<InitState>(event, emit) async {
-      emit(AlianzasBeneficiariosInitial());
-    });
-
     on<GetAlianzasBeneficiarios>((event, emit) async {
       emit(AlianzasBeneficiariosLoading());
       await _getAlianzasBeneficiarios(event, emit);

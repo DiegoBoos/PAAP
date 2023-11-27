@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../ui/blocs/alianzas/alianzas_bloc.dart';
 import '../../../domain/entities/v_alianza_entity.dart';
 import '../../utils/sync_pages.dart';
-import '../../utils/no_data_svg.dart';
 import 'alianzas_rows.dart';
 
 class AlianzasPage extends StatefulWidget {
@@ -26,11 +25,7 @@ class _AlianzasPageState extends State<AlianzasPage> {
               return const CustomCircularProgress(alignment: Alignment.center);
             } else if (state is AlianzasLoaded) {
               List<VAlianzaEntity> alianzas = state.alianzasLoaded!;
-              if (alianzas.isEmpty) {
-                return const SizedBox(
-                    child:
-                        Center(child: NoDataSvg(title: 'No hay resultados')));
-              }
+
               return AlianzasRows(alianzas: alianzas);
             }
             return Container();

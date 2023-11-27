@@ -7,9 +7,9 @@ import '../../../domain/usecases/perfil_cofinanciador/perfil_cofinanciador_db_us
 part '../perfil_cofinanciador/perfil_cofinanciador_state.dart';
 
 class PerfilCofinanciadorCubit extends Cubit<PerfilCofinanciadorState> {
-  final PerfilCofinanciadorUsecaseDB perfilCofinanciadorDB;
+  final PerfilCofinanciadorUsecaseDB perfilCofinanciadorUsecaseDB;
 
-  PerfilCofinanciadorCubit({required this.perfilCofinanciadorDB})
+  PerfilCofinanciadorCubit({required this.perfilCofinanciadorUsecaseDB})
       : super(PerfilCofinanciadorInitial());
 
   void initState() => emit(PerfilCofinanciadorInitial());
@@ -19,8 +19,8 @@ class PerfilCofinanciadorCubit extends Cubit<PerfilCofinanciadorState> {
   }
 
   void loadPerfilCofinanciador(String perfilId, String cofinanciadorId) async {
-    final result = await perfilCofinanciadorDB.getPerfilCofinanciadorUsecaseDB(
-        perfilId, cofinanciadorId);
+    final result = await perfilCofinanciadorUsecaseDB
+        .getPerfilCofinanciadorUsecaseDB(perfilId, cofinanciadorId);
     result.fold(
         (failure) => emit(PerfilCofinanciadorError(failure.properties.first)),
         (data) {
@@ -34,7 +34,7 @@ class PerfilCofinanciadorCubit extends Cubit<PerfilCofinanciadorState> {
   }
 
   void savePerfilCofinanciadorDB() async {
-    final result = await perfilCofinanciadorDB
+    final result = await perfilCofinanciadorUsecaseDB
         .savePerfilCofinanciadorUsecaseDB(state.perfilCofinanciador);
     result.fold(
         (failure) => emit(PerfilCofinanciadorError(failure.properties.first)),

@@ -17,9 +17,9 @@ abstract class PerfilBeneficiarioRepositoryDB {
       List<PerfilBeneficiarioEntity> perfilBeneficiarios);
 
   Future<Either<Failure, int>> savePerfilBeneficiarioRepositoryDB(
-      PerfilBeneficiarioEntity perfilBeneficiarioEntity);
+      PerfilBeneficiarioEntity perfilBeneficiario);
 
   Future<Either<Failure, int>>
       updatePerfilesBeneficiariosProduccionDBRepositoryDB(
-          List<PerfilBeneficiarioEntity> perfilesBeneficiariosEntity);
+          List<PerfilBeneficiarioEntity> perfilesBeneficiarios);
 }

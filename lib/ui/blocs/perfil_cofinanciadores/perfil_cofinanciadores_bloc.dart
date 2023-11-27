@@ -12,10 +12,6 @@ class PerfilCofinanciadoresBloc
   final PerfilCofinanciadorUsecaseDB perfilCofinanciadorUsecaseDB;
   PerfilCofinanciadoresBloc({required this.perfilCofinanciadorUsecaseDB})
       : super(PerfilCofinanciadoresInitial()) {
-    on(<InitState>(event, emit) async {
-      emit(PerfilCofinanciadoresInitial());
-    });
-
     on<GetPerfilCofinanciadores>((event, emit) async {
       emit(PerfilCofinanciadoresLoading());
       await _getPerfilCofinanciadores(event, emit);

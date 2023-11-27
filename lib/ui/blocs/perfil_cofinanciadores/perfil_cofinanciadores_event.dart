@@ -7,8 +7,6 @@ abstract class PerfilCofinanciadoresEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class InitState extends PerfilCofinanciadoresEvent {}
-
 class GetPerfilCofinanciadores extends PerfilCofinanciadoresEvent {
   final String perfilId;
 

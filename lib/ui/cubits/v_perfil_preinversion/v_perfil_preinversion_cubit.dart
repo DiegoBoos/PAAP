@@ -9,7 +9,7 @@ class VPerfilPreInversionCubit extends Cubit<VPerfilPreInversionState> {
   VPerfilPreInversionCubit() : super(VPerfilPreInversionInitial());
 
   void selectVPerfilPreinversion(
-      VPerfilPreInversionEntity vPerfilPreInversionEntity) {
-    emit(VPerfilPreInversionSelected(vPerfilPreInversionEntity));
+      VPerfilPreInversionEntity vPerfilPreInversion) {
+    emit(VPerfilPreInversionSelected(vPerfilPreInversion));
   }
 }

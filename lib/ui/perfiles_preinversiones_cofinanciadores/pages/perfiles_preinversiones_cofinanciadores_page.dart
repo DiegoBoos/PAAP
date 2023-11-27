@@ -7,7 +7,6 @@ import '../../../domain/usecases/perfil_preinversion_cofinanciador/perfil_preinv
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
-import '../../utils/no_data_svg.dart';
 import 'perfil_preinversion_cofinanciador_rows.dart';
 
 class PerfilesPreInversionesCofinanciadoresPage extends StatefulWidget {
@@ -40,22 +39,8 @@ class _PerfilesPreInversionesCofinanciadoresPageState
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    final perfilPreInversionCofinanciadoresBloc =
-        BlocProvider.of<PerfilPreInversionCofinanciadoresBloc>(context,
-            listen: true);
-
-    final perfilPreInversionCofinanciadores =
-        perfilPreInversionCofinanciadoresBloc
-            .state.perfilPreInversionCofinanciadores;
 
     return Scaffold(
-      floatingActionButton: perfilPreInversionCofinanciadores != null &&
-              perfilPreInversionCofinanciadores.isEmpty
-          ? FloatingActionButton(
-              child: const Icon(Icons.save),
-              onPressed: () => Navigator.pushNamed(
-                  context, 'NewEditVCofinanciadorPreInversion'))
-          : null,
       drawer: BlocBuilder<MenuCubit, MenuState>(
         builder: (context, state) {
           final menuHijo = menuCubit.preInversionMenuSorted(state.menus!);
@@ -84,11 +69,7 @@ class _PerfilesPreInversionesCofinanciadoresPageState
               List<PerfilPreInversionCofinanciadorEntity>
                   perfilPreInversionCofinanciadores =
                   state.perfilPreInversionCofinanciadoresLoaded!;
-              if (perfilPreInversionCofinanciadores.isEmpty) {
-                return const SizedBox(
-                    child:
-                        Center(child: NoDataSvg(title: 'No hay resultados')));
-              }
+
               return PerfilPreInversionCofinanciadorRows(
                 perfilPreInversionCofinanciadores:
                     perfilPreInversionCofinanciadores,

@@ -62,7 +62,7 @@ class _CostosUPTPageState extends State<CostosUPTPage> {
 
       if (state is PerfilPreInversionCostosUPTError) {
         CustomSnackBar.showSnackBar(
-            context, 'Error al guardar datos', Colors.red);
+            context, 'Error al cargar/guardar datos', Colors.red);
       }
     }, child: BlocBuilder<VPerfilesPreInversionesPlanNegociosCubit,
         VPerfilesPreInversionesPlanNegociosState>(

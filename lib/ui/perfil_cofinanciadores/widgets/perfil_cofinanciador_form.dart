@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubits/perfil_cofinanciador/perfil_cofinanciador_cubit.dart';
 import '../../../domain/entities/cofinanciador_entity.dart';
+import '../../cubits/v_perfil/v_perfil_cubit.dart';
 import '../../utils/input_decoration.dart';
 
 class PerfilCofinanciadorForm extends StatefulWidget {
@@ -26,6 +27,8 @@ class _PerfilCofinanciadorFormState extends State<PerfilCofinanciadorForm> {
   void initState() {
     super.initState();
 
+    final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
+
     final perfilCofinanciadorCubit =
         BlocProvider.of<PerfilCofinanciadorCubit>(context);
 
@@ -33,20 +36,26 @@ class _PerfilCofinanciadorFormState extends State<PerfilCofinanciadorForm> {
         perfilCofinanciadorCubit.state.perfilCofinanciador;
 
     setState(() {
-      cofinanciadoresFiltered = widget.cofinanciadores
-          .where((cofinanciador) =>
-              cofinanciador.municipio == perfilCofinanciador.municipio)
-          .toList();
-
       cofinanciadorId = perfilCofinanciador.cofinanciadorId;
 
       if (cofinanciadorId != null) {
+        cofinanciadoresFiltered = widget.cofinanciadores
+            .where((cofinanciador) =>
+                cofinanciador.municipio == perfilCofinanciador.municipio)
+            .toList();
+
         final initialCofinanciador = cofinanciadoresFiltered.firstWhere(
           (cofinanciador) =>
               cofinanciador.id == perfilCofinanciador.cofinanciadorId,
         );
         _cofinanciadorController =
             TextEditingController(text: initialCofinanciador.nombre);
+      } else {
+        final municipioPerfil = vPerfilCubit.state.vPerfil!.municipio;
+        cofinanciadoresFiltered = widget.cofinanciadores
+            .where(
+                (cofinanciador) => cofinanciador.municipio == municipioPerfil)
+            .toList();
       }
 
       participacionCtrl.text = perfilCofinanciador.participacion ?? '';
@@ -119,6 +128,7 @@ class _PerfilCofinanciadorFormState extends State<PerfilCofinanciadorForm> {
                 setState(() {
                   cofinanciadorId = value.id;
                 });
+                perfilCofinanciadorCubit.changeCofinanciadorId(cofinanciadorId);
               },
               initialValue: _cofinanciadorController.value),
           const SizedBox(height: 20),

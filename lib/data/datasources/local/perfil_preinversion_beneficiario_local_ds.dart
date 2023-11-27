@@ -152,10 +152,21 @@ class PerfilPreInversionBeneficiarioLocalDataSourceImpl
       PerfilPreInversionBeneficiario.Longitud,
       PerfilPreInversionBeneficiario.Latitud,
       PerfilPreInversionBeneficiario.CedulaCatastral,
-      Beneficiario.Nombre1 || " " || Beneficiario.Nombre2 || " " || Beneficiario.Apellido1 || " " || Beneficiario.Apellido2 as Nombre,
-      cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', Beneficiario.FechaNacimiento ) as int) as Edad
+      Beneficiario.BeneficiarioId,
+      Beneficiario.TipoIdentificacionId,
+      Beneficiario.FechaExpedicionDocumento,
+      Beneficiario.FechaNacimiento,
+      cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', Beneficiario.FechaNacimiento ) as int) as Edad,
+      Beneficiario.Nombre1,
+      Beneficiario.Nombre2,
+      Beneficiario.Apellido1,
+      Beneficiario.Apellido2,
+      Beneficiario.GeneroId,
+      Beneficiario.GrupoEspecialId,
+      Beneficiario.TelefonoMovil,
+      Beneficiario.Activo
       from PerfilPreInversionBeneficiario
-      inner join Beneficiario  on PerfilPreInversionBeneficiario.BeneficiarioId = Beneficiario.BeneficiarioId
+      inner join Beneficiario on PerfilPreInversionBeneficiario.BeneficiarioId = Beneficiario.BeneficiarioId
       left join TipoIdentificacion on TipoIdentificacion.TipoIdentificacionId=Beneficiario.TipoIdentificacionId
       left join Genero on Genero.GeneroId=Beneficiario.GeneroId
       left join GrupoEspecial on GrupoEspecial.GrupoEspecialId=Beneficiario.GrupoEspecialId

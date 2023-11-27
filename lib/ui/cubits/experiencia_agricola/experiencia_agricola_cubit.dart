@@ -21,18 +21,16 @@ class ExperienciaAgricolaCubit extends Cubit<ExperienciaAgricolaState> {
     result.fold(
         (failure) => emit(ExperienciaAgricolaError(failure.properties.first)),
         (data) {
-      if (data == null) {
-        emit(ExperienciaAgricolaError('Error'));
-      } else {
+      if (data != null) {
         emit(ExperienciaAgricolaLoaded(data));
       }
     });
   }
 
   void saveExperienciaAgricolaDB(
-      ExperienciaAgricolaEntity experienciaAgricolaEntity) async {
+      ExperienciaAgricolaEntity experienciaAgricola) async {
     final result = await experienciaAgricolaDB
-        .saveExperienciaAgricolaUsecaseDB(experienciaAgricolaEntity);
+        .saveExperienciaAgricolaUsecaseDB(experienciaAgricola);
     result.fold(
         (failure) => emit(ExperienciaAgricolaError(failure.properties.first)),
         (data) => emit(ExperienciaAgricolaSaved()));

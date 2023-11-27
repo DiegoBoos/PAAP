@@ -61,7 +61,7 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
             criterioCubit.getCriteriosDB(agrupacion.agrupacionId!);
           },
         ),
-        if (agrupacion.agrupacionId != '')
+        if (agrupacion.agrupacionId != null)
           Column(
             children: [
               const SizedBox(height: 10),

@@ -21,9 +21,7 @@ class ExperienciaPecuariaCubit extends Cubit<ExperienciaPecuariaState> {
     result.fold(
         (failure) => emit(ExperienciaPecuariaError(failure.properties.first)),
         (data) {
-      if (data == null) {
-        emit(ExperienciaPecuariaError('Error'));
-      } else {
+      if (data != null) {
         emit(ExperienciaPecuariaLoaded(data));
       }
     });

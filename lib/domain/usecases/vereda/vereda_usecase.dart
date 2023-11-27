@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../data/models/vereda_model.dart';
 import '../../../data/core/error/failure.dart';
 import '../../entities/vereda_entity.dart';
 import '../../entities/usuario_entity.dart';
@@ -16,7 +15,7 @@ class VeredaUsecase {
     return repository.getVeredasRepository(usuario);
   }
 
-  Future<Either<Failure, List<VeredaModel>>> downloadVeredas(
+  Future<Either<Failure, List<VeredaEntity>>> downloadVeredas(
       UsuarioEntity usuario, List<String> municipiosIds) {
     return repository.downloadVeredas(usuario, municipiosIds);
   }

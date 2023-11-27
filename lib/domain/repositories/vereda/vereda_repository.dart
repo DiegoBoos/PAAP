@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../data/models/vereda_model.dart';
 import '../../../data/core/error/failure.dart';
+import '../../../data/models/vereda_model.dart';
 import '../../entities/vereda_entity.dart';
 import '../../entities/usuario_entity.dart';
 

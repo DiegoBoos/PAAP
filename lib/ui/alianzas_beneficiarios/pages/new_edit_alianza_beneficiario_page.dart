@@ -30,7 +30,7 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
       listener: (context, state) {
         if (state is AlianzaBeneficiarioError) {
           CustomSnackBar.showSnackBar(
-              context, 'Error al guardar datos', Colors.red);
+              context, 'Error al cargar/guardar datos', Colors.red);
         }
         if (state is AlianzaBeneficiarioSaved) {
           CustomSnackBar.showSnackBar(
@@ -109,8 +109,7 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
     beneficiarioCubit.changeActivo(true);
 
-    final beneficiario = beneficiarioCubit.state.beneficiario;
-    beneficiarioCubit.saveBeneficiarioDB(beneficiario);
+    beneficiarioCubit.saveBeneficiarioDB();
   }
 
   void saveAlianzaBeneficiario(BuildContext context) {

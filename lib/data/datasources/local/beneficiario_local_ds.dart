@@ -41,7 +41,7 @@ class BeneficiarioLocalDataSourceImpl implements BeneficiarioLocalDataSource {
   Future<List<BeneficiarioModel>> getBeneficiariosDB(String perfilId) async {
     final db = await DBConfig.database;
     String sql = '''
-      select
+      SELECT
       Beneficiario.BeneficiarioId,
       Beneficiario.TipoIdentificacionId,
       Beneficiario.FechaExpedicionDocumento,
@@ -55,7 +55,7 @@ class BeneficiarioLocalDataSourceImpl implements BeneficiarioLocalDataSource {
       Beneficiario.GrupoEspecialId,
       Beneficiario.TelefonoMovil,
       Beneficiario.Activo
-      from Beneficiario
+      FROM Beneficiario
     ''';
 
     final res = await db.rawQuery(sql);

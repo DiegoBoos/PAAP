@@ -61,17 +61,19 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
       final perfilBeneficiarioMunicipioId = perfilBeneficiario?.municipioId;
       final perfilBeneficiarioVeredaId = perfilBeneficiario?.veredaId;
 
-      final municipio = municipiosFiltered.firstWhere(
-        (municipio) => municipio.id == perfilBeneficiarioMunicipioId,
-      );
+      if (perfilBeneficiarioMunicipioId != null) {
+        final municipio = municipiosFiltered.firstWhere(
+          (municipio) => municipio.id == perfilBeneficiarioMunicipioId,
+        );
 
-      if (municipio.id != '') {
-        departamentoId = municipio.departamentoid;
-        municipioId = perfilBeneficiarioMunicipioId;
-        municipiosFiltered = allMunicipios
-            .where((municipio) => municipio.departamentoid == departamentoId)
-            .toList();
-        loadVeredasByMunicipio(municipioId!, perfilBeneficiarioVeredaId!);
+        if (municipio.id != '') {
+          departamentoId = municipio.departamentoid;
+          municipioId = perfilBeneficiarioMunicipioId;
+          municipiosFiltered = allMunicipios
+              .where((municipio) => municipio.departamentoid == departamentoId)
+              .toList();
+          loadVeredasByMunicipio(municipioId!, perfilBeneficiarioVeredaId!);
+        }
       }
 
       experienciaCtrl.text = perfilBeneficiario?.experiencia ?? '';
@@ -79,7 +81,6 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
       areaProyectoCtrl.text = perfilBeneficiario?.areaProyecto ?? '';
       areaFincaCtrl.text = perfilBeneficiario?.areaFinca ?? '';
       tipoTenenciaId = perfilBeneficiario?.tipoTenenciaId;
-      beneficioId = perfilBeneficiario?.beneficioId;
     });
   }
 

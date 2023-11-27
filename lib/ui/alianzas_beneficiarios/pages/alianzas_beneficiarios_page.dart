@@ -6,7 +6,6 @@ import '../../../ui/cubits/menu/menu_cubit.dart';
 import '../../../ui/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
-import '../../utils/no_data_svg.dart';
 import '../../utils/styles.dart';
 
 import '../../alianzas/widgets/alianza_drawer.dart';
@@ -36,12 +35,6 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
 
-    final alianzasBeneficiariosBloc =
-        BlocProvider.of<AlianzasBeneficiariosBloc>(context, listen: true);
-
-    final alianzasBeneficiarios =
-        alianzasBeneficiariosBloc.state.alianzasBeneficiarios;
-
     return Scaffold(
         drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
@@ -51,13 +44,6 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
             );
           },
         ),
-        floatingActionButton: alianzasBeneficiarios != null &&
-                alianzasBeneficiarios.isEmpty
-            ? FloatingActionButton(
-                child: const Icon(Icons.save),
-                onPressed: () =>
-                    Navigator.pushNamed(context, 'NewEditVBeneficiarioAlianza'))
-            : null,
         appBar: AppBar(title: const Text('Consulta'), actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -80,11 +66,7 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
               }
               if (state is AlianzasBeneficiariosLoaded) {
                 final alianzasBeneficiarios = state.alianzasBeneficiariosLoaded;
-                if (alianzasBeneficiarios.isEmpty) {
-                  return const SizedBox(
-                      child:
-                          Center(child: NoDataSvg(title: 'No hay resultados')));
-                }
+
                 return AlianzasBeneficiariosRows(
                   alianzasBeneficiarios: alianzasBeneficiarios,
                 );

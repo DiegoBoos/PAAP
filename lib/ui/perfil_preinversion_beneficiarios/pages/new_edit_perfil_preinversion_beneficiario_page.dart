@@ -12,8 +12,9 @@ import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/floating_buttons.dart';
 import '../../utils/network_icon.dart';
-import '../widgets/beneficiario_experiencia_form.dart';
+import '../widgets/experiencia_agricola_form.dart';
 import '../widgets/beneficiario_form.dart';
+import '../widgets/experiencia_pecuaria_form.dart';
 import '../widgets/perfil_beneficiario_form.dart';
 import '../widgets/perfil_preinversion_beneficiario_form.dart';
 import '../widgets/conyuge_form.dart';
@@ -25,8 +26,6 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    final vPerfilPreInversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
     final perfilPreInversionBeneficiariosBloc =
         BlocProvider.of<PerfilPreInversionBeneficiariosBloc>(context);
     final perfilPreInversionBeneficiarioCubit =
@@ -40,17 +39,17 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
         listener: (context, state) {
           if (state is PerfilPreInversionBeneficiarioError) {
             CustomSnackBar.showSnackBar(
-                context, 'Error al guardar datos', Colors.red);
+                context, 'Error al cargar/guardar datos', Colors.red);
           }
           if (state is PerfilPreInversionBeneficiarioSaved) {
             CustomSnackBar.showSnackBar(
                 context, 'Datos guardados satisfactoriamente', Colors.green);
 
-            final perfilPreInversionId = vPerfilPreInversionCubit
-                .state.vPerfilPreInversion!.perfilPreInversionId!;
-
+            final perfilPreInversionId =
+                state.perfilPreInversionBeneficiario.perfilPreInversionId!;
             perfilPreInversionBeneficiariosBloc
                 .add(GetPerfilPreInversionBeneficiarios(perfilPreInversionId));
+            Navigator.pop(context);
           }
         },
         child: Scaffold(
@@ -80,7 +79,9 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
                   key: formKey,
                   child: Column(
                     children: [
-                      const BeneficiarioForm(),
+                      BeneficiarioForm(
+                          perfilPreInversionBeneficiario:
+                              perfilPreInversionBeneficiario),
                       PerfilBeneficiarioForm(
                         perfilPreInversionBeneficiario:
                             perfilPreInversionBeneficiario,
@@ -92,10 +93,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
                           perfilPreInversionBeneficiario:
                               perfilPreInversionBeneficiario,
                         ),
-                      BeneficiarioExperienciaForm(
-                        perfilPreInversionBeneficiario:
-                            perfilPreInversionBeneficiario,
-                      ),
+                      const BeneficiarioExperiencia(),
                       const SizedBox(height: 10),
                       SaveBackButtons(
                         onSaved: () {
@@ -122,8 +120,7 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
     beneficiarioCubit.changeActivo(true);
 
-    final beneficiario = beneficiarioCubit.state.beneficiario;
-    beneficiarioCubit.saveBeneficiarioDB(beneficiario);
+    beneficiarioCubit.saveBeneficiarioDB();
   }
 
   void savePerfilPreInversionBeneficiario(BuildContext context) {
@@ -185,5 +182,60 @@ class NewEditPerfilPreInversionBeneficiarioPage extends StatelessWidget {
 
       experienciaPecuariaCubit.saveExperienciaPecuariaDB();
     }
+  }
+}
+
+class BeneficiarioExperiencia extends StatelessWidget {
+  const BeneficiarioExperiencia({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    final experienciaAgricolaCubit =
+        BlocProvider.of<ExperienciaAgricolaCubit>(context);
+    final experienciaPecuariaCubit =
+        BlocProvider.of<ExperienciaPecuariaCubit>(context);
+    final tipoProyecto =
+        vPerfilPreInversionCubit.state.vPerfilPreInversion!.tipoProyecto;
+
+    return BlocListener<BeneficiarioCubit, BeneficiarioState>(
+      listener: (context, state) {
+        if (state is BeneficiarioLoaded) {
+          final beneficiarioId = state.beneficiarioLoaded.beneficiarioId!;
+
+          if (tipoProyecto == 'Agrícola') {
+            experienciaAgricolaCubit.loadExperienciaAgricola(
+                '1', beneficiarioId);
+          } else if (tipoProyecto == 'Pecuario') {
+            experienciaPecuariaCubit.loadExperienciaPecuaria(
+                '1', beneficiarioId);
+          }
+        }
+      },
+      child: Column(
+        children: [
+          BlocBuilder<ExperienciaAgricolaCubit, ExperienciaAgricolaState>(
+            builder: (context, state) {
+              if (state is ExperienciaAgricolaLoaded) {
+                return const ExperienciaAgricolaForm();
+              } else {
+                return Container();
+              }
+            },
+          ),
+          BlocBuilder<ExperienciaPecuariaCubit, ExperienciaPecuariaState>(
+            builder: (context, state) {
+              if (state is ExperienciaPecuariaLoaded) {
+                return const ExperienciaPecuariaForm();
+              } else {
+                return Container();
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

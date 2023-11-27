@@ -26,26 +26,15 @@ class _PerfilAliadosPageState extends State<PerfilAliadosPage> {
     final perfilAliadosBloc = BlocProvider.of<PerfilAliadosBloc>(context);
     final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
 
-    final perfilId = vPerfilCubit.state.vPerfil!.perfilId;
-    perfilAliadosBloc.add(GetPerfilAliados(perfilId!));
+    final perfilId = vPerfilCubit.state.vPerfil!.perfilId!;
+    perfilAliadosBloc.add(GetPerfilAliados(perfilId));
   }
 
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
 
-    final perfilAliadosBloc =
-        BlocProvider.of<PerfilAliadosBloc>(context, listen: true);
-
-    final perfilAliados = perfilAliadosBloc.state.perfilAliados;
-
     return Scaffold(
-        floatingActionButton: perfilAliados != null && perfilAliados.isEmpty
-            ? FloatingActionButton(
-                child: const Icon(Icons.save),
-                onPressed: () =>
-                    Navigator.pushNamed(context, 'NewEditAliadoPreInversion'))
-            : null,
         drawer: BlocBuilder<MenuCubit, MenuState>(
           builder: (context, state) {
             final menuHijo = menuCubit.perfilesMenuSorted(state.menus!);
@@ -70,11 +59,7 @@ class _PerfilAliadosPageState extends State<PerfilAliadosPage> {
               } else if (state is PerfilAliadosLoaded) {
                 List<PerfilAliadoEntity> perfilAliados =
                     state.perfilAliadosLoaded;
-                if (perfilAliados.isEmpty) {
-                  return const SizedBox(
-                      child:
-                          Center(child: NoDataSvg(title: 'No hay resultados')));
-                }
+
                 return PerfilAliadosRows(
                   perfilAliados: perfilAliados,
                 );

@@ -51,7 +51,7 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
     final db = await DBConfig.database;
 
     String sql = '''
-      select 
+      SELECT 
       PerfilPreInversionAliado.PerfilPreInversionId,
       PerfilPreInversionAliado.AliadoId,
       PerfilPreInversionAliado.ProductoId,
@@ -60,10 +60,23 @@ class PerfilPreInversionAliadoLocalDataSourceImpl
       PerfilPreInversionAliado.FrecuenciaId,
       PerfilPreInversionAliado.PorcentajeCompra,
       PerfilPreInversionAliado.SitioEntregaId,
-      Aliado.Nombre as aliado
-      from PerfilPreInversionAliado
-      left join Aliado on (Aliado.AliadoId=PerfilPreInversionAliado.AliadoId)
-      where PerfilPreInversionId = $perfilPreInversionId
+      Aliado.AliadoId,
+      Aliado.Nombre,
+      Aliado.FechaCreacion,
+      Aliado.NombreContacto,
+      Aliado.Direccion,
+      Aliado.TelefonoFijo,
+      Aliado.TelefonoMovil,
+      Aliado.Correo,
+      Aliado.MunicipioId,
+      Aliado.Experiencia,
+      Aliado.FechaActivacion,
+      Aliado.FechaDesactivacion,
+      Aliado.FechaCambio,
+      Aliado.Activo
+      FROM PerfilPreInversionAliado
+      LEFT join Aliado ON (Aliado.AliadoId=PerfilPreInversionAliado.AliadoId)
+      WHERE PerfilPreInversionId = $perfilPreInversionId
       ''';
 
     final res = await db.rawQuery(sql);

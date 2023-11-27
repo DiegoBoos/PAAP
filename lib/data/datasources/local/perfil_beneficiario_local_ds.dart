@@ -23,7 +23,6 @@ class PerfilBeneficiarioLocalDataSourceImpl
   static createPerfilBeneficiarioTable(Database db) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS PerfilBeneficiario (
-        PerfilBeneficiarioId	INTEGER,
         PerfilId	TEXT NOT NULL,
         BeneficiarioId	TEXT NOT NULL,
         MunicipioId	TEXT NOT NULL,
@@ -38,7 +37,6 @@ class PerfilBeneficiarioLocalDataSourceImpl
         CualBeneficio	TEXT,
         Activo	TEXT,
         RecordStatus	TEXT,
-        PRIMARY KEY(PerfilBeneficiarioId),
         FOREIGN KEY(PerfilId) REFERENCES Perfil(ID),
         FOREIGN KEY(BeneficiarioId) REFERENCES Beneficiario(BeneficiarioId),
         FOREIGN KEY(MunicipioId) REFERENCES Municipio(MunicipioId),
@@ -54,7 +52,20 @@ class PerfilBeneficiarioLocalDataSourceImpl
     final db = await DBConfig.database;
 
     String sql = '''
-      select
+      SELECT
+      PerfilBeneficiario.PerfilId,
+      PerfilBeneficiario.BeneficiarioId,
+      PerfilBeneficiario.MunicipioId,
+      PerfilBeneficiario.VeredaId,
+      PerfilBeneficiario.AreaFinca,
+      PerfilBeneficiario.AreaProyecto,
+      PerfilBeneficiario.TipoTenenciaId,
+      PerfilBeneficiario.Experiencia,
+      PerfilBeneficiario.Asociado,
+      PerfilBeneficiario.ConocePerfil,
+      PerfilBeneficiario.FueBeneficiado,
+      PerfilBeneficiario.CualBeneficio,
+      PerfilBeneficiario.Activo,
       Beneficiario.BeneficiarioId,
       Beneficiario.TipoIdentificacionId,
       Beneficiario.FechaExpedicionDocumento,
@@ -67,10 +78,13 @@ class PerfilBeneficiarioLocalDataSourceImpl
       Beneficiario.GeneroId,
       Beneficiario.GrupoEspecialId,
       Beneficiario.TelefonoMovil,
-      Beneficiario.Activo,
-      Beneficiario.Nombre1 || " " || Beneficiario.Nombre2 || " " || Beneficiario.Apellido1 || " " || Beneficiario.Apellido2 as Nombre,
-      cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', Beneficiario.FechaNacimiento ) as int) as Edad
-      from Beneficiario
+      Beneficiario.Activo
+      FROM PerfilBeneficiario
+      INNER JOIN Beneficiario on PerfilBeneficiario.BeneficiarioId = Beneficiario.BeneficiarioId
+      LEFT JOIN Municipio on Municipio.MunicipioId=PerfilBeneficiario.MunicipioId
+      LEFT JOIN Departamento on Departamento.DepartamentoId=Municipio.DepartamentoId
+      LEFT JOIN Vereda on Vereda.VeredaId=PerfilBeneficiario.VeredaId
+      WHERE PerfilId = $perfilId
     ''';
 
     final res = await db.rawQuery(sql);

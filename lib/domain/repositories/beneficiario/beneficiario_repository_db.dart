@@ -13,11 +13,11 @@ abstract class BeneficiarioRepositoryDB {
       String id);
 
   Future<Either<Failure, int>> saveBeneficiariosRepositoryDB(
-      List<BeneficiarioEntity> beneficiariosEntity);
+      List<BeneficiarioEntity> beneficiarios);
 
   Future<Either<Failure, int>> saveBeneficiarioRepositoryDB(
       BeneficiarioEntity beneficiarioEntity);
 
   Future<Either<Failure, int>> updateBeneficiariosProduccionDBRepositoryDB(
-      List<BeneficiarioEntity> beneficiariosEntity);
+      List<BeneficiarioEntity> beneficiarios);
 }

@@ -140,7 +140,7 @@ class _PerfilPreInversionBeneficiarioFormState
           child: Column(
             children: [
               const Text(
-                'Información del Beneficiario con relación a la PreInversión',
+                'Información del beneficiario con relación a la PreInversión',
                 style: Styles.titleStyle,
               ),
               const SizedBox(height: 20),

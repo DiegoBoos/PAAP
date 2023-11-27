@@ -301,10 +301,6 @@ authBlocInit() {
 
 beneficiarioInit() {
   // cubit
-  locator.registerFactory(
-      () => PerfilBeneficiariosBloc(perfilBeneficiarioUsecaseDB: locator()));
-
-  // cubit
   locator.registerFactory(() => BeneficiarioCubit(beneficiarioDB: locator()));
 
   // remote usecase
@@ -1341,6 +1337,10 @@ opcionInit() {
 }
 
 perfilAliadoInit() {
+  // bloc
+  locator.registerFactory(
+      () => PerfilAliadosBloc(perfilAliadoUsecaseDB: locator()));
+
   // cubit
   locator.registerFactory(() => PerfilAliadoCubit(perfilAliadoDB: locator()));
 
@@ -1378,9 +1378,9 @@ perfilAliadoInit() {
 }
 
 perfilBeneficiarioInit() {
-  // bloc
+  // cubit
   locator.registerFactory(
-      () => PerfilAliadosBloc(perfilAliadoUsecaseDB: locator()));
+      () => PerfilBeneficiariosBloc(perfilBeneficiarioUsecaseDB: locator()));
 
   // cubit
   locator.registerFactory(
@@ -1420,9 +1420,13 @@ perfilBeneficiarioInit() {
 }
 
 perfilCofinanciadorInit() {
+  // bloc
+  locator.registerFactory(
+      () => PerfilCofinanciadoresBloc(perfilCofinanciadorUsecaseDB: locator()));
+
   // cubit
   locator.registerFactory(
-      () => PerfilCofinanciadorCubit(perfilCofinanciadorDB: locator()));
+      () => PerfilCofinanciadorCubit(perfilCofinanciadorUsecaseDB: locator()));
 
   // remote usecase
   locator.registerLazySingleton(() => PerfilCofinanciadorUsecase(locator()));

@@ -33,14 +33,13 @@ class PerfilBeneficiarioUsecaseDB {
   }
 
   Future<Either<Failure, int>> savePerfilBeneficiarioUsecaseDB(
-      PerfilBeneficiarioEntity perfilBeneficiarioEntity) {
-    return repositoryDB
-        .savePerfilBeneficiarioRepositoryDB(perfilBeneficiarioEntity);
+      PerfilBeneficiarioEntity perfilBeneficiario) {
+    return repositoryDB.savePerfilBeneficiarioRepositoryDB(perfilBeneficiario);
   }
 
   Future<Either<Failure, int>> updatePerfilesBeneficiariosProduccionUsecaseDB(
-      List<PerfilBeneficiarioEntity> perfilesBeneficiariosEntity) {
+      List<PerfilBeneficiarioEntity> perfilesBeneficiarios) {
     return repositoryDB.updatePerfilesBeneficiariosProduccionDBRepositoryDB(
-        perfilesBeneficiariosEntity);
+        perfilesBeneficiarios);
   }
 }

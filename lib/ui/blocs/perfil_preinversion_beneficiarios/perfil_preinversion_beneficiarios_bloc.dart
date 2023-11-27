@@ -15,10 +15,6 @@ class PerfilPreInversionBeneficiariosBloc extends Bloc<
   PerfilPreInversionBeneficiariosBloc(
       {required this.perfilPreInversionBeneficiarioUsecaseDB})
       : super(PerfilPreInversionBeneficiariosInitial()) {
-    on(<InitState>(event, emit) async {
-      emit(PerfilPreInversionBeneficiariosInitial());
-    });
-
     on<GetPerfilPreInversionBeneficiarios>((event, emit) async {
       emit(PerfilPreInversionBeneficiariosLoading());
       await _getPerfilPreInversionBeneficiarios(event, emit);

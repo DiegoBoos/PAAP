@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../domain/entities/perfil_cofinanciador_entity.dart';
 import '../../cubits/perfil_cofinanciador/perfil_cofinanciador_cubit.dart';
+import '../../utils/no_data_svg.dart';
 
 class PerfilCofinanciadoresTableSource extends DataTableSource {
   final BuildContext context;
@@ -39,11 +40,11 @@ class PerfilCofinanciadoresTableSource extends DataTableSource {
                         .setPerfilCofinanciador(perfilCofinanciador);
 
                     navigator.pushNamed(
-                      'NewEditVCofinanciador',
+                      'NewEditVPerfilCofinanciador',
                     );
                   },
             child: Text(perfilCofinanciador.nombre!))),
-        DataCell(Text(monto!)),
+        DataCell(Text(monto ?? '')),
       ],
     );
   }
@@ -74,12 +75,6 @@ class PerfilCofinanciadorRows extends StatefulWidget {
 class _PerfilCofinanciadorRowsState extends State<PerfilCofinanciadorRows> {
   List<PerfilCofinanciadorEntity> perfilCofinanciadoresFiltered = [];
 
-  @override
-  void initState() {
-    super.initState();
-    perfilCofinanciadoresFiltered = widget.perfilCofinanciadores;
-  }
-
   void _buscar(String query) {
     final lowerCaseQuery = query.toLowerCase();
     final perfilCofinanciadores =
@@ -94,36 +89,64 @@ class _PerfilCofinanciadorRowsState extends State<PerfilCofinanciadorRows> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        TextField(
-          onChanged: (value) => _buscar(value),
-          decoration: const InputDecoration(
-            labelText: 'Buscar',
-            suffixIcon: Icon(Icons.search),
-          ),
-        ),
-        PaginatedDataTable(
-          header: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    perfilCofinanciadoresFiltered = widget.perfilCofinanciadores;
+    return widget.perfilCofinanciadores.isEmpty
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Cofinanciadores'),
-              IconButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, 'NewEditVCofinanciador'),
-                  icon: const Icon(Icons.add))
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Perfil Cofinanciadores',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, 'NewEditVPerfilCofinanciador');
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                        ))
+                  ],
+                ),
+              ),
+              const Expanded(child: NoDataSvg(title: 'No hay resultados')),
             ],
-          ),
-          rowsPerPage: 10, // Adjust as needed
-          columns: const <DataColumn>[
-            DataColumn(label: Text('Id')),
-            DataColumn(label: Text('Nombre')),
-            DataColumn(label: Text('Monto')),
-          ],
-          source: PerfilCofinanciadoresTableSource(
-              context, perfilCofinanciadoresFiltered),
-        ),
-      ],
-    );
+          )
+        : ListView(
+            children: [
+              TextField(
+                onChanged: (value) => _buscar(value),
+                decoration: const InputDecoration(
+                  labelText: 'Buscar',
+                  suffixIcon: Icon(Icons.search),
+                ),
+              ),
+              PaginatedDataTable(
+                header: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Cofinanciadores'),
+                    IconButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, 'NewEditVPerfilCofinanciador'),
+                        icon: const Icon(Icons.add))
+                  ],
+                ),
+                rowsPerPage: 10, // Adjust as needed
+                columns: const <DataColumn>[
+                  DataColumn(label: Text('Id')),
+                  DataColumn(label: Text('Nombre')),
+                  DataColumn(label: Text('Monto')),
+                ],
+                source: PerfilCofinanciadoresTableSource(
+                    context, perfilCofinanciadoresFiltered),
+              ),
+            ],
+          );
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 
 import '../../../ui/blocs/perfil_preinversion_aliados/perfil_preinversion_aliados_bloc.dart';
-import '../../../ui/cubits/aliado/aliado_cubit.dart';
 import '../../../ui/cubits/menu/menu_cubit.dart';
 import '../../../ui/cubits/perfil_preinversion_aliado/perfil_preinversion_aliado_cubit.dart';
-import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
+import '../../cubits/aliado/aliado_cubit.dart';
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/floating_buttons.dart';
@@ -18,15 +18,11 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-
-    final perfilPreInversionAliadoCubit =
-        BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
-    final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    final vPerfilPreInversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
     final perfilPreInversionAliadosBloc =
         BlocProvider.of<PerfilPreInversionAliadosBloc>(context);
+    final perfilPreInversionAliadoCubit =
+        BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
 
     final perfilPreInversionAliado =
         perfilPreInversionAliadoCubit.state.perfilPreInversionAliado;
@@ -42,9 +38,10 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
           CustomSnackBar.showSnackBar(
               context, 'Datos guardados satisfactoriamente', Colors.green);
 
-          perfilPreInversionAliadosBloc.add(GetPerfilPreInversionAliados(
-              vPerfilPreInversionCubit
-                  .state.vPerfilPreInversion!.perfilPreInversionId!));
+          final perfilPreInversionId =
+              state.perfilPreInversionAliado.perfilPreInversionId!;
+          perfilPreInversionAliadosBloc
+              .add(GetPerfilPreInversionAliados(perfilPreInversionId));
         }
       },
       child: Scaffold(
@@ -81,16 +78,8 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
 
                         formKey.currentState!.save();
 
-                        final vPerfilPreInversionId = vPerfilPreInversionCubit
-                            .state.vPerfilPreInversion!.perfilPreInversionId;
-
-                        aliadoCubit.saveAliadoDB(aliadoCubit.state.aliado);
-
-                        perfilPreInversionAliadoCubit
-                            .changePerfilPreInversionId(vPerfilPreInversionId!);
-
-                        perfilPreInversionAliadoCubit
-                            .savePerfilPreInversionAliadoDB();
+                        saveAliado(context);
+                        savePerfilPreInversionAliado(context);
                       },
                     ),
                   ],
@@ -99,5 +88,28 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
             ),
           )),
     );
+  }
+
+  void saveAliado(BuildContext context) {
+    final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
+    aliadoCubit.saveAliadoDB();
+  }
+
+  void savePerfilPreInversionAliado(BuildContext context) {
+    final vPerfilPreInversionCubit =
+        BlocProvider.of<VPerfilPreInversionCubit>(context);
+    final perfilPreInversionAliadoCubit =
+        BlocProvider.of<PerfilPreInversionAliadoCubit>(context);
+
+    final vPerfilPreInversionId = vPerfilPreInversionCubit
+        .state.vPerfilPreInversion!.perfilPreInversionId;
+    final aliadoId =
+        perfilPreInversionAliadoCubit.state.perfilPreInversionAliado.aliadoId;
+
+    perfilPreInversionAliadoCubit
+        .changePerfilPreInversionId(vPerfilPreInversionId!);
+    perfilPreInversionAliadoCubit.changeAliadoId(aliadoId);
+
+    perfilPreInversionAliadoCubit.savePerfilPreInversionAliadoDB();
   }
 }

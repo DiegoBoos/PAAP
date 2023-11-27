@@ -25,11 +25,15 @@ class BeneficiarioCubit extends Cubit<BeneficiarioState> {
     });
   }
 
-  void saveBeneficiarioDB(BeneficiarioEntity beneficiarioEntity) async {
+  void setBeneficiario(BeneficiarioEntity beneficiario) {
+    emit(BeneficiarioLoaded(beneficiario));
+  }
+
+  void saveBeneficiarioDB() async {
     final result =
-        await beneficiarioDB.saveBeneficiarioUsecaseDB(beneficiarioEntity);
+        await beneficiarioDB.saveBeneficiarioUsecaseDB(state.beneficiario);
     result.fold((failure) => emit(BeneficiarioError(failure.properties.first)),
-        (data) => emit(BeneficiarioSaved(beneficiario: beneficiarioEntity)));
+        (data) => emit(BeneficiarioSaved(beneficiario: state.beneficiario)));
   }
 
   void changeBeneficiarioId(String? newValue) {

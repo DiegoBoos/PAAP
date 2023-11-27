@@ -39,6 +39,25 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
     super.initState();
     BlocProvider.of<CofinanciadorCubit>(context).getCofinanciadores();
     BlocProvider.of<RubroCubit>(context).getRubrosDB();
+
+    final perfilPreInversionCofinanciadorDesembolsoCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorDesembolsoCubit>(
+            context);
+
+    final perfilPreInversionCofinanciadorActividadFinancieraCubit = BlocProvider
+        .of<PerfilPreInversionCofinanciadorActividadFinancieraCubit>(context);
+
+    if (perfilPreInversionCofinanciadorDesembolsoCubit.state
+        is PerfilPreInversionCofinanciadorDesembolsoLoaded) {
+      isDesembolsoVisible = true;
+      isActividadesVisible = true;
+    }
+
+    if (perfilPreInversionCofinanciadorActividadFinancieraCubit.state
+        is PerfilPreInversionCofinanciadorActividadFinancieraLoaded) {
+      isActividadesVisible = true;
+      isRubrosVisible = true;
+    }
   }
 
   @override
@@ -103,18 +122,6 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
               BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context)
                   .changeMonto(perfilPreInversionCofinanciadorSaved.monto);
 
-              final valorTotalProyecto = vPerfilPreInversionCubit
-                  .state.vPerfilPreInversion!.valorTotalProyecto;
-
-              // Actualizar la participacion del cofinanciador
-              final participacion =
-                  double.parse(state.perfilPreInversionCofinanciador.monto!) *
-                      100 /
-                      double.parse(valorTotalProyecto!);
-
-              perfilPreInversionCofinanciadorCubit
-                  .changeParticipacion(participacion.toString());
-
               perfilPreInversionCofinanciadorDesembolsoCubit
                   .getPerfilPreInversionCofinanciadorDesembolso(
                       perfilPreInversionCofinanciadorSaved
@@ -178,16 +185,9 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
           },
         ),
         appBar: AppBar(
-            title: BlocBuilder<PerfilPreInversionCofinanciadorCubit,
-                PerfilPreInversionCofinanciadorState>(
-              builder: (context, state) {
-                if (state is PerfilPreInversionCofinanciadorLoaded) {
-                  return const Text('Editar');
-                } else {
-                  return const Text('Crear');
-                }
-              },
-            ),
+            title: Text(perfilPreInversionCofinanciador.cofinanciadorId == ''
+                ? 'Crear'
+                : 'Editar'),
             actions: const [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -209,7 +209,7 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
                         cofinanciadores: state.cofinanciadoresLoaded!,
                       );
                     } else {
-                      return const CircularProgressIndicator();
+                      return const Center(child: CircularProgressIndicator());
                     }
                   },
                 ),
@@ -231,8 +231,7 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
 
                     formKeyCofinanciador.currentState!.save();
 
-                    perfilPreInversionCofinanciadorCubit
-                        .savePerfilPreInversionCofinanciadorDB();
+                    savePerfilPreInversionCofinanciador();
                   },
                 )
               ],
@@ -241,5 +240,33 @@ class _NewEditPerfilPreInversionCofinanciadorPageState
         ),
       ),
     );
+  }
+
+  void savePerfilPreInversionCofinanciador() {
+    final vPerfilCubit = BlocProvider.of<VPerfilPreInversionCubit>(context);
+
+    final perfilPreInversionCofinanciadorCubit =
+        BlocProvider.of<PerfilPreInversionCofinanciadorCubit>(context);
+
+    final perfilPreInversion = vPerfilCubit.state.vPerfilPreInversion!;
+
+    final perfilPreInversionCofinanciador = perfilPreInversionCofinanciadorCubit
+        .state.perfilPreInversionCofinanciador;
+
+    double participacion = 0;
+
+    if (perfilPreInversionCofinanciador.monto != null &&
+        perfilPreInversionCofinanciador.monto != '') {
+      participacion = double.parse(perfilPreInversionCofinanciador.monto!) *
+          100 /
+          double.parse(perfilPreInversion.valorTotalProyecto!);
+    }
+
+    perfilPreInversionCofinanciadorCubit
+        .changePerfilPreInversionId(perfilPreInversion.perfilId);
+    perfilPreInversionCofinanciadorCubit
+        .changeParticipacion(participacion.toString());
+    perfilPreInversionCofinanciadorCubit
+        .savePerfilPreInversionCofinanciadorDB();
   }
 }

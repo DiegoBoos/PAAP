@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paap/ui/utils/no_data_svg.dart';
 
 import '../../../domain/entities/perfil_beneficiario_entity.dart';
 import '../../cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
@@ -17,6 +18,9 @@ class PerfilBeneficiariosTableSource extends DataTableSource {
     final perfilBeneficiarioCubit =
         BlocProvider.of<PerfilBeneficiarioCubit>(context);
 
+    final nombreCompleto =
+        '${perfilBeneficiario.nombre1} ${perfilBeneficiario.nombre2 ?? ''} ${perfilBeneficiario.apellido1} ${perfilBeneficiario.apellido2 ?? ''}';
+
     return DataRow.byIndex(
       index: index,
       cells: <DataCell>[
@@ -30,7 +34,7 @@ class PerfilBeneficiariosTableSource extends DataTableSource {
                 'NewEditVPerfilBeneficiario',
               );
             },
-            child: Text(perfilBeneficiario.nombre ?? '')))
+            child: Text(nombreCompleto)))
 
         // Add more cells for each column
       ],
@@ -62,20 +66,15 @@ class PerfilBeneficiariosRows extends StatefulWidget {
 
 class _PerfilBeneficiariosRowsState extends State<PerfilBeneficiariosRows> {
   List<PerfilBeneficiarioEntity> perfilBeneficiariosFiltered = [];
-  List<PerfilBeneficiarioEntity> allPerfilBeneficiarios = [];
-
-  @override
-  void initState() {
-    super.initState();
-    allPerfilBeneficiarios = widget.perfilBeneficiarios;
-    perfilBeneficiariosFiltered = allPerfilBeneficiarios;
-  }
 
   void _buscar(String query) {
     final lowerCaseQuery = query.toLowerCase();
     final perfilBeneficiarios =
-        allPerfilBeneficiarios.where((perfilBeneficiario) {
-      return perfilBeneficiario.nombre!.toLowerCase().contains(lowerCaseQuery);
+        widget.perfilBeneficiarios.where((perfilBeneficiario) {
+      final nombreCompleto =
+          '${perfilBeneficiario.nombre1 ?? ''} ${perfilBeneficiario.nombre2 ?? ''} ${perfilBeneficiario.apellido1 ?? ''} ${perfilBeneficiario.apellido2 ?? ''}';
+
+      return nombreCompleto.toLowerCase().contains(lowerCaseQuery);
     }).toList();
 
     setState(() {
@@ -85,38 +84,67 @@ class _PerfilBeneficiariosRowsState extends State<PerfilBeneficiariosRows> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        TextField(
-          onChanged: (value) => _buscar(value),
-          decoration: const InputDecoration(
-            labelText: 'Buscar',
-            suffixIcon: Icon(Icons.search),
-          ),
-        ),
-        PaginatedDataTable(
-          header: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    perfilBeneficiariosFiltered = widget.perfilBeneficiarios;
+    return widget.perfilBeneficiarios.isEmpty
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('PerfilBeneficiarios'),
-              IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'NewEditVPerfilBeneficiario');
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                  ))
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Beneficiarios',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, 'NewEditVPerfilBeneficiario');
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                        ))
+                  ],
+                ),
+              ),
+              const Expanded(child: NoDataSvg(title: 'No hay resultados')),
             ],
-          ),
-          rowsPerPage: 10,
-          columns: const <DataColumn>[
-            DataColumn(label: Text('ID')),
-            DataColumn(label: Text('Nombre')),
-          ],
-          source: PerfilBeneficiariosTableSource(
-              context, perfilBeneficiariosFiltered),
-        ),
-      ],
-    );
+          )
+        : ListView(
+            children: [
+              TextField(
+                onChanged: (value) => _buscar(value),
+                decoration: const InputDecoration(
+                  labelText: 'Buscar',
+                  suffixIcon: Icon(Icons.search),
+                ),
+              ),
+              PaginatedDataTable(
+                header: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Beneficiarios'),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, 'NewEditVPerfilBeneficiario');
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                        ))
+                  ],
+                ),
+                rowsPerPage: 10,
+                columns: const <DataColumn>[
+                  DataColumn(label: Text('ID')),
+                  DataColumn(label: Text('Nombre')),
+                ],
+                source: PerfilBeneficiariosTableSource(
+                    context, perfilBeneficiariosFiltered),
+              ),
+            ],
+          );
   }
 }

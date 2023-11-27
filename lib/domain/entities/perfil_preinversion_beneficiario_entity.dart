@@ -50,8 +50,17 @@ class PerfilPreInversionBeneficiarioEntity {
     this.longitud,
     this.latitud,
     this.cedulaCatastral,
-    this.nombre,
+    this.tipoIdentificacionId,
+    this.fechaExpedicionDocumento,
+    this.fechaNacimiento,
     this.edad,
+    this.nombre1,
+    this.nombre2,
+    this.apellido1,
+    this.apellido2,
+    this.generoId,
+    this.grupoEspecialId,
+    this.telefonoMovil,
     this.recordStatus,
   });
 
@@ -105,8 +114,17 @@ class PerfilPreInversionBeneficiarioEntity {
   String? longitud;
   String? latitud;
   String? cedulaCatastral;
-  String? nombre;
-  String? edad;
+  String? tipoIdentificacionId;
+  String? fechaExpedicionDocumento;
+  String? fechaNacimiento;
+  int? edad;
+  String? nombre1;
+  String? nombre2;
+  String? apellido1;
+  String? apellido2;
+  String? generoId;
+  String? grupoEspecialId;
+  String? telefonoMovil;
   String? recordStatus;
 
   PerfilPreInversionBeneficiarioEntity copyWith({
@@ -160,6 +178,17 @@ class PerfilPreInversionBeneficiarioEntity {
     String? longitud,
     String? latitud,
     String? cedulaCatastral,
+    String? tipoIdentificacionId,
+    String? fechaExpedicionDocumento,
+    String? fechaNacimiento,
+    int? edad,
+    String? nombre1,
+    String? nombre2,
+    String? apellido1,
+    String? apellido2,
+    String? generoId,
+    String? grupoEspecialId,
+    String? telefonoMovil,
     String? recordStatus,
   }) =>
       PerfilPreInversionBeneficiarioEntity(
@@ -219,6 +248,18 @@ class PerfilPreInversionBeneficiarioEntity {
         longitud: longitud ?? this.longitud,
         latitud: latitud ?? this.latitud,
         cedulaCatastral: cedulaCatastral ?? this.cedulaCatastral,
+        tipoIdentificacionId: tipoIdentificacionId ?? this.tipoIdentificacionId,
+        fechaExpedicionDocumento:
+            fechaExpedicionDocumento ?? this.fechaExpedicionDocumento,
+        fechaNacimiento: fechaNacimiento ?? this.fechaNacimiento,
+        edad: edad ?? this.edad,
+        nombre1: nombre1 ?? this.nombre1,
+        nombre2: nombre2 ?? this.nombre2,
+        apellido1: apellido1 ?? this.apellido1,
+        apellido2: apellido2 ?? this.apellido2,
+        generoId: generoId ?? this.generoId,
+        grupoEspecialId: grupoEspecialId ?? this.grupoEspecialId,
+        telefonoMovil: telefonoMovil ?? this.telefonoMovil,
         recordStatus: recordStatus ?? this.recordStatus,
       );
 

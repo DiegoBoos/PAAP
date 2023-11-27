@@ -11,10 +11,6 @@ class PerfilAliadosBloc extends Bloc<PerfilAliadosEvent, PerfilAliadosState> {
   final PerfilAliadoUsecaseDB perfilAliadoUsecaseDB;
   PerfilAliadosBloc({required this.perfilAliadoUsecaseDB})
       : super(PerfilAliadosInitial()) {
-    on(<InitState>(event, emit) async {
-      emit(PerfilAliadosInitial());
-    });
-
     on<GetPerfilAliados>((event, emit) async {
       emit(PerfilAliadosLoading());
       await _getPerfilAliados(event, emit);

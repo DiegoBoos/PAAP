@@ -37,15 +37,11 @@ class _NewEditPerfilCofinanciadorPageState
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
 
-    final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
-
-    final perfilCofinanciadorCubit =
-        BlocProvider.of<PerfilCofinanciadorCubit>(context);
-
     final perfilCofinanciadoresBloc =
         BlocProvider.of<PerfilCofinanciadoresBloc>(context);
 
-    final perfil = vPerfilCubit.state.vPerfil!;
+    final perfilCofinanciadorCubit =
+        BlocProvider.of<PerfilCofinanciadorCubit>(context);
 
     final perfilCofinanciador =
         perfilCofinanciadorCubit.state.perfilCofinanciador;
@@ -58,13 +54,16 @@ class _NewEditPerfilCofinanciadorPageState
               CustomSnackBar.showSnackBar(
                   context, 'Datos guardados satisfactoriamente', Colors.green);
 
-              perfilCofinanciadoresBloc
-                  .add(GetPerfilCofinanciadores(perfil.perfilId!));
-
               final perfilCofinanciadorSaved = state.perfilCofinanciador;
 
+              // Actualizar el monto del cofinanciador
               BlocProvider.of<PerfilCofinanciadorCubit>(context)
                   .changeMonto(perfilCofinanciadorSaved.monto);
+
+              perfilCofinanciadoresBloc.add(
+                  GetPerfilCofinanciadores(perfilCofinanciadorSaved.perfilId!));
+
+              Navigator.pop(context);
             }
           },
         ),
@@ -112,28 +111,7 @@ class _NewEditPerfilCofinanciadorPageState
                     }
 
                     formKeyCofinanciador.currentState!.save();
-
-                    final perfilCofinanciadorCubit =
-                        BlocProvider.of<PerfilCofinanciadorCubit>(context);
-
-                    final perfilCofinanciador =
-                        perfilCofinanciadorCubit.state.perfilCofinanciador;
-
-                    double participacion = 0;
-
-                    if (perfilCofinanciador.monto != null &&
-                        perfilCofinanciador.monto != '') {
-                      participacion = double.parse(perfilCofinanciador.monto!) *
-                          100 /
-                          double.parse(perfil.valorTotalProyecto!);
-                    }
-
-                    perfilCofinanciadorCubit.changePerfilId(perfil.perfilId);
-
-                    perfilCofinanciadorCubit
-                        .changeParticipacion(participacion.toString());
-
-                    perfilCofinanciadorCubit.savePerfilCofinanciadorDB();
+                    savePerfilCofinanciador();
                   },
                 )
               ],
@@ -142,5 +120,29 @@ class _NewEditPerfilCofinanciadorPageState
         ),
       ),
     );
+  }
+
+  void savePerfilCofinanciador() {
+    final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
+
+    final perfilCofinanciadorCubit =
+        BlocProvider.of<PerfilCofinanciadorCubit>(context);
+
+    final perfil = vPerfilCubit.state.vPerfil!;
+
+    final perfilCofinanciador =
+        perfilCofinanciadorCubit.state.perfilCofinanciador;
+
+    double participacion = 0;
+
+    if (perfilCofinanciador.monto != null && perfilCofinanciador.monto != '') {
+      participacion = double.parse(perfilCofinanciador.monto!) *
+          100 /
+          double.parse(perfil.valorTotalProyecto!);
+    }
+
+    perfilCofinanciadorCubit.changePerfilId(perfil.perfilId);
+    perfilCofinanciadorCubit.changeParticipacion(participacion.toString());
+    perfilCofinanciadorCubit.savePerfilCofinanciadorDB();
   }
 }

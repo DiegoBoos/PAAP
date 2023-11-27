@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/perfil_aliados/perfil_aliados_bloc.dart';
+import '../../cubits/aliado/aliado_cubit.dart';
 import '../../cubits/menu/menu_cubit.dart';
 import '../../cubits/perfil_aliado/perfil_aliado_cubit.dart';
+import '../../cubits/v_perfil/v_perfil_cubit.dart';
 import '../../perfiles/widgets/perfil_drawer.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/floating_buttons.dart';
@@ -16,9 +18,9 @@ class NewEditPerfilAliadoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final menuCubit = BlocProvider.of<MenuCubit>(context);
     final perfilAliadosBloc = BlocProvider.of<PerfilAliadosBloc>(context);
     final perfilAliadoCubit = BlocProvider.of<PerfilAliadoCubit>(context);
-    final menuCubit = BlocProvider.of<MenuCubit>(context);
 
     final perfilAliado = perfilAliadoCubit.state.perfilAliado;
 
@@ -32,8 +34,9 @@ class NewEditPerfilAliadoPage extends StatelessWidget {
           CustomSnackBar.showSnackBar(
               context, 'Datos guardados satisfactoriamente', Colors.green);
 
-          final perfilId = state.perfilAliado.perfilId;
-          perfilAliadosBloc.add(GetPerfilAliados(perfilId!));
+          final perfilId = state.perfilAliado.perfilId!;
+          perfilAliadosBloc.add(GetPerfilAliados(perfilId));
+          Navigator.pop(context);
         }
       },
       child: Scaffold(
@@ -68,7 +71,8 @@ class NewEditPerfilAliadoPage extends StatelessWidget {
 
                         formKey.currentState!.save();
 
-                        perfilAliadoCubit.savePerfilAliadoDB();
+                        saveAliado(context);
+                        savePerfilAliado(context);
                       },
                     ),
                   ],
@@ -77,5 +81,24 @@ class NewEditPerfilAliadoPage extends StatelessWidget {
             ),
           )),
     );
+  }
+
+  void saveAliado(BuildContext context) {
+    final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
+    aliadoCubit.saveAliadoDB();
+  }
+
+  void savePerfilAliado(BuildContext context) {
+    final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
+    final perfilAliadoCubit = BlocProvider.of<PerfilAliadoCubit>(context);
+    final perfilAliado = perfilAliadoCubit.state.perfilAliado;
+
+    final perfilId = vPerfilCubit.state.vPerfil!.perfilId!;
+    final aliadoId = perfilAliado.aliadoId;
+
+    perfilAliadoCubit.changePerfilId(perfilId);
+    perfilAliadoCubit.changeAliadoId(aliadoId);
+
+    perfilAliadoCubit.savePerfilAliadoDB();
   }
 }

@@ -7,8 +7,6 @@ abstract class PerfilAliadosEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class InitState extends PerfilAliadosEvent {}
-
 class GetPerfilAliados extends PerfilAliadosEvent {
   final String perfilId;
 

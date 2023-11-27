@@ -8,5 +8,5 @@ abstract class BeneficiarioRepository {
   Future<Either<Failure, List<BeneficiarioEntity>>> getBeneficiariosRepository(
       UsuarioEntity usuario);
   Future<Either<Failure, List<BeneficiarioEntity>>> saveBeneficiariosRepository(
-      UsuarioEntity usuario, List<BeneficiarioEntity> beneficiariosEntity);
+      UsuarioEntity usuario, List<BeneficiarioEntity> beneficiarios);
 }

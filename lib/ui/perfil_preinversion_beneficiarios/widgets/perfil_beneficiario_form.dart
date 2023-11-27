@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entities/perfil_beneficiario_entity.dart';
 import '../../../ui/cubits/departamento/departamento_cubit.dart';
 import '../../../ui/cubits/municipio/municipio_cubit.dart';
 import '../../../ui/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
@@ -11,6 +12,8 @@ import '../../../domain/entities/municipio_entity.dart';
 import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
 import '../../../domain/entities/vereda_entity.dart';
+import '../../cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
+import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
@@ -42,12 +45,29 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
   @override
   void initState() {
     super.initState();
+    final perfilBeneficiarioCubit =
+        BlocProvider.of<PerfilBeneficiarioCubit>(context);
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
 
     allMunicipios = municipioCubit.state.municipios!;
     municipiosFiltered = allMunicipios;
 
-    loadPerfilPreInversionBeneficiario(widget.perfilPreInversionBeneficiario);
+    final perfilBeneficiario = PerfilBeneficiarioEntity(
+        perfilId: widget.perfilPreInversionBeneficiario?.perfilPreInversionId,
+        beneficiarioId: widget.perfilPreInversionBeneficiario?.beneficiarioId,
+        municipioId: widget.perfilPreInversionBeneficiario?.municipioId,
+        veredaId: widget.perfilPreInversionBeneficiario?.veredaId,
+        tipoTenenciaId: widget.perfilPreInversionBeneficiario?.tipoTenenciaId,
+        areaFinca: widget.perfilPreInversionBeneficiario?.areaFinca,
+        areaProyecto: widget.perfilPreInversionBeneficiario?.areaProyecto,
+        asociado: widget.perfilPreInversionBeneficiario?.asociado,
+        activo: widget.perfilPreInversionBeneficiario?.activo,
+        fueBeneficiado: widget.perfilPreInversionBeneficiario?.fueBeneficiado,
+        cualBeneficio: widget.perfilPreInversionBeneficiario?.cualBeneficio,
+        experiencia: widget.perfilPreInversionBeneficiario?.experiencia);
+
+    perfilBeneficiarioCubit.setPerfilBeneficiario(perfilBeneficiario);
+    loadPerfilBeneficiario(perfilBeneficiario);
   }
 
   @override
@@ -57,48 +77,42 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
     BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context).initState();
   }
 
-  void loadPerfilPreInversionBeneficiario(
-      PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario) {
+  void loadPerfilBeneficiario(PerfilBeneficiarioEntity? perfilBeneficiario) {
     setState(() {
-      final perfilPreInversionBeneficiarioMunicipioId =
-          perfilPreInversionBeneficiario?.municipioId;
-      final perfilPreInversionBeneficiarioVeredaId =
-          perfilPreInversionBeneficiario?.veredaId;
+      final perfilBeneficiarioMunicipioId = perfilBeneficiario?.municipioId;
+      final perfilBeneficiarioVeredaId = perfilBeneficiario?.veredaId;
 
-      final municipio = municipiosFiltered.firstWhere(
-        (municipio) =>
-            municipio.id == perfilPreInversionBeneficiarioMunicipioId,
-      );
+      if (perfilBeneficiarioMunicipioId != null) {
+        final municipio = municipiosFiltered.firstWhere(
+          (municipio) => municipio.id == perfilBeneficiarioMunicipioId,
+        );
 
-      if (municipio.id != '') {
-        departamentoId = municipio.departamentoid;
-        municipioId = perfilPreInversionBeneficiarioMunicipioId;
-        municipiosFiltered = allMunicipios
-            .where((municipio) => municipio.departamentoid == departamentoId)
-            .toList();
-        loadVeredasByMunicipio(
-            municipioId!, perfilPreInversionBeneficiarioVeredaId!);
+        if (municipio.id != '') {
+          departamentoId = municipio.departamentoid;
+          municipioId = perfilBeneficiarioMunicipioId;
+          municipiosFiltered = allMunicipios
+              .where((municipio) => municipio.departamentoid == departamentoId)
+              .toList();
+          loadVeredasByMunicipio(municipioId!, perfilBeneficiarioVeredaId!);
+        }
       }
 
-      experienciaCtrl.text = perfilPreInversionBeneficiario?.experiencia ?? '';
-      cualBeneficioCtrl.text =
-          perfilPreInversionBeneficiario?.cualBeneficio ?? '';
-      areaProyectoCtrl.text =
-          perfilPreInversionBeneficiario?.areaProyecto ?? '';
-      areaFincaCtrl.text = perfilPreInversionBeneficiario?.areaFinca ?? '';
-      tipoTenenciaId = perfilPreInversionBeneficiario?.tipoTenenciaId;
-      beneficioId = perfilPreInversionBeneficiario?.beneficioId;
+      experienciaCtrl.text = perfilBeneficiario?.experiencia ?? '';
+      cualBeneficioCtrl.text = perfilBeneficiario?.cualBeneficio ?? '';
+      areaProyectoCtrl.text = perfilBeneficiario?.areaProyecto ?? '';
+      areaFincaCtrl.text = perfilBeneficiario?.areaFinca ?? '';
+      tipoTenenciaId = perfilBeneficiario?.tipoTenenciaId;
+      //beneficioId = perfilBeneficiario?.beneficioId;
     });
   }
 
   void loadVeredasByMunicipio(
-      String municipioId, String perfilPreInversionBeneficiarioVeredaId) async {
+      String municipioId, String perfilBeneficiarioVeredaId) async {
     final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
     veredaCubit.getVeredasByMunicipioDB(municipioId);
-    veredaId = perfilPreInversionBeneficiarioVeredaId != ''
-        ? perfilPreInversionBeneficiarioVeredaId
-        : null;
+    veredaId =
+        perfilBeneficiarioVeredaId != '' ? perfilBeneficiarioVeredaId : null;
   }
 
   @override
@@ -111,8 +125,17 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
     final perfilPreInversionBeneficiario = perfilPreInversionBeneficiarioCubit
         .state.perfilPreInversionBeneficiario;
 
-    return BlocBuilder<PerfilPreInversionBeneficiarioCubit,
-        PerfilPreInversionBeneficiarioState>(builder: (context, state) {
+    return BlocListener<PerfilBeneficiarioCubit, PerfilBeneficiarioState>(
+        listener: (context, state) {
+      if (state is PerfilBeneficiarioError) {
+        CustomSnackBar.showSnackBar(context, state.message, Colors.red);
+      }
+      if (state is PerfilBeneficiarioLoaded) {
+        final perfilBeneficiario = state.perfilBeneficiarioLoaded;
+        loadPerfilBeneficiario(perfilBeneficiario);
+      }
+    }, child: BlocBuilder<PerfilPreInversionBeneficiarioCubit,
+            PerfilPreInversionBeneficiarioState>(builder: (context, state) {
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -359,6 +382,6 @@ class _PerfilBeneficiarioFormState extends State<PerfilBeneficiarioForm> {
           ),
         ),
       );
-    });
+    }));
   }
 }

@@ -9,7 +9,8 @@ abstract class PerfilBeneficiarioState extends Equatable {
 }
 
 class PerfilBeneficiarioInitial extends PerfilBeneficiarioState {
-  PerfilBeneficiarioInitial() : super(perfilBeneficiario: initObject());
+  PerfilBeneficiarioInitial()
+      : super(perfilBeneficiario: PerfilBeneficiarioEntity());
 }
 
 class PerfilBeneficiarioLoaded extends PerfilBeneficiarioState {
@@ -34,27 +35,8 @@ class PerfilBeneficiarioError extends PerfilBeneficiarioState {
   final String message;
 
   PerfilBeneficiarioError(this.message)
-      : super(perfilBeneficiario: initObject());
+      : super(perfilBeneficiario: PerfilBeneficiarioEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-PerfilBeneficiarioEntity initObject() {
-  return PerfilBeneficiarioEntity(
-    perfilId: '',
-    beneficiarioId: '',
-    municipioId: '',
-    veredaId: '',
-    areaFinca: '',
-    areaProyecto: '',
-    tipoTenenciaId: '',
-    experiencia: '',
-    asociado: '',
-    conocePerfil: '',
-    fueBeneficiado: '',
-    cualBeneficio: '',
-    activo: '',
-    recordStatus: '',
-  );
 }

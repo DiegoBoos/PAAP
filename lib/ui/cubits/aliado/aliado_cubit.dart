@@ -12,10 +12,14 @@ class AliadoCubit extends Cubit<AliadoState> {
 
   void initState() => emit(AliadoInitial());
 
-  void saveAliadoDB(AliadoEntity aliadoEntity) async {
-    final result = await aliadoUsecaseDB.saveAliadoUsecaseDB(aliadoEntity);
+  void setAliado(AliadoEntity aliado) {
+    emit(AliadoLoaded(aliado));
+  }
+
+  void saveAliadoDB() async {
+    final result = await aliadoUsecaseDB.saveAliadoUsecaseDB(state.aliado);
     result.fold((failure) => emit(AliadoError(failure.properties.first)),
-        (data) => emit(AliadoSaved(aliadoSaved: aliadoEntity)));
+        (data) => emit(AliadoSaved(aliadoSaved: state.aliado)));
   }
 
   void getAliado(String aliadoId) async {

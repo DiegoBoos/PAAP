@@ -4,6 +4,7 @@ export 'package:paap/domain/repositories/perfil_cofinanciador/perfil_cofinanciad
 export 'package:paap/domain/repositories/perfil_cofinanciador/perfil_cofinanciador_repository_db.dart';
 export 'package:paap/domain/entities/perfil_cofinanciador_entity.dart';
 export 'package:paap/domain/entities/perfil_cofinanciador_entity.dart';
+export 'package:paap/ui/blocs/perfil_cofinanciadores/perfil_cofinanciadores_bloc.dart';
 export 'package:paap/ui/cubits/perfil_cofinanciador/perfil_cofinanciador_cubit.dart';
 export 'package:paap/data/repositories/perfil_cofinanciador/perfil_cofinanciador_repository.dart';
 export 'package:paap/data/repositories/perfil_cofinanciador/perfil_cofinanciador_repository_db.dart';

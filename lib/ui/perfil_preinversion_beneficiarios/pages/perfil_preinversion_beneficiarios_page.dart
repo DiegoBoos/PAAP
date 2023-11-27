@@ -7,7 +7,6 @@ import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dar
 import '../../perfil_preinversion/widgets/perfil_preinversion_drawer.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
-import '../../utils/no_data_svg.dart';
 import 'perfil_preinversion_beneficiarios_rows.dart';
 
 class PerfilPreInversionBeneficiariosPage extends StatefulWidget {
@@ -39,10 +38,6 @@ class _PerfilPreInversionBeneficiariosPageState
   @override
   Widget build(BuildContext context) {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
-    final perfilPreInversionBeneficiariosBloc =
-        BlocProvider.of<PerfilPreInversionBeneficiariosBloc>(context);
-    final perfilPreInversionBeneficiarios = perfilPreInversionBeneficiariosBloc
-        .state.perfilPreInversionBeneficiarios;
 
     return Scaffold(
       drawer: BlocBuilder<MenuCubit, MenuState>(
@@ -53,13 +48,6 @@ class _PerfilPreInversionBeneficiariosPageState
           );
         },
       ),
-      floatingActionButton: perfilPreInversionBeneficiarios != null &&
-              perfilPreInversionBeneficiarios.isEmpty
-          ? FloatingActionButton(
-              child: const Icon(Icons.save),
-              onPressed: () => Navigator.pushNamed(
-                  context, 'NewEditVBeneficiarioPreInversion'))
-          : null,
       appBar: AppBar(title: const Text('Consulta'), actions: const [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -77,11 +65,7 @@ class _PerfilPreInversionBeneficiariosPageState
             if (state is PerfilPreInversionBeneficiariosLoaded) {
               final perfilPreInversionBeneficiarios =
                   state.perfilPreInversionBeneficiariosLoaded;
-              if (perfilPreInversionBeneficiarios.isEmpty) {
-                return const SizedBox(
-                    child:
-                        Center(child: NoDataSvg(title: 'No hay resultados')));
-              }
+
               return PerfilPreInversionBeneficiariosRows(
                 perfilPreInversionBeneficiarios:
                     perfilPreInversionBeneficiarios,

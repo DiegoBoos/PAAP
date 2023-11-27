@@ -33,10 +33,8 @@ class PerfilPreInversionBeneficiarioCubit
   void initState() => emit(PerfilPreInversionBeneficiarioInitial());
 
   void setPerfilPreInversionBeneficiario(
-      PerfilPreInversionBeneficiarioEntity
-          perfilPreInversionBeneficiarioEntity) {
-    emit(PerfilPreInversionBeneficiarioChanged(
-        perfilPreInversionBeneficiarioEntity));
+      PerfilPreInversionBeneficiarioEntity perfilPreInversionBeneficiario) {
+    emit(PerfilPreInversionBeneficiarioChanged(perfilPreInversionBeneficiario));
   }
 
   void savePerfilPreInversionBeneficiarioDB() async {

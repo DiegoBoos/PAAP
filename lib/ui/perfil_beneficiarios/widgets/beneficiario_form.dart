@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/entities/perfil_preinversion_beneficiario_entity.dart';
+import '../../../domain/entities/perfil_beneficiario_entity.dart';
+import '../../../ui/cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
 import '../../../ui/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../ui/cubits/genero/genero_cubit.dart';
 import '../../../ui/cubits/grupo_especial/grupo_especial_cubit.dart';
-import '../../../ui/cubits/perfil_preinversion_beneficiario/perfil_preinversion_beneficiario_cubit.dart';
 import '../../../ui/cubits/tipo_identificacion/tipo_identificacion_cubit.dart';
-import '../../../ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import '../../../domain/entities/beneficiario_entity.dart';
 import '../../../domain/entities/genero_entity.dart';
 import '../../../domain/entities/grupo_especial_entity.dart';
 import '../../../domain/entities/tipo_identificacion_entity.dart';
-import '../../cubits/perfil_beneficiario/perfil_beneficiario_cubit.dart';
+import '../../cubits/v_perfil/v_perfil_cubit.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class BeneficiarioForm extends StatefulWidget {
-  const BeneficiarioForm({super.key, this.perfilPreInversionBeneficiario});
-  final PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario;
+  const BeneficiarioForm({super.key, this.perfilBeneficiario});
+
+  final PerfilBeneficiarioEntity? perfilBeneficiario;
 
   @override
   State<BeneficiarioForm> createState() => _BeneficiarioFormState();
@@ -28,8 +28,6 @@ class BeneficiarioForm extends StatefulWidget {
 
 class _BeneficiarioFormState extends State<BeneficiarioForm> {
   final dateFormat = DateFormat('yyyy-MM-dd');
-
-  final PageController pageViewController = PageController(initialPage: 1);
 
   String? tipoIdentificacionId;
   String? generoId;
@@ -48,23 +46,21 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
   @override
   void initState() {
     super.initState();
-
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
 
     final beneficiario = BeneficiarioEntity(
-        beneficiarioId: widget.perfilPreInversionBeneficiario?.beneficiarioId,
-        tipoIdentificacionId:
-            widget.perfilPreInversionBeneficiario?.tipoIdentificacionId,
-        generoId: widget.perfilPreInversionBeneficiario?.generoId,
-        grupoEspecialId: widget.perfilPreInversionBeneficiario?.grupoEspecialId,
+        beneficiarioId: widget.perfilBeneficiario?.beneficiarioId,
+        tipoIdentificacionId: widget.perfilBeneficiario?.tipoIdentificacionId,
         fechaExpedicionDocumento:
-            widget.perfilPreInversionBeneficiario?.fechaExpedicionDocumento,
-        fechaNacimiento: widget.perfilPreInversionBeneficiario?.fechaNacimiento,
-        telefonoMovil: widget.perfilPreInversionBeneficiario?.telefonoMovil,
-        nombre1: widget.perfilPreInversionBeneficiario?.nombre1,
-        nombre2: widget.perfilPreInversionBeneficiario?.nombre2,
-        apellido1: widget.perfilPreInversionBeneficiario?.apellido1,
-        apellido2: widget.perfilPreInversionBeneficiario?.apellido2);
+            widget.perfilBeneficiario?.fechaExpedicionDocumento,
+        fechaNacimiento: widget.perfilBeneficiario?.fechaNacimiento,
+        telefonoMovil: widget.perfilBeneficiario?.telefonoMovil,
+        nombre1: widget.perfilBeneficiario?.nombre1,
+        nombre2: widget.perfilBeneficiario?.nombre2,
+        apellido1: widget.perfilBeneficiario?.apellido1,
+        apellido2: widget.perfilBeneficiario?.apellido2,
+        generoId: widget.perfilBeneficiario?.generoId,
+        grupoEspecialId: widget.perfilBeneficiario?.grupoEspecialId);
 
     beneficiarioCubit.setBeneficiario(beneficiario);
     loadBeneficiario(beneficiario);
@@ -76,38 +72,31 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     BlocProvider.of<BeneficiarioCubit>(context).initState();
   }
 
-  @override
-  void dispose() {
-    pageViewController.dispose();
-    super.dispose();
-  }
-
   void loadBeneficiario(BeneficiarioEntity beneficiario) {
-    setState(() {
-      tipoIdentificacionId = beneficiario.tipoIdentificacionId;
-      generoId = beneficiario.generoId;
-      grupoEspecialId = beneficiario.grupoEspecialId;
-      beneficiarioIdCtrl.text = beneficiario.beneficiarioId ?? '';
+    tipoIdentificacionId = beneficiario.tipoIdentificacionId;
+    generoId = beneficiario.generoId;
+    grupoEspecialId = beneficiario.grupoEspecialId;
 
-      if (beneficiario.fechaExpedicionDocumento != null &&
-          beneficiario.fechaExpedicionDocumento != '') {
-        fechaExpedicionDocumentoCtrl.text = dateFormat
-            .format(DateTime.parse(beneficiario.fechaExpedicionDocumento!));
-      }
+    beneficiarioIdCtrl.text = beneficiario.beneficiarioId ?? '';
 
-      if (beneficiario.fechaNacimiento != null &&
-          beneficiario.fechaNacimiento != '') {
-        fechaNacimientoCtrl.text =
-            dateFormat.format(DateTime.parse(beneficiario.fechaNacimiento!));
-        calcularEdad(fechaNacimientoCtrl.text);
-      }
+    if (beneficiario.fechaExpedicionDocumento != null &&
+        beneficiario.fechaExpedicionDocumento != '') {
+      fechaExpedicionDocumentoCtrl.text = dateFormat
+          .format(DateTime.parse(beneficiario.fechaExpedicionDocumento!));
+    }
 
-      telefonoMovilCtrl.text = beneficiario.telefonoMovil ?? '';
-      nombre1Ctrl.text = beneficiario.nombre1 ?? '';
-      nombre2Ctrl.text = beneficiario.nombre2 ?? '';
-      apellido1Ctrl.text = beneficiario.apellido1 ?? '';
-      apellido2Ctrl.text = beneficiario.apellido2 ?? '';
-    });
+    if (beneficiario.fechaNacimiento != null &&
+        beneficiario.fechaNacimiento != '') {
+      fechaNacimientoCtrl.text =
+          dateFormat.format(DateTime.parse(beneficiario.fechaNacimiento!));
+      calcularEdad(beneficiario.fechaNacimiento!);
+    }
+
+    telefonoMovilCtrl.text = beneficiario.telefonoMovil ?? '';
+    nombre1Ctrl.text = beneficiario.nombre1 ?? '';
+    nombre2Ctrl.text = beneficiario.nombre2 ?? '';
+    apellido1Ctrl.text = beneficiario.apellido1 ?? '';
+    apellido2Ctrl.text = beneficiario.apellido2 ?? '';
   }
 
   void calcularEdad(String fechaNacimiento) {
@@ -121,28 +110,25 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
 
   @override
   Widget build(BuildContext context) {
-    final vPerfilPreInversionCubit =
-        BlocProvider.of<VPerfilPreInversionCubit>(context);
+    final vPerfilCubit = BlocProvider.of<VPerfilCubit>(context);
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
     final perfilBeneficiarioCubit =
         BlocProvider.of<PerfilBeneficiarioCubit>(context);
 
-    final perfilPreInversionBeneficiarioCubit =
-        BlocProvider.of<PerfilPreInversionBeneficiarioCubit>(context);
+    final perfilId = vPerfilCubit.state.vPerfil!.perfilId!;
 
-    final perfilPreInversionId = vPerfilPreInversionCubit
-        .state.vPerfilPreInversion!.perfilPreInversionId!;
-
-    return BlocConsumer<BeneficiarioCubit, BeneficiarioState>(
+    return BlocListener<BeneficiarioCubit, BeneficiarioState>(
         listener: (context, state) {
       if (state is BeneficiarioError) {
         CustomSnackBar.showSnackBar(context, state.message, Colors.red);
       }
       if (state is BeneficiarioLoaded) {
         final beneficiarioLoaded = state.beneficiarioLoaded;
+
         loadBeneficiario(beneficiarioLoaded);
       }
-    }, builder: (context, state) {
+    }, child: BlocBuilder<BeneficiarioCubit, BeneficiarioState>(
+            builder: (context, state) {
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -166,17 +152,11 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
               },
               onFieldSubmitted: (String value) {
                 beneficiarioCubit.loadBeneficiario(value);
-                perfilBeneficiarioCubit.loadPerfilBeneficiario(
-                    perfilPreInversionId, value);
-
-                perfilPreInversionBeneficiarioCubit
-                    .loadPerfilPreInversionBeneficiario(
-                        perfilPreInversionId, value);
+                perfilBeneficiarioCubit.loadPerfilBeneficiario(perfilId, value);
               },
               onSaved: ((String? newValue) {
                 beneficiarioCubit.changeBeneficiarioId(newValue);
-                perfilPreInversionBeneficiarioCubit
-                    .changeBeneficiarioId(newValue);
+                perfilBeneficiarioCubit.changeBeneficiarioId(newValue);
               }),
             ),
             const SizedBox(height: 20),
@@ -463,100 +443,6 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
           ]),
         ),
       );
-    });
+    }));
   }
 }
-
-//if (images.isNotEmpty)
-//     Stack(
-//       children: [
-//         SelectedImages(
-//             images: images, pageViewController: pageViewController),
-//         Positioned(
-//             top: 10,
-//             right: 10,
-//             child: Container(
-//               decoration: const BoxDecoration(
-//                   color: Colors.black26, shape: BoxShape.circle),
-//               child: IconButton(
-//                   icon: const Icon(Icons.delete,
-//                       size: 30, color: Colors.white),
-//                   onPressed: () => deleteCurrentImage()),
-//             )),
-//       ],
-//     ),
-//   const SizedBox(height: 20),
-//   ElevatedButton(
-//       style: ElevatedButton.styleFrom(
-//           minimumSize: const Size.fromHeight(56),
-//           backgroundColor: Colors.white,
-//           foregroundColor: Colors.black,
-//           textStyle: const TextStyle(fontSize: 20)),
-//       onPressed: () => pickImage(ImageSource.gallery),
-//       child: Row(children: const [
-//         Icon(Icons.image_outlined),
-//         SizedBox(width: 16),
-//         Text('Seleccionar de Galería')
-//       ])),
-//   const SizedBox(height: 20),
-//   ElevatedButton(
-//       style: ElevatedButton.styleFrom(
-//           minimumSize: const Size.fromHeight(56),
-//           backgroundColor: Colors.white,
-//           foregroundColor: Colors.black,
-//           textStyle: const TextStyle(fontSize: 20)),
-//       onPressed: () => pickImage(ImageSource.camera),
-//       child: Row(
-//         children: const [
-//           Icon(Icons.camera_alt_outlined),
-//           SizedBox(width: 16),
-//           Text('Seleccionar de Cámara')
-//         ],
-//       )),
-//   const SizedBox(height: 20),
-//   if (images.isNotEmpty)
-//     Align(
-//       alignment: Alignment.bottomRight,
-//       child: FloatingActionButton(
-//         child: const Icon(Icons.save),
-//         onPressed: () {
-//           createPDF();
-//         },
-//       ),
-//     )
-
-// Future pickImage(ImageSource source) async {
-//   try {
-//     final image = await ImagePicker().pickImage(source: source);
-//     if (image == null) return;
-
-//     final imageTemporary = File(image.path);
-//     setState(() => images.add(imageTemporary));
-//   } on PlatformException catch (e) {
-//     CustomSnackBar.showSnackBar(context, e.toString(), Colors.red);
-//   }
-// }
-
-// void deleteCurrentImage() {
-//   for (var i = 0; i < images.length; i++) {
-//     if (pageViewController.page == i) {
-//       setState(() => images.removeAt(i));
-//       pageViewController.jumpToPage(i);
-//     }
-//   }
-// }
-
-// createPDF() async {
-//   for (var i = 0; i < images.length; i++) {
-//     final image = pw.MemoryImage(images[i].readAsBytesSync());
-
-//     final pdfFile =
-//         await PDFAPI.convertImageToPDF(image, i).catchError((error) {
-//       CustomSnackBar.showSnackBar(context, error.toString(), Colors.red);
-//     });
-
-//     if (pdfFile != null) {
-//       PDFAPI.openFile(pdfFile);
-//     }
-//   }
-// }

@@ -7,6 +7,7 @@ import 'ui/blocs/alianzas/alianzas_bloc.dart';
 import 'ui/blocs/auth/auth_bloc.dart';
 import 'ui/blocs/perfil_aliados/perfil_aliados_bloc.dart';
 import 'ui/blocs/perfil_beneficiarios/perfil_beneficiarios_bloc.dart';
+import 'ui/blocs/perfil_cofinanciadores/perfil_cofinanciadores_bloc.dart';
 import 'ui/blocs/perfil_preinversion_aliados/perfil_preinversion_aliados_bloc.dart';
 import 'ui/blocs/perfil_preinversion_beneficiarios/perfil_preinversion_beneficiarios_bloc.dart';
 import 'ui/blocs/perfil_preinversion_cofinanciador_actividades_financieras/perfil_preinversion_cofinanciador_actividades_financieras_bloc.dart';
@@ -192,6 +193,9 @@ class _MyAppState extends State<MyApp> {
             create: (_) => di.locator<PerfilBeneficiariosBloc>(),
           ),
           BlocProvider(
+            create: (_) => di.locator<PerfilBeneficiarioCubit>(),
+          ),
+          BlocProvider(
             create: (_) => di.locator<BeneficiarioCubit>(),
           ),
           BlocProvider(
@@ -202,6 +206,9 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider(
             create: (_) => di.locator<PerfilPreInversionAliadoCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => di.locator<PerfilCofinanciadoresBloc>(),
           ),
           BlocProvider(
             create: (_) => di.locator<CofinanciadorCubit>(),

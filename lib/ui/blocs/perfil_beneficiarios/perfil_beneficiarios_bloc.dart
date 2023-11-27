@@ -12,21 +12,13 @@ class PerfilBeneficiariosBloc
   final PerfilBeneficiarioUsecaseDB perfilBeneficiarioUsecaseDB;
   PerfilBeneficiariosBloc({required this.perfilBeneficiarioUsecaseDB})
       : super(PerfilBeneficiariosInitial()) {
-    on(<InitState>(event, emit) async {
-      emit(PerfilBeneficiariosInitial());
-    });
-
     on<GetPerfilBeneficiarios>((event, emit) async {
       emit(PerfilBeneficiariosLoading());
-      await _getPerfilBeneficiarios(event, emit);
+      final result = await perfilBeneficiarioUsecaseDB
+          .getPerfilBeneficiariosUsecaseDB(event.perfilId);
+      result.fold(
+          (failure) => emit(PerfilBeneficiariosError(failure.properties.first)),
+          (data) => emit(PerfilBeneficiariosLoaded(data)));
     });
-  }
-
-  _getPerfilBeneficiarios(event, emit) async {
-    final result = await perfilBeneficiarioUsecaseDB
-        .getPerfilBeneficiariosUsecaseDB(event.perfilId);
-    result.fold(
-        (failure) => emit(PerfilBeneficiariosError(failure.properties.first)),
-        (data) => emit(PerfilBeneficiariosLoaded(data)));
   }
 }
