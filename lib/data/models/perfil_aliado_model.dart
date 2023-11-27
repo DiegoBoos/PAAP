@@ -34,6 +34,19 @@ class PerfilAliadoModel extends PerfilAliadoEntity {
           porcentajeCompra: porcentajeCompra,
           sitioEntregaId: sitioEntregaId,
           recordStatus: recordStatus,
+          nombre: nombre,
+          fechaCreacion: fechaCreacion,
+          nombreContacto: nombreContacto,
+          direccion: direccion,
+          telefonoFijo: telefonoFijo,
+          telefonoMovil: telefonoMovil,
+          correo: correo,
+          municipioId: municipioId,
+          experiencia: experiencia,
+          fechaActivacion: fechaActivacion,
+          fechaDesactivacion: fechaDesactivacion,
+          fechaCambio: fechaCambio,
+          activo: activo,
         );
 
   factory PerfilAliadoModel.fromJson(Map<String, dynamic> json) =>
@@ -46,7 +59,6 @@ class PerfilAliadoModel extends PerfilAliadoEntity {
         frecuenciaId: json["FrecuenciaId"],
         porcentajeCompra: json["PorcentajeCompra"],
         sitioEntregaId: json["SitioEntregaId"],
-        recordStatus: json["RecordStatus"],
         nombre: json["Nombre"],
         fechaCreacion: json["FechaCreacion"],
         nombreContacto: json["NombreContacto"],
@@ -60,5 +72,6 @@ class PerfilAliadoModel extends PerfilAliadoEntity {
         fechaDesactivacion: json["FechaDesactivacion"],
         fechaCambio: json["FechaCambio"],
         activo: json["Activo"],
+        recordStatus: json["RecordStatus"],
       );
 }
