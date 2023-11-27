@@ -85,7 +85,7 @@ class _PerfilAliadosRowsState extends State<PerfilAliadosRows> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Perfil Aliados',
+                      'Aliados',
                       style: TextStyle(fontSize: 20),
                     ),
                     IconButton(
@@ -114,7 +114,7 @@ class _PerfilAliadosRowsState extends State<PerfilAliadosRows> {
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Perfil Aliados'),
+                    const Text('Aliados'),
                     IconButton(
                         onPressed: () => Navigator.pushNamed(
                             context, 'NewEditVPerfilAliado'),

@@ -43,7 +43,7 @@ class _PerfilAliadosPageState extends State<PerfilAliadosPage> {
             );
           },
         ),
-        appBar: AppBar(title: const Text('Consulta'), actions: const [
+        appBar: AppBar(title: const Text('Perfiles'), actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0),
             child: NetworkIcon(),

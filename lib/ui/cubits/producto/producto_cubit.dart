@@ -11,8 +11,8 @@ class ProductoCubit extends Cubit<ProductoState> {
 
   ProductoCubit({required this.productoDB}) : super(ProductosInitial());
 
-  void getProductosDB(String perfilPreInversionId) async {
-    final result = await productoDB.getProductosUsecaseDB(perfilPreInversionId);
+  void getProductosDB(String perfilId) async {
+    final result = await productoDB.getProductosUsecaseDB(perfilId);
     result.fold((failure) => emit(ProductosError(failure.properties.first)),
         (data) => emit(ProductosLoaded(data)));
   }
