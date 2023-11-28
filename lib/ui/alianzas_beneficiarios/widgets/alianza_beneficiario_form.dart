@@ -17,7 +17,8 @@ import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class AlianzaBeneficiarioForm extends StatefulWidget {
-  const AlianzaBeneficiarioForm({super.key});
+  const AlianzaBeneficiarioForm({super.key, required this.alianzaBeneficiario});
+  final AlianzaBeneficiarioEntity alianzaBeneficiario;
 
   @override
   State<AlianzaBeneficiarioForm> createState() =>
@@ -54,48 +55,62 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
   @override
   void initState() {
     super.initState();
-    final alianzaBeneficiarioCubit =
-        BlocProvider.of<AlianzaBeneficiarioCubit>(context);
-
-    final alianzaBeneficiario =
-        alianzaBeneficiarioCubit.state.alianzaBeneficiario;
-
-    setState(() {
-      residenciaId = alianzaBeneficiario.residenciaId;
-      estadoCivilId = alianzaBeneficiario.estadoCivilId;
-      nivelEscolarId = alianzaBeneficiario.nivelEscolarId;
-      actividadEconomicaId = alianzaBeneficiario.actividadEconomicaId;
-      tipoDiscapacidadId = alianzaBeneficiario.tipoDiscapacidadId;
-      ingresosDiariosCtrl.text = alianzaBeneficiario.ingresosDiarios ?? '';
-      diasTrabajoCtrl.text = alianzaBeneficiario.diasTrabajo ?? '';
-      calificacionSisbenCtrl.text =
-          alianzaBeneficiario.calificacionSisben ?? '';
-      latitudCtrl.text = alianzaBeneficiario.latitud ?? '';
-      longitudCtrl.text = alianzaBeneficiario.longitud ?? '';
-      cedulaCatastralCtrl.text = alianzaBeneficiario.cedulaCatastral ?? '';
-      miembrosHogarCtrl.text = alianzaBeneficiario.miembrosHogar ?? '';
-      miembrosEcoActivosCtrl.text =
-          alianzaBeneficiario.miembrosEcoActivos ?? '';
-      ingresosMensualesCtrl.text = alianzaBeneficiario.ingresosMensuales ?? '';
-      gastosMensualesCtrl.text = alianzaBeneficiario.gastosMensuales ?? '';
-      activoInmobiliarioCtrl.text =
-          alianzaBeneficiario.activoInmobiliario ?? '';
-      activoFinancieroCtrl.text = alianzaBeneficiario.activoFinanciero ?? '';
-      activoProductivoCtrl.text = alianzaBeneficiario.activoProductivo ?? '';
-      activoCorrienteCtrl.text = alianzaBeneficiario.activoCorriente ?? '';
-      nombreFincaCtrl.text = alianzaBeneficiario.nombreFinca ?? '';
-      nombreOrganizacionCtrl.text =
-          alianzaBeneficiario.nombreOrganizacion ?? '';
-      mesesAsociadoCtrl.text = alianzaBeneficiario.mesesAsociado ?? '';
-      notaCtrl.text = alianzaBeneficiario.nota ?? '';
-      calculateTotalActivo(alianzaBeneficiario);
-    });
+    loadAlianzaBeneficiario(widget.alianzaBeneficiario);
   }
 
   @override
   void deactivate() {
     super.deactivate();
     BlocProvider.of<AlianzaBeneficiarioCubit>(context).initState();
+  }
+
+  loadAlianzaBeneficiario(AlianzaBeneficiarioEntity? alianzaBeneficiario) {
+    setState(() {
+      residenciaId = alianzaBeneficiario?.residenciaId;
+      estadoCivilId = alianzaBeneficiario?.estadoCivilId;
+      nivelEscolarId = alianzaBeneficiario?.nivelEscolarId;
+      actividadEconomicaId = alianzaBeneficiario?.actividadEconomicaId;
+      tipoDiscapacidadId = alianzaBeneficiario?.tipoDiscapacidadId;
+      ingresosDiariosCtrl.text = alianzaBeneficiario?.ingresosDiarios ?? '';
+      diasTrabajoCtrl.text = alianzaBeneficiario?.diasTrabajo ?? '';
+      calificacionSisbenCtrl.text =
+          alianzaBeneficiario?.calificacionSisben ?? '';
+      latitudCtrl.text = alianzaBeneficiario?.latitud ?? '';
+      longitudCtrl.text = alianzaBeneficiario?.longitud ?? '';
+      cedulaCatastralCtrl.text = alianzaBeneficiario?.cedulaCatastral ?? '';
+      miembrosHogarCtrl.text = alianzaBeneficiario?.miembrosHogar ?? '';
+      miembrosEcoActivosCtrl.text =
+          alianzaBeneficiario?.miembrosEcoActivos ?? '';
+      ingresosMensualesCtrl.text = alianzaBeneficiario?.ingresosMensuales ?? '';
+      gastosMensualesCtrl.text = alianzaBeneficiario?.gastosMensuales ?? '';
+      activoInmobiliarioCtrl.text =
+          alianzaBeneficiario?.activoInmobiliario ?? '';
+      activoFinancieroCtrl.text = alianzaBeneficiario?.activoFinanciero ?? '';
+      activoProductivoCtrl.text = alianzaBeneficiario?.activoProductivo ?? '';
+      activoCorrienteCtrl.text = alianzaBeneficiario?.activoCorriente ?? '';
+      nombreFincaCtrl.text = alianzaBeneficiario?.nombreFinca ?? '';
+      nombreOrganizacionCtrl.text =
+          alianzaBeneficiario?.nombreOrganizacion ?? '';
+      mesesAsociadoCtrl.text = alianzaBeneficiario?.mesesAsociado ?? '';
+      notaCtrl.text = alianzaBeneficiario?.nota ?? '';
+      calculateTotalActivo(alianzaBeneficiario);
+    });
+  }
+
+  void calculateTotalActivo(AlianzaBeneficiarioEntity? alianzaBeneficiario) {
+    if (alianzaBeneficiario?.activoFinanciero != null &&
+        alianzaBeneficiario?.activoInmobiliario != null &&
+        alianzaBeneficiario?.activoProductivo != null &&
+        alianzaBeneficiario?.activoCorriente != null) {
+      final sum = double.parse(alianzaBeneficiario!.activoCorriente!) +
+          double.parse(alianzaBeneficiario.activoFinanciero!) +
+          double.parse(alianzaBeneficiario.activoInmobiliario!) +
+          double.parse(alianzaBeneficiario.activoInmobiliario!) +
+          double.parse(alianzaBeneficiario.activoProductivo!);
+      totalActivoCtrl.text = sum.toString();
+    } else {
+      totalActivoCtrl.text = '0';
+    }
   }
 
   @override
@@ -568,7 +583,8 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
                       ? true
                       : false,
                   onChanged: (bool? value) {
-                    alianzaBeneficiarioCubit.changeCotizanteBeps(value);
+                    alianzaBeneficiarioCubit
+                        .changeCotizanteBeps(value.toString());
                   }),
               const SizedBox(height: 20),
               SwitchListTile(
@@ -578,25 +594,12 @@ class _AlianzaBeneficiarioFormState extends State<AlianzaBeneficiarioForm> {
                       : false,
                   onChanged: (bool? value) {
                     alianzaBeneficiarioCubit
-                        .changeAccesoExplotacionTierra(value);
+                        .changeAccesoExplotacionTierra(value.toString());
                   }),
             ],
           ),
         ),
       );
     });
-  }
-
-  void calculateTotalActivo(AlianzaBeneficiarioEntity alianzaBeneficiario) {
-    if (alianzaBeneficiario.activoCorriente != null &&
-        alianzaBeneficiario.activoFinanciero != null &&
-        alianzaBeneficiario.activoInmobiliario != null &&
-        alianzaBeneficiario.activoProductivo != null) {
-      final sum = double.parse(alianzaBeneficiario.activoCorriente!) +
-          double.parse(alianzaBeneficiario.activoFinanciero!) +
-          double.parse(alianzaBeneficiario.activoInmobiliario!) +
-          double.parse(alianzaBeneficiario.activoProductivo!);
-      totalActivoCtrl.text = sum.toString();
-    }
   }
 }

@@ -80,20 +80,20 @@ class PerfilPreInversionBeneficiarioCubit
   }
 
   void changeAsociado(String? value) {
-    final asociadoChanged = state.perfilPreInversionBeneficiario
-        .copyWith(asociado: value.toString());
+    final asociadoChanged =
+        state.perfilPreInversionBeneficiario.copyWith(asociado: value);
     emit(PerfilPreInversionBeneficiarioChanged(asociadoChanged));
   }
 
   void changeConocePerfil(String? value) {
-    final conocePerfilChanged = state.perfilPreInversionBeneficiario
-        .copyWith(conocePerfil: value.toString());
+    final conocePerfilChanged =
+        state.perfilPreInversionBeneficiario.copyWith(conocePerfil: value);
     emit(PerfilPreInversionBeneficiarioChanged(conocePerfilChanged));
   }
 
   void changeFueBeneficiado(String? value) {
-    final fueBeneficiadoChanged = state.perfilPreInversionBeneficiario
-        .copyWith(fueBeneficiado: value.toString());
+    final fueBeneficiadoChanged =
+        state.perfilPreInversionBeneficiario.copyWith(fueBeneficiado: value);
     emit(PerfilPreInversionBeneficiarioChanged(fueBeneficiadoChanged));
   }
 
@@ -326,15 +326,15 @@ class PerfilPreInversionBeneficiarioCubit
     emit(PerfilPreInversionBeneficiarioChanged(cedulaCatastralChanged));
   }
 
-  void changeCotizanteBeps(bool? value) {
-    final cotizanteBepsChanged = state.perfilPreInversionBeneficiario
-        .copyWith(cotizanteBeps: value.toString());
+  void changeCotizanteBeps(String? value) {
+    final cotizanteBepsChanged =
+        state.perfilPreInversionBeneficiario.copyWith(cotizanteBeps: value);
     emit(PerfilPreInversionBeneficiarioChanged(cotizanteBepsChanged));
   }
 
-  void changeAccesoExplotacionTierra(bool? value) {
+  void changeAccesoExplotacionTierra(String? value) {
     final accesoExplotacionTierraChanged = state.perfilPreInversionBeneficiario
-        .copyWith(accesoExplotacionTierra: value.toString());
+        .copyWith(accesoExplotacionTierra: value);
     emit(PerfilPreInversionBeneficiarioChanged(accesoExplotacionTierraChanged));
   }
 
@@ -352,17 +352,17 @@ class PerfilPreInversionBeneficiarioCubit
 
   void initConyuge() {
     final initConyuge = state.perfilPreInversionBeneficiario.copyWith(
-        conyugeTipoIdentificacionId: '',
-        conyugeId: '',
-        conyugeFechaExpedicionDocumento: '',
-        conyugeNombre1: '',
-        conyugeNombre2: '',
-        conyugeApellido1: '',
-        conyugeApellido2: '',
-        conyugeGeneroId: '',
-        conyugeFechaNacimiento: '',
-        conyugeIngresosMensuales: '',
-        conyugeGrupoEspecialId: '');
+        conyugeTipoIdentificacionId: null,
+        conyugeId: null,
+        conyugeFechaExpedicionDocumento: null,
+        conyugeNombre1: null,
+        conyugeNombre2: null,
+        conyugeApellido1: null,
+        conyugeApellido2: null,
+        conyugeGeneroId: null,
+        conyugeFechaNacimiento: null,
+        conyugeIngresosMensuales: null,
+        conyugeGrupoEspecialId: null);
     emit(PerfilPreInversionBeneficiarioChanged(initConyuge));
   }
 }

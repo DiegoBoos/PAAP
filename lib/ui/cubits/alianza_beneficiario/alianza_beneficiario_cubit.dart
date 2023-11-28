@@ -69,20 +69,19 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
   }
 
   void changeAsociado(String? value) {
-    final asociadoChanged =
-        state.alianzaBeneficiario.copyWith(asociado: value.toString());
+    final asociadoChanged = state.alianzaBeneficiario.copyWith(asociado: value);
     emit(AlianzaBeneficiarioChanged(asociadoChanged));
   }
 
   void changeConocePerfil(String? value) {
     final conocePerfilChanged =
-        state.alianzaBeneficiario.copyWith(conocePerfil: value.toString());
+        state.alianzaBeneficiario.copyWith(conocePerfil: value);
     emit(AlianzaBeneficiarioChanged(conocePerfilChanged));
   }
 
   void changeFueBeneficiado(String? value) {
     final fueBeneficiadoChanged =
-        state.alianzaBeneficiario.copyWith(fueBeneficiado: value.toString());
+        state.alianzaBeneficiario.copyWith(fueBeneficiado: value);
     emit(AlianzaBeneficiarioChanged(fueBeneficiadoChanged));
   }
 
@@ -312,15 +311,15 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
     emit(AlianzaBeneficiarioChanged(cedulaCatastralChanged));
   }
 
-  void changeCotizanteBeps(bool? value) {
+  void changeCotizanteBeps(String? value) {
     final cotizanteBepsChanged =
-        state.alianzaBeneficiario.copyWith(cotizanteBeps: value.toString());
+        state.alianzaBeneficiario.copyWith(cotizanteBeps: value);
     emit(AlianzaBeneficiarioChanged(cotizanteBepsChanged));
   }
 
-  void changeAccesoExplotacionTierra(bool? value) {
-    final accesoExplotacionTierraChanged = state.alianzaBeneficiario
-        .copyWith(accesoExplotacionTierra: value.toString());
+  void changeAccesoExplotacionTierra(String? value) {
+    final accesoExplotacionTierraChanged =
+        state.alianzaBeneficiario.copyWith(accesoExplotacionTierra: value);
     emit(AlianzaBeneficiarioChanged(accesoExplotacionTierraChanged));
   }
 
@@ -338,17 +337,17 @@ class AlianzaBeneficiarioCubit extends Cubit<AlianzaBeneficiarioState> {
 
   void initConyuge() {
     final initConyuge = state.alianzaBeneficiario.copyWith(
-        conyugeTipoIdentificacionId: '',
-        conyugeId: '',
-        conyugeFechaExpedicionDocumento: '',
-        conyugeNombre1: '',
-        conyugeNombre2: '',
-        conyugeApellido1: '',
-        conyugeApellido2: '',
-        conyugeGeneroId: '',
-        conyugeFechaNacimiento: '',
-        conyugeIngresosMensuales: '',
-        conyugeGrupoEspecialId: '');
+        conyugeTipoIdentificacionId: null,
+        conyugeId: null,
+        conyugeFechaExpedicionDocumento: null,
+        conyugeNombre1: null,
+        conyugeNombre2: null,
+        conyugeApellido1: null,
+        conyugeApellido2: null,
+        conyugeGeneroId: null,
+        conyugeFechaNacimiento: null,
+        conyugeIngresosMensuales: null,
+        conyugeGrupoEspecialId: null);
     emit(AlianzaBeneficiarioChanged(initConyuge));
   }
 }

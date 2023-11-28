@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import '../../../ui/cubits/genero/genero_cubit.dart';
 import '../../../ui/cubits/grupo_especial/grupo_especial_cubit.dart';
@@ -13,7 +14,8 @@ import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class ConyugeForm extends StatefulWidget {
-  const ConyugeForm({super.key});
+  const ConyugeForm({super.key, required this.alianzaBeneficiario});
+  final AlianzaBeneficiarioEntity alianzaBeneficiario;
 
   @override
   State<ConyugeForm> createState() => _ConyugeFormState();
@@ -39,26 +41,24 @@ class _ConyugeFormState extends State<ConyugeForm> {
   void initState() {
     super.initState();
 
-    final alianzaBeneficiarioCubit =
-        BlocProvider.of<AlianzaBeneficiarioCubit>(context);
+    loadConyuge(widget.alianzaBeneficiario);
+  }
 
-    final alianzaBeneficiario =
-        alianzaBeneficiarioCubit.state.alianzaBeneficiario;
-
-    final conyugeFechaExpedicionDocumento =
-        alianzaBeneficiario.conyugeFechaExpedicionDocumento;
-
-    final conyugeFechaNacimiento = alianzaBeneficiario.conyugeFechaNacimiento;
-
+  void loadConyuge(AlianzaBeneficiarioEntity? alianzaBeneficiario) {
     setState(() {
+      final conyugeFechaExpedicionDocumento =
+          alianzaBeneficiario?.conyugeFechaExpedicionDocumento;
+
+      final conyugeFechaNacimiento =
+          alianzaBeneficiario?.conyugeFechaNacimiento;
       conyugeTipoIdentificacionId =
-          alianzaBeneficiario.conyugeTipoIdentificacionId;
+          alianzaBeneficiario?.conyugeTipoIdentificacionId;
 
-      conyugeGeneroId = alianzaBeneficiario.conyugeGeneroId;
+      conyugeGeneroId = alianzaBeneficiario?.conyugeGeneroId;
 
-      conyugeGrupoEspecialId = alianzaBeneficiario.conyugeGrupoEspecialId;
+      conyugeGrupoEspecialId = alianzaBeneficiario?.conyugeGrupoEspecialId;
 
-      conyugeIdCtrl.text = alianzaBeneficiario.conyugeId ?? '';
+      conyugeIdCtrl.text = alianzaBeneficiario?.conyugeId ?? '';
 
       if (conyugeFechaExpedicionDocumento != null &&
           conyugeFechaExpedicionDocumento != '') {
@@ -66,11 +66,11 @@ class _ConyugeFormState extends State<ConyugeForm> {
             dateFormat.format(DateTime.parse(conyugeFechaExpedicionDocumento));
       }
 
-      conyugeNombre1Ctrl.text = alianzaBeneficiario.conyugeNombre1 ?? '';
-      conyugeApellido1Ctrl.text = alianzaBeneficiario.conyugeApellido1 ?? '';
-      conyugeNombre2Ctrl.text = alianzaBeneficiario.conyugeNombre2 ?? '';
-      conyugeApellido2Ctrl.text = alianzaBeneficiario.conyugeApellido2 ?? '';
-      conyugeGeneroId = alianzaBeneficiario.conyugeGeneroId;
+      conyugeNombre1Ctrl.text = alianzaBeneficiario?.conyugeNombre1 ?? '';
+      conyugeApellido1Ctrl.text = alianzaBeneficiario?.conyugeApellido1 ?? '';
+      conyugeNombre2Ctrl.text = alianzaBeneficiario?.conyugeNombre2 ?? '';
+      conyugeApellido2Ctrl.text = alianzaBeneficiario?.conyugeApellido2 ?? '';
+      conyugeGeneroId = alianzaBeneficiario?.conyugeGeneroId;
 
       if (conyugeFechaNacimiento != null && conyugeFechaNacimiento != '') {
         conyugeFechaNacimientoCtrl.text =
@@ -78,9 +78,9 @@ class _ConyugeFormState extends State<ConyugeForm> {
       }
 
       ingresosMensualesCtrl.text =
-          alianzaBeneficiario.conyugeIngresosMensuales ?? '';
+          alianzaBeneficiario?.conyugeIngresosMensuales ?? '';
 
-      conyugeGrupoEspecialId = alianzaBeneficiario.conyugeGrupoEspecialId;
+      conyugeGrupoEspecialId = alianzaBeneficiario?.conyugeGrupoEspecialId;
     });
   }
 
@@ -104,6 +104,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
               builder: (context, state) {
                 if (state is TiposIdentificacionesLoaded) {
                   return DropdownButtonFormField(
+                    isExpanded: true,
                     decoration: CustomInputDecoration.inputDecoration(
                         hintText: 'Tipo de identificación',
                         labelText: 'Tipo de identificación'),

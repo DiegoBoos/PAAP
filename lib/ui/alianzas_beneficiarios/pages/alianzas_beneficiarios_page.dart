@@ -6,7 +6,6 @@ import '../../../ui/cubits/menu/menu_cubit.dart';
 import '../../../ui/cubits/v_alianza/v_alianza_cubit.dart';
 import '../../utils/sync_pages.dart';
 import '../../utils/network_icon.dart';
-import '../../utils/styles.dart';
 
 import '../../alianzas/widgets/alianza_drawer.dart';
 import 'alianzas_beneficiarios_rows.dart';
@@ -36,45 +35,39 @@ class _AlianzasBeneficiariosPageState extends State<AlianzasBeneficiariosPage> {
     final menuCubit = BlocProvider.of<MenuCubit>(context);
 
     return Scaffold(
-        drawer: BlocBuilder<MenuCubit, MenuState>(
+      drawer: BlocBuilder<MenuCubit, MenuState>(
+        builder: (context, state) {
+          final menuHijo = menuCubit.alianzaMenuSorted(state.menus!);
+          return AlianzaDrawer(
+            menuHijo: menuHijo,
+          );
+        },
+      ),
+      appBar: AppBar(title: const Text('Consulta'), actions: const [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30.0),
+          child: NetworkIcon(),
+        )
+      ]),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child:
+            BlocBuilder<AlianzasBeneficiariosBloc, AlianzasBeneficiariosState>(
           builder: (context, state) {
-            final menuHijo = menuCubit.alianzaMenuSorted(state.menus!);
-            return AlianzaDrawer(
-              menuHijo: menuHijo,
-            );
+            if (state is AlianzasBeneficiariosLoading) {
+              return const CustomCircularProgress(alignment: Alignment.center);
+            }
+            if (state is AlianzasBeneficiariosLoaded) {
+              final alianzasBeneficiarios = state.alianzasBeneficiariosLoaded;
+
+              return AlianzasBeneficiariosRows(
+                alianzasBeneficiarios: alianzasBeneficiarios,
+              );
+            }
+            return Container();
           },
         ),
-        appBar: AppBar(title: const Text('Consulta'), actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: NetworkIcon(),
-          )
-        ]),
-        body: ListView(children: [
-          const SizedBox(height: 30),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Text('BENEFICIARIOS ALIANZA',
-                style: Styles.titleStyle, textAlign: TextAlign.center),
-          ),
-          const SizedBox(height: 20),
-          BlocBuilder<AlianzasBeneficiariosBloc, AlianzasBeneficiariosState>(
-            builder: (context, state) {
-              if (state is AlianzasBeneficiariosLoading) {
-                return const CustomCircularProgress(
-                    alignment: Alignment.center);
-              }
-              if (state is AlianzasBeneficiariosLoaded) {
-                final alianzasBeneficiarios = state.alianzasBeneficiariosLoaded;
-
-                return AlianzasBeneficiariosRows(
-                  alianzasBeneficiarios: alianzasBeneficiarios,
-                );
-              }
-              return Container();
-            },
-          ),
-          const SizedBox(height: 30),
-        ]));
+      ),
+    );
   }
 }

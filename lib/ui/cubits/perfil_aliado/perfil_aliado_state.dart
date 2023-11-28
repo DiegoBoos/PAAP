@@ -9,7 +9,7 @@ abstract class PerfilAliadoState extends Equatable {
 }
 
 class PerfilAliadoInitial extends PerfilAliadoState {
-  PerfilAliadoInitial() : super(perfilAliado: initObject());
+  PerfilAliadoInitial() : super(perfilAliado: PerfilAliadoEntity());
 }
 
 class PerfilAliadoLoading extends PerfilAliadoState {
@@ -37,12 +37,8 @@ class PerfilAliadoSaved extends PerfilAliadoState {
 class PerfilAliadoError extends PerfilAliadoState {
   final String message;
 
-  PerfilAliadoError(this.message) : super(perfilAliado: initObject());
+  PerfilAliadoError(this.message) : super(perfilAliado: PerfilAliadoEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-PerfilAliadoEntity initObject() {
-  return PerfilAliadoEntity(perfilId: '', aliadoId: '');
 }

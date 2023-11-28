@@ -15,7 +15,9 @@ abstract class PerfilPreInversionCofinanciadorDesembolsoState
 class PerfilPreInversionCofinanciadorDesembolsoInitial
     extends PerfilPreInversionCofinanciadorDesembolsoState {
   PerfilPreInversionCofinanciadorDesembolsoInitial()
-      : super(perfilPreInversionCofinanciadorDesembolso: initObject());
+      : super(
+            perfilPreInversionCofinanciadorDesembolso:
+                PerfilPreInversionCofinanciadorDesembolsoEntity());
 }
 
 class PerfilPreInversionCofinanciadorDesembolsoLoaded
@@ -53,11 +55,9 @@ class PerfilPreInversionCofinanciadorDesembolsoError
   final String message;
 
   PerfilPreInversionCofinanciadorDesembolsoError(this.message)
-      : super(perfilPreInversionCofinanciadorDesembolso: initObject());
+      : super(
+            perfilPreInversionCofinanciadorDesembolso:
+                PerfilPreInversionCofinanciadorDesembolsoEntity());
   @override
   List<Object?> get props => [message];
 }
-
-PerfilPreInversionCofinanciadorDesembolsoEntity initObject() =>
-    PerfilPreInversionCofinanciadorDesembolsoEntity(
-        perfilPreInversionId: '', recordStatus: '');

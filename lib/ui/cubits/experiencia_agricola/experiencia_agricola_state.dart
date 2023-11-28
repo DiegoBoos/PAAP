@@ -9,11 +9,8 @@ abstract class ExperienciaAgricolaState extends Equatable {
 }
 
 class ExperienciaAgricolaInitial extends ExperienciaAgricolaState {
-  ExperienciaAgricolaInitial() : super(experienciaAgricola: initObject());
-}
-
-class ExperienciaAgricolaLoading extends ExperienciaAgricolaState {
-  ExperienciaAgricolaLoading() : super(experienciaAgricola: initObject());
+  ExperienciaAgricolaInitial()
+      : super(experienciaAgricola: ExperienciaAgricolaEntity());
 }
 
 class ExperienciaAgricolaLoaded extends ExperienciaAgricolaState {
@@ -31,34 +28,15 @@ class ExperienciaAgricolaChanged extends ExperienciaAgricolaState {
 }
 
 class ExperienciaAgricolaSaved extends ExperienciaAgricolaState {
-  ExperienciaAgricolaSaved() : super(experienciaAgricola: initObject());
+  const ExperienciaAgricolaSaved({required super.experienciaAgricola});
 }
 
 class ExperienciaAgricolaError extends ExperienciaAgricolaState {
   final String message;
 
   ExperienciaAgricolaError(this.message)
-      : super(experienciaAgricola: initObject());
+      : super(experienciaAgricola: ExperienciaAgricolaEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-ExperienciaAgricolaEntity initObject() {
-  return ExperienciaAgricolaEntity(
-    beneficiarioId: '',
-    areaCultivo: '',
-    cantidadProducida: '',
-    cantidadVendida: '',
-    cantidadAutoconsumo: '',
-    costoImplementacion: '',
-    valorJornal: '',
-    totalIngresoNeto: '',
-    areaPasto: '',
-    areaSinUso: '',
-    areaReservaConservacion: '',
-    areaImplementacion: '',
-    totalAreaPredio: '',
-    recordStatus: '',
-  );
 }

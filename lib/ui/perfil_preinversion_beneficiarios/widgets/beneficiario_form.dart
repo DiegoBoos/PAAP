@@ -19,8 +19,9 @@ import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class BeneficiarioForm extends StatefulWidget {
-  const BeneficiarioForm({super.key, this.perfilPreInversionBeneficiario});
-  final PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario;
+  const BeneficiarioForm(
+      {super.key, required this.perfilPreInversionBeneficiario});
+  final PerfilPreInversionBeneficiarioEntity perfilPreInversionBeneficiario;
 
   @override
   State<BeneficiarioForm> createState() => _BeneficiarioFormState();
@@ -52,19 +53,19 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
 
     final beneficiario = BeneficiarioEntity(
-        beneficiarioId: widget.perfilPreInversionBeneficiario?.beneficiarioId,
+        beneficiarioId: widget.perfilPreInversionBeneficiario.beneficiarioId,
         tipoIdentificacionId:
-            widget.perfilPreInversionBeneficiario?.tipoIdentificacionId,
-        generoId: widget.perfilPreInversionBeneficiario?.generoId,
-        grupoEspecialId: widget.perfilPreInversionBeneficiario?.grupoEspecialId,
+            widget.perfilPreInversionBeneficiario.tipoIdentificacionId,
+        generoId: widget.perfilPreInversionBeneficiario.generoId,
+        grupoEspecialId: widget.perfilPreInversionBeneficiario.grupoEspecialId,
         fechaExpedicionDocumento:
-            widget.perfilPreInversionBeneficiario?.fechaExpedicionDocumento,
-        fechaNacimiento: widget.perfilPreInversionBeneficiario?.fechaNacimiento,
-        telefonoMovil: widget.perfilPreInversionBeneficiario?.telefonoMovil,
-        nombre1: widget.perfilPreInversionBeneficiario?.nombre1,
-        nombre2: widget.perfilPreInversionBeneficiario?.nombre2,
-        apellido1: widget.perfilPreInversionBeneficiario?.apellido1,
-        apellido2: widget.perfilPreInversionBeneficiario?.apellido2);
+            widget.perfilPreInversionBeneficiario.fechaExpedicionDocumento,
+        fechaNacimiento: widget.perfilPreInversionBeneficiario.fechaNacimiento,
+        telefonoMovil: widget.perfilPreInversionBeneficiario.telefonoMovil,
+        nombre1: widget.perfilPreInversionBeneficiario.nombre1,
+        nombre2: widget.perfilPreInversionBeneficiario.nombre2,
+        apellido1: widget.perfilPreInversionBeneficiario.apellido1,
+        apellido2: widget.perfilPreInversionBeneficiario.apellido2);
 
     beneficiarioCubit.setBeneficiario(beneficiario);
     loadBeneficiario(beneficiario);

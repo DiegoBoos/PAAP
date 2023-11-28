@@ -9,7 +9,7 @@ abstract class AliadoState extends Equatable {
 }
 
 class AliadoInitial extends AliadoState {
-  AliadoInitial() : super(aliado: initObject());
+  AliadoInitial() : super(aliado: AliadoEntity());
 }
 
 class AliadoLoading extends AliadoState {
@@ -37,27 +37,8 @@ class AliadoSaved extends AliadoState {
 class AliadoError extends AliadoState {
   final String message;
 
-  AliadoError(this.message) : super(aliado: initObject());
+  AliadoError(this.message) : super(aliado: AliadoEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-AliadoEntity initObject() {
-  return AliadoEntity(
-      aliadoId: '',
-      nombre: '',
-      fechaCreacion: '',
-      nombreContacto: '',
-      direccion: '',
-      telefonoFijo: '',
-      telefonoMovil: '',
-      correo: '',
-      municipioId: '',
-      experiencia: '',
-      fechaActivacion: '',
-      fechaDesactivacion: '',
-      fechaCambio: '',
-      activo: '',
-      recordStatus: '');
 }

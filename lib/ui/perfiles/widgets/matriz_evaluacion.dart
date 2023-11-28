@@ -116,24 +116,28 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                                 .changeEvaluacion(evaluacion.evaluacionId!);
                             evaluacionRespuestaCubit.changeCriterio(value!);
 
+                            final evaluacionId = evaluacionRespuestaCubit
+                                .state.evaluacionRespuesta.evaluacionId!;
+
                             final evaluacionRespuesta =
                                 await evaluacionRespuestaCubit
                                     .getEvaluacionRespuestaDB(
-                                        value,
-                                        evaluacionRespuestaCubit.state
-                                            .evaluacionRespuesta.evaluacionId!);
+                                        value, evaluacionId);
 
                             if (evaluacionRespuesta != null) {
                               observacionCtrl.text =
                                   evaluacionRespuesta.observacion!;
                               opcionId = evaluacionRespuesta.opcionId;
+
+                              final criterioId = evaluacionRespuestaCubit
+                                  .state.evaluacionRespuesta.criterioId!;
+
+                              final evaluacionId = evaluacionRespuestaCubit
+                                  .state.evaluacionRespuesta.evaluacionId!;
+
                               evaluacionRespuestaCubit
                                   .getEvaluacionRespuestaOpcionDB(
-                                      evaluacionRespuestaCubit.state
-                                          .evaluacionRespuesta.criterioId!,
-                                      evaluacionRespuestaCubit.state
-                                          .evaluacionRespuesta.evaluacionId!,
-                                      opcionId!);
+                                      criterioId, evaluacionId, opcionId!);
                             }
 
                             opciones = await opcionCubit.getOpcionesDB(value);
@@ -168,13 +172,15 @@ class _MatrizEvaluacionState extends State<MatrizEvaluacion> {
                               );
                             }).toList(),
                             onChanged: (String? value) {
+                              final criterioId = evaluacionRespuestaCubit
+                                  .state.evaluacionRespuesta.criterioId!;
+
+                              final evaluacionId = evaluacionRespuestaCubit
+                                  .state.evaluacionRespuesta.evaluacionId!;
+
                               evaluacionRespuestaCubit
                                   .getEvaluacionRespuestaOpcionDB(
-                                      evaluacionRespuestaCubit.state
-                                          .evaluacionRespuesta.criterioId!,
-                                      evaluacionRespuestaCubit.state
-                                          .evaluacionRespuesta.evaluacionId!,
-                                      value!);
+                                      criterioId, evaluacionId, value!);
 
                               opcionId = value;
 

@@ -1,8 +1,8 @@
 part of 'perfil_preinversion_cubit.dart';
 
 abstract class PerfilPreInversionState extends Equatable {
-  final PerfilPreInversionEntity? perfilPreInversion;
-  const PerfilPreInversionState({this.perfilPreInversion});
+  final PerfilPreInversionEntity perfilPreInversion;
+  const PerfilPreInversionState({required this.perfilPreInversion});
 
   @override
   List<Object?> get props => [perfilPreInversion];
@@ -10,31 +10,11 @@ abstract class PerfilPreInversionState extends Equatable {
 
 class PerfilPreInversionInitial extends PerfilPreInversionState {
   PerfilPreInversionInitial()
-      : super(
-            perfilPreInversion: PerfilPreInversionEntity(
-                perfilPreInversionId: '',
-                perfilId: '',
-                convocatoriaId: '',
-                nombre: '',
-                abreviatura: '',
-                nit: '',
-                municipioId: '',
-                direccion: '',
-                contacto: '',
-                telefonoFijo: '',
-                telefonoMovil: '',
-                correo: '',
-                tipoProyectoId: '',
-                productoId: '',
-                productoAsociadoId: '',
-                valorTotalProyecto: '',
-                incentivoModular: ''));
+      : super(perfilPreInversion: PerfilPreInversionEntity());
 }
 
-class PerfilPreInversionLoading extends PerfilPreInversionState {}
-
 class PerfilPreInversionLoaded extends PerfilPreInversionState {
-  final PerfilPreInversionEntity? perfilPreInversionLoaded;
+  final PerfilPreInversionEntity perfilPreInversionLoaded;
 
   const PerfilPreInversionLoaded(this.perfilPreInversionLoaded)
       : super(perfilPreInversion: perfilPreInversionLoaded);
@@ -43,7 +23,8 @@ class PerfilPreInversionLoaded extends PerfilPreInversionState {
 class PerfilPreInversionError extends PerfilPreInversionState {
   final String message;
 
-  const PerfilPreInversionError(this.message);
+  PerfilPreInversionError(this.message)
+      : super(perfilPreInversion: PerfilPreInversionEntity());
 
   @override
   List<Object?> get props => [message];

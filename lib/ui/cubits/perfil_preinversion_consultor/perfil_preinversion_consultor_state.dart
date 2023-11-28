@@ -12,7 +12,7 @@ abstract class PerfilPreInversionConsultorState extends Equatable {
 class PerfilPreInversionConsultorInitial
     extends PerfilPreInversionConsultorState {
   PerfilPreInversionConsultorInitial()
-      : super(perfilPreInversionConsultor: initObject());
+      : super(perfilPreInversionConsultor: PerfilPreInversionConsultorEntity());
 }
 
 class PerfilPreInversionConsultorLoading
@@ -33,7 +33,7 @@ class PerfilPreInversionConsultorLoaded
 class PerfilPreInversionConsultorSaved
     extends PerfilPreInversionConsultorState {
   PerfilPreInversionConsultorSaved()
-      : super(perfilPreInversionConsultor: initObject());
+      : super(perfilPreInversionConsultor: PerfilPreInversionConsultorEntity());
 }
 
 class PerfilPreInversionConsultorError
@@ -41,15 +41,8 @@ class PerfilPreInversionConsultorError
   final String message;
 
   PerfilPreInversionConsultorError(this.message)
-      : super(perfilPreInversionConsultor: initObject());
+      : super(perfilPreInversionConsultor: PerfilPreInversionConsultorEntity());
 
   @override
   List<Object?> get props => [message];
 }
-
-PerfilPreInversionConsultorEntity initObject() =>
-    PerfilPreInversionConsultorEntity(
-        perfilPreInversionId: '',
-        consultorId: '',
-        revisionId: '',
-        fechaRevision: '');

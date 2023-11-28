@@ -10,12 +10,7 @@ abstract class PerfilPreInversionAliadoState extends Equatable {
 
 class PerfilPreInversionAliadoInitial extends PerfilPreInversionAliadoState {
   PerfilPreInversionAliadoInitial()
-      : super(perfilPreInversionAliado: initObject());
-}
-
-class PerfilPreInversionAliadoLoading extends PerfilPreInversionAliadoState {
-  const PerfilPreInversionAliadoLoading(
-      {required super.perfilPreInversionAliado});
+      : super(perfilPreInversionAliado: PerfilPreInversionAliadoEntity());
 }
 
 class PerfilPreInversionAliadoLoaded extends PerfilPreInversionAliadoState {
@@ -41,12 +36,8 @@ class PerfilPreInversionAliadoError extends PerfilPreInversionAliadoState {
   final String message;
 
   PerfilPreInversionAliadoError(this.message)
-      : super(perfilPreInversionAliado: initObject());
+      : super(perfilPreInversionAliado: PerfilPreInversionAliadoEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-PerfilPreInversionAliadoEntity initObject() {
-  return PerfilPreInversionAliadoEntity(perfilPreInversionId: '', aliadoId: '');
 }

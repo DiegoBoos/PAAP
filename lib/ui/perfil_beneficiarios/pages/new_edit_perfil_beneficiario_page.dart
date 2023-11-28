@@ -52,8 +52,9 @@ class NewEditPerfilBeneficiarioPage extends StatelessWidget {
             },
           ),
           appBar: AppBar(
-              title: Text(
-                  perfilBeneficiario.beneficiarioId == '' ? 'Crear' : 'Editar'),
+              title: Text(perfilBeneficiario.beneficiarioId == null
+                  ? 'Crear'
+                  : 'Editar'),
               actions: const [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.0),

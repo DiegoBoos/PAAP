@@ -1,7 +1,7 @@
 part of 'visita_cubit.dart';
 
 abstract class VisitaState extends Equatable {
-  final VisitaEntity visita;
+  final VisitaEntity? visita;
   const VisitaState({required this.visita});
 
   @override
@@ -9,11 +9,11 @@ abstract class VisitaState extends Equatable {
 }
 
 class VisitaInitial extends VisitaState {
-  VisitaInitial() : super(visita: initObject());
+  const VisitaInitial() : super(visita: null);
 }
 
 class VisitaLoading extends VisitaState {
-  VisitaLoading() : super(visita: initObject());
+  const VisitaLoading() : super(visita: null);
 }
 
 class VisitaLoaded extends VisitaState {
@@ -23,20 +23,18 @@ class VisitaLoaded extends VisitaState {
 }
 
 class VisitaSaved extends VisitaState {
-  VisitaSaved() : super(visita: initObject());
+  const VisitaSaved() : super(visita: null);
 }
 
 class VisitaCleared extends VisitaState {
-  VisitaCleared() : super(visita: initObject());
+  const VisitaCleared() : super(visita: null);
 }
 
 class VisitaError extends VisitaState {
   final String message;
 
-  VisitaError(this.message) : super(visita: initObject());
+  const VisitaError(this.message) : super(visita: null);
 
   @override
   List<Object?> get props => [message];
 }
-
-VisitaEntity initObject() => VisitaEntity();

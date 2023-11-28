@@ -94,14 +94,9 @@ class AliadosLocalDataSourceImpl implements AliadosLocalDataSource {
 
     if (resQuery.isEmpty) {
       aliadoEntity.recordStatus = 'N';
-      aliadoEntity.fechaCreacion = DateTime.now().toIso8601String();
-      aliadoEntity.fechaActivacion = DateTime.now().toIso8601String();
-      aliadoEntity.fechaCambio = DateTime.now().toIso8601String();
-      aliadoEntity.activo = 'true';
       batch.insert('Aliado', aliadoEntity.toJson());
     } else {
       aliadoEntity.recordStatus = 'E';
-      aliadoEntity.fechaCambio = DateTime.now().toIso8601String();
       batch.update('Aliado', aliadoEntity.toJson(),
           where: 'AliadoId = ?', whereArgs: [aliadoEntity.aliadoId]);
     }

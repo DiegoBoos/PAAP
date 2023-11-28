@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
+import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../ui/cubits/departamento/departamento_cubit.dart';
 import '../../../ui/cubits/municipio/municipio_cubit.dart';
 import '../../../ui/cubits/tipo_tenencia/tipo_tenencia_cubit.dart';
@@ -11,11 +11,14 @@ import '../../../domain/entities/municipio_entity.dart';
 import '../../../domain/entities/tipo_tenencia_entity.dart';
 import '../../../domain/entities/vereda_entity.dart';
 import '../../../domain/usecases/beneficio/beneficio_exports.dart';
+import '../../cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class AlianzaPerfilBeneficiarioForm extends StatefulWidget {
-  const AlianzaPerfilBeneficiarioForm({super.key});
+  const AlianzaPerfilBeneficiarioForm(
+      {super.key, required this.alianzaBeneficiario});
+  final AlianzaBeneficiarioEntity alianzaBeneficiario;
 
   @override
   State<AlianzaPerfilBeneficiarioForm> createState() =>
@@ -24,6 +27,7 @@ class AlianzaPerfilBeneficiarioForm extends StatefulWidget {
 
 class _AlianzaPerfilBeneficiarioFormState
     extends State<AlianzaPerfilBeneficiarioForm> {
+  List<MunicipioEntity> allMunicipios = [];
   List<MunicipioEntity> municipiosFiltered = [];
   List<VeredaEntity> veredasFiltered = [];
 
@@ -43,37 +47,28 @@ class _AlianzaPerfilBeneficiarioFormState
     super.initState();
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
-
     final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
 
-    final alianzaBeneficiario =
-        alianzaBeneficiarioCubit.state.alianzaBeneficiario;
+    allMunicipios = municipioCubit.state.municipios!;
+    municipiosFiltered = allMunicipios;
 
-    final alianzaBeneficiarioMunicipioId = alianzaBeneficiario.municipioId;
+    final alianzaBeneficiario = AlianzaBeneficiarioEntity(
+        alianzaId: widget.alianzaBeneficiario.alianzaId,
+        beneficiarioId: widget.alianzaBeneficiario.beneficiarioId,
+        municipioId: widget.alianzaBeneficiario.municipioId,
+        veredaId: widget.alianzaBeneficiario.veredaId,
+        tipoTenenciaId: widget.alianzaBeneficiario.tipoTenenciaId,
+        areaFinca: widget.alianzaBeneficiario.areaFinca,
+        areaProyecto: widget.alianzaBeneficiario.areaProyecto,
+        asociado: widget.alianzaBeneficiario.asociado,
+        activo: widget.alianzaBeneficiario.activo,
+        fueBeneficiado: widget.alianzaBeneficiario.fueBeneficiado,
+        cualBeneficio: widget.alianzaBeneficiario.cualBeneficio,
+        beneficioId: widget.alianzaBeneficiario.beneficioId,
+        experiencia: widget.alianzaBeneficiario.experiencia);
 
-    final alianzaBeneficiarioVeredaId = alianzaBeneficiario.veredaId;
-
-    setState(() {
-      final municipio = municipiosFiltered.firstWhere(
-        (municipio) => municipio.id == alianzaBeneficiarioMunicipioId,
-      );
-
-      if (municipio.id != '') {
-        departamentoId = municipio.departamentoid;
-        municipioId = alianzaBeneficiarioMunicipioId;
-        municipiosFiltered = municipioCubit.state.municipios!
-            .where((municipio) => municipio.departamentoid == departamentoId)
-            .toList();
-        loadVeredasByMunicipio(municipioId!, alianzaBeneficiarioVeredaId!);
-      }
-
-      experienciaCtrl.text = alianzaBeneficiario.experiencia ?? '';
-      cualBeneficioCtrl.text = alianzaBeneficiario.cualBeneficio ?? '';
-      areaProyectoCtrl.text = alianzaBeneficiario.areaProyecto ?? '';
-      areaFincaCtrl.text = alianzaBeneficiario.areaFinca ?? '';
-      tipoTenenciaId = alianzaBeneficiario.tipoTenenciaId;
-      beneficioId = alianzaBeneficiario.beneficioId;
-    });
+    alianzaBeneficiarioCubit.setAlianzaBeneficiario(alianzaBeneficiario);
+    loadAlianzaBeneficiario(alianzaBeneficiario);
   }
 
   @override
@@ -81,6 +76,35 @@ class _AlianzaPerfilBeneficiarioFormState
     super.deactivate();
     municipioId = null;
     BlocProvider.of<AlianzaBeneficiarioCubit>(context).initState();
+  }
+
+  void loadAlianzaBeneficiario(AlianzaBeneficiarioEntity alianzaBeneficiario) {
+    setState(() {
+      final alianzaBeneficiarioMunicipioId = alianzaBeneficiario.municipioId;
+      final alianzaBeneficiarioVeredaId = alianzaBeneficiario.veredaId;
+
+      if (alianzaBeneficiarioMunicipioId != null) {
+        final municipio = municipiosFiltered.firstWhere(
+          (municipio) => municipio.id == alianzaBeneficiarioMunicipioId,
+        );
+
+        if (municipio.id != '') {
+          departamentoId = municipio.departamentoid;
+          municipioId = alianzaBeneficiarioMunicipioId;
+          municipiosFiltered = allMunicipios
+              .where((municipio) => municipio.departamentoid == departamentoId)
+              .toList();
+          loadVeredasByMunicipio(municipioId!, alianzaBeneficiarioVeredaId!);
+        }
+
+        experienciaCtrl.text = alianzaBeneficiario.experiencia ?? '';
+        cualBeneficioCtrl.text = alianzaBeneficiario.cualBeneficio ?? '';
+        areaProyectoCtrl.text = alianzaBeneficiario.areaProyecto ?? '';
+        areaFincaCtrl.text = alianzaBeneficiario.areaFinca ?? '';
+        tipoTenenciaId = alianzaBeneficiario.tipoTenenciaId;
+        beneficioId = alianzaBeneficiario.beneficioId;
+      }
+    });
   }
 
   void loadVeredasByMunicipio(
@@ -97,7 +121,6 @@ class _AlianzaPerfilBeneficiarioFormState
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context, listen: true);
 
-    final municipioCubit = BlocProvider.of<MunicipioCubit>(context);
     final veredaCubit = BlocProvider.of<VeredaCubit>(context);
 
     final alianzaBeneficiario =
@@ -138,7 +161,7 @@ class _AlianzaPerfilBeneficiarioFormState
                       },
                       onChanged: (String? value) {
                         setState(() {
-                          municipiosFiltered = municipioCubit.state.municipios!
+                          municipiosFiltered = allMunicipios
                               .where(((municipio) =>
                                   municipio.departamentoid == value))
                               .toList();

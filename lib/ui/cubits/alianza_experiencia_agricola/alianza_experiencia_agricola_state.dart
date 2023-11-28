@@ -12,7 +12,7 @@ abstract class AlianzaExperienciaAgricolaState extends Equatable {
 class AlianzaExperienciaAgricolaInitial
     extends AlianzaExperienciaAgricolaState {
   AlianzaExperienciaAgricolaInitial()
-      : super(alianzaExperienciaAgricola: initObject());
+      : super(alianzaExperienciaAgricola: AlianzaExperienciaAgricolaEntity());
 }
 
 class AlianzaExperienciaAgricolaLoaded extends AlianzaExperienciaAgricolaState {
@@ -39,29 +39,8 @@ class AlianzaExperienciaAgricolaError extends AlianzaExperienciaAgricolaState {
   final String message;
 
   AlianzaExperienciaAgricolaError(this.message)
-      : super(alianzaExperienciaAgricola: initObject());
+      : super(alianzaExperienciaAgricola: AlianzaExperienciaAgricolaEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-AlianzaExperienciaAgricolaEntity initObject() {
-  return AlianzaExperienciaAgricolaEntity(
-    tipoActividadProductivaId: '',
-    beneficiarioId: '',
-    frecuenciaId: '',
-    areaCultivo: '',
-    cantidadProducida: '',
-    cantidadVendida: '',
-    cantidadAutoconsumo: '',
-    costoImplementacion: '',
-    valorJornal: '',
-    totalIngresoNeto: '',
-    areaPasto: '',
-    areaSinUso: '',
-    areaReservaConservacion: '',
-    areaImplementacion: '',
-    totalAreaPredio: '',
-    recordStatus: '',
-  );
 }

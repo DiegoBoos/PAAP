@@ -32,7 +32,8 @@ class ExperienciaPecuariaCubit extends Cubit<ExperienciaPecuariaState> {
         .saveExperienciaPecuariaUsecaseDB(state.experienciaPecuaria);
     result.fold(
         (failure) => emit(ExperienciaPecuariaError(failure.properties.first)),
-        (data) => emit(ExperienciaPecuariaSaved()));
+        (data) => emit(ExperienciaPecuariaSaved(
+            experienciaPecuaria: state.experienciaPecuaria)));
   }
 
   void changeTipoActividadProductiva(String? value) {

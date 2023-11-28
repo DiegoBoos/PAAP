@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/experiencia_pecuaria_entity.dart';
-import '../../../ui/cubits/experiencia_pecuaria/experiencia_pecuaria_cubit.dart';
+import '../../../ui/cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
 import '../../../ui/cubits/frecuencia/frecuencia_cubit.dart';
 import '../../../ui/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
+import '../../../domain/entities/alianza_experiencia_pecuaria_entity.dart';
 import '../../../domain/entities/frecuencia_entity.dart';
 import '../../../domain/entities/tipo_actividad_productiva_entity.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class ExperienciaPecuariaForm extends StatefulWidget {
-  const ExperienciaPecuariaForm(this.experienciaPecuaria, {super.key});
-  final ExperienciaPecuariaEntity? experienciaPecuaria;
+  const ExperienciaPecuariaForm(this.alianzaExperienciaPecuaria, {super.key});
+  final AlianzaExperienciaPecuariaEntity? alianzaExperienciaPecuaria;
 
   @override
   State<ExperienciaPecuariaForm> createState() =>
@@ -20,14 +20,31 @@ class ExperienciaPecuariaForm extends StatefulWidget {
 }
 
 class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
-  String? tipoActividadProductivaId;
-  String? frecuenciaId;
+  String? alianzaExperienciaAgricolaTipoActividadProductivaId;
+  String? alianzaExperienciaAgricolaFrecuenciaId;
+
+  final areaCultivoCtrl = TextEditingController();
+  final cantidadProducidaCtrl = TextEditingController();
+  final cantidadVendidaCtrl = TextEditingController();
+  final cantidadAutoconsumoCtrl = TextEditingController();
+  final costoImplementacionCtrl = TextEditingController();
+  final alianzaExperienciaAgricolaValorJornalCtrl = TextEditingController();
+  final totalIngresoNetoCtrl = TextEditingController();
+  final areaPastoCtrl = TextEditingController();
+  final areaSinUsoCtrl = TextEditingController();
+  final areaReservaConservacionCtrl = TextEditingController();
+  final areaImplementacionCtrl = TextEditingController();
+  final totalAreaPredioCtrl = TextEditingController();
+
+  String? alianzaExperienciaPecuariaTipoActividadProductivaId;
+  String? alianzaExperienciaPecuariaFrecuenciaId;
+
   final cantidadAnimalesCtrl = TextEditingController();
   final cantidadCriaCtrl = TextEditingController();
   final cantidadLevanteCtrl = TextEditingController();
   final cantidadCebaCtrl = TextEditingController();
   final cantidadLecheCtrl = TextEditingController();
-  final experienciaPecuariaValorJornalCtrl = TextEditingController();
+  final alianzaExperienciaPecuariaValorJornalCtrl = TextEditingController();
   final costosInsumosCtrl = TextEditingController();
   final ingresosCtrl = TextEditingController();
 
@@ -35,36 +52,41 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
   void initState() {
     super.initState();
 
-    loadExperienciaPecuaria(widget.experienciaPecuaria);
+    loadAlianzaExperienciaPecuaria(widget.alianzaExperienciaPecuaria);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    BlocProvider.of<ExperienciaPecuariaCubit>(context).initState();
+    BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context).initState();
   }
 
-  void loadExperienciaPecuaria(ExperienciaPecuariaEntity? experienciaPecuaria) {
+  void loadAlianzaExperienciaPecuaria(
+      AlianzaExperienciaPecuariaEntity? alianzaExperienciaPecuaria) {
     setState(() {
-      tipoActividadProductivaId =
-          experienciaPecuaria?.tipoActividadProductivaId;
-      frecuenciaId = experienciaPecuaria?.frecuenciaId;
-      cantidadAnimalesCtrl.text = experienciaPecuaria?.cantidadAnimales ?? '';
-      cantidadCriaCtrl.text = experienciaPecuaria?.cantidadCria ?? '';
-      cantidadLevanteCtrl.text = experienciaPecuaria?.cantidadLevante ?? '';
-      cantidadCebaCtrl.text = experienciaPecuaria?.cantidadCeba ?? '';
-      cantidadLecheCtrl.text = experienciaPecuaria?.cantidadLeche ?? '';
-      experienciaPecuariaValorJornalCtrl.text =
-          experienciaPecuaria?.valorJornal ?? '';
-      costosInsumosCtrl.text = experienciaPecuaria?.costosInsumos ?? '';
-      ingresosCtrl.text = experienciaPecuaria?.ingresos ?? '';
+      alianzaExperienciaPecuariaTipoActividadProductivaId =
+          alianzaExperienciaPecuaria?.tipoActividadProductivaId;
+      alianzaExperienciaPecuariaFrecuenciaId =
+          alianzaExperienciaPecuaria?.frecuenciaId;
+      cantidadAnimalesCtrl.text =
+          alianzaExperienciaPecuaria?.cantidadAnimales ?? '';
+      cantidadCriaCtrl.text = alianzaExperienciaPecuaria?.cantidadCria ?? '';
+      cantidadLevanteCtrl.text =
+          alianzaExperienciaPecuaria?.cantidadLevante ?? '';
+      cantidadCebaCtrl.text = alianzaExperienciaPecuaria?.cantidadCeba ?? '';
+      cantidadLecheCtrl.text = alianzaExperienciaPecuaria?.cantidadLeche ?? '';
+      alianzaExperienciaPecuariaValorJornalCtrl.text =
+          alianzaExperienciaPecuaria?.valorJornal ?? '';
+      costosInsumosCtrl.text = alianzaExperienciaPecuaria?.costosInsumos ?? '';
+      ingresosCtrl.text = alianzaExperienciaPecuaria?.ingresos ?? '';
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final experienciaPecuariaCubit =
-        BlocProvider.of<ExperienciaPecuariaCubit>(context);
+    final alianzaExperienciaPecuariaCubit =
+        BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context);
+
     return Card(
         child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -83,7 +105,7 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Tipo de Actividad Productiva',
                       labelText: 'Tipo de Actividad Productiva'),
-                  value: tipoActividadProductivaId,
+                  value: alianzaExperienciaPecuariaTipoActividadProductivaId,
                   items: state.tiposActividadesProductivas!
                       .map<DropdownMenuItem<String>>(
                           (TipoActividadProductivaEntity value) {
@@ -99,7 +121,7 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                     return null;
                   },
                   onChanged: (String? value) {
-                    experienciaPecuariaCubit
+                    alianzaExperienciaPecuariaCubit
                         .changeTipoActividadProductiva(value);
                   },
                 );
@@ -114,7 +136,7 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                 return DropdownButtonFormField(
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Frecuencia', labelText: 'Frecuencia'),
-                  value: frecuenciaId,
+                  value: alianzaExperienciaPecuariaFrecuenciaId,
                   items: state.frecuencias!
                       .map<DropdownMenuItem<String>>((FrecuenciaEntity value) {
                     return DropdownMenuItem<String>(
@@ -129,7 +151,7 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                     return null;
                   },
                   onChanged: (String? value) {
-                    experienciaPecuariaCubit.changeFrecuencia(value);
+                    alianzaExperienciaPecuariaCubit.changeFrecuencia(value);
                   },
                 );
               }
@@ -138,7 +160,6 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
           ),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: cantidadAnimalesCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Cantidad de animales',
@@ -150,11 +171,11 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaPecuariaCubit.changeCantidadAnimales(newValue);
+                alianzaExperienciaPecuariaCubit
+                    .changeCantidadAnimales(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: cantidadCriaCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Cantidad Cría', labelText: 'Cantidad Cría'),
@@ -165,11 +186,10 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaPecuariaCubit.changeCantidadCria(newValue);
+                alianzaExperienciaPecuariaCubit.changeCantidadCria(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: cantidadLevanteCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Cantidad Levante', labelText: 'Cantidad Levante'),
@@ -180,11 +200,10 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaPecuariaCubit.changeCantidadLevante(newValue);
+                alianzaExperienciaPecuariaCubit.changeCantidadLevante(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: cantidadCebaCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Cantidad Ceba', labelText: 'Cantidad Ceba'),
@@ -195,11 +214,10 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaPecuariaCubit.changeCantidadCeba(newValue);
+                alianzaExperienciaPecuariaCubit.changeCantidadCeba(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: cantidadLecheCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Cantidad Leche', labelText: 'Cantidad Leche'),
@@ -210,12 +228,11 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaPecuariaCubit.changeCantidadLeche(newValue);
+                alianzaExperienciaPecuariaCubit.changeCantidadLeche(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
-              controller: experienciaPecuariaValorJornalCtrl,
+              controller: alianzaExperienciaPecuariaValorJornalCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Valor Jornal', labelText: 'Valor Jornal'),
               validator: (value) {
@@ -225,11 +242,10 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaPecuariaCubit.changeValorJornal(newValue);
+                alianzaExperienciaPecuariaCubit.changeValorJornal(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: costosInsumosCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Costo Insumos', labelText: 'Costo Insumos'),
@@ -240,11 +256,10 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaPecuariaCubit.changeCostosInsumos(newValue);
+                alianzaExperienciaPecuariaCubit.changeCostosInsumos(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: ingresosCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Ingresos', labelText: 'Ingresos'),
@@ -255,7 +270,7 @@ class _ExperienciaPecuariaFormState extends State<ExperienciaPecuariaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaPecuariaCubit.changeIngresos(newValue);
+                alianzaExperienciaPecuariaCubit.changeIngresos(newValue);
               }),
         ],
       ),

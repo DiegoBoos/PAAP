@@ -50,7 +50,7 @@ class AppRouter {
       return const PerfilPreInversionBeneficiariosPage();
     },
     'NewEditVBeneficiarioPreInversion': (BuildContext context) {
-      return const NewEditPerfilPreInversionBeneficiarioPage();
+      return NewEditPerfilPreInversionBeneficiarioPage();
     },
     'VAliadoPreInversion': (BuildContext context) {
       return const PerfilPreInversionAliadosPage();

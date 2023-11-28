@@ -9,11 +9,13 @@ abstract class EvaluacionRespuestaState extends Equatable {
 }
 
 class EvaluacionRespuestaInitial extends EvaluacionRespuestaState {
-  EvaluacionRespuestaInitial() : super(evaluacionRespuesta: initObject());
+  EvaluacionRespuestaInitial()
+      : super(evaluacionRespuesta: EvaluacionRespuestaEntity());
 }
 
 class EvaluacionRespuestaLoading extends EvaluacionRespuestaState {
-  EvaluacionRespuestaLoading() : super(evaluacionRespuesta: initObject());
+  EvaluacionRespuestaLoading()
+      : super(evaluacionRespuesta: EvaluacionRespuestaEntity());
 }
 
 class EvaluacionRespuestaLoaded extends EvaluacionRespuestaState {
@@ -38,18 +40,8 @@ class EvaluacionRespuestaError extends EvaluacionRespuestaState {
   final String message;
 
   EvaluacionRespuestaError(this.message)
-      : super(evaluacionRespuesta: initObject());
+      : super(evaluacionRespuesta: EvaluacionRespuestaEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-EvaluacionRespuestaEntity initObject() {
-  return EvaluacionRespuestaEntity(
-      criterioId: '',
-      evaluacionId: '',
-      observacion: '',
-      opcionId: '',
-      recordStatus: '',
-      remoteEvaluacionId: '');
 }

@@ -54,8 +54,9 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
             },
           ),
           appBar: AppBar(
-              title: Text(
-                  perfilPreInversionAliado.aliadoId == '' ? 'Crear' : 'Editar'),
+              title: Text(perfilPreInversionAliado.aliadoId == null
+                  ? 'Crear'
+                  : 'Editar'),
               actions: const [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -92,6 +93,21 @@ class NewEditPerfilPreInversionAliadoPage extends StatelessWidget {
 
   void saveAliado(BuildContext context) {
     final aliadoCubit = BlocProvider.of<AliadoCubit>(context);
+    if (aliadoCubit.state.aliado.activo == null) {
+      aliadoCubit.changeActivo('true');
+    }
+    if (aliadoCubit.state.aliado.fechaCreacion == null) {
+      aliadoCubit.changeFechaCreacion(DateTime.now().toString());
+    }
+    if (aliadoCubit.state.aliado.fechaCambio == null) {
+      aliadoCubit.changeFechaCambio(DateTime.now().toString());
+    }
+    if (aliadoCubit.state.aliado.fechaActivacion == null) {
+      aliadoCubit.changeFechaActivacion(DateTime.now().toString());
+    }
+    if (aliadoCubit.state.aliado.fechaDesactivacion == null) {
+      aliadoCubit.changeFechaDesactivacion(DateTime.now().toString());
+    }
     aliadoCubit.saveAliadoDB();
   }
 

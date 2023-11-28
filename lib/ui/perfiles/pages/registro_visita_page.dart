@@ -227,7 +227,7 @@ class _RegistroVisitaPageState extends State<RegistroVisitaPage> {
                                 builder: (context, state) {
                                   final evaluacion = state.evaluacion;
                                   return SaveFinishCancelButtons(
-                                      finalizado: evaluacion.finalizado!,
+                                      finalizado: evaluacion.finalizado ?? '',
                                       onFinished: evaluacion.finalizado ==
                                               'true'
                                           ? null

@@ -13,7 +13,9 @@ abstract class PerfilPreInversionIngresosUPTState extends Equatable {
 class PerfilPreInversionIngresosUPTInitial
     extends PerfilPreInversionIngresosUPTState {
   PerfilPreInversionIngresosUPTInitial()
-      : super(perfilPreInversionIngresosUPT: _initObject());
+      : super(
+            perfilPreInversionIngresosUPT:
+                VPerfilPreInversionPlanNegocioEntity());
 }
 
 class PerfilPreInversionIngresosUPTLoaded
@@ -50,14 +52,9 @@ class PerfilPreInversionIngresosUPTError
   final String message;
 
   PerfilPreInversionIngresosUPTError(this.message)
-      : super(perfilPreInversionIngresosUPT: _initObject());
+      : super(
+            perfilPreInversionIngresosUPT:
+                VPerfilPreInversionPlanNegocioEntity());
   @override
   List<Object?> get props => [message];
 }
-
-VPerfilPreInversionPlanNegocioEntity _initObject() =>
-    VPerfilPreInversionPlanNegocioEntity(
-      year: '',
-      cantidad: '',
-      valor: '',
-    );

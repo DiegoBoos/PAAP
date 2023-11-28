@@ -15,7 +15,7 @@ class AlianzaExperienciaAgricolaCubit
 
   void initState() => emit(AlianzaExperienciaAgricolaInitial());
 
-  void selectAlianzaExperienciaAgricola(
+  void loadAlianzaExperienciaAgricola(
       String tipoActividadProductivaId, String beneficiarioId) async {
     final result = await alianzaExperienciaAgricolaDB
         .getAlianzaExperienciaAgricolaUsecaseDB(
@@ -26,8 +26,6 @@ class AlianzaExperienciaAgricolaCubit
         (data) {
       if (data != null) {
         emit(AlianzaExperienciaAgricolaLoaded(data));
-      } else {
-        emit(AlianzaExperienciaAgricolaInitial());
       }
     });
   }

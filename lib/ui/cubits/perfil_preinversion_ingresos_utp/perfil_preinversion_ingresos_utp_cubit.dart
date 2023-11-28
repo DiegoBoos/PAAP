@@ -14,7 +14,6 @@ class PerfilPreInversionIngresosUPTCubit
   PerfilPreInversionIngresosUPTCubit(
       {required this.perfilPreInversionPlanNegocioDB})
       : super(PerfilPreInversionIngresosUPTInitial());
-
   void initState() => emit(PerfilPreInversionIngresosUPTInitial());
 
   selectPerfilPreInversionIngresosUPT(

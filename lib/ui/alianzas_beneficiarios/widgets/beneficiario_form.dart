@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../domain/entities/alianza_beneficiario_entity.dart';
 import '../../../ui/cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import '../../../ui/cubits/beneficiario/beneficiario_cubit.dart';
 import '../../../ui/cubits/genero/genero_cubit.dart';
@@ -16,7 +17,8 @@ import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class BeneficiarioForm extends StatefulWidget {
-  const BeneficiarioForm({super.key});
+  const BeneficiarioForm({super.key, required this.alianzaBeneficiario});
+  final AlianzaBeneficiarioEntity alianzaBeneficiario;
 
   @override
   State<BeneficiarioForm> createState() => _BeneficiarioFormState();
@@ -44,7 +46,21 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
     super.initState();
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
 
-    final beneficiario = beneficiarioCubit.state.beneficiario;
+    final beneficiario = BeneficiarioEntity(
+        beneficiarioId: widget.alianzaBeneficiario.beneficiarioId,
+        tipoIdentificacionId: widget.alianzaBeneficiario.tipoIdentificacionId,
+        fechaExpedicionDocumento:
+            widget.alianzaBeneficiario.fechaExpedicionDocumento,
+        fechaNacimiento: widget.alianzaBeneficiario.fechaNacimiento,
+        telefonoMovil: widget.alianzaBeneficiario.telefonoMovil,
+        nombre1: widget.alianzaBeneficiario.nombre1,
+        nombre2: widget.alianzaBeneficiario.nombre2,
+        apellido1: widget.alianzaBeneficiario.apellido1,
+        apellido2: widget.alianzaBeneficiario.apellido2,
+        generoId: widget.alianzaBeneficiario.generoId,
+        grupoEspecialId: widget.alianzaBeneficiario.grupoEspecialId);
+
+    beneficiarioCubit.setBeneficiario(beneficiario);
     loadBeneficiario(beneficiario);
   }
 
@@ -147,6 +163,7 @@ class _BeneficiarioFormState extends State<BeneficiarioForm> {
               builder: (context, state) {
                 if (state is TiposIdentificacionesLoaded) {
                   return DropdownButtonFormField(
+                    isExpanded: true,
                     decoration: CustomInputDecoration.inputDecoration(
                         hintText: 'Tipo de identificación',
                         labelText: 'Tipo de identificación'),

@@ -16,7 +16,9 @@ abstract class PerfilPreInversionCofinanciadorActividadFinancieraState
 class PerfilPreInversionCofinanciadorActividadFinancieraInitial
     extends PerfilPreInversionCofinanciadorActividadFinancieraState {
   PerfilPreInversionCofinanciadorActividadFinancieraInitial()
-      : super(perfilPreInversionCofinanciadorActividadFinanciera: initObject());
+      : super(
+            perfilPreInversionCofinanciadorActividadFinanciera:
+                PerfilPreInversionCofinanciadorActividadFinancieraEntity());
 }
 
 class PerfilPreInversionCofinanciadorActividadFinancieraLoaded
@@ -54,11 +56,9 @@ class PerfilPreInversionCofinanciadorActividadFinancieraError
   final String message;
 
   PerfilPreInversionCofinanciadorActividadFinancieraError(this.message)
-      : super(perfilPreInversionCofinanciadorActividadFinanciera: initObject());
+      : super(
+            perfilPreInversionCofinanciadorActividadFinanciera:
+                PerfilPreInversionCofinanciadorActividadFinancieraEntity());
   @override
   List<Object?> get props => [message];
 }
-
-PerfilPreInversionCofinanciadorActividadFinancieraEntity initObject() =>
-    PerfilPreInversionCofinanciadorActividadFinancieraEntity(
-        perfilPreInversionId: '', valor: '', recordStatus: '');

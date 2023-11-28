@@ -89,7 +89,7 @@ class _NewEditPerfilPreInversionCostosUPTState
             appBar: AppBar(
                 title: Text(
                     state.perfilPreInversionCostosUPT.actividadFinancieraId !=
-                            ''
+                            null
                         ? 'Editar'
                         : 'Crear'),
                 actions: const [

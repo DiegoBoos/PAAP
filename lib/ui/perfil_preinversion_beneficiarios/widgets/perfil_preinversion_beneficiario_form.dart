@@ -18,8 +18,8 @@ import '../../utils/styles.dart';
 
 class PerfilPreInversionBeneficiarioForm extends StatefulWidget {
   const PerfilPreInversionBeneficiarioForm(
-      {super.key, this.perfilPreInversionBeneficiario});
-  final PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario;
+      {super.key, required this.perfilPreInversionBeneficiario});
+  final PerfilPreInversionBeneficiarioEntity perfilPreInversionBeneficiario;
 
   @override
   State<PerfilPreInversionBeneficiarioForm> createState() =>
@@ -67,54 +67,57 @@ class _PerfilPreInversionBeneficiarioFormState
   }
 
   void loadPerfilPreInversionBeneficiario(
-      PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario) {
+      PerfilPreInversionBeneficiarioEntity perfilPreInversionBeneficiario) {
     setState(() {
-      residenciaId = perfilPreInversionBeneficiario?.residenciaId;
-      estadoCivilId = perfilPreInversionBeneficiario?.estadoCivilId;
-      nivelEscolarId = perfilPreInversionBeneficiario?.nivelEscolarId;
+      residenciaId = perfilPreInversionBeneficiario.residenciaId;
+      estadoCivilId = perfilPreInversionBeneficiario.estadoCivilId;
+      nivelEscolarId = perfilPreInversionBeneficiario.nivelEscolarId;
       actividadEconomicaId =
-          perfilPreInversionBeneficiario?.actividadEconomicaId;
-      tipoDiscapacidadId = perfilPreInversionBeneficiario?.tipoDiscapacidadId;
+          perfilPreInversionBeneficiario.actividadEconomicaId;
+      tipoDiscapacidadId = perfilPreInversionBeneficiario.tipoDiscapacidadId;
       ingresosDiariosCtrl.text =
-          perfilPreInversionBeneficiario?.ingresosDiarios ?? '';
-      diasTrabajoCtrl.text = perfilPreInversionBeneficiario?.diasTrabajo ?? '';
+          perfilPreInversionBeneficiario.ingresosDiarios ?? '';
+      diasTrabajoCtrl.text = perfilPreInversionBeneficiario.diasTrabajo ?? '';
       calificacionSisbenCtrl.text =
-          perfilPreInversionBeneficiario?.calificacionSisben ?? '';
-      latitudCtrl.text = perfilPreInversionBeneficiario?.latitud ?? '';
-      longitudCtrl.text = perfilPreInversionBeneficiario?.longitud ?? '';
+          perfilPreInversionBeneficiario.calificacionSisben ?? '';
+      latitudCtrl.text = perfilPreInversionBeneficiario.latitud ?? '';
+      longitudCtrl.text = perfilPreInversionBeneficiario.longitud ?? '';
       cedulaCatastralCtrl.text =
-          perfilPreInversionBeneficiario?.cedulaCatastral ?? '';
+          perfilPreInversionBeneficiario.cedulaCatastral ?? '';
       miembrosHogarCtrl.text =
-          perfilPreInversionBeneficiario?.miembrosHogar ?? '';
+          perfilPreInversionBeneficiario.miembrosHogar ?? '';
       miembrosEcoActivosCtrl.text =
-          perfilPreInversionBeneficiario?.miembrosEcoActivos ?? '';
+          perfilPreInversionBeneficiario.miembrosEcoActivos ?? '';
       ingresosMensualesCtrl.text =
-          perfilPreInversionBeneficiario?.ingresosMensuales ?? '';
+          perfilPreInversionBeneficiario.ingresosMensuales ?? '';
       gastosMensualesCtrl.text =
-          perfilPreInversionBeneficiario?.gastosMensuales ?? '';
+          perfilPreInversionBeneficiario.gastosMensuales ?? '';
       activoInmobiliarioCtrl.text =
-          perfilPreInversionBeneficiario?.activoInmobiliario ?? '';
+          perfilPreInversionBeneficiario.activoInmobiliario ?? '';
       activoFinancieroCtrl.text =
-          perfilPreInversionBeneficiario?.activoFinanciero ?? '';
+          perfilPreInversionBeneficiario.activoFinanciero ?? '';
       activoProductivoCtrl.text =
-          perfilPreInversionBeneficiario?.activoProductivo ?? '';
+          perfilPreInversionBeneficiario.activoProductivo ?? '';
       activoCorrienteCtrl.text =
-          perfilPreInversionBeneficiario?.activoCorriente ?? '';
-      nombreFincaCtrl.text = perfilPreInversionBeneficiario?.nombreFinca ?? '';
+          perfilPreInversionBeneficiario.activoCorriente ?? '';
+      nombreFincaCtrl.text = perfilPreInversionBeneficiario.nombreFinca ?? '';
       nombreOrganizacionCtrl.text =
-          perfilPreInversionBeneficiario?.nombreOrganizacion ?? '';
+          perfilPreInversionBeneficiario.nombreOrganizacion ?? '';
       mesesAsociadoCtrl.text =
-          perfilPreInversionBeneficiario?.mesesAsociado ?? '';
-      notaCtrl.text = perfilPreInversionBeneficiario?.nota ?? '';
+          perfilPreInversionBeneficiario.mesesAsociado ?? '';
+      notaCtrl.text = perfilPreInversionBeneficiario.nota ?? '';
       calculateTotalActivo(perfilPreInversionBeneficiario);
     });
   }
 
   void calculateTotalActivo(
       PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario) {
-    if (perfilPreInversionBeneficiario != null) {
+    if (perfilPreInversionBeneficiario?.activoFinanciero != null &&
+        perfilPreInversionBeneficiario?.activoInmobiliario != null &&
+        perfilPreInversionBeneficiario?.activoProductivo != null &&
+        perfilPreInversionBeneficiario?.activoCorriente != null) {
       final sum =
-          double.parse(perfilPreInversionBeneficiario.activoCorriente!) +
+          double.parse(perfilPreInversionBeneficiario!.activoCorriente!) +
               double.parse(perfilPreInversionBeneficiario.activoFinanciero!) +
               double.parse(perfilPreInversionBeneficiario.activoInmobiliario!) +
               double.parse(perfilPreInversionBeneficiario.activoInmobiliario!) +
@@ -140,7 +143,7 @@ class _PerfilPreInversionBeneficiarioFormState
           child: Column(
             children: [
               const Text(
-                'Información del beneficiario con relación a la PreInversión',
+                'Información del beneficiario con relación a la preinversión',
                 style: Styles.titleStyle,
               ),
               const SizedBox(height: 20),
@@ -615,7 +618,7 @@ class _PerfilPreInversionBeneficiarioFormState
                       : false,
                   onChanged: (bool? value) {
                     perfilPreInversionBeneficiarioCubit
-                        .changeCotizanteBeps(value);
+                        .changeCotizanteBeps(value.toString());
                   }),
               const SizedBox(height: 20),
               SwitchListTile(
@@ -627,7 +630,7 @@ class _PerfilPreInversionBeneficiarioFormState
                           : false,
                   onChanged: (bool? value) {
                     perfilPreInversionBeneficiarioCubit
-                        .changeAccesoExplotacionTierra(value);
+                        .changeAccesoExplotacionTierra(value.toString());
                   }),
             ],
           ),

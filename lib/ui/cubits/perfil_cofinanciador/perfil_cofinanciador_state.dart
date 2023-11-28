@@ -9,7 +9,8 @@ abstract class PerfilCofinanciadorState extends Equatable {
 }
 
 class PerfilCofinanciadorInitial extends PerfilCofinanciadorState {
-  PerfilCofinanciadorInitial() : super(perfilCofinanciador: initObject());
+  PerfilCofinanciadorInitial()
+      : super(perfilCofinanciador: PerfilCofinanciadorEntity());
 }
 
 class PerfilCofinanciadorLoaded extends PerfilCofinanciadorState {
@@ -37,18 +38,8 @@ class PerfilCofinanciadorError extends PerfilCofinanciadorState {
   final String message;
 
   PerfilCofinanciadorError(this.message)
-      : super(perfilCofinanciador: initObject());
+      : super(perfilCofinanciador: PerfilCofinanciadorEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-PerfilCofinanciadorEntity initObject() {
-  return PerfilCofinanciadorEntity(
-    perfilId: '',
-    cofinanciadorId: '',
-    monto: '',
-    participacion: '',
-    recordStatus: '',
-  );
 }

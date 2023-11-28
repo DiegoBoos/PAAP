@@ -11,7 +11,7 @@ abstract class PerfilPreInversionPrecioState extends Equatable {
 
 class PerfilPreInversionPrecioInitial extends PerfilPreInversionPrecioState {
   PerfilPreInversionPrecioInitial()
-      : super(perfilPreInversionPrecio: initObject());
+      : super(perfilPreInversionPrecio: PerfilPreInversionPrecioEntity());
 }
 
 class PerfilPreInversionPrecioLoading extends PerfilPreInversionPrecioState {
@@ -42,15 +42,7 @@ class PerfilPreInversionPrecioError extends PerfilPreInversionPrecioState {
   final String message;
 
   PerfilPreInversionPrecioError(this.message)
-      : super(perfilPreInversionPrecio: initObject());
+      : super(perfilPreInversionPrecio: PerfilPreInversionPrecioEntity());
   @override
   List<Object?> get props => [message];
 }
-
-PerfilPreInversionPrecioEntity initObject() => PerfilPreInversionPrecioEntity(
-    perfilPreInversionId: '',
-    productoId: '',
-    tipoCalidadId: '',
-    precio: '',
-    unidadId: '',
-    recordStatus: '');

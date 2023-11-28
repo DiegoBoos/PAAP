@@ -12,6 +12,7 @@ class AlianzaBeneficiarioEntity {
     this.conocePerfil,
     this.fueBeneficiado,
     this.cualBeneficio,
+    this.beneficioId,
     this.activo,
     this.miembrosHogar,
     this.miembrosEcoActivos,
@@ -49,11 +50,18 @@ class AlianzaBeneficiarioEntity {
     this.longitud,
     this.latitud,
     this.cedulaCatastral,
-    this.beneficioId,
-    this.recordStatus,
-    //OTROS
-    this.nombre,
+    this.tipoIdentificacionId,
+    this.fechaExpedicionDocumento,
+    this.fechaNacimiento,
     this.edad,
+    this.nombre1,
+    this.nombre2,
+    this.apellido1,
+    this.apellido2,
+    this.generoId,
+    this.grupoEspecialId,
+    this.telefonoMovil,
+    this.recordStatus,
   });
 
   String? alianzaId;
@@ -68,6 +76,7 @@ class AlianzaBeneficiarioEntity {
   String? conocePerfil;
   String? fueBeneficiado;
   String? cualBeneficio;
+  String? beneficioId;
   String? activo;
   String? miembrosHogar;
   String? miembrosEcoActivos;
@@ -105,10 +114,18 @@ class AlianzaBeneficiarioEntity {
   String? longitud;
   String? latitud;
   String? cedulaCatastral;
-  String? beneficioId;
+  String? tipoIdentificacionId;
+  String? fechaExpedicionDocumento;
+  String? fechaNacimiento;
+  int? edad;
+  String? nombre1;
+  String? nombre2;
+  String? apellido1;
+  String? apellido2;
+  String? generoId;
+  String? grupoEspecialId;
+  String? telefonoMovil;
   String? recordStatus;
-  String? nombre;
-  String? edad;
 
   AlianzaBeneficiarioEntity copyWith({
     String? alianzaId,
@@ -123,6 +140,7 @@ class AlianzaBeneficiarioEntity {
     String? conocePerfil,
     String? fueBeneficiado,
     String? cualBeneficio,
+    String? beneficioId,
     String? activo,
     String? miembrosHogar,
     String? miembrosEcoActivos,
@@ -160,7 +178,17 @@ class AlianzaBeneficiarioEntity {
     String? longitud,
     String? latitud,
     String? cedulaCatastral,
-    String? beneficioId,
+    String? tipoIdentificacionId,
+    String? fechaExpedicionDocumento,
+    String? fechaNacimiento,
+    int? edad,
+    String? nombre1,
+    String? nombre2,
+    String? apellido1,
+    String? apellido2,
+    String? generoId,
+    String? grupoEspecialId,
+    String? telefonoMovil,
     String? recordStatus,
   }) =>
       AlianzaBeneficiarioEntity(
@@ -176,6 +204,7 @@ class AlianzaBeneficiarioEntity {
         conocePerfil: conocePerfil ?? this.conocePerfil,
         fueBeneficiado: fueBeneficiado ?? this.fueBeneficiado,
         cualBeneficio: cualBeneficio ?? this.cualBeneficio,
+        beneficioId: beneficioId ?? this.beneficioId,
         activo: activo ?? this.activo,
         miembrosHogar: miembrosHogar ?? this.miembrosHogar,
         miembrosEcoActivos: miembrosEcoActivos ?? this.miembrosEcoActivos,
@@ -219,7 +248,18 @@ class AlianzaBeneficiarioEntity {
         longitud: longitud ?? this.longitud,
         latitud: latitud ?? this.latitud,
         cedulaCatastral: cedulaCatastral ?? this.cedulaCatastral,
-        beneficioId: beneficioId ?? this.beneficioId,
+        tipoIdentificacionId: tipoIdentificacionId ?? this.tipoIdentificacionId,
+        fechaExpedicionDocumento:
+            fechaExpedicionDocumento ?? this.fechaExpedicionDocumento,
+        fechaNacimiento: fechaNacimiento ?? this.fechaNacimiento,
+        edad: edad ?? this.edad,
+        nombre1: nombre1 ?? this.nombre1,
+        nombre2: nombre2 ?? this.nombre2,
+        apellido1: apellido1 ?? this.apellido1,
+        apellido2: apellido2 ?? this.apellido2,
+        generoId: generoId ?? this.generoId,
+        grupoEspecialId: grupoEspecialId ?? this.grupoEspecialId,
+        telefonoMovil: telefonoMovil ?? this.telefonoMovil,
         recordStatus: recordStatus ?? this.recordStatus,
       );
 
@@ -236,6 +276,7 @@ class AlianzaBeneficiarioEntity {
         "ConocePerfil": conocePerfil,
         "FueBeneficiado": fueBeneficiado,
         "CualBeneficio": cualBeneficio,
+        "BeneficioId": beneficioId,
         "Activo": activo,
         "MiembrosHogar": miembrosHogar,
         "MiembrosEcoActivos": miembrosEcoActivos,
@@ -273,7 +314,6 @@ class AlianzaBeneficiarioEntity {
         "Longitud": longitud,
         "Latitud": latitud,
         "CedulaCatastral": cedulaCatastral,
-        "BeneficioId": beneficioId,
         "RecordStatus": recordStatus,
       };
 }

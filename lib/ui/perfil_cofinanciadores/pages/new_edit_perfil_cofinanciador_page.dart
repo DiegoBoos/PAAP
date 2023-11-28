@@ -78,8 +78,9 @@ class _NewEditPerfilCofinanciadorPageState
           },
         ),
         appBar: AppBar(
-            title: Text(
-                perfilCofinanciador.cofinanciadorId == '' ? 'Crear' : 'Editar'),
+            title: Text(perfilCofinanciador.cofinanciadorId == null
+                ? 'Crear'
+                : 'Editar'),
             actions: const [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),

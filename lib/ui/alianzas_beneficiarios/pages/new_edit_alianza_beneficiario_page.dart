@@ -11,12 +11,12 @@ import '../../alianzas/widgets/alianza_drawer.dart';
 import '../../utils/custom_snack_bar.dart';
 import '../../utils/floating_buttons.dart';
 import '../../utils/network_icon.dart';
-import '../../utils/styles.dart';
-import '../widgets/alianza_beneficiario_experiencia_form.dart';
 import '../widgets/alianza_beneficiario_form.dart';
 import '../widgets/alianza_perfil_beneficiario_form.dart';
 import '../widgets/beneficiario_form.dart';
 import '../widgets/conyuge_form.dart';
+import '../widgets/experiencia_agricola_form.dart';
+import '../widgets/experiencia_pecuaria_form.dart';
 
 class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
   const NewEditAlianzaBeneficiarioPage({super.key});
@@ -25,6 +25,9 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final menuCubit = BlocProvider.of<MenuCubit>(context);
+
+    final vAlianzaCubit = BlocProvider.of<VAlianzaCubit>(context);
+    final tipoProyecto = vAlianzaCubit.state.vAlianza!.tipoProyecto;
 
     return BlocConsumer<AlianzaBeneficiarioCubit, AlianzaBeneficiarioState>(
       listener: (context, state) {
@@ -54,7 +57,7 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
               },
             ),
             appBar: AppBar(
-                title: Text(beneficiarioId == '' ? 'Crear' : 'Editar'),
+                title: Text(beneficiarioId == null ? 'Crear' : 'Editar'),
                 actions: const [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -67,37 +70,36 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Form(
                   key: formKey,
-                  child: Column(children: [
-                    const Text('BENEFICIARIOS ALIANZA',
-                        style: Styles.titleStyle),
-                    const SizedBox(height: 10),
-                    Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        const BeneficiarioForm(),
-                        const AlianzaPerfilBeneficiarioForm(),
-                        const AlianzaBeneficiarioForm(),
-                        if (estadoCivilId == '2' || estadoCivilId == '5')
-                          const ConyugeForm(),
-                        const AlianzaBeneficiarioExperienciaForm(),
-                        const SizedBox(height: 10),
-                        SaveBackButtons(
-                          onSaved: () {
-                            if (!formKey.currentState!.validate()) {
-                              return;
-                            }
+                  child: Column(
+                    children: [
+                      BeneficiarioForm(
+                          alianzaBeneficiario: alianzaBeneficiario),
+                      AlianzaPerfilBeneficiarioForm(
+                          alianzaBeneficiario: alianzaBeneficiario),
+                      AlianzaBeneficiarioForm(
+                          alianzaBeneficiario: alianzaBeneficiario),
+                      if (estadoCivilId == '2' || estadoCivilId == '5')
+                        ConyugeForm(alianzaBeneficiario: alianzaBeneficiario),
+                      AlianzaBeneficiarioExperiencia(
+                          tipoProyecto: tipoProyecto,
+                          beneficiarioId: beneficiarioId),
+                      const SizedBox(height: 10),
+                      SaveBackButtons(
+                        onSaved: () {
+                          if (!formKey.currentState!.validate()) {
+                            return;
+                          }
 
-                            formKey.currentState!.save();
+                          formKey.currentState!.save();
 
-                            saveBeneficiario(context);
-                            saveAlianzaBeneficiario(context);
-                            saveExperiencia(context);
-                          },
-                        ),
-                        const SizedBox(height: 10)
-                      ],
-                    )
-                  ]),
+                          saveBeneficiario(context);
+                          saveAlianzaBeneficiario(context);
+                          saveExperiencia(context);
+                        },
+                      ),
+                      const SizedBox(height: 10)
+                    ],
+                  ),
                 ),
               ),
             ));
@@ -107,7 +109,7 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
 
   void saveBeneficiario(BuildContext context) {
     final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
-    beneficiarioCubit.changeActivo(true);
+    beneficiarioCubit.changeActivo('true');
 
     beneficiarioCubit.saveBeneficiarioDB();
   }
@@ -126,17 +128,17 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
     final alianzaBeneficiario =
         alianzaBeneficiarioCubit.state.alianzaBeneficiario;
 
-    if (alianzaBeneficiario.fueBeneficiado == '') {
+    if (alianzaBeneficiario.fueBeneficiado == null) {
       alianzaBeneficiarioCubit.changeFueBeneficiado('false');
     }
-    if (alianzaBeneficiario.activo == '') {
+    if (alianzaBeneficiario.activo == null) {
       alianzaBeneficiarioCubit.changeActivo('false');
     }
-    if (alianzaBeneficiario.cotizanteBeps == '') {
-      alianzaBeneficiarioCubit.changeCotizanteBeps(false);
+    if (alianzaBeneficiario.cotizanteBeps == null) {
+      alianzaBeneficiarioCubit.changeCotizanteBeps('false');
     }
-    if (alianzaBeneficiario.accesoExplotacionTierra == '') {
-      alianzaBeneficiarioCubit.changeAccesoExplotacionTierra(false);
+    if (alianzaBeneficiario.accesoExplotacionTierra == null) {
+      alianzaBeneficiarioCubit.changeAccesoExplotacionTierra('false');
     }
 
     alianzaBeneficiarioCubit.saveAlianzaBeneficiarioDB();
@@ -164,8 +166,99 @@ class NewEditAlianzaBeneficiarioPage extends StatelessWidget {
     } else if (tipoProyecto == 'Pecuario') {
       alianzaExperienciaPecuariaCubit.changeBeneficiarioId(beneficiarioId);
 
-      alianzaExperienciaPecuariaCubit.saveAlianzaExperienciaPecuariaDB(
-          alianzaExperienciaPecuariaCubit.state.alianzaExperienciaPecuaria);
+      final alianzaExperienciaPecuaria =
+          alianzaExperienciaPecuariaCubit.state.alianzaExperienciaPecuaria;
+
+      alianzaExperienciaPecuariaCubit
+          .saveAlianzaExperienciaPecuariaDB(alianzaExperienciaPecuaria);
     }
+  }
+}
+
+class AlianzaBeneficiarioExperiencia extends StatefulWidget {
+  const AlianzaBeneficiarioExperiencia(
+      {super.key, required this.tipoProyecto, required this.beneficiarioId});
+  final String? tipoProyecto;
+  final String? beneficiarioId;
+
+  @override
+  State<AlianzaBeneficiarioExperiencia> createState() =>
+      _AlianzaBeneficiarioExperienciaState();
+}
+
+class _AlianzaBeneficiarioExperienciaState
+    extends State<AlianzaBeneficiarioExperiencia> {
+  @override
+  void initState() {
+    super.initState();
+
+    final alianzaExperienciaAgricolaCubit =
+        BlocProvider.of<AlianzaExperienciaAgricolaCubit>(context);
+
+    final alianzaExperienciaPecuariaCubit =
+        BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context);
+
+    if (widget.beneficiarioId != null) {
+      if (widget.tipoProyecto == 'Agrícola') {
+        alianzaExperienciaAgricolaCubit.loadAlianzaExperienciaAgricola(
+            '1', widget.beneficiarioId!);
+      } else if (widget.tipoProyecto == 'Pecuario') {
+        alianzaExperienciaPecuariaCubit.loadAlianzaExperienciaPecuaria(
+            '1', widget.beneficiarioId!);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final alianzaExperienciaAgricolaCubit =
+        BlocProvider.of<AlianzaExperienciaAgricolaCubit>(context);
+
+    final alianzaExperienciaPecuariaCubit =
+        BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context);
+
+    return BlocListener<BeneficiarioCubit, BeneficiarioState>(
+      listener: (context, state) {
+        if (state is BeneficiarioLoaded) {
+          final beneficiarioId = state.beneficiarioLoaded.beneficiarioId!;
+
+          if (widget.tipoProyecto == 'Agrícola') {
+            alianzaExperienciaAgricolaCubit.loadAlianzaExperienciaAgricola(
+                '1', beneficiarioId);
+          } else if (widget.tipoProyecto == 'Pecuario') {
+            alianzaExperienciaPecuariaCubit.loadAlianzaExperienciaPecuaria(
+                '1', beneficiarioId);
+          }
+        }
+      },
+      child: Column(
+        children: [
+          BlocBuilder<AlianzaExperienciaAgricolaCubit,
+              AlianzaExperienciaAgricolaState>(
+            builder: (context, state) {
+              if (state is AlianzaExperienciaAgricolaLoaded) {
+                final alianzaExperienciaAgricola =
+                    state.alianzaExperienciaAgricolaLoaded;
+                return ExperienciaAgricolaForm(alianzaExperienciaAgricola);
+              } else {
+                return Container();
+              }
+            },
+          ),
+          BlocBuilder<AlianzaExperienciaPecuariaCubit,
+              AlianzaExperienciaPecuariaState>(
+            builder: (context, state) {
+              if (state is AlianzaExperienciaPecuariaLoaded) {
+                final alianzaExperienciaPecuaria =
+                    state.alianzaExperienciaPecuariaLoaded;
+                return ExperienciaPecuariaForm(alianzaExperienciaPecuaria);
+              } else {
+                return Container();
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

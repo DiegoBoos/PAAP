@@ -9,7 +9,7 @@ abstract class BeneficiarioState extends Equatable {
 }
 
 class BeneficiarioInitial extends BeneficiarioState {
-  BeneficiarioInitial() : super(beneficiario: initObject());
+  BeneficiarioInitial() : super(beneficiario: BeneficiarioEntity());
 }
 
 class BeneficiarioLoaded extends BeneficiarioState {
@@ -33,22 +33,8 @@ class BeneficiarioSaved extends BeneficiarioState {
 class BeneficiarioError extends BeneficiarioState {
   final String message;
 
-  BeneficiarioError(this.message) : super(beneficiario: initObject());
+  BeneficiarioError(this.message) : super(beneficiario: BeneficiarioEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-BeneficiarioEntity initObject() {
-  return BeneficiarioEntity(
-      beneficiarioId: '',
-      nombre1: '',
-      nombre2: '',
-      apellido1: '',
-      apellido2: '',
-      fechaNacimiento: '',
-      fechaExpedicionDocumento: '',
-      telefonoMovil: '',
-      activo: '',
-      recordStatus: '');
 }

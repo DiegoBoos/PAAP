@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../cubits/alianza_beneficiario/alianza_beneficiario_cubit.dart';
 import '../../cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
 import '../../cubits/alianza_experiencia_pecuaria/alianza_experiencia_pecuaria_cubit.dart';
-import '../../cubits/beneficiario/beneficiario_cubit.dart';
 import '../../cubits/v_alianza/v_alianza_cubit.dart';
 import '../../../domain/entities/alianza_beneficiario_entity.dart';
+import '../../utils/no_data_svg.dart';
 
 class AlianzasBeneficiariosTableSource extends DataTableSource {
   final BuildContext context;
@@ -23,13 +23,14 @@ class AlianzasBeneficiariosTableSource extends DataTableSource {
     final alianzaBeneficiarioCubit =
         BlocProvider.of<AlianzaBeneficiarioCubit>(context);
 
-    final beneficiarioCubit = BlocProvider.of<BeneficiarioCubit>(context);
-
     final experienciaAgricolaCubit =
         BlocProvider.of<AlianzaExperienciaAgricolaCubit>(context);
 
     final experienciaPecuariaCubit =
         BlocProvider.of<AlianzaExperienciaPecuariaCubit>(context);
+
+    final nombreCompleto =
+        '${alianzaBeneficiario.nombre1 ?? ''} ${alianzaBeneficiario.nombre2 ?? ''} ${alianzaBeneficiario.apellido1 ?? ''} ${alianzaBeneficiario.apellido2 ?? ''}';
 
     return DataRow.byIndex(
       index: index,
@@ -44,13 +45,11 @@ class AlianzasBeneficiariosTableSource extends DataTableSource {
               alianzaBeneficiarioCubit
                   .setAlianzaBeneficiario(alianzaBeneficiario);
 
-              beneficiarioCubit.loadBeneficiario(beneficiarioId);
-
               if (tipoProyecto == 'Agrícola') {
-                experienciaAgricolaCubit.selectAlianzaExperienciaAgricola(
+                experienciaAgricolaCubit.loadAlianzaExperienciaAgricola(
                     '1', beneficiarioId);
               } else if (tipoProyecto == 'Pecuario') {
-                experienciaPecuariaCubit.selectAlianzaExperienciaPecuaria(
+                experienciaPecuariaCubit.loadAlianzaExperienciaPecuaria(
                     '1', beneficiarioId);
               }
 
@@ -59,7 +58,7 @@ class AlianzasBeneficiariosTableSource extends DataTableSource {
                 'NewEditVBeneficiarioAlianza',
               );
             },
-            child: Text(alianzaBeneficiario.nombre ?? ''))),
+            child: Text(nombreCompleto))),
       ],
     );
   }
@@ -89,20 +88,14 @@ class AlianzasBeneficiariosRows extends StatefulWidget {
 
 class _AlianzasBeneficiariosRowsState extends State<AlianzasBeneficiariosRows> {
   List<AlianzaBeneficiarioEntity> alianzasBeneficiariosFiltered = [];
-  List<AlianzaBeneficiarioEntity> allAlianzasBeneficiarios = [];
-
-  @override
-  void initState() {
-    super.initState();
-    allAlianzasBeneficiarios = widget.alianzasBeneficiarios;
-    alianzasBeneficiariosFiltered = allAlianzasBeneficiarios;
-  }
 
   void _buscar(String query) {
     final lowerCaseQuery = query.toLowerCase();
     final alianzasBeneficiarios =
-        allAlianzasBeneficiarios.where((alianzaBeneficiario) {
-      return alianzaBeneficiario.nombre!.toLowerCase().contains(lowerCaseQuery);
+        widget.alianzasBeneficiarios.where((alianzaBeneficiario) {
+      final nombreCompleto =
+          '${alianzaBeneficiario.nombre1 ?? ''} ${alianzaBeneficiario.nombre2 ?? ''} ${alianzaBeneficiario.apellido1 ?? ''} ${alianzaBeneficiario.apellido2 ?? ''}';
+      return nombreCompleto.toLowerCase().contains(lowerCaseQuery);
     }).toList();
 
     setState(() {
@@ -112,35 +105,63 @@ class _AlianzasBeneficiariosRowsState extends State<AlianzasBeneficiariosRows> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        TextField(
-          onChanged: (value) => _buscar(value),
-          decoration: const InputDecoration(
-            labelText: 'Buscar',
-            suffixIcon: Icon(Icons.search),
-          ),
-        ),
-        PaginatedDataTable(
-          header: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    alianzasBeneficiariosFiltered = widget.alianzasBeneficiarios;
+    return widget.alianzasBeneficiarios.isEmpty
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('AlianzasBeneficiarios'),
-              IconButton(
-                  onPressed: () => Navigator.pushNamed(
-                      context, 'NewEditVBeneficiarioAlianza'),
-                  icon: const Icon(Icons.add))
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Beneficiarios',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, 'NewEditVBeneficiarioAlianza');
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                        ))
+                  ],
+                ),
+              ),
+              const Expanded(child: NoDataSvg(title: 'No hay resultados')),
             ],
-          ),
-          rowsPerPage: 10, // Adjust as needed
-          columns: const <DataColumn>[
-            DataColumn(label: Text('ID')),
-            DataColumn(label: Text('Nombre')),
-          ],
-          source: AlianzasBeneficiariosTableSource(
-              context, alianzasBeneficiariosFiltered),
-        ),
-      ],
-    );
+          )
+        : ListView(
+            children: [
+              TextField(
+                onChanged: (value) => _buscar(value),
+                decoration: const InputDecoration(
+                  labelText: 'Buscar',
+                  suffixIcon: Icon(Icons.search),
+                ),
+              ),
+              PaginatedDataTable(
+                header: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Beneficiarios'),
+                    IconButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, 'NewEditVBeneficiarioAlianza'),
+                        icon: const Icon(Icons.add))
+                  ],
+                ),
+                rowsPerPage: 10, // Adjust as needed
+                columns: const <DataColumn>[
+                  DataColumn(label: Text('ID')),
+                  DataColumn(label: Text('Nombre')),
+                ],
+                source: AlianzasBeneficiariosTableSource(
+                    context, alianzasBeneficiariosFiltered),
+              ),
+            ],
+          );
   }
 }

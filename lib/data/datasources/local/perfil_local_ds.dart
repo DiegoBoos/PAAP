@@ -144,9 +144,6 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
   Future<List<String>> getMunicipiosPerfilesDB() async {
     final db = await DBConfig.database;
 
-    /*  List<Map> listMunicipios =
-        await db.rawQuery('select distinct MunicipioId from perfil'); */
-
     final cursor = await db.query('Perfil',
         distinct: true,
         columns: ['MunicipioId'],
@@ -159,9 +156,6 @@ class PerfilLocalDataSourceImpl implements PerfilLocalDataSource {
     for (var e in cursor) {
       listMunicipiosId.add(e.entries.first.value.toString());
     }
-
-    /*  final listMunicipios = List<Map<String, Object?>>.from(
-        cursor.map((m) => {print(m), m['MunicipioId']})).toList(); */
 
     return listMunicipiosId;
   }

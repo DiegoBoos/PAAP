@@ -12,7 +12,7 @@ abstract class AlianzaExperienciaPecuariaState extends Equatable {
 class AlianzaExperienciaPecuariaInitial
     extends AlianzaExperienciaPecuariaState {
   AlianzaExperienciaPecuariaInitial()
-      : super(alianzaExperienciaPecuaria: initObject());
+      : super(alianzaExperienciaPecuaria: AlianzaExperienciaPecuariaEntity());
 }
 
 class AlianzaExperienciaPecuariaLoaded extends AlianzaExperienciaPecuariaState {
@@ -40,25 +40,8 @@ class AlianzaExperienciaPecuariaError extends AlianzaExperienciaPecuariaState {
   final String message;
 
   AlianzaExperienciaPecuariaError(this.message)
-      : super(alianzaExperienciaPecuaria: initObject());
+      : super(alianzaExperienciaPecuaria: AlianzaExperienciaPecuariaEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-AlianzaExperienciaPecuariaEntity initObject() {
-  return AlianzaExperienciaPecuariaEntity(
-    tipoActividadProductivaId: '',
-    beneficiarioId: '',
-    frecuenciaId: '',
-    cantidadAnimales: '',
-    cantidadCria: '',
-    cantidadLevante: '',
-    cantidadCeba: '',
-    cantidadLeche: '',
-    valorJornal: '',
-    costosInsumos: '',
-    ingresos: '',
-    recordStatus: '',
-  );
 }

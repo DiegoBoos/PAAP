@@ -100,7 +100,7 @@ class _PerfilPreInversionAliadoFormState
         municipioId: widget.perfilPreInversionAliado?.municipioId);
 
     aliadoCubit.setAliado(aliado);
-    loadAliado(aliadoCubit.state.aliado);
+    loadAliado(aliado);
   }
 
   @override

@@ -9,7 +9,7 @@ abstract class EvaluacionState extends Equatable {
 }
 
 class EvaluacionInitial extends EvaluacionState {
-  EvaluacionInitial() : super(evaluacion: initObject());
+  EvaluacionInitial() : super(evaluacion: EvaluacionEntity());
 }
 
 class EvaluacionLoaded extends EvaluacionState {
@@ -33,24 +33,8 @@ class EvaluacionSaved extends EvaluacionState {
 class EvaluacionError extends EvaluacionState {
   final String message;
 
-  EvaluacionError(this.message) : super(evaluacion: initObject());
+  EvaluacionError(this.message) : super(evaluacion: EvaluacionEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-EvaluacionEntity initObject() {
-  return EvaluacionEntity(
-      evaluacionId: '',
-      perfilId: '',
-      resumen: '',
-      fortalezas: '',
-      debilidades: '',
-      riesgos: '',
-      finalizado: '',
-      usuarioIdCoordinador: '',
-      fechaEvaluacion: '',
-      preAprobado: '',
-      recordStatus: '',
-      remoteEvaluacionId: '');
 }

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/experiencia_agricola_entity.dart';
-import '../../../ui/cubits/experiencia_agricola/experiencia_agricola_cubit.dart';
+import '../../../ui/cubits/alianza_experiencia_agricola/alianza_experiencia_agricola_cubit.dart';
 import '../../../ui/cubits/frecuencia/frecuencia_cubit.dart';
 import '../../../ui/cubits/tipo_actividad_productiva/tipo_actividad_productiva_cubit.dart';
+import '../../../domain/entities/alianza_experiencia_agricola_entity.dart';
 import '../../../domain/entities/frecuencia_entity.dart';
 import '../../../domain/entities/tipo_actividad_productiva_entity.dart';
 import '../../utils/input_decoration.dart';
 import '../../utils/styles.dart';
 
 class ExperienciaAgricolaForm extends StatefulWidget {
-  const ExperienciaAgricolaForm(this.experienciaAgricola, {super.key});
-  final ExperienciaAgricolaEntity? experienciaAgricola;
+  const ExperienciaAgricolaForm(this.alianzaExperienciaAgricola, {super.key});
+  final AlianzaExperienciaAgricolaEntity? alianzaExperienciaAgricola;
 
   @override
   State<ExperienciaAgricolaForm> createState() =>
@@ -20,14 +20,15 @@ class ExperienciaAgricolaForm extends StatefulWidget {
 }
 
 class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
-  String? tipoActividadProductivaId;
-  String? frecuenciaId;
+  String? alianzaExperienciaAgricolaTipoActividadProductivaId;
+  String? alianzaExperienciaAgricolaFrecuenciaId;
+
   final areaCultivoCtrl = TextEditingController();
   final cantidadProducidaCtrl = TextEditingController();
   final cantidadVendidaCtrl = TextEditingController();
   final cantidadAutoconsumoCtrl = TextEditingController();
   final costoImplementacionCtrl = TextEditingController();
-  final experienciaAgricolaValorJornalCtrl = TextEditingController();
+  final alianzaExperienciaAgricolaValorJornalCtrl = TextEditingController();
   final totalIngresoNetoCtrl = TextEditingController();
   final areaPastoCtrl = TextEditingController();
   final areaSinUsoCtrl = TextEditingController();
@@ -35,48 +36,67 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
   final areaImplementacionCtrl = TextEditingController();
   final totalAreaPredioCtrl = TextEditingController();
 
+  String? alianzaExperienciaPecuariaTipoActividadProductivaId;
+  String? alianzaExperienciaPecuariaFrecuenciaId;
+
+  final cantidadAnimalesCtrl = TextEditingController();
+  final cantidadCriaCtrl = TextEditingController();
+  final cantidadLevanteCtrl = TextEditingController();
+  final cantidadCebaCtrl = TextEditingController();
+  final cantidadLecheCtrl = TextEditingController();
+  final alianzaExperienciaPecuariaValorJornalCtrl = TextEditingController();
+  final costosInsumosCtrl = TextEditingController();
+  final ingresosCtrl = TextEditingController();
+
   @override
   void initState() {
     super.initState();
 
-    loadExperienciaAgricola(widget.experienciaAgricola);
+    loadAlianzaExperienciaAgricola(widget.alianzaExperienciaAgricola);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    BlocProvider.of<ExperienciaAgricolaCubit>(context).initState();
+    BlocProvider.of<AlianzaExperienciaAgricolaCubit>(context).initState();
   }
 
-  void loadExperienciaAgricola(ExperienciaAgricolaEntity? experienciaAgricola) {
+  void loadAlianzaExperienciaAgricola(
+      AlianzaExperienciaAgricolaEntity? alianzaExperienciaAgricola) {
     setState(() {
-      tipoActividadProductivaId =
-          experienciaAgricola?.tipoActividadProductivaId;
-      frecuenciaId = experienciaAgricola?.frecuenciaId;
-      areaCultivoCtrl.text = experienciaAgricola?.areaCultivo ?? '';
-      cantidadProducidaCtrl.text = experienciaAgricola?.cantidadProducida ?? '';
-      cantidadVendidaCtrl.text = experienciaAgricola?.cantidadVendida ?? '';
+      alianzaExperienciaAgricolaTipoActividadProductivaId =
+          alianzaExperienciaAgricola?.tipoActividadProductivaId;
+      alianzaExperienciaAgricolaFrecuenciaId =
+          alianzaExperienciaAgricola?.frecuenciaId;
+      areaCultivoCtrl.text = alianzaExperienciaAgricola?.areaCultivo ?? '';
+      cantidadProducidaCtrl.text =
+          alianzaExperienciaAgricola?.cantidadProducida ?? '';
+      cantidadVendidaCtrl.text =
+          alianzaExperienciaAgricola?.cantidadVendida ?? '';
       cantidadAutoconsumoCtrl.text =
-          experienciaAgricola?.cantidadAutoconsumo ?? '';
+          alianzaExperienciaAgricola?.cantidadAutoconsumo ?? '';
       costoImplementacionCtrl.text =
-          experienciaAgricola?.costoImplementacion ?? '';
-      experienciaAgricolaValorJornalCtrl.text =
-          experienciaAgricola?.valorJornal ?? '';
-      totalIngresoNetoCtrl.text = experienciaAgricola?.totalIngresoNeto ?? '';
-      areaPastoCtrl.text = experienciaAgricola?.areaPasto ?? '';
-      areaSinUsoCtrl.text = experienciaAgricola?.areaSinUso ?? '';
+          alianzaExperienciaAgricola?.costoImplementacion ?? '';
+      alianzaExperienciaAgricolaValorJornalCtrl.text =
+          alianzaExperienciaAgricola?.valorJornal ?? '';
+      totalIngresoNetoCtrl.text =
+          alianzaExperienciaAgricola?.totalIngresoNeto ?? '';
+      areaPastoCtrl.text = alianzaExperienciaAgricola?.areaPasto ?? '';
+      areaSinUsoCtrl.text = alianzaExperienciaAgricola?.areaSinUso ?? '';
       areaReservaConservacionCtrl.text =
-          experienciaAgricola?.areaReservaConservacion ?? '';
+          alianzaExperienciaAgricola?.areaReservaConservacion ?? '';
       areaImplementacionCtrl.text =
-          experienciaAgricola?.areaImplementacion ?? '';
-      totalAreaPredioCtrl.text = experienciaAgricola?.totalAreaPredio ?? '';
+          alianzaExperienciaAgricola?.areaImplementacion ?? '';
+      totalAreaPredioCtrl.text =
+          alianzaExperienciaAgricola?.totalAreaPredio ?? '';
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final experienciaAgricolaCubit =
-        BlocProvider.of<ExperienciaAgricolaCubit>(context);
+    final alianzaExperienciaAgricolaCubit =
+        BlocProvider.of<AlianzaExperienciaAgricolaCubit>(context);
+
     return Card(
         child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -95,7 +115,7 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Tipo de Actividad Productiva',
                       labelText: 'Tipo de Actividad Productiva'),
-                  value: tipoActividadProductivaId,
+                  value: alianzaExperienciaAgricolaTipoActividadProductivaId,
                   items: state.tiposActividadesProductivas!
                       .map<DropdownMenuItem<String>>(
                           (TipoActividadProductivaEntity value) {
@@ -111,7 +131,7 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                     return null;
                   },
                   onChanged: (String? value) {
-                    experienciaAgricolaCubit
+                    alianzaExperienciaAgricolaCubit
                         .changeTipoActividadProductiva(value);
                   },
                 );
@@ -126,7 +146,7 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return DropdownButtonFormField(
                   decoration: CustomInputDecoration.inputDecoration(
                       hintText: 'Frecuencia', labelText: 'Frecuencia'),
-                  value: frecuenciaId,
+                  value: alianzaExperienciaAgricolaFrecuenciaId,
                   items: state.frecuencias!
                       .map<DropdownMenuItem<String>>((FrecuenciaEntity value) {
                     return DropdownMenuItem<String>(
@@ -141,7 +161,7 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                     return null;
                   },
                   onChanged: (String? value) {
-                    experienciaAgricolaCubit.changeFrecuencia(value);
+                    alianzaExperienciaAgricolaCubit.changeFrecuencia(value);
                   },
                 );
               }
@@ -150,7 +170,6 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
           ),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: areaCultivoCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Área del Cultivo Hectárea',
@@ -162,11 +181,10 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeAreaCultivo(newValue);
+                alianzaExperienciaAgricolaCubit.changeAreaCultivo(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: cantidadProducidaCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Cantidad Producida',
@@ -178,11 +196,11 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeCantidadProducida(newValue);
+                alianzaExperienciaAgricolaCubit
+                    .changeCantidadProducida(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: cantidadVendidaCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Cantidad Vendida', labelText: 'Cantidad Vendida'),
@@ -193,11 +211,10 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeCantidadVendida(newValue);
+                alianzaExperienciaAgricolaCubit.changeCantidadVendida(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: cantidadAutoconsumoCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Cantidad Autoconsumo',
@@ -209,11 +226,11 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeCantidadAutoconsumo(newValue);
+                alianzaExperienciaAgricolaCubit
+                    .changeCantidadAutoconsumo(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: costoImplementacionCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Costo de implementación',
@@ -225,12 +242,12 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeCostoImplementacion(newValue);
+                alianzaExperienciaAgricolaCubit
+                    .changeCostoImplementacion(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
-              controller: experienciaAgricolaValorJornalCtrl,
+              controller: alianzaExperienciaAgricolaValorJornalCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Valor Jornal', labelText: 'Valor Jornal'),
               validator: (value) {
@@ -240,11 +257,10 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeValorJornal(newValue);
+                alianzaExperienciaAgricolaCubit.changeValorJornal(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: totalIngresoNetoCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Ingreso Total Neto',
@@ -256,11 +272,11 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeTotalIngresoNeto(newValue);
+                alianzaExperienciaAgricolaCubit
+                    .changeTotalIngresoNeto(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: areaPastoCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Área de Pastos', labelText: 'Área de Pastos'),
@@ -271,11 +287,10 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeAreaPasto(newValue);
+                alianzaExperienciaAgricolaCubit.changeAreaPasto(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: areaSinUsoCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Área sin uso', labelText: 'Área sin uso'),
@@ -286,11 +301,10 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeAreaSinUso(newValue);
+                alianzaExperienciaAgricolaCubit.changeAreaSinUso(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: areaReservaConservacionCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Área de Reserva', labelText: 'Área de Reserva'),
@@ -301,12 +315,11 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit
+                alianzaExperienciaAgricolaCubit
                     .changeAreaReservaConservacion(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: areaImplementacionCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Área Implementación',
@@ -318,11 +331,11 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeAreaImplementacion(newValue);
+                alianzaExperienciaAgricolaCubit
+                    .changeAreaImplementacion(newValue);
               }),
           const SizedBox(height: 20),
           TextFormField(
-              keyboardType: TextInputType.number,
               controller: totalAreaPredioCtrl,
               decoration: CustomInputDecoration.inputDecoration(
                   hintText: 'Total Área Predio',
@@ -334,7 +347,7 @@ class _ExperienciaAgricolaFormState extends State<ExperienciaAgricolaForm> {
                 return null;
               },
               onSaved: (String? newValue) {
-                experienciaAgricolaCubit.changeTotalAreaPredio(newValue);
+                alianzaExperienciaAgricolaCubit.changeTotalAreaPredio(newValue);
               }),
           const SizedBox(height: 20),
         ],

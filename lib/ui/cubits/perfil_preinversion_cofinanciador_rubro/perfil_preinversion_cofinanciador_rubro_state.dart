@@ -14,7 +14,9 @@ abstract class PerfilPreInversionCofinanciadorRubroState extends Equatable {
 class PerfilPreInversionCofinanciadorRubroInitial
     extends PerfilPreInversionCofinanciadorRubroState {
   PerfilPreInversionCofinanciadorRubroInitial()
-      : super(perfilPreInversionCofinanciadorRubro: initObject());
+      : super(
+            perfilPreInversionCofinanciadorRubro:
+                PerfilPreInversionCofinanciadorRubroEntity());
 }
 
 class PerfilPreInversionCofinanciadorRubroLoaded
@@ -52,11 +54,9 @@ class PerfilPreInversionCofinanciadorRubroError
   final String message;
 
   PerfilPreInversionCofinanciadorRubroError(this.message)
-      : super(perfilPreInversionCofinanciadorRubro: initObject());
+      : super(
+            perfilPreInversionCofinanciadorRubro:
+                PerfilPreInversionCofinanciadorRubroEntity());
   @override
   List<Object?> get props => [message];
 }
-
-PerfilPreInversionCofinanciadorRubroEntity initObject() =>
-    PerfilPreInversionCofinanciadorRubroEntity(
-        perfilPreInversionId: '', valor: '', recordStatus: '');

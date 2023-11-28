@@ -100,20 +100,11 @@ class _PerfilPreInversionBeneficiariosRowsState
     extends State<PerfilPreInversionBeneficiariosRows> {
   List<PerfilPreInversionBeneficiarioEntity>
       perfilPreInversionBeneficiariosFiltered = [];
-  List<PerfilPreInversionBeneficiarioEntity>
-      allPerfilPreInversionBeneficiarios = [];
-
-  @override
-  void initState() {
-    super.initState();
-    allPerfilPreInversionBeneficiarios = widget.perfilPreInversionBeneficiarios;
-    perfilPreInversionBeneficiariosFiltered =
-        allPerfilPreInversionBeneficiarios;
-  }
 
   void _buscar(String query) {
     final lowerCaseQuery = query.toLowerCase();
-    final perfilPreInversionBeneficiarios = allPerfilPreInversionBeneficiarios
+    final perfilPreInversionBeneficiarios = widget
+        .perfilPreInversionBeneficiarios
         .where((perfilPreInversionBeneficiario) {
       final nombreCompleto =
           '${perfilPreInversionBeneficiario.nombre1 ?? ''} ${perfilPreInversionBeneficiario.nombre2 ?? ''} ${perfilPreInversionBeneficiario.apellido1 ?? ''} ${perfilPreInversionBeneficiario.apellido2 ?? ''}';
@@ -128,6 +119,8 @@ class _PerfilPreInversionBeneficiariosRowsState
 
   @override
   Widget build(BuildContext context) {
+    perfilPreInversionBeneficiariosFiltered =
+        widget.perfilPreInversionBeneficiarios;
     return widget.perfilPreInversionBeneficiarios.isEmpty
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -138,7 +131,7 @@ class _PerfilPreInversionBeneficiariosRowsState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'PreInversión Beneficiarios',
+                      'Beneficiarios',
                       style: TextStyle(fontSize: 20),
                     ),
                     IconButton(
@@ -168,7 +161,7 @@ class _PerfilPreInversionBeneficiariosRowsState
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('PreInversión Beneficiarios'),
+                    const Text('Beneficiarios'),
                     IconButton(
                         onPressed: () {
                           Navigator.pushNamed(

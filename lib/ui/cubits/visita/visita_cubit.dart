@@ -9,9 +9,9 @@ part 'visita_state.dart';
 class VisitaCubit extends Cubit<VisitaState> {
   final VisitaUsecaseDB visitaDB;
 
-  VisitaCubit({required this.visitaDB}) : super(VisitaInitial());
+  VisitaCubit({required this.visitaDB}) : super(const VisitaInitial());
 
-  void initState() => emit(VisitaInitial());
+  void initState() => emit(const VisitaInitial());
 
   void getVisitaDB(String perfilId, String tipoVisitaId) async {
     final result = await visitaDB.getVisitaUsecaseDB(perfilId, tipoVisitaId);
@@ -20,7 +20,7 @@ class VisitaCubit extends Cubit<VisitaState> {
       if (data != null) {
         emit(VisitaLoaded(data));
       } else {
-        emit(VisitaInitial());
+        emit(const VisitaInitial());
       }
     });
   }
@@ -36,6 +36,6 @@ class VisitaCubit extends Cubit<VisitaState> {
   void clearVisitasDB() async {
     final result = await visitaDB.clearVisitasUsecaseDB();
     result.fold((failure) => emit(VisitaError(failure.properties.first)),
-        (data) => emit(VisitaCleared()));
+        (data) => emit(const VisitaCleared()));
   }
 }

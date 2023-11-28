@@ -15,7 +15,7 @@ import '../../utils/styles.dart';
 
 class ConyugeForm extends StatefulWidget {
   const ConyugeForm({super.key, required this.perfilPreInversionBeneficiario});
-  final PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario;
+  final PerfilPreInversionBeneficiarioEntity perfilPreInversionBeneficiario;
 
   @override
   State<ConyugeForm> createState() => _ConyugeFormState();
@@ -44,23 +44,23 @@ class _ConyugeFormState extends State<ConyugeForm> {
   }
 
   void loadConyuge(
-      PerfilPreInversionBeneficiarioEntity? perfilPreInversionBeneficiario) {
+      PerfilPreInversionBeneficiarioEntity perfilPreInversionBeneficiario) {
     setState(() {
       final conyugeFechaExpedicionDocumento =
-          perfilPreInversionBeneficiario?.conyugeFechaExpedicionDocumento;
+          perfilPreInversionBeneficiario.conyugeFechaExpedicionDocumento;
 
       final conyugeFechaNacimiento =
-          perfilPreInversionBeneficiario?.conyugeFechaNacimiento;
+          perfilPreInversionBeneficiario.conyugeFechaNacimiento;
 
       conyugeTipoIdentificacionId =
-          perfilPreInversionBeneficiario?.conyugeTipoIdentificacionId;
+          perfilPreInversionBeneficiario.conyugeTipoIdentificacionId;
 
-      conyugeGeneroId = perfilPreInversionBeneficiario?.conyugeGeneroId;
+      conyugeGeneroId = perfilPreInversionBeneficiario.conyugeGeneroId;
 
       conyugeGrupoEspecialId =
-          perfilPreInversionBeneficiario?.conyugeGrupoEspecialId;
+          perfilPreInversionBeneficiario.conyugeGrupoEspecialId;
 
-      conyugeIdCtrl.text = perfilPreInversionBeneficiario?.conyugeId ?? '';
+      conyugeIdCtrl.text = perfilPreInversionBeneficiario.conyugeId ?? '';
 
       if (conyugeFechaExpedicionDocumento != null &&
           conyugeFechaExpedicionDocumento != '') {
@@ -69,14 +69,14 @@ class _ConyugeFormState extends State<ConyugeForm> {
       }
 
       conyugeNombre1Ctrl.text =
-          perfilPreInversionBeneficiario?.conyugeNombre1 ?? '';
+          perfilPreInversionBeneficiario.conyugeNombre1 ?? '';
       conyugeApellido1Ctrl.text =
-          perfilPreInversionBeneficiario?.conyugeApellido1 ?? '';
+          perfilPreInversionBeneficiario.conyugeApellido1 ?? '';
       conyugeNombre2Ctrl.text =
-          perfilPreInversionBeneficiario?.conyugeNombre2 ?? '';
+          perfilPreInversionBeneficiario.conyugeNombre2 ?? '';
       conyugeApellido2Ctrl.text =
-          perfilPreInversionBeneficiario?.conyugeApellido2 ?? '';
-      conyugeGeneroId = perfilPreInversionBeneficiario?.conyugeGeneroId;
+          perfilPreInversionBeneficiario.conyugeApellido2 ?? '';
+      conyugeGeneroId = perfilPreInversionBeneficiario.conyugeGeneroId;
 
       if (conyugeFechaNacimiento != null && conyugeFechaNacimiento != '') {
         conyugeFechaNacimientoCtrl.text =
@@ -84,10 +84,10 @@ class _ConyugeFormState extends State<ConyugeForm> {
       }
 
       ingresosMensualesCtrl.text =
-          perfilPreInversionBeneficiario?.conyugeIngresosMensuales ?? '';
+          perfilPreInversionBeneficiario.conyugeIngresosMensuales ?? '';
 
       conyugeGrupoEspecialId =
-          perfilPreInversionBeneficiario?.conyugeGrupoEspecialId;
+          perfilPreInversionBeneficiario.conyugeGrupoEspecialId;
     });
   }
 
@@ -111,6 +111,7 @@ class _ConyugeFormState extends State<ConyugeForm> {
               builder: (context, state) {
                 if (state is TiposIdentificacionesLoaded) {
                   return DropdownButtonFormField(
+                    isExpanded: true,
                     decoration: CustomInputDecoration.inputDecoration(
                         hintText: 'Tipo de identificación',
                         labelText: 'Tipo de identificación'),

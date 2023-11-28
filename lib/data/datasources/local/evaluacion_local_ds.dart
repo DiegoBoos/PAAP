@@ -94,12 +94,6 @@ class EvaluacionLocalDataSourceImpl implements EvaluacionLocalDataSource {
         List<EvaluacionModel>.from(res.map((m) => EvaluacionModel.fromJson(m)))
             .toList();
 
-    /* for (var evaluacion in evaluacionesModel) {
-      if (evaluacion.recordStatus == 'N') {
-        evaluacion.evaluacionId = '0';
-      }
-    } */
-
     return evaluacionesModel;
   }
 

@@ -99,8 +99,8 @@ class BeneficiarioCubit extends Cubit<BeneficiarioState> {
     emit(BeneficiarioChanged(telefonoMovilChanged));
   }
 
-  void changeActivo(bool? value) {
-    final activo = state.beneficiario.copyWith(activo: value.toString());
+  void changeActivo(String? value) {
+    final activo = state.beneficiario.copyWith(activo: value);
     emit(BeneficiarioChanged(activo));
   }
 }

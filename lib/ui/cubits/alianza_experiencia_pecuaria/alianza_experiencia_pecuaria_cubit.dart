@@ -15,7 +15,7 @@ class AlianzaExperienciaPecuariaCubit
 
   void initState() => emit(AlianzaExperienciaPecuariaInitial());
 
-  void selectAlianzaExperienciaPecuaria(
+  void loadAlianzaExperienciaPecuaria(
       String tipoActividadProductivaId, String beneficiarioId) async {
     final result = await alianzaExperienciaPecuariaDB
         .getAlianzaExperienciaPecuariaUsecaseDB(

@@ -9,11 +9,8 @@ abstract class ExperienciaPecuariaState extends Equatable {
 }
 
 class ExperienciaPecuariaInitial extends ExperienciaPecuariaState {
-  ExperienciaPecuariaInitial() : super(experienciaPecuaria: initObject());
-}
-
-class ExperienciaPecuariaLoading extends ExperienciaPecuariaState {
-  ExperienciaPecuariaLoading() : super(experienciaPecuaria: initObject());
+  ExperienciaPecuariaInitial()
+      : super(experienciaPecuaria: ExperienciaPecuariaEntity());
 }
 
 class ExperienciaPecuariaLoaded extends ExperienciaPecuariaState {
@@ -31,30 +28,15 @@ class ExperienciaPecuariaChanged extends ExperienciaPecuariaState {
 }
 
 class ExperienciaPecuariaSaved extends ExperienciaPecuariaState {
-  ExperienciaPecuariaSaved() : super(experienciaPecuaria: initObject());
+  const ExperienciaPecuariaSaved({required super.experienciaPecuaria});
 }
 
 class ExperienciaPecuariaError extends ExperienciaPecuariaState {
   final String message;
 
   ExperienciaPecuariaError(this.message)
-      : super(experienciaPecuaria: initObject());
+      : super(experienciaPecuaria: ExperienciaPecuariaEntity());
 
   @override
   List<Object?> get props => [message];
-}
-
-ExperienciaPecuariaEntity initObject() {
-  return ExperienciaPecuariaEntity(
-    beneficiarioId: '',
-    cantidadAnimales: '',
-    cantidadCria: '',
-    cantidadLevante: '',
-    cantidadCeba: '',
-    cantidadLeche: '',
-    valorJornal: '',
-    costosInsumos: '',
-    ingresos: '',
-    recordStatus: '',
-  );
 }

@@ -35,9 +35,9 @@ class _PerfilCofinanciadorFormState extends State<PerfilCofinanciadorForm> {
     final perfilCofinanciador =
         perfilCofinanciadorCubit.state.perfilCofinanciador;
 
-    setState(() {
-      cofinanciadorId = perfilCofinanciador.cofinanciadorId;
+    cofinanciadorId = perfilCofinanciador.cofinanciadorId;
 
+    setState(() {
       if (cofinanciadorId != null) {
         cofinanciadoresFiltered = widget.cofinanciadores
             .where((cofinanciador) =>

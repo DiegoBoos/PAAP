@@ -35,7 +35,7 @@ class _NewEditPerfilPreInversionIngresosUPTState
         appBar: AppBar(
             title: Text(perfilPreInversionIngresosUPTCubit.state
                         .perfilPreInversionIngresosUPT.actividadFinancieraId !=
-                    ''
+                    null
                 ? 'Editar'
                 : 'Crear'),
             actions: const [
