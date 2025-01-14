@@ -63,42 +63,48 @@ class PerfilPreInversionCofinanciadoresTableSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text(perfilPreInversionCofinanciador.cofinanciadorId!)),
         DataCell(TextButton(
-            onPressed: perfilPreInversionCofinanciador.correo == 'TOTAL'
-                ? null
-                : () async {
-                    final navigator = Navigator.of(context);
+          onPressed: perfilPreInversionCofinanciador.correo == 'TOTAL'
+              ? null
+              : () async {
+                  final navigator = Navigator.of(context);
 
-                    final perfilPreInversionId = vPerfilPreInversionCubit
-                        .state.vPerfilPreInversion!.perfilPreInversionId!;
+                  final perfilPreInversionId = vPerfilPreInversionCubit
+                      .state.vPerfilPreInversion!.perfilPreInversionId!;
 
-                    final cofinanciadorId =
-                        perfilPreInversionCofinanciador.cofinanciadorId!;
+                  final cofinanciadorId =
+                      perfilPreInversionCofinanciador.cofinanciadorId!;
 
-                    // Asignar el perfilPreInversionId y cofinanciadorId al cubit de perfilPreInversionCofinanciador
-                    perfilPreInversionCofinanciadorCubit
-                        .setPerfilPreInversionCofinanciador(
-                            perfilPreInversionCofinanciador);
+                  // Asignar el perfilPreInversionId y cofinanciadorId al cubit de perfilPreInversionCofinanciador
+                  perfilPreInversionCofinanciadorCubit
+                      .setPerfilPreInversionCofinanciador(
+                          perfilPreInversionCofinanciador);
 
-                    // Obtener los desembolsos, actividades financieras y rubros
-                    perfilPreInversionCofinanciadorDesembolsoCubit
-                        .getPerfilPreInversionCofinanciadorDesembolso(
-                            perfilPreInversionId, cofinanciadorId);
+                  // Obtener los desembolsos, actividades financieras y rubros
+                  perfilPreInversionCofinanciadorDesembolsoCubit
+                      .getPerfilPreInversionCofinanciadorDesembolso(
+                          perfilPreInversionId, cofinanciadorId);
 
-                    perfilPreInversionCofinanciadorActividadFinancieraCubit
-                        .getPerfilPreInversionCofinanciadorActividadFinanciera(
-                      perfilPreInversionId,
-                      cofinanciadorId,
-                    );
+                  perfilPreInversionCofinanciadorActividadFinancieraCubit
+                      .getPerfilPreInversionCofinanciadorActividadFinanciera(
+                    perfilPreInversionId,
+                    cofinanciadorId,
+                  );
 
-                    perfilPreInversionCofinanciadorRubroCubit
-                        .getPerfilPreInversionCofinanciadorRubro(
-                      perfilPreInversionId,
-                      cofinanciadorId,
-                    );
+                  perfilPreInversionCofinanciadorRubroCubit
+                      .getPerfilPreInversionCofinanciadorRubro(
+                    perfilPreInversionId,
+                    cofinanciadorId,
+                  );
 
-                    navigator.pushNamed('NewEditVCofinanciadorPreInversion');
-                  },
-            child: Text(perfilPreInversionCofinanciador.nombre!))),
+                  navigator.pushNamed('NewEditVCofinanciadorPreInversion');
+                },
+          child: SizedBox(
+            width: 200,
+            child: Text(
+              perfilPreInversionCofinanciador.nombre!,
+            ),
+          ),
+        )),
         DataCell(Text(monto!)),
       ],
     );
@@ -247,6 +253,7 @@ class _PerfilPreInversionCofinanciadorRowsState
                     ),
                   ),
                   PaginatedDataTable(
+                    dataRowHeight: 250,
                     header: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

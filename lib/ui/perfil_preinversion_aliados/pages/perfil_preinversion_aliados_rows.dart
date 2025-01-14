@@ -24,16 +24,22 @@ class PerfilPreInversionAliadosTableSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text(perfilPreInversionAliado.aliadoId!)),
         DataCell(TextButton(
-            onPressed: () {
-              perfilPreInversionAliadoCubit
-                  .setPerfilPreInversionAliado(perfilPreInversionAliado);
+          onPressed: () {
+            perfilPreInversionAliadoCubit
+                .setPerfilPreInversionAliado(perfilPreInversionAliado);
 
-              Navigator.pushNamed(
-                context,
-                'NewEditAliadoPreInversion',
-              );
-            },
-            child: Text(perfilPreInversionAliado.nombre ?? ''))),
+            Navigator.pushNamed(
+              context,
+              'NewEditAliadoPreInversion',
+            );
+          },
+          child: SizedBox(
+            width: 200,
+            child: Text(
+              perfilPreInversionAliado.nombre!,
+            ),
+          ),
+        )),
       ],
     );
   }
@@ -119,6 +125,7 @@ class _PerfilPreInversionAliadosRowsState
                 ),
               ),
               PaginatedDataTable(
+                dataRowHeight: 250,
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

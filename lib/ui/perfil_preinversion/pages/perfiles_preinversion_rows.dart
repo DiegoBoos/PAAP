@@ -27,8 +27,11 @@ class VPerfilesPreInversionTableSource extends DataTableSource {
               'VPerfilPreInversion',
             );
           },
-          child: Text(
-            vPerfilPreInversion.nombre!,
+          child: SizedBox(
+            width: 200,
+            child: Text(
+              vPerfilPreInversion.nombre!,
+            ),
           ),
         )),
       ],
@@ -111,6 +114,7 @@ class _PerfilesPreInversionRowsState extends State<PerfilesPreInversionRows> {
           ),
         ),
         PaginatedDataTable(
+          dataRowHeight: 250,
           header: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

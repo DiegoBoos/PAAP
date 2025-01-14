@@ -25,8 +25,11 @@ class VAlianzasTableSource extends DataTableSource {
             vAlianzaCubit.selectVAlianza(vAlianza);
             Navigator.pushNamed(context, 'VAlianza');
           },
-          child: Text(
-            vAlianza.nombre!,
+          child: SizedBox(
+            width: 200,
+            child: Text(
+              vAlianza.nombre!,
+            ),
           ),
         )),
       ],
@@ -105,6 +108,7 @@ class _AlianzasRowsState extends State<AlianzasRows> {
           ),
         ),
         PaginatedDataTable(
+          dataRowHeight: 250,
           header: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

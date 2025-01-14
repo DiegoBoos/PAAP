@@ -41,31 +41,35 @@ class PerfilPreInversionBeneficiariosTableSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text(perfilPreInversionBeneficiario.beneficiarioId!)),
         DataCell(TextButton(
-            onPressed: () {
-              final tipoProyecto = vPerfilPreInversionCubit
-                  .state.vPerfilPreInversion!.tipoProyecto;
+          onPressed: () {
+            final tipoProyecto = vPerfilPreInversionCubit
+                .state.vPerfilPreInversion!.tipoProyecto;
 
-              final beneficiarioId =
-                  perfilPreInversionBeneficiario.beneficiarioId!;
+            final beneficiarioId =
+                perfilPreInversionBeneficiario.beneficiarioId!;
 
-              perfilPreinversionBeneficiarioCubit
-                  .setPerfilPreInversionBeneficiario(
-                      perfilPreInversionBeneficiario);
+            perfilPreinversionBeneficiarioCubit
+                .setPerfilPreInversionBeneficiario(
+                    perfilPreInversionBeneficiario);
 
-              if (tipoProyecto == 'Agrícola') {
-                experienciaAgricolaCubit.loadExperienciaAgricola(
-                    '1', beneficiarioId);
-              } else if (tipoProyecto == 'Pecuario') {
-                experienciaPecuariaCubit.loadExperienciaPecuaria(
-                    '1', beneficiarioId);
-              }
+            if (tipoProyecto == 'Agrícola') {
+              experienciaAgricolaCubit.loadExperienciaAgricola(
+                  '1', beneficiarioId);
+            } else if (tipoProyecto == 'Pecuario') {
+              experienciaPecuariaCubit.loadExperienciaPecuaria(
+                  '1', beneficiarioId);
+            }
 
-              Navigator.pushNamed(
-                context,
-                'NewEditVBeneficiarioPreInversion',
-              );
-            },
-            child: Text(nombreCompleto))),
+            Navigator.pushNamed(
+              context,
+              'NewEditVBeneficiarioPreInversion',
+            );
+          },
+          child: SizedBox(
+            width: 200,
+            child: Text(nombreCompleto),
+          ),
+        )),
 
         // Add more cells for each column
       ],
@@ -158,6 +162,7 @@ class _PerfilPreInversionBeneficiariosRowsState
                 ),
               ),
               PaginatedDataTable(
+                dataRowHeight: 250,
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

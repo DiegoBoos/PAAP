@@ -26,16 +26,19 @@ class PerfilBeneficiariosTableSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text(perfilBeneficiario.beneficiarioId!)),
         DataCell(TextButton(
-            onPressed: () {
-              perfilBeneficiarioCubit.setPerfilBeneficiario(perfilBeneficiario);
+          onPressed: () {
+            perfilBeneficiarioCubit.setPerfilBeneficiario(perfilBeneficiario);
 
-              Navigator.pushNamed(
-                context,
-                'NewEditVPerfilBeneficiario',
-              );
-            },
-            child: Text(nombreCompleto)))
-
+            Navigator.pushNamed(
+              context,
+              'NewEditVPerfilBeneficiario',
+            );
+          },
+          child: SizedBox(
+            width: 200,
+            child: Text(nombreCompleto),
+          ),
+        ))
         // Add more cells for each column
       ],
     );
@@ -122,6 +125,7 @@ class _PerfilBeneficiariosRowsState extends State<PerfilBeneficiariosRows> {
                 ),
               ),
               PaginatedDataTable(
+                dataRowHeight: 250,
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

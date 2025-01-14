@@ -44,7 +44,12 @@ class PerfilCofinanciadoresTableSource extends DataTableSource {
                     );
                   },
             child: Text(perfilCofinanciador.nombre!))),
-        DataCell(Text(monto ?? '')),
+        DataCell(SizedBox(
+          width: 200,
+          child: Text(
+            monto ?? '',
+          ),
+        ))
       ],
     );
   }
@@ -127,6 +132,7 @@ class _PerfilCofinanciadorRowsState extends State<PerfilCofinanciadorRows> {
                 ),
               ),
               PaginatedDataTable(
+                dataRowHeight: 250,
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

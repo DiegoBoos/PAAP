@@ -30,7 +30,12 @@ class PerfilAliadosTableSource extends DataTableSource {
                 'NewEditVPerfilAliado',
               );
             },
-            child: Text(perfilAliado.nombre ?? ''))),
+            child: SizedBox(
+              width: 200,
+              child: Text(
+                perfilAliado.nombre!,
+              ),
+            )))
       ],
     );
   }
@@ -111,6 +116,7 @@ class _PerfilAliadosRowsState extends State<PerfilAliadosRows> {
                 ),
               ),
               PaginatedDataTable(
+                dataRowHeight: 250,
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

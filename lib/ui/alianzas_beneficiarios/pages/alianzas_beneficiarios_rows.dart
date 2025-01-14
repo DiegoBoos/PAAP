@@ -37,28 +37,32 @@ class AlianzasBeneficiariosTableSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text(alianzaBeneficiario.alianzaId!)),
         DataCell(TextButton(
-            onPressed: () {
-              final tipoProyecto = vAlianzaCubit.state.vAlianza!.tipoProyecto;
+          onPressed: () {
+            final tipoProyecto = vAlianzaCubit.state.vAlianza!.tipoProyecto;
 
-              final beneficiarioId = alianzaBeneficiario.beneficiarioId!;
+            final beneficiarioId = alianzaBeneficiario.beneficiarioId!;
 
-              alianzaBeneficiarioCubit
-                  .setAlianzaBeneficiario(alianzaBeneficiario);
+            alianzaBeneficiarioCubit
+                .setAlianzaBeneficiario(alianzaBeneficiario);
 
-              if (tipoProyecto == 'Agrícola') {
-                experienciaAgricolaCubit.loadAlianzaExperienciaAgricola(
-                    '1', beneficiarioId);
-              } else if (tipoProyecto == 'Pecuario') {
-                experienciaPecuariaCubit.loadAlianzaExperienciaPecuaria(
-                    '1', beneficiarioId);
-              }
+            if (tipoProyecto == 'Agrícola') {
+              experienciaAgricolaCubit.loadAlianzaExperienciaAgricola(
+                  '1', beneficiarioId);
+            } else if (tipoProyecto == 'Pecuario') {
+              experienciaPecuariaCubit.loadAlianzaExperienciaPecuaria(
+                  '1', beneficiarioId);
+            }
 
-              Navigator.pushNamed(
-                context,
-                'NewEditVBeneficiarioAlianza',
-              );
-            },
-            child: Text(nombreCompleto))),
+            Navigator.pushNamed(
+              context,
+              'NewEditVBeneficiarioAlianza',
+            );
+          },
+          child: SizedBox(
+            width: 200,
+            child: Text(nombreCompleto),
+          ),
+        )),
       ],
     );
   }
@@ -143,6 +147,7 @@ class _AlianzasBeneficiariosRowsState extends State<AlianzasBeneficiariosRows> {
                 ),
               ),
               PaginatedDataTable(
+                dataRowHeight: 250,
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -18,15 +18,20 @@ class VPerfilesTableSource extends DataTableSource {
       index: index,
       cells: <DataCell>[
         DataCell(Text(vPerfil.perfilId!)),
-        DataCell(TextButton(
-          onPressed: () {
-            BlocProvider.of<VPerfilCubit>(context).selectVPerfil(vPerfil);
-            Navigator.pushNamed(context, 'VPerfil');
-          },
-          child: Text(
-            vPerfil.nombre!,
+        DataCell(
+          TextButton(
+            onPressed: () {
+              BlocProvider.of<VPerfilCubit>(context).selectVPerfil(vPerfil);
+              Navigator.pushNamed(context, 'VPerfil');
+            },
+            child: SizedBox(
+              width: 200,
+              child: Text(
+                vPerfil.nombre!,
+              ),
+            ),
           ),
-        )),
+        ),
       ],
     );
   }
@@ -55,32 +60,29 @@ class PerfilesRows extends StatefulWidget {
 
 class _PerfilesRowsState extends State<PerfilesRows> {
   List<VPerfilEntity> vPerfilesFiltered = [];
-  List<VPerfilEntity> allVPerfiles = [];
-
   bool enableId = false;
 
   @override
   void initState() {
     super.initState();
-    allVPerfiles = widget.vPerfiles;
-    vPerfilesFiltered = allVPerfiles;
+    vPerfilesFiltered = widget.vPerfiles;
   }
 
   void _buscar(String query) {
     setState(() {
       if (query.isEmpty) {
-        vPerfilesFiltered = allVPerfiles;
+        vPerfilesFiltered = widget.vPerfiles;
       } else {
         final lowerCaseQuery = query.toLowerCase();
         if (enableId) {
-          final vPerfiles = allVPerfiles.where((vPerfil) {
+          final vPerfiles = widget.vPerfiles.where((vPerfil) {
             return vPerfil.perfilId!.toLowerCase() == lowerCaseQuery;
           }).toList();
 
           vPerfilesFiltered = vPerfiles;
           return;
         } else {
-          final vPerfiles = allVPerfiles.where((vPerfil) {
+          final vPerfiles = widget.vPerfiles.where((vPerfil) {
             return vPerfil.nombre!.toLowerCase().contains(lowerCaseQuery);
           }).toList();
 
@@ -103,6 +105,7 @@ class _PerfilesRowsState extends State<PerfilesRows> {
           ),
         ),
         PaginatedDataTable(
+          dataRowHeight: 250,
           header: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

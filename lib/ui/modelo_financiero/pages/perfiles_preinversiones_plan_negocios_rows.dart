@@ -42,42 +42,46 @@ class PerfilPreInversionPlanNegociosTableSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text(vPerfilPreInversionPlanNegocio.valor!)),
         DataCell(TextButton(
-            onPressed: () {
-              if (tipoMovimientoId == '3') {
-                final perfilPreInversionCostosUPTCubit =
-                    BlocProvider.of<PerfilPreInversionCostosUPTCubit>(context);
-                perfilPreInversionCostosUPTCubit
-                    .selectPerfilPreInversionCostosUPT(
-                        vPerfilPreInversionPlanNegocio);
+          onPressed: () {
+            if (tipoMovimientoId == '3') {
+              final perfilPreInversionCostosUPTCubit =
+                  BlocProvider.of<PerfilPreInversionCostosUPTCubit>(context);
+              perfilPreInversionCostosUPTCubit
+                  .selectPerfilPreInversionCostosUPT(
+                      vPerfilPreInversionPlanNegocio);
 
-                Navigator.pushNamed(
-                    context, 'NewEditPerfilPreInversionCostosUPT',
-                    arguments: tipoMovimientoId);
-              } else if (tipoMovimientoId == '2') {
-                final vPerfilPreInversionCubit =
-                    BlocProvider.of<VPerfilPreInversionCubit>(context);
-                final perfilPreInversionPrecioCubit =
-                    BlocProvider.of<PerfilPreInversionPrecioCubit>(context);
-                final perfilPreInversionIngresosUPTCubit =
-                    BlocProvider.of<PerfilPreInversionIngresosUPTCubit>(
-                        context);
+              Navigator.pushNamed(context, 'NewEditPerfilPreInversionCostosUPT',
+                  arguments: tipoMovimientoId);
+            } else if (tipoMovimientoId == '2') {
+              final vPerfilPreInversionCubit =
+                  BlocProvider.of<VPerfilPreInversionCubit>(context);
+              final perfilPreInversionPrecioCubit =
+                  BlocProvider.of<PerfilPreInversionPrecioCubit>(context);
+              final perfilPreInversionIngresosUPTCubit =
+                  BlocProvider.of<PerfilPreInversionIngresosUPTCubit>(context);
 
-                final perfilPreInversionId = vPerfilPreInversionCubit
-                    .state.vPerfilPreInversion!.perfilPreInversionId!;
+              final perfilPreInversionId = vPerfilPreInversionCubit
+                  .state.vPerfilPreInversion!.perfilPreInversionId!;
 
-                perfilPreInversionPrecioCubit
-                    .getPerfilPreInversionPrecioCubit(perfilPreInversionId);
+              perfilPreInversionPrecioCubit
+                  .getPerfilPreInversionPrecioCubit(perfilPreInversionId);
 
-                perfilPreInversionIngresosUPTCubit
-                    .selectPerfilPreInversionIngresosUPT(
-                        vPerfilPreInversionPlanNegocio);
+              perfilPreInversionIngresosUPTCubit
+                  .selectPerfilPreInversionIngresosUPT(
+                      vPerfilPreInversionPlanNegocio);
 
-                Navigator.pushNamed(
-                    context, 'NewEditPerfilPreInversionIngresosUPT',
-                    arguments: tipoMovimientoId);
-              }
-            },
-            child: Text(vPerfilPreInversionPlanNegocio.porcentaje ?? ''))),
+              Navigator.pushNamed(
+                  context, 'NewEditPerfilPreInversionIngresosUPT',
+                  arguments: tipoMovimientoId);
+            }
+          },
+          child: SizedBox(
+            width: 200,
+            child: Text(
+              vPerfilPreInversionPlanNegocio.porcentaje ?? '',
+            ),
+          ),
+        )),
       ],
     );
   }
@@ -125,6 +129,7 @@ class _PerfilPreInversionPlanNegociosRowsState
   @override
   Widget build(BuildContext context) {
     return PaginatedDataTable(
+      dataRowHeight: 250,
       header: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

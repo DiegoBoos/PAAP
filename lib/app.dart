@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app_config.dart';
+import 'data/utils.dart';
 import 'ui/blocs/alianza_beneficiarios/alianza_beneficiarios_bloc.dart';
 import 'ui/blocs/alianzas/alianzas_bloc.dart';
 import 'ui/blocs/auth/auth_bloc.dart';
@@ -81,7 +82,6 @@ import 'ui/cubits/v_perfil/v_perfil_cubit.dart';
 import 'ui/cubits/v_perfil_preinversion/v_perfil_preinversion_cubit.dart';
 import 'ui/cubits/vereda/vereda_cubit.dart';
 import 'ui/cubits/visita/visita_cubit.dart';
-import 'data/db/db_config.dart';
 import 'domain/usecases/perfil_preinversion_plan_negocio/perfil_preinversion_plan_negocio_exports.dart';
 import 'injection.dart' as di;
 import 'router.dart';
@@ -104,19 +104,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    setAppConfig();
-  }
-
-  setAppConfig() async {
-    final db = await DBConfig.database;
-
-    Map<String, dynamic> appConfig = {
-      "appName": widget.appConfig.appName,
-      "flavor": widget.appConfig.flavor,
-      "url": widget.appConfig.url,
-    };
-
-    await db.insert('AppConfig', appConfig);
+    Utils.setAppConfig(widget.appConfig);
   }
 
   @override
