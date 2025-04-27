@@ -1,10 +1,8 @@
 PAAP - Proyecto Apoyo Alianzas Productivas
 
-📌 Overview
-
 PAAP (Proyecto Apoyo Alianzas Productivas) is a mobile application developed to support the Ministry of Agriculture and Rural Development in managing productive alliance projects. The app facilitates data collection, profile management, pre-investment analysis, and financial modeling for agricultural projects.
 
-🚀 Features
+Features
 
 User authentication and secure login
 
@@ -18,7 +16,7 @@ Financial modeling tools
 
 Alliance and investment tracking
 
-📖 User Manual
+User Manual
 
 For a detailed guide on how to use PAAP, refer to the official User Manual. The manual provides step-by-step instructions for navigating the modules, including:
 
@@ -30,7 +28,7 @@ Tracking alliances and funding sources
 
 (Manual unavailable only under government policies.)
 
-🖼️ Screenshots
+Screenshots
 
 System Architecture (Flutter Clean Architecture)
 
@@ -48,22 +46,8 @@ Home Dashboard
 
 <img width="227" alt="image" src="https://github.com/user-attachments/assets/932c3c0b-02b2-4deb-a0dd-96b7bbd2380c" />
 
-🛠 Tech Stack
+Tech Stack
 
 Frontend: Flutter
 
 Database: SQLite
-
-🤝 Contributing
-
-This project is managed by the Ministry of Agriculture and Rural Development of Colombia. External contributions are not accepted.
-
-📝 License
-
-This project is under government regulations. Please refer to the official government policies for usage rights.
-
-📩 Contact & Support
-
-For inquiries or support, please contact the Ministry of Agriculture and Rural Development through official channels.
-
-PAAP - Enhancing Agricultural Productivity Through Technology 🌱📲
